@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+* David
+*
+*/
+-->
+
+<layout>
+   
+    <!-- To add a tab on new product page -->
+    <adminhtml_catalog_product_new>
+        <reference name="product_tabs">
+            <action method="addTab">
+                <name>stocklevels_tab</name>
+                <block template="nwh/nwh_stocklevels.phtml">nwh_retailexpress/adminhtml_config</block>
+            </action>
+        </reference>
+    </adminhtml_catalog_product_new>
+    <!-- To add a tab on new product page -->
+
+
+    <!-- To add a tab on edit product page -->
+    <adminhtml_catalog_product_edit>
+        <reference name="product_tabs">
+            <action method="addTab">
+                <name>stocklevels_tab</name>
+                <block template="nwh/nwh_stocklevels.phtml">nwh_retailexpress/adminhtml_config</block>
+            </action>
+        </reference>
+        <reference name="head">
+            <action method="addItem">
+                <type>js</type>
+                <name>nwh/jquery.js</name>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>nwh/stocklevels.js</name>
+            </action>
+        </reference>
+        
+    </adminhtml_catalog_product_edit>
+    <!-- To add a tab on edit product page -->
+    <adminhtml_sales_order_index>
+        <reference name="content">
+            <block  type="adminhtml/store_switcher" name="store_switcher" as="store_switcher" before="-">
+                <action method="setUseConfirm">
+                    <params>0</params>
+                </action>
+            </block>
+        </reference>
+    </adminhtml_sales_order_index>
+</layout>

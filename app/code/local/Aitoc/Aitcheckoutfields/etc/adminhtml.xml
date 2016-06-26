@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<config>
+	<menu>
+		<system>
+			<children>
+				<aitcheckoutfields> 
+					<title>Checkout Attributes</title>
+					<action>adminhtml/aitcheckoutfields_index</action>
+					<sort_order>20</sort_order>           
+				</aitcheckoutfields> 
+			</children>
+		</system>
+	</menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <aitcheckoutfields translate="title" module="aitcheckoutfields">
+                                <title>Manage Aitoc Checkout Attributes</title>
+                                <sort_order>1</sort_order>
+                            </aitcheckoutfields>
+                            <config>
+                                <children>
+                                    <aitcheckoutfields translate="title" module="aitcheckoutfields">
+                                        <title>Manage Aitoc Checkout Attributes</title>
+                                    </aitcheckoutfields>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>
+
+<!--
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (CFM Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckoutfields
+ * @version      1.0.9 - 2.9.8
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+-->

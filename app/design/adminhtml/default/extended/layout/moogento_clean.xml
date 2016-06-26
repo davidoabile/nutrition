@@ -1,0 +1,100 @@
+<layout>
+    <default>
+        <reference name="head">
+
+            <action method="addJs"><script>moogento/general/jquery.min.js</script></action>
+            <action method="addJs"><script>moogento/general/jquery-ui.min.js</script></action>
+            <action method="addJs"><script>moogento/general/jquery.cookie.js</script></action>
+            <action method="addJs"><script>moogento/clean/adminhtml/notifications.js</script></action>
+            <action method="addJs"><script>moogento/clean/adminhtml/menu.js</script></action>
+            <action method="addJs"><script>moogento/general/spinner.js</script></action>
+            <action method="addJs"><script>moogento/clean/adminhtml/extended.js</script></action>
+
+            <action method="addItem"><type>skin_js</type><name>bootstrap/js/bootstrap.min.js</name></action>
+            <action method="addItem"><type>skin_css</type><name>bootstrap/css/bootstrap.css</name></action>
+            <action method="addItem"><type>skin_css</type><name>bootstrap/css/bootstrap-responsive.css</name></action>
+            <action method="addItem"><type>skin_css</type><name>moogento/general/spinner/spinner.css</name></action>
+            <action method="addItem"><type>skin_css</type><name>moogento/general/jqueryui/jquery-ui.min.css</name></action>
+
+
+            <action method="addItem" ifconfig="moogento_clean/css/fonts"><type>skin_css</type><name>fonts.css</name></action>
+            <action method="addItem" ifconfig="moogento_clean/css/header"><type>skin_css</type><name>header.css</name></action>
+            <action method="addItem" ifconfig="moogento_clean/css/footer"><type>skin_css</type><name>footer.css</name></action>
+            <action method="addItem" ifconfig="moogento_clean/css/main_part"><type>skin_css</type><name>main_part.css</name></action>
+            <action method="addItem" ifconfig="moogento_clean/css/grid"><type>skin_css</type><name>grid.css</name></action>
+            <action method="addItem" ifconfig="moogento_clean/css/buttons"><type>skin_css</type><name>buttons.css</name></action>
+
+            <!--<action method="addItem"><type>skin_css</type><name>extended.css</name></action>-->
+
+            <action method="addJs"><script>moogento/jscolor/jscolor.js</script></action>
+
+            <action method="addItem"><type>skin_js</type><name>js/datepicker/js/bootstrap-datetimepicker.min.js</name></action>
+            <action method="addItem"><type>skin_css</type><name>js/datepicker/css/bootstrap-datetimepicker.min.css</name></action>
+
+            <action method="addCss"><script>moogento/general/tooltipster/css/tooltipster.css</script></action>
+            <action method="addItem"><type>skin_js</type><script>moogento/general/tooltipster/js/jquery.tooltipster.min.js</script></action>
+
+        </reference>
+        <reference name="before_body_end">
+            <block type="core/template" name="color_css" template="color/css.phtml" />
+        </reference>
+    </default>
+    <adminhtml_catalog_product_index>
+        <update handle="catalog_product_grid_handle" />
+        <reference name="head">
+            <action method="addItem" ifconfig="moogento_clean/css/grid_actions"><type>skin_css</type><name>pagination.css</name></action>
+            <action method="addItem"><type>skin_css</type><name>moogento/stockeasy/catalog/product/extended.css</name></action>
+        </reference>
+    </adminhtml_catalog_product_index>
+    <adminhtml_catalog_product_grid>
+        <update handle="catalog_product_grid_handle" />
+    </adminhtml_catalog_product_grid>
+    
+    <catalog_product_grid_handle>
+        <reference name="product.grid">
+            <action method="setTemplate"><template>moogento/clean/widget/grid.phtml</template></action>
+            <action method="setMassactionBlockName"><name>Moogento_Clean_Block_Adminhtml_Widget_Grid_Massaction</name></action>
+        </reference>    
+        <reference name="coreproduct.grid">
+            <action method="setTemplate"><template>moogento/clean/widget/grid.phtml</template></action>
+            <action method="setMassactionBlockName"><name>Moogento_Clean_Block_Adminhtml_Widget_Grid_Massaction</name></action>
+        </reference>        
+    </catalog_product_grid_handle>
+    
+    
+    <order_grid_handle>
+        <reference name="adminhtml_sales_order.grid">
+            <action method="setTemplate"><template>moogento/clean/widget/grid.phtml</template></action>
+        </reference>
+        <reference name="sales_order.grid">
+            <action method="setTemplate"><template>moogento/clean/widget/grid.phtml</template></action>
+        </reference>
+    </order_grid_handle>
+    
+    <adminhtml_dashboard_productsordered>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="adminhtml/dashboard_tab_products_ordered" name="adminhtml.dashboard.tab.products.ordered"/>
+        </block>
+    </adminhtml_dashboard_productsordered>
+    
+    <adminhtml_sales_order_index>
+        <update handle="order_grid_handle" />
+        <reference name="head">
+            <action method="addItem" ifconfig="moogento_clean/css/grid_actions"><type>skin_css</type><name>pagination.css</name></action>
+            <action method="addItem" ifconfig="moogento_clean/css/grid"><type>skin_css</type><name>shipeasy.css</name></action>
+        </reference>
+    </adminhtml_sales_order_index>
+
+    <adminhtml_sales_order_grid>
+        <update handle="order_grid_handle" />
+    </adminhtml_sales_order_grid>
+    
+    <adminhtml_dashboard_index>
+        <reference name="head">
+            <action method="addItem" ifconfig="moogento_clean/css/grid"><type>skin_js</type><name>dash.js</name></action>
+            <!--<action method="addJs"><script>moogento/clean/adminhtml/chartjs/chart.min.js</script></action>	-->
+            <action method="addJs"><script>moogento/clean/adminhtml/chartjs/chart.js</script></action>
+            <action method="addJs"><script>moogento/clean/adminhtml/dashboard.js</script></action>
+        </reference>
+    </adminhtml_dashboard_index>
+</layout>

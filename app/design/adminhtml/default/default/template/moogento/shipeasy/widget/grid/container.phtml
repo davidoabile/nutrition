@@ -1,0 +1,126 @@
+<?php 
+/** 
+* Moogento
+* 
+* SOFTWARE LICENSE
+* 
+* This source file is covered by the Moogento End User License Agreement
+* that is bundled with this extension in the file License.html
+* It is also available online here:
+* http://www.moogento.com/License.html
+* 
+* NOTICE
+* 
+* If you customize this file please remember that it will be overwrtitten
+* with any future upgrade installs. 
+* If you'd like to add a feature which is not in this software, get in touch
+* at www.moogento.com for a quote.
+* 
+* ID          pe+sMEDTrtCzNq3pehW9DJ0lnYtgqva4i4Z=
+* File        container.phtml
+* @category   Moogento
+* @package    pickPack
+* @copyright  Copyright (c) 2014 Moogento <info@moogento.com> / All rights reserved.
+* @license    http://www.moogento.com/License.html
+*/ 
+
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+if(Mage::getStoreConfig('moogento_shipeasy/general/order_page_title_color_yn') ==5)
+{
+    $title_color = Mage::getStoreConfig('moogento_shipeasy/general/order_page_title_color');
+    if(!($title_color))  
+        $title_color = '#0004FA';
+    $style_color = 'style="color : '.$title_color.'"';
+?>  
+    <style>
+    .content-header h3{color : <?php echo $title_color; ?> !important;}
+    </style>
+<?php
+}
+?>
+
+<?php
+if(Mage::getStoreConfig('moogento_shipeasy/general/filter_buttons_color_yn') ==5)
+{
+    $fiter_background_color = Mage::getStoreConfig('moogento_shipeasy/general/filter_buttons_color');
+    if(!($fiter_background_color))  
+        $fiter_background_color = '#0004FA';
+
+    $fiter_background_color_hover = Mage::getStoreConfig('moogento_shipeasy/general/filter_buttons_hover_color');
+    if(!($fiter_background_color_hover))  
+        $fiter_background_color_hover = '#0004FA'; 
+
+?>  
+    <style>
+    .filter-actions button {
+    	/*//color : <?php echo $title_color; ?> !important;*/
+    	background-color: <?php echo $fiter_background_color; ?> !important;
+    }
+
+    .filter-actions button:hover {
+    	/*//color : <?php echo $title_color; ?> !important;*/
+    	background-color: <?php echo $fiter_background_color_hover; ?> !important;
+    }
+
+    button {
+	/*
+		dark green / submit buttons
+	*/
+	    border-color: green;
+	    font-weight: 900;
+	    line-height: 11px;
+	    padding: 1px 17px 0;
+
+		background-image: -ms-linear-gradient(top, <?php echo $fiter_background_color; ?> 0%, <?php echo $fiter_background_color_hover; ?> 60%) !important;
+		background-image: -moz-linear-gradient(top, <?php echo $fiter_background_color; ?> 0%, <?php echo $fiter_background_color_hover; ?> 60%)!important;
+		background-image: -o-linear-gradient(top, <?php echo $fiter_background_color; ?> 0%, <?php echo $fiter_background_color_hover; ?> 60%);
+		background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, <?php echo $fiter_background_color; ?>), color-stop(0.6, <?php echo $fiter_background_color_hover; ?>)) !important;
+		background-image: -webkit-linear-gradient(top, <?php echo $fiter_background_color; ?> 0%, <?php echo $fiter_background_color_hover; ?> 60%) !important;
+		background-image: linear-gradient(to bottom, <?php echo $fiter_background_color; ?> 0%, <?php echo $fiter_background_color_hover; ?> 60%) !important;
+	}
+	button:hover {
+		background:<?php echo $fiter_background_color_hover; ?> !important;
+	}
+
+
+    </style>
+<?php
+}
+?>
+
+<div class="content-header">
+    <table cellspacing="0">
+        <tr>
+            <td style="<?php echo $this->getHeaderWidth() ?>"><?php echo $this->getHeaderHtml() ?></td>
+            <td class="form-buttons"><?php echo $this->getButtonsHtml() ?></td>
+        </tr>
+    </table>
+</div>
+<div>
+    <?php echo $this->getGridHtml() ?>
+</div>

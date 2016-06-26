@@ -1,0 +1,55 @@
+<?php $_debug = Mage::getStoreConfigFlag('moogento_retailexpress/general/debug'); ?>
+<div>
+    <div class="box-left">
+        <div class="entry-edit">
+            <div class="entry-edit-head">
+                <h4><?php echo Mage::helper('moogento_retailexpress')->__('RetailExpress') ?></h4>
+            </div>
+            <fieldset>
+                <table cellspacing="0" class="form-list">
+                    <tbody>
+                        <tr>
+                            <td class="label"><label>Status</label></td>
+                            <td class="value"><strong><?php echo $this->_getRetailStatus() ?></strong></td>
+                        </tr>
+                        <?php if ($this->getOrder()->getData('retail_express_message')): ?>
+                            <tr>
+                                <td class="label"><label>Status Message</label></td>
+                                <td class="value"><strong><?php echo $this->getOrder()->getData('retail_express_message') ?></strong></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if ($this->getOrder()->getData('retail_express_id')): ?>
+                            <tr>
+                                <td class="label"><label>RetailExpress ID</label></td>
+                                <td class="value"><strong><?php echo $this->getOrder()->getData('retail_express_id') ?></strong></td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+                <?php if ($this->getOrder()->getData('retail_express_status') != Moogento_RetailExpress_Model_Retailexpress_Status::SUCCESS
+                          && $this->getOrder()->getData('retail_express_status') != Moogento_RetailExpress_Model_Retailexpress_Status::SUCCESS_MANUAL): ?>
+                <a href="<?php echo $this->getUrl('*/sales_order_retail/send', array('order_id' => $this->getOrder()->getId())) ?>" class="scalable export">
+                    <span><span><span><?php echo Mage::helper('moogento_retailexpress')->__('Send to Retail Express') ?></span></span></span>
+                </a><br/>
+                <?php endif; ?>
+                <?php if ($this->getOrder()->getData('retail_express_id') && $this->_getRetailUrl()): ?>
+                    <a href="<?php echo $this->_getRetailUrl() ?>" target="_blank" class="scalable">
+                        <span><span><span><?php echo $this->__('See this order in Retail Express') ?></span></span></span>
+                    </a><br/>
+                <?php endif; ?>
+                <?php if ($this->getOrder()->getData('retail_express_id') && $this->getOrder()->getData('retail_express_status') == Moogento_RetailExpress_Model_Retailexpress_Status::ERROR): ?>
+                    <a href="<?php echo $this->getUrl('*/sales_order_retail/markSuccess', array('order_id' => $this->getOrder()->getId())) ?>" class="scalable">
+                        <span><span><span><?php echo $this->__("Mark rEx status as 'Success (Manual)'") ?></span></span></span>
+                    </a><br/>
+                <?php endif; ?>
+                <?php $logUrl = Mage::helper('moogento_retailexpress')->getLogUrl($this->getOrder()->getId()) ?>
+                <?php if ($logUrl): ?>
+                    <a href="<?php echo $logUrl ?>" target="_blank" class="scalable">
+                        <span><span><span><?php echo $this->__("Get communication log") ?></span></span></span>
+                    </a>
+                <?php endif; ?>
+            </fieldset>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>

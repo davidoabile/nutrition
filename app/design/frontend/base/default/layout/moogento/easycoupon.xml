@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action method="addLinkRel" ifconfig="moogento_easycoupon/settings/include_google_font"><rel>stylesheet</rel><href>//fonts.googleapis.com/css?family=Raleway:600</href></action>
+            <action method="addItem"><type>skin_css</type><name>moogento/easycoupon/css/easycoupon.css</name></action>
+            <action method="addItem"><type>skin_js</type><name>moogento/easycoupon/js/easycoupon.js</name></action>
+        </reference>
+        <reference name="after_body_start">
+            <block type="moogento_easycoupon/header_bar" before="-" name="easycoupon.header.bar" template="moogento/easycoupon/header_bar.phtml"/>
+        </reference>    
+    </default>
+    <easycoupon_index_index>
+        <reference name="content">
+            <block type="moogento_easycoupon/easycoupon" name="easycoupon" template="moogento/easycoupon/easycoupon.phtml" />
+        </reference>
+    </easycoupon_index_index>
+</layout>

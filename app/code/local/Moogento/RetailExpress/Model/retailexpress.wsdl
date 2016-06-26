@@ -1,0 +1,1150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://retailexpress.com.au/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://retailexpress.com.au/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Exposes methods for data insertion and retrieval between the system and an external web store.</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://retailexpress.com.au/">
+      <s:element name="OutletsGetByChannel">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ChannelId" type="s:int"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OutletsGetByChannelResponse">
+        <s:complexType/>
+      </s:element>
+      <s:element name="ClientHeader" type="tns:ClientHeader"/>
+      <s:complexType name="ClientHeader">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ClientID" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string"/>
+        </s:sequence>
+        <s:anyAttribute/>
+      </s:complexType>
+      <s:element name="ProductsGetBulkDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="LastUpdated" type="s:dateTime"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ProductsGetBulkDetailsResponse">
+        <s:complexType/>
+      </s:element>
+      <s:element name="ProductsGetBulkDetailsByChannel">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="LastUpdated" type="s:dateTime"/>
+            <s:element minOccurs="1" maxOccurs="1" name="ChannelId" type="s:int"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ProductsGetBulkDetailsByChannelResponse">
+        <s:complexType/>
+      </s:element>
+      <s:element name="WebOrderGetBulkFulfillment">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="LastUpdated" type="s:dateTime"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="WebOrderGetBulkFulfillmentResponse">
+        <s:complexType/>
+      </s:element>
+      <s:element name="WebOrderGetBulkFulfillmentByChannel">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="LastUpdated" type="s:dateTime"/>
+            <s:element minOccurs="1" maxOccurs="1" name="ChannelId" type="s:int"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="WebOrderGetBulkFulfillmentByChannelResponse">
+        <s:complexType/>
+      </s:element>
+      <s:element name="CustomerGetBulkDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="LastUpdated" type="s:dateTime"/>
+            <s:element minOccurs="1" maxOccurs="1" name="OnlyCustomersWithEmails" type="s:boolean"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CustomerGetBulkDetailsResponse">
+        <s:complexType/>
+      </s:element>
+      <s:element name="ProductsGetBulkDetailsExtended">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="OnlyWebEnabledWarehouseStock" type="s:boolean"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ProductsGetBulkDetailsExtendedResponse">
+        <s:complexType/>
+      </s:element>
+      <s:element name="ProductsGetBulkDetailsExtendedByChannel">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="OnlyWebEnabledWarehouseStock" type="s:boolean"/>
+            <s:element minOccurs="1" maxOccurs="1" name="ChannelId" type="s:int"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ProductsGetBulkDetailsExtendedByChannelResponse">
+        <s:complexType/>
+      </s:element>
+      <s:element name="ProductGetETADateByChannel">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ChannelId" type="s:int"/>
+            <s:element minOccurs="0" maxOccurs="1" name="RequestXML" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ProductGetETADateByChannelResponse">
+        <s:complexType/>
+      </s:element>
+      <s:element name="CustomerGetDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CustomerId" type="s:int"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CustomerGetDetailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerGetDetailsResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any/>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrderCreate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OrderXML" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrderCreateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OrderCreateResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any/>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrderCreateByChannel">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OrderXML" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="ChannelId" type="s:int"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrderCreateByChannelResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OrderCreateByChannelResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any/>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrderUpdateCustomerDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OrderXML" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrderUpdateCustomerDetailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OrderUpdateCustomerDetailsResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any/>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrderAddPayment">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OrderPaymentXML" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrderAddPaymentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OrderAddPaymentResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any/>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrderCancel">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="OrderId" type="s:int"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrderCancelResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OrderCancelResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any/>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrderDeliveryUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="OrderId" type="s:int"/>
+            <s:element minOccurs="1" maxOccurs="1" name="ExternalOrderId" nillable="true" type="s:int"/>
+            <s:element minOccurs="0" maxOccurs="1" name="Reference" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="DeliveryDriverId" nillable="true" type="s:int"/>
+            <s:element minOccurs="0" maxOccurs="1" name="DeliveryDriverName" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrderDeliveryUpdateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OrderDeliveryUpdateResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any/>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CustomerCreateUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerXML" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CustomerCreateUpdateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerCreateUpdateResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any/>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrdersGetHistory">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CustomerId" type="s:int"/>
+            <s:element minOccurs="1" maxOccurs="1" name="WebOrdersOnly" type="s:boolean"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrdersGetHistoryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OrdersGetHistoryResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any/>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrdersGetHistoryByChannel">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CustomerId" type="s:int"/>
+            <s:element minOccurs="1" maxOccurs="1" name="WebOrdersOnly" type="s:boolean"/>
+            <s:element minOccurs="1" maxOccurs="1" name="ChannelId" type="s:int"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrdersGetHistoryByChannelResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OrdersGetHistoryByChannelResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any/>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="VoucherGetBalance">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="VoucherCode" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="VoucherGetBalanceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="VoucherGetBalanceResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any/>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ProductGetDetailsStockPricing">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ProductId" type="s:int"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CustomerId" type="s:int"/>
+            <s:element minOccurs="1" maxOccurs="1" name="PriceGroupId" type="s:int"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ProductGetDetailsStockPricingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ProductGetDetailsStockPricingResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any/>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ProductGetDetailsStockPricingByChannel">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ProductId" type="s:int"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CustomerId" type="s:int"/>
+            <s:element minOccurs="1" maxOccurs="1" name="PriceGroupId" type="s:int"/>
+            <s:element minOccurs="1" maxOccurs="1" name="ChannelId" type="s:int"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ProductGetDetailsStockPricingByChannelResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ProductGetDetailsStockPricingByChannelResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any/>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="OutletsGetByChannelSoapIn">
+    <wsdl:part name="parameters" element="tns:OutletsGetByChannel"/>
+  </wsdl:message>
+  <wsdl:message name="OutletsGetByChannelSoapOut">
+    <wsdl:part name="parameters" element="tns:OutletsGetByChannelResponse"/>
+  </wsdl:message>
+  <wsdl:message name="OutletsGetByChannelClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="ProductsGetBulkDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:ProductsGetBulkDetails"/>
+  </wsdl:message>
+  <wsdl:message name="ProductsGetBulkDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:ProductsGetBulkDetailsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ProductsGetBulkDetailsClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="ProductsGetBulkDetailsByChannelSoapIn">
+    <wsdl:part name="parameters" element="tns:ProductsGetBulkDetailsByChannel"/>
+  </wsdl:message>
+  <wsdl:message name="ProductsGetBulkDetailsByChannelSoapOut">
+    <wsdl:part name="parameters" element="tns:ProductsGetBulkDetailsByChannelResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ProductsGetBulkDetailsByChannelClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="WebOrderGetBulkFulfillmentSoapIn">
+    <wsdl:part name="parameters" element="tns:WebOrderGetBulkFulfillment"/>
+  </wsdl:message>
+  <wsdl:message name="WebOrderGetBulkFulfillmentSoapOut">
+    <wsdl:part name="parameters" element="tns:WebOrderGetBulkFulfillmentResponse"/>
+  </wsdl:message>
+  <wsdl:message name="WebOrderGetBulkFulfillmentClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="WebOrderGetBulkFulfillmentByChannelSoapIn">
+    <wsdl:part name="parameters" element="tns:WebOrderGetBulkFulfillmentByChannel"/>
+  </wsdl:message>
+  <wsdl:message name="WebOrderGetBulkFulfillmentByChannelSoapOut">
+    <wsdl:part name="parameters" element="tns:WebOrderGetBulkFulfillmentByChannelResponse"/>
+  </wsdl:message>
+  <wsdl:message name="WebOrderGetBulkFulfillmentByChannelClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="CustomerGetBulkDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:CustomerGetBulkDetails"/>
+  </wsdl:message>
+  <wsdl:message name="CustomerGetBulkDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:CustomerGetBulkDetailsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="CustomerGetBulkDetailsClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="ProductsGetBulkDetailsExtendedSoapIn">
+    <wsdl:part name="parameters" element="tns:ProductsGetBulkDetailsExtended"/>
+  </wsdl:message>
+  <wsdl:message name="ProductsGetBulkDetailsExtendedSoapOut">
+    <wsdl:part name="parameters" element="tns:ProductsGetBulkDetailsExtendedResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ProductsGetBulkDetailsExtendedClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="ProductsGetBulkDetailsExtendedByChannelSoapIn">
+    <wsdl:part name="parameters" element="tns:ProductsGetBulkDetailsExtendedByChannel"/>
+  </wsdl:message>
+  <wsdl:message name="ProductsGetBulkDetailsExtendedByChannelSoapOut">
+    <wsdl:part name="parameters" element="tns:ProductsGetBulkDetailsExtendedByChannelResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ProductsGetBulkDetailsExtendedByChannelClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="ProductGetETADateByChannelSoapIn">
+    <wsdl:part name="parameters" element="tns:ProductGetETADateByChannel"/>
+  </wsdl:message>
+  <wsdl:message name="ProductGetETADateByChannelSoapOut">
+    <wsdl:part name="parameters" element="tns:ProductGetETADateByChannelResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ProductGetETADateByChannelClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="CustomerGetDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:CustomerGetDetails"/>
+  </wsdl:message>
+  <wsdl:message name="CustomerGetDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:CustomerGetDetailsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="CustomerGetDetailsClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="OrderCreateSoapIn">
+    <wsdl:part name="parameters" element="tns:OrderCreate"/>
+  </wsdl:message>
+  <wsdl:message name="OrderCreateSoapOut">
+    <wsdl:part name="parameters" element="tns:OrderCreateResponse"/>
+  </wsdl:message>
+  <wsdl:message name="OrderCreateClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="OrderCreateByChannelSoapIn">
+    <wsdl:part name="parameters" element="tns:OrderCreateByChannel"/>
+  </wsdl:message>
+  <wsdl:message name="OrderCreateByChannelSoapOut">
+    <wsdl:part name="parameters" element="tns:OrderCreateByChannelResponse"/>
+  </wsdl:message>
+  <wsdl:message name="OrderCreateByChannelClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="OrderUpdateCustomerDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:OrderUpdateCustomerDetails"/>
+  </wsdl:message>
+  <wsdl:message name="OrderUpdateCustomerDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:OrderUpdateCustomerDetailsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="OrderUpdateCustomerDetailsClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="OrderAddPaymentSoapIn">
+    <wsdl:part name="parameters" element="tns:OrderAddPayment"/>
+  </wsdl:message>
+  <wsdl:message name="OrderAddPaymentSoapOut">
+    <wsdl:part name="parameters" element="tns:OrderAddPaymentResponse"/>
+  </wsdl:message>
+  <wsdl:message name="OrderAddPaymentClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="OrderCancelSoapIn">
+    <wsdl:part name="parameters" element="tns:OrderCancel"/>
+  </wsdl:message>
+  <wsdl:message name="OrderCancelSoapOut">
+    <wsdl:part name="parameters" element="tns:OrderCancelResponse"/>
+  </wsdl:message>
+  <wsdl:message name="OrderCancelClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="OrderDeliveryUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:OrderDeliveryUpdate"/>
+  </wsdl:message>
+  <wsdl:message name="OrderDeliveryUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:OrderDeliveryUpdateResponse"/>
+  </wsdl:message>
+  <wsdl:message name="OrderDeliveryUpdateClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="CustomerCreateUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:CustomerCreateUpdate"/>
+  </wsdl:message>
+  <wsdl:message name="CustomerCreateUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:CustomerCreateUpdateResponse"/>
+  </wsdl:message>
+  <wsdl:message name="CustomerCreateUpdateClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="OrdersGetHistorySoapIn">
+    <wsdl:part name="parameters" element="tns:OrdersGetHistory"/>
+  </wsdl:message>
+  <wsdl:message name="OrdersGetHistorySoapOut">
+    <wsdl:part name="parameters" element="tns:OrdersGetHistoryResponse"/>
+  </wsdl:message>
+  <wsdl:message name="OrdersGetHistoryClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="OrdersGetHistoryByChannelSoapIn">
+    <wsdl:part name="parameters" element="tns:OrdersGetHistoryByChannel"/>
+  </wsdl:message>
+  <wsdl:message name="OrdersGetHistoryByChannelSoapOut">
+    <wsdl:part name="parameters" element="tns:OrdersGetHistoryByChannelResponse"/>
+  </wsdl:message>
+  <wsdl:message name="OrdersGetHistoryByChannelClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="VoucherGetBalanceSoapIn">
+    <wsdl:part name="parameters" element="tns:VoucherGetBalance"/>
+  </wsdl:message>
+  <wsdl:message name="VoucherGetBalanceSoapOut">
+    <wsdl:part name="parameters" element="tns:VoucherGetBalanceResponse"/>
+  </wsdl:message>
+  <wsdl:message name="VoucherGetBalanceClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="ProductGetDetailsStockPricingSoapIn">
+    <wsdl:part name="parameters" element="tns:ProductGetDetailsStockPricing"/>
+  </wsdl:message>
+  <wsdl:message name="ProductGetDetailsStockPricingSoapOut">
+    <wsdl:part name="parameters" element="tns:ProductGetDetailsStockPricingResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ProductGetDetailsStockPricingClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:message name="ProductGetDetailsStockPricingByChannelSoapIn">
+    <wsdl:part name="parameters" element="tns:ProductGetDetailsStockPricingByChannel"/>
+  </wsdl:message>
+  <wsdl:message name="ProductGetDetailsStockPricingByChannelSoapOut">
+    <wsdl:part name="parameters" element="tns:ProductGetDetailsStockPricingByChannelResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ProductGetDetailsStockPricingByChannelClientHeader">
+    <wsdl:part name="ClientHeader" element="tns:ClientHeader"/>
+  </wsdl:message>
+  <wsdl:portType name="WebStoreServiceV2Soap">
+    <wsdl:operation name="OutletsGetByChannel">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns zipped xml containing details of outlets associated with the given channel.</wsdl:documentation>
+      <wsdl:input message="tns:OutletsGetByChannelSoapIn"/>
+      <wsdl:output message="tns:OutletsGetByChannelSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="ProductsGetBulkDetails">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns zipped xml describing product attributes, products updated or disabled since LastUpdated date.  Can only be called once every 60 minutes.</wsdl:documentation>
+      <wsdl:input message="tns:ProductsGetBulkDetailsSoapIn"/>
+      <wsdl:output message="tns:ProductsGetBulkDetailsSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="ProductsGetBulkDetailsByChannel">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns zipped xml describing product attributes, products updated or disabled since LastUpdated date.  Can only be called once every 60 minutes.</wsdl:documentation>
+      <wsdl:input message="tns:ProductsGetBulkDetailsByChannelSoapIn"/>
+      <wsdl:output message="tns:ProductsGetBulkDetailsByChannelSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="WebOrderGetBulkFulfillment">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieves a zipped xml list of all Orders, Order Details (items), Fulfillment (dispatch) and payments created since LastUpdated date.  Can only be called once every 60 minutes.</wsdl:documentation>
+      <wsdl:input message="tns:WebOrderGetBulkFulfillmentSoapIn"/>
+      <wsdl:output message="tns:WebOrderGetBulkFulfillmentSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="WebOrderGetBulkFulfillmentByChannel">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieves a zipped xml list of all Orders, Order Details (items), Fulfillment (dispatch) and payments created since LastUpdated date.  Can only be called once every 60 minutes.</wsdl:documentation>
+      <wsdl:input message="tns:WebOrderGetBulkFulfillmentByChannelSoapIn"/>
+      <wsdl:output message="tns:WebOrderGetBulkFulfillmentByChannelSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="CustomerGetBulkDetails">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieves a zipped xml list of all Customers added or edited since LastUpdated date.  Can only be called once every 60 minutes.</wsdl:documentation>
+      <wsdl:input message="tns:CustomerGetBulkDetailsSoapIn"/>
+      <wsdl:output message="tns:CustomerGetBulkDetailsSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="ProductsGetBulkDetailsExtended">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieves a zipped xml list of all Products with all metadata about the products.  Can only be called once every day.</wsdl:documentation>
+      <wsdl:input message="tns:ProductsGetBulkDetailsExtendedSoapIn"/>
+      <wsdl:output message="tns:ProductsGetBulkDetailsExtendedSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="ProductsGetBulkDetailsExtendedByChannel">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieves a zipped xml list of all Products with all metadata about the products.  Can only be called once every day.</wsdl:documentation>
+      <wsdl:input message="tns:ProductsGetBulkDetailsExtendedByChannelSoapIn"/>
+      <wsdl:output message="tns:ProductsGetBulkDetailsExtendedByChannelSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="ProductGetETADateByChannel">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a zipped xml list of products with ETA dates based on supplied sales channel and quantity ordered.</wsdl:documentation>
+      <wsdl:input message="tns:ProductGetETADateByChannelSoapIn"/>
+      <wsdl:output message="tns:ProductGetETADateByChannelSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="CustomerGetDetails">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieves detail about a single customer.</wsdl:documentation>
+      <wsdl:input message="tns:CustomerGetDetailsSoapIn"/>
+      <wsdl:output message="tns:CustomerGetDetailsSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="OrderCreate">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Creates an order (and optionally a customer if no customerId is passed) in the system and returns the OrderId.</wsdl:documentation>
+      <wsdl:input message="tns:OrderCreateSoapIn"/>
+      <wsdl:output message="tns:OrderCreateSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="OrderCreateByChannel">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Creates an order (and optionally a customer if no customerId is passed) in the system and returns the OrderId.</wsdl:documentation>
+      <wsdl:input message="tns:OrderCreateByChannelSoapIn"/>
+      <wsdl:output message="tns:OrderCreateByChannelSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="OrderUpdateCustomerDetails">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Used to update the billing and delivery details for an order. Does not update the customer’s permanent record.</wsdl:documentation>
+      <wsdl:input message="tns:OrderUpdateCustomerDetailsSoapIn"/>
+      <wsdl:output message="tns:OrderUpdateCustomerDetailsSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="OrderAddPayment">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Adds a payment to an existing Order, requires the OrderId returned during order creation.</wsdl:documentation>
+      <wsdl:input message="tns:OrderAddPaymentSoapIn"/>
+      <wsdl:output message="tns:OrderAddPaymentSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="OrderCancel">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Cancels an order in the system.</wsdl:documentation>
+      <wsdl:input message="tns:OrderCancelSoapIn"/>
+      <wsdl:output message="tns:OrderCancelSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="OrderDeliveryUpdate">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Update delivery details for an order.</wsdl:documentation>
+      <wsdl:input message="tns:OrderDeliveryUpdateSoapIn"/>
+      <wsdl:output message="tns:OrderDeliveryUpdateSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="CustomerCreateUpdate">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Creates or updates a customer record in the system, leave the CustomerId field blank to create a new customer record.</wsdl:documentation>
+      <wsdl:input message="tns:CustomerCreateUpdateSoapIn"/>
+      <wsdl:output message="tns:CustomerCreateUpdateSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="OrdersGetHistory">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns all orders a customer has placed.</wsdl:documentation>
+      <wsdl:input message="tns:OrdersGetHistorySoapIn"/>
+      <wsdl:output message="tns:OrdersGetHistorySoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="OrdersGetHistoryByChannel">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns all orders a customer has placed.</wsdl:documentation>
+      <wsdl:input message="tns:OrdersGetHistoryByChannelSoapIn"/>
+      <wsdl:output message="tns:OrdersGetHistoryByChannelSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="VoucherGetBalance">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the current balance of a voucher.</wsdl:documentation>
+      <wsdl:input message="tns:VoucherGetBalanceSoapIn"/>
+      <wsdl:output message="tns:VoucherGetBalanceSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="ProductGetDetailsStockPricing">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns price and stock on hand levels for a product, if a CustomerId is provided pricing will take into account any customer discounts.</wsdl:documentation>
+      <wsdl:input message="tns:ProductGetDetailsStockPricingSoapIn"/>
+      <wsdl:output message="tns:ProductGetDetailsStockPricingSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="ProductGetDetailsStockPricingByChannel">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns price and stock on hand levels for a product, if a CustomerId is provided pricing will take into account any customer discounts.</wsdl:documentation>
+      <wsdl:input message="tns:ProductGetDetailsStockPricingByChannelSoapIn"/>
+      <wsdl:output message="tns:ProductGetDetailsStockPricingByChannelSoapOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WebStoreServiceV2Soap" type="tns:WebStoreServiceV2Soap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="OutletsGetByChannel">
+      <soap:operation soapAction="http://retailexpress.com.au/OutletsGetByChannel" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:OutletsGetByChannelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProductsGetBulkDetails">
+      <soap:operation soapAction="http://retailexpress.com.au/ProductsGetBulkDetails" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:ProductsGetBulkDetailsClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProductsGetBulkDetailsByChannel">
+      <soap:operation soapAction="http://retailexpress.com.au/ProductsGetBulkDetailsByChannel" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:ProductsGetBulkDetailsByChannelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="WebOrderGetBulkFulfillment">
+      <soap:operation soapAction="http://retailexpress.com.au/WebOrderGetBulkFulfillment" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:WebOrderGetBulkFulfillmentClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="WebOrderGetBulkFulfillmentByChannel">
+      <soap:operation soapAction="http://retailexpress.com.au/WebOrderGetBulkFulfillmentByChannel" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:WebOrderGetBulkFulfillmentByChannelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CustomerGetBulkDetails">
+      <soap:operation soapAction="http://retailexpress.com.au/CustomerGetBulkDetails" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:CustomerGetBulkDetailsClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProductsGetBulkDetailsExtended">
+      <soap:operation soapAction="http://retailexpress.com.au/ProductsGetBulkDetailsExtended" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:ProductsGetBulkDetailsExtendedClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProductsGetBulkDetailsExtendedByChannel">
+      <soap:operation soapAction="http://retailexpress.com.au/ProductsGetBulkDetailsExtendedByChannel" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:ProductsGetBulkDetailsExtendedByChannelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProductGetETADateByChannel">
+      <soap:operation soapAction="http://retailexpress.com.au/ProductGetETADateByChannel" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:ProductGetETADateByChannelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CustomerGetDetails">
+      <soap:operation soapAction="http://retailexpress.com.au/CustomerGetDetails" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:CustomerGetDetailsClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrderCreate">
+      <soap:operation soapAction="http://retailexpress.com.au/OrderCreate" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:OrderCreateClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrderCreateByChannel">
+      <soap:operation soapAction="http://retailexpress.com.au/OrderCreateByChannel" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:OrderCreateByChannelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrderUpdateCustomerDetails">
+      <soap:operation soapAction="http://retailexpress.com.au/OrderUpdateCustomerDetails" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:OrderUpdateCustomerDetailsClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrderAddPayment">
+      <soap:operation soapAction="http://retailexpress.com.au/OrderAddPayment" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:OrderAddPaymentClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrderCancel">
+      <soap:operation soapAction="http://retailexpress.com.au/OrderCancel" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:OrderCancelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrderDeliveryUpdate">
+      <soap:operation soapAction="http://retailexpress.com.au/OrderDeliveryUpdate" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:OrderDeliveryUpdateClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CustomerCreateUpdate">
+      <soap:operation soapAction="http://retailexpress.com.au/CustomerCreateUpdate" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:CustomerCreateUpdateClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrdersGetHistory">
+      <soap:operation soapAction="http://retailexpress.com.au/OrdersGetHistory" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:OrdersGetHistoryClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrdersGetHistoryByChannel">
+      <soap:operation soapAction="http://retailexpress.com.au/OrdersGetHistoryByChannel" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:OrdersGetHistoryByChannelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VoucherGetBalance">
+      <soap:operation soapAction="http://retailexpress.com.au/VoucherGetBalance" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:VoucherGetBalanceClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProductGetDetailsStockPricing">
+      <soap:operation soapAction="http://retailexpress.com.au/ProductGetDetailsStockPricing" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:ProductGetDetailsStockPricingClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProductGetDetailsStockPricingByChannel">
+      <soap:operation soapAction="http://retailexpress.com.au/ProductGetDetailsStockPricingByChannel" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:ProductGetDetailsStockPricingByChannelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="WebStoreServiceV2Soap12" type="tns:WebStoreServiceV2Soap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="OutletsGetByChannel">
+      <soap12:operation soapAction="http://retailexpress.com.au/OutletsGetByChannel" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:OutletsGetByChannelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProductsGetBulkDetails">
+      <soap12:operation soapAction="http://retailexpress.com.au/ProductsGetBulkDetails" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:ProductsGetBulkDetailsClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProductsGetBulkDetailsByChannel">
+      <soap12:operation soapAction="http://retailexpress.com.au/ProductsGetBulkDetailsByChannel" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:ProductsGetBulkDetailsByChannelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="WebOrderGetBulkFulfillment">
+      <soap12:operation soapAction="http://retailexpress.com.au/WebOrderGetBulkFulfillment" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:WebOrderGetBulkFulfillmentClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="WebOrderGetBulkFulfillmentByChannel">
+      <soap12:operation soapAction="http://retailexpress.com.au/WebOrderGetBulkFulfillmentByChannel" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:WebOrderGetBulkFulfillmentByChannelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CustomerGetBulkDetails">
+      <soap12:operation soapAction="http://retailexpress.com.au/CustomerGetBulkDetails" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:CustomerGetBulkDetailsClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProductsGetBulkDetailsExtended">
+      <soap12:operation soapAction="http://retailexpress.com.au/ProductsGetBulkDetailsExtended" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:ProductsGetBulkDetailsExtendedClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProductsGetBulkDetailsExtendedByChannel">
+      <soap12:operation soapAction="http://retailexpress.com.au/ProductsGetBulkDetailsExtendedByChannel" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:ProductsGetBulkDetailsExtendedByChannelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProductGetETADateByChannel">
+      <soap12:operation soapAction="http://retailexpress.com.au/ProductGetETADateByChannel" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:ProductGetETADateByChannelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CustomerGetDetails">
+      <soap12:operation soapAction="http://retailexpress.com.au/CustomerGetDetails" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:CustomerGetDetailsClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrderCreate">
+      <soap12:operation soapAction="http://retailexpress.com.au/OrderCreate" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:OrderCreateClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrderCreateByChannel">
+      <soap12:operation soapAction="http://retailexpress.com.au/OrderCreateByChannel" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:OrderCreateByChannelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrderUpdateCustomerDetails">
+      <soap12:operation soapAction="http://retailexpress.com.au/OrderUpdateCustomerDetails" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:OrderUpdateCustomerDetailsClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrderAddPayment">
+      <soap12:operation soapAction="http://retailexpress.com.au/OrderAddPayment" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:OrderAddPaymentClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrderCancel">
+      <soap12:operation soapAction="http://retailexpress.com.au/OrderCancel" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:OrderCancelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrderDeliveryUpdate">
+      <soap12:operation soapAction="http://retailexpress.com.au/OrderDeliveryUpdate" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:OrderDeliveryUpdateClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CustomerCreateUpdate">
+      <soap12:operation soapAction="http://retailexpress.com.au/CustomerCreateUpdate" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:CustomerCreateUpdateClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrdersGetHistory">
+      <soap12:operation soapAction="http://retailexpress.com.au/OrdersGetHistory" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:OrdersGetHistoryClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrdersGetHistoryByChannel">
+      <soap12:operation soapAction="http://retailexpress.com.au/OrdersGetHistoryByChannel" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:OrdersGetHistoryByChannelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VoucherGetBalance">
+      <soap12:operation soapAction="http://retailexpress.com.au/VoucherGetBalance" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:VoucherGetBalanceClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProductGetDetailsStockPricing">
+      <soap12:operation soapAction="http://retailexpress.com.au/ProductGetDetailsStockPricing" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:ProductGetDetailsStockPricingClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProductGetDetailsStockPricingByChannel">
+      <soap12:operation soapAction="http://retailexpress.com.au/ProductGetDetailsStockPricingByChannel" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:ProductGetDetailsStockPricingByChannelClientHeader" part="ClientHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WebStoreServiceV2">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Exposes methods for data insertion and retrieval between the system and an external web store.</wsdl:documentation>
+    <wsdl:port name="WebStoreServiceV2Soap" binding="tns:WebStoreServiceV2Soap">
+      <soap:address location="http://demo.retailexpress.com.au/dotnet/admin/webservices/webstore/ServiceV2.asmx"/>
+    </wsdl:port>
+    <wsdl:port name="WebStoreServiceV2Soap12" binding="tns:WebStoreServiceV2Soap12">
+      <soap12:address location="http://demo.retailexpress.com.au/dotnet/admin/webservices/webstore/ServiceV2.asmx"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

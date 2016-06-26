@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<!--
+  Moogento
+  
+  SOFTWARE LICENSE
+  
+  This source file is covered by the Moogento End User License Agreement
+  that is bundled with this extension in the file License.html
+  It is also available online here:
+  http://moogento.com/License.html
+  
+  NOTICE
+  
+  If you customize this file please remember that it will be overwrtitten
+  with any future upgrade installs. 
+  If you'd like to add a feature which is not in this software, get in touch
+  at www.moogento.com for a quote.
+  
+  ID          pe+sMEDTrtCzNq3pehW9DJ0lnYtgqva4i4Z=
+  File        adminhtml.xml
+  @category   Moogento
+  @package    pickPack
+  @copyright  Copyright (c) 2014 Moogento <info@moogento.com> / All rights reserved.
+  @license    http://moogento.com/License.html
+-->
+<config>
+    <menu>
+        <system>
+            <children>
+                <convert>
+                    <children>
+                        <moogento_shipments translate="title" module="moogento_shipeasy">
+                            <title>Import Shipments</title>
+                            <action>adminhtml/system_convert_shipments</action>
+                            <sort_order>50</sort_order>
+                        </moogento_shipments>
+                    </children>
+                </convert>
+            </children>
+        </system>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <sales>
+                        <children>
+                            <order> 
+                                <children>
+                                    <actions>
+                                        <children>
+                                            <!-- 
+<moo_shipeasy_edit_shipping_cost translate="title" module="moogento_shipeasy">
+                                                <title>Moogento shipEasy : Update Shipping Cost</title>
+                                                <sort_order>2000</sort_order>
+                                            </moo_shipeasy_edit_shipping_cost>
+ -->
+
+                                            <moo_shipeasy_ship translate="title" module="moogento_shipeasy">
+                                                <title>Moogento shipEasy : Ship</title>
+                                                <sort_order>2010</sort_order>
+                                            </moo_shipeasy_ship>
+
+                                            <moo_shipeasy_invoice translate="title" module="moogento_shipeasy">
+                                                <title>Moogento shipEasy : Invoice</title>
+                                                <sort_order>2020</sort_order>
+                                            </moo_shipeasy_invoice>
+
+                                            <moo_shipeasy_ship_and_invoice translate="title" module="moogento_shipeasy">
+                                                <title>Moogento shipEasy : Ship and Invoice</title>
+                                                <sort_order>2030</sort_order>
+                                            </moo_shipeasy_ship_and_invoice>
+
+                                            <moo_shipeasy_change_status translate="title" module="moogento_shipeasy">
+                                                <title>Moogento shipEasy : Change Status</title>
+                                                <sort_order>2040</sort_order>
+                                            </moo_shipeasy_change_status>
+
+                                            <moo_shipeasy_change_update_custom_attribute translate="title" module="moogento_shipeasy">
+                                                <title>Moogento shipEasy : Update Custom Attribute</title>
+                                                <sort_order>2050</sort_order>
+                                            </moo_shipeasy_change_update_custom_attribute>
+
+                                            <moo_shipeasy_grid_edit_tracking translate="title" module="moogento_shipeasy">
+                                                <title>Moogento shipEasy : Edit tracking in grid</title>
+                                                <sort_order>2060</sort_order>
+                                            </moo_shipeasy_grid_edit_tracking>
+                                            <moo_shipeasy_grid_add_tracking translate="title" module="moogento_shipeasy">
+                                                <title>Moogento shipEasy : Add tracking in grid</title>
+                                                <sort_order>2070</sort_order>
+                                            </moo_shipeasy_grid_add_tracking>
+                                        </children>
+                                    </actions>
+                                </children>
+                            </order>
+                        </children>
+                    </sales>
+                    <system>
+                        <children>
+                            <convert>
+                                <children>
+                                    <moogento_shipments translate="title" module="moogento_shipeasy">
+                                        <title>shipEasy : Import Shipments</title>
+                                    </moogento_shipments>
+                                </children>
+                            </convert>
+                            <config>
+                                <children>
+                                    <moogento_shipeasy translate="title" module="moogento_shipeasy">
+                                        <title>Moogento shipEasy</title>
+                                        <sort_order>302</sort_order>
+                                    </moogento_shipeasy>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

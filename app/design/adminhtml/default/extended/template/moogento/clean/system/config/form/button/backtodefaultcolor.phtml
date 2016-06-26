@@ -1,0 +1,22 @@
+<script type="text/javascript">
+    //<![CDATA[
+    function saveCondition() {
+        new Ajax.Request('<?php echo $this->getAjaxCheckUrl() ?>', {
+            method:     'get',
+            onSuccess: function(transport){
+                var colors = JSON.parse(transport.responseText);
+                jQuery.each(colors, function( index, value ) {
+                    var el = jQuery("#moogento_clean_colors_"+index);
+                    el.val(value.toUpperCase());
+                    el.css('background-color', "#"+value);
+                    //$("#moogento_clean_colors_"+index+" option[value=" + value + "]").attr('selected', 'true')
+                });
+                jQuery("#row_moogento_clean_colors_default_color").find("td").last().html('<p style="color: red; margin-left: 10px;">Please save data</p>');
+            }
+            
+        });
+    }
+    //]]>
+</script>
+
+<?php echo $this->getButtonHtml() ?>

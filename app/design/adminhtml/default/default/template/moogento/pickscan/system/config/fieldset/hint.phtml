@@ -1,0 +1,21 @@
+<div class="moogento-notice">
+	<div class="floatingcows">
+		<div class="floatingsheep" style="background-image:url(<?php echo $this->getLogo() ?>);"><a href="https://moogento.com" id="mooink">&nbsp;</a></div>
+	    <div id="mooinfo">
+			<h4>
+	        <?php echo $this->__('pickNScan'); ?>
+	    	</h4>
+            <div id="license_info"></div>
+            <script defer src="<?php echo $this->getInfo() ?>"></script>
+			<script>
+                Event.observe(window, 'load', function() {
+                    $('license_info').update(window.moogento_license_info);
+                });
+			</script>
+		</div>
+	</div>
+	<ul id="wikilinks">
+		<li><a class="store" href="https://moogento.com"><img src="https://moogento.com/images/moogento-favicon_32x32.png" width=16 /> Moogento Store</a></li>
+	</ul>
+</div>
+<div style="clear:both;"></div>

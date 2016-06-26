@@ -1,0 +1,55 @@
+<?php $_order = $this->getOrder() ?>
+<?php $_orderData = Mage::helper('moogento_shipeasy/sales')->getOrderM2EProData($_order); ?>
+<?php if(isset($_orderData['id'])): ?>
+<div class="box-left" id="m2epro_order_view">
+    <div class="entry-edit">
+        <div class="entry-edit-head">
+            <h4><?php echo $_orderData['target'].' data from M2ePro';?></h4>
+        </div>
+        <div class="fieldset-left">
+            <div class="m2epro">
+                <span> Order data: </span>
+                <table cellspacing="0" class="form-list order_data">
+                    <tbody>
+                        <?php foreach ($_orderData['data'] as $order_data):?>
+                        <tr>
+                            <td class='title'>
+                                <?php echo $order_data['title']; ?>
+                            </td>
+                            <td class='data'>
+                                <?php echo $order_data['data']; ?>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <?php if(isset($_orderData['order_link'])): ?>
+                    <span> 
+                        <a href="<?php echo $_orderData['order_link']?>">View original order</a> 
+                    </span>
+                    <br/>
+                <?php endif; ?>
+                <span> Products data:</span>
+                <table cellspacing="0" class="form-list products_data">
+                    <tbody>
+                        <?php foreach ($_orderData['products'] as $products):?>
+                        <tr>
+                            <td class='product_name'>
+                                <?php echo $products['name']; ?>
+                            </td>
+                            <td class='magento_link'>
+                                <a href="<?php echo $products['magento_link'] ?>"> View in frontend Magento</a>
+                            </td>
+                            <td class='merchant_link'>
+                                <a href="<?php echo $products['merchant_link'] ?>"> View in <?php echo $_orderData['target'] ?></a>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clear"></div>
+<?php endif; ?>

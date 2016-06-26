@@ -1,0 +1,155 @@
+<div class="timer_banner" id="timer_banner">
+    <?php
+        $bannerYes = Mage::getStoreConfig('samedd/sameddgroup/samedaydisplay');
+        $delivTime = Mage::getStoreConfig('samedd/sameddgroup/delivery_time');
+        $banner    = Mage::getStoreConfig('samedd/sameddgroup/samedaybanner');
+        $delivTime = implode(':', explode(',', $delivTime));
+    ?>
+    <div class="timer-title">
+        <h3><?php echo Mage::getStoreConfig('samedd/sameddgroup/samedaytitle');?></h3>
+    </div>
+    <?php if ($bannerYes == 1): ?>
+        <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'catalog/product/watermark/' . $banner ?>"/>
+    <?php else: ?>
+        <div class="timer-inner">
+            <div class="desc-top">Order in the next</div>
+            <div class="timerCoundown">
+                <div class="countdown-container" id="timerCoundown"></div>
+                <div class="countdown-title">
+                    <div class="time-title">Hours</div>
+                    <div class="time-title">Minutes</div>
+                    <div class="time-title">Seconds</div>
+                </div>
+            </div>
+            <div class="timerClosed">
+                <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'catalog/product/watermark/' . $banner ?>"/>
+            </div>
+
+            <script type="text/template" id="timerCoundown-template">
+                <div class="time <%= label %>">
+                    <span class="count curr top"><%= curr %></span>
+                    <span class="count next top"><%= next %></span>
+                    <span class="count next bottom"><%= next %></span>
+                    <span class="count curr bottom"><%= curr %></span>
+                    <span class="label"><%= label.length < 6 ? label : label.substr(0, 3)  %></span>
+                </div>
+            </script>
+            <script>
+                jQblvg(document).ready(function($) {
+					/*Fix the function forEach does not work on IE8*/
+					if (typeof Array.prototype.forEach != 'function') {
+							Array.prototype.forEach = function(callback){
+							  for (var i = 0; i < this.length; i++){
+								callback.apply(this, [this[i], i, this]);
+							  }
+							};
+						}
+                    jQblvg('.timerClosed').hide();
+                    //var myVar = setInterval(function() {
+
+                    //}, 1000);
+
+                    //function mytimer() {
+                        var nowtime   = "<?php echo date('d F Y H:i:s', Mage::getModel('core/date')->timestamp(time())) ?>";
+                        var timestamp = Date.parse(nowtime);
+
+                        var dateBegin = new Date();
+                        dateBegin.setTime(timestamp);
+                        var dateEnd   = stringToDate("<?php echo date('Y-m-d') . ' ' . $delivTime ?>");
+                        jQuery('.timerCoundown').hide();
+                        jQuery('.timer_banner').hide();
+                        if (dateBegin < dateEnd) {
+                            jQuery('.timerCoundown').show();
+                            jQuery('.timer_banner').show();
+                            //var labels     = ['hours', 'minutes', 'seconds'];
+                            var labels     = ['hours1', 'hours2', 'minutes1', 'minutes2', 'seconds1', 'seconds2'];
+                            var template   = _.template($('#timerCoundown-template').html());
+                            //var parser     = /([0-9]{2})/gi;
+                            var parser     = /([0-9]{1})/gi;
+                            var $delivery  = $('#timerCoundown');
+
+                            // Parse countdown string to an object
+                            function strfobj(str) {
+                                var parsed = str.match(parser),
+                                obj = {};
+                                labels.forEach(function(label, i) {
+                                    obj[label] = parsed[i]
+                                });
+
+                                return obj;
+                            }
+
+                            // Return the time components that diffs
+                            function diff(obj1, obj2) {
+                                var diff = [];
+                                labels.forEach(function(key) {
+                                    if (obj1[key] !== obj2[key]) {
+                                        diff.push(key);
+                                    }
+                                });
+
+                                return diff;
+                            }
+
+                            var currDate   = '00:00:00';
+                            var nextDate   = '00:00:00';
+
+                            // Build the layout
+                            var initData = strfobj(currDate);
+                            labels.forEach(function(label, i) {
+                                $delivery.append(template({
+                                    curr : initData[label],
+                                    next : initData[label],
+                                    label: label
+                                }));
+                            });
+                            // Starts the countdown
+                            $delivery.countdown(dateBegin, dateEnd, function(event) {
+                                //var newDate = event.strftime('%w:%d:%H:%M:%S');
+                                var newDate = event.strftime('%H:%M:%S');
+                                if (newDate !== nextDate) {
+                                    currDate = nextDate;
+                                    nextDate = newDate;
+                                    // Setup the data
+                                    var data = {
+                                        'curr': strfobj(currDate),
+                                        'next': strfobj(nextDate)
+                                    };
+                                    // Apply the new values to each node that changed
+                                    diff(data.curr, data.next).forEach(function(label) {
+                                        var selector = '.%s'.replace(/%s/, label),
+                                        $node = $delivery.find(selector);
+                                        // Update the node
+                                        $node.removeClass('flip');
+                                        $node.find('.curr').text(data.curr[label]);
+                                        $node.find('.next').text(data.next[label]);
+                                        // Wait for a repaint to then flip
+                                        _.delay(function($node) {
+                                            $node.addClass('flip');
+                                        }, 5, $node);
+                                    });
+                                }
+                            });
+                            $('.hours2').after('<div class="time-separate time" >:</div>');
+                            $('.minutes2').after('<div class="time-separate time" >:</div>');
+                            //clearInterval(myVar);adm
+                                var sml_margin =$('.box-additional.grid12-3').offset().top - ($('#timer_banner').offset().top + $('#timer_banner').outerHeight());
+                                sml_margin=sml_margin-90;
+                                if(sml_margin > 0 ){
+                                    $('.box-additional.grid12-3').css("position","relative");
+                                    $('.box-additional.grid12-3').css("margin-top","-"+sml_margin+"px");
+                                }
+                        } else {
+                            move_similar_product();
+                           setTimeout(check_similar_product, 800);
+                           setTimeout(check_similar_product, 1200);
+                           setTimeout(check_similar_product, 2000);
+                           setTimeout(check_similar_product, 3000);
+                        }
+                    //}
+                });
+            </script>
+            <div class="desc-bot">&amp; we'll send it today!</div>
+        </div>
+    <?php endif ?>
+</div>

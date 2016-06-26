@@ -1,0 +1,23 @@
+<?php
+    $connection = Mage::getSingleton('core/resource')->getConnection('distributor_read');
+    $results = $connection->fetchAll("SELECT * FROM faq WHERE status = 0");
+?>
+<div class="faq_list_main">
+    <ul>
+        <?php $count = 0 ?>
+        <?php foreach($results as $key=>$val): ?>
+            <?php $count = $count + 1 ?>
+            <li>
+                <div class="faq_no">
+                    <?php echo $count ?>
+                </div>
+                <div class="faq_ttl">
+                    <?php echo $val['question'] ?>
+                </div>
+                <div class="faq_shrt_det">
+                    <?php echo $val['answer'] ?>
+                </div>
+            </li>
+        <?php endforeach ?>
+    </ul>
+</div>

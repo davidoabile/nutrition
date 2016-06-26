@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Moogento_Automation>
+            <version>0.9.1</version>
+        </Moogento_Automation>
+    </modules>
+    <global>
+        <blocks>
+            <moogento_automation>
+                <class>Moogento_Automation_Block</class>
+            </moogento_automation>
+        </blocks>
+        <helpers>
+            <moogento_automation>
+                <class>Moogento_Automation_Helper</class>
+            </moogento_automation>
+        </helpers>
+        <models>
+            <moogento_automation>
+                <class>Moogento_Automation_Model</class>
+                <resourceModel>moogento_automation_resource</resourceModel>
+            </moogento_automation>
+            <moogento_automation_resource>
+                <class>Moogento_Automation_Model_Resource</class>
+                <entities>
+                    <processing_flag>
+                        <table>moogento_automation_processing_flag</table>
+                    </processing_flag>
+                </entities>
+            </moogento_automation_resource>
+        </models>
+        <resources>
+            <moogento_automation_setup>
+                <setup>
+                    <module>Moogento_Automation</module>
+                </setup>
+            </moogento_automation_setup>
+        </resources>
+        <events>
+            <controller_action_predispatch_adminhtml_system_config_save>
+                <observers>
+                    <moogento_automation>
+                        <model>moogento_automation/observer</model>
+                        <method>controller_action_predispatch_adminhtml_system_config_save</method>
+                    </moogento_automation>
+                </observers>
+            </controller_action_predispatch_adminhtml_system_config_save>
+        </events>
+    </global>
+    <crontab>
+        <jobs>
+            <moogento_automation_status_updater>
+                <schedule>
+                    <cron_expr>0 * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>moogento_automation/cron::updateStatus</model>
+                </run>
+            </moogento_automation_status_updater>
+            <moogento_automation_complete_email>
+                <schedule>
+                    <cron_expr>15 * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>moogento_automation/cron::sendCompleteEmail</model>
+                </run>
+            </moogento_automation_complete_email>
+            <moogento_automation_import>
+                <schedule><cron_expr>10 * * * *</cron_expr></schedule>
+                <run><model>moogento_automation/cron::import</model></run>
+            </moogento_automation_import>
+        </jobs>
+    </crontab>
+</config>

@@ -1,0 +1,169 @@
+<?php
+$productid = Mage::app()->getRequest()->getParam('id');
+$model = Mage::getModel('catalog/product'); //getting product model
+$_product = $model->load($productid); //getting product object for particular product id
+?>
+
+<form action="<?php echo Mage::helper('collection/cart')->getAddUrl($_product) ?>" method="post" id="product_addtocart_form"<?php if ($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+<input type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" name="form_key">
+<div class="main_part mrgn_b20 quickviewNew">
+    <a href="javascript:;" id="" class="pb_close"><img src="<?php echo $this->getSkinUrl("images/close_20.png") ?>" /></a>
+    <div class="fw_area">
+        <div class="left">
+            <div class="fwimg">
+                <span><img width="134" height="131"  title="<?php echo $_product->getName() ?>" alt="<?php echo $_product->getName() ?>" src="<?php echo $_product->getImageUrl() ?>"></span>
+            </div>
+            <div class="fwimg_detl">
+                <h4>
+                    <?php $name = $_product->getName();
+                        if (strlen($name) > 15) {
+                            echo substr($name, 0,15) . '...';
+                        } else {
+                            echo $name;
+                        }
+                    ?>
+                </h4>
+            <div class="comman mrgn_t10 font14_blk">
+                <?php $shortdesc = strip_tags($_product->getShortDescription());
+                    if (strlen($shortdesc) > 22) {
+                        echo substr($shortdesc, 0, 22) . '...';
+                    } else {
+                        echo $shortdesc;
+                    }
+                ?>
+            </div>
+            <div class="comman mrgn_t5 font12_gry">
+                <?php
+                $description = strip_tags($_product->getDescription());
+                if (strlen($description) > 335) {
+                    echo substr($description, 0, 335) . '...';
+                } else {
+                    echo $description;
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+    <div class="right" style="margin-right: 6px;">
+        <div class="pricing">
+            <ul>
+                <?php if ($_product->getFinalPrice() != $_product->getPrice()) : ?>
+                    <?php if($_product->getPrice() < $_product->getFinalPrice()) : ?>
+                        <li>
+                            <div class="pricingleft font18_gry">RRP</div>
+                            <div class="pricingright font30_gry">$0.00</div>
+                        </li>
+                        <li>
+                            <div class="pricingleft font18_red">WP</div>
+                            <div class="pricingright font30_red">
+                                <?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($_product->getPrice(), '2', '.', ','); ?>
+                            </div>
+                        </li>
+                    <?php else : ?>
+                        <li>
+                            <div class="pricingleft font18_gry">RRP</div>
+                            <div class="pricingright font30_gry"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($_product->getPrice(), '2', '.', ','); ?></div>
+                        </li>
+                        <li>
+                            <div class="pricingleft font18_red">WP</div>
+                            <div class="pricingright font30_red"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($_product->getFinalPrice(), '2', '.', ','); ?></div>
+                        </li>
+                    <?php endif; ?>
+                <?php else : ?>
+                     <li>
+                        <div class="pricingleft font18_gry">RRP</div>
+                        <div class="pricingright font30_gry">$0.00</div>
+                    </li>
+                    <li>
+                        <div class="pricingleft font18_red">WP</div>
+                        <div class="pricingright font30_red"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($_product->getPrice(), '2', '.', ','); ?></div>
+                    </li>
+                <?php endif; ?>
+                <?php
+                    $_finalPrice = $_product->getFinalPrice();
+                    $_price = $_product->getPrice();
+                ?>
+                <?php if ($_finalPrice < $_price): ?>
+                    <?php
+                    $_savePercent = 100 - round(($_finalPrice / $_price) * 100);
+                    $_saveAmount = number_format(($_price - $_finalPrice), 2);
+                    ?>
+                    <li>
+                        <div class="pricingleft font14_blk">SAVE</div>
+                        <div class="pricingright font14_blk"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo $_saveAmount; ?></div>
+                    </li>
+                    <?php endif; ?>
+                    <?php if ($_product->isSaleable()) { ?>
+                        <div class="prod_opt mrgn_t10">
+                            <?php $cProduct = Mage::getModel('catalog/product')->load($_product->getId());
+                            if ($cProduct->getData('type_id') == "configurable") {
+                                $config = $cProduct->getTypeInstance(true);
+                                foreach ($config->getConfigurableAttributesAsArray($cProduct) as $attributes) {
+                            ?>
+                                <div style="float: left; width: 100%;">
+                                    <div class="font14_blk lableNew"><?php echo $attributes['label'] ?></div>
+                                    <div class="dropdownqty">
+                                    <select name="super_attribute[<?php echo $attributes['attribute_id'] ?>]" id="attribute<?php echo $attributes['attribute_id'] ?>" class="changeprice  required-entry super-attribute-select">
+                                    <option price='0' value="0"><?php echo $this->__('----Select----') ?></option>
+                                        <?php foreach ($attributes["values"] as $values) : ?>
+                                            <?php
+                                                $price1 = number_format($values['pricing_value'], '2', '.', ',');
+                                                $pricelable1 = ($price1 !='0.00')? ' +'.Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol().$price1 :'';
+                                            ?>
+                                            <option value="<?php echo $values['value_index'] ?>" price="<?php echo number_format($values['pricing_value'], '2', '.', ','); ?>" >
+                                                <?php echo $values['label'] ?><?php echo $pricelable1; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select></div>
+                                </div>
+                        <?php }
+                            }
+                        $attVal = $_product->getOptions();
+                        $optStr = "";
+                        if(count($attVal) > 0){
+                        foreach($attVal as $optionKey => $optionVal) {
+                        $optStr .= '<div style="float: left; width: 100%;"><div class="font14_blk lableNew">' . $optionVal->getTitle() . '</div>';
+
+                        $optStr .= "<div class='dropdownqty'><select class='changeprice' name='options[".$optionVal->getId()."]'>";
+                         $optStr .= "<option value='0'  price='0'>--Please select--</option>";
+                        foreach($optionVal->getValues() as $valuesKey => $valuesVal) {
+                               $price = number_format($valuesVal->getPrice(), '2', '.', ',');
+                                $pricelable = ($price !='0.0000')? ' +'.Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol().$price :'';
+                        $optStr .= "<option price='".$valuesVal->getPrice()."' value='".$valuesVal->getId()."'>".$valuesVal->getTitle().$pricelable."</option>";
+                        }
+                        $optStr .= "</select></div></div>";
+
+                        }
+                        echo($optStr);
+                        }
+                        ?>
+                        <label class="font14_blk lableNew" for="qty">Qty</label>
+                        <input type="hidden" class="input-text qty" title="Qty" value="1" maxlength="12" id="qty_<?php echo $productid ?>" name="qty">
+                        <div class="dropdownqty">
+                            <select name="qty" onchange="jQuery('.qty').val(this.value);">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
+                    </div>
+                    <li class="mrgn_t5"><a class="link12_red" href="<?php echo $_compareUrl ?>">+ Add to compare</a></li>
+                    <div class="buttonMain">
+                        <a href="<?php echo $_product->getProductUrl() ?>" class="viewDtails">VIEW DETAILS</a>
+                        <button class="btn-cart buy_btn" id="pb_cart_<?php echo $_product->getId() ?>" title="Add to Cart" type="submit">Add To Cart</button>
+                    </div>
+                    <?php } ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</form>     
+

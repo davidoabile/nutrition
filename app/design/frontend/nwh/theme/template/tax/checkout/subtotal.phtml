@@ -1,0 +1,47 @@
+
+<?php if ($this->displayBoth()): ?>
+    <tr class="os_part mrgn_t5">
+        <td style="<?php echo $this->getStyle() ?>" class="a-right left font14_gry" colspan="<?php echo $this->getColspan(); ?>">
+            <?php echo $this->helper('tax')->__('Subtotal (Excl. Tax)') ?>
+        </td>
+        <td style="<?php echo $this->getStyle() ?>" class="a-right right font18_blk">
+            <?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValueExclTax()) ?>
+        </td>
+    </tr>
+    <tr class="os_part mrgn_t5">
+        <td style="<?php echo $this->getStyle() ?>" class="a-right left font14_gry" colspan="<?php echo $this->getColspan(); ?>">
+            <?php echo $this->helper('tax')->__('Subtotal (Incl. Tax)') ?>
+        </td>
+        <td style="<?php echo $this->getStyle() ?>" class="a-right right font18_blk">
+            <?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValueInclTax()) ?>
+        </td>
+    </tr>
+    <?php else : ?>
+    <tr class="os_part mrgn_t5">
+        <td style="<?php echo $this->getStyle() ?>" class="a-right left font14_gry" colspan="<?php echo $this->getColspan(); ?>">
+            <?php echo $this->getTotal()->getTitle() ?>
+        </td>
+        <td style="<?php echo $this->getStyle() ?>" class="a-right right font18_blk">
+            <?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue()) ?>
+        </td>
+    </tr>
+    <?php $url = explode("/", $_SERVER['REQUEST_URI']) ?>
+    <?php if (!in_array("aitcheckout", $url) AND !Mage::helper('bonusoffers/gifts')->isItemInCart()): ?>
+        <tr class="free_gift mrgn_t5">
+            <td class="left mrgn_r10"><img src="<?php echo $this->getSkinUrl('images/gift.png'); ?>" /></td>
+            <td class="left font14_sky">
+                <?php if (Mage::helper('bonusoffers/gifts')->isShowPopup()): ?>
+                    <?php echo Mage::getStoreConfig('gifts/settings/earnt_message') ?>
+                <?php else: ?>
+                    <?php echo Mage::getStoreConfig('gifts/settings/almost_earnt_message') ?>
+                <?php endif ?>
+            </td>
+            <td class="comman mrgn_t10 font12_gry">
+                <?php echo Mage::getStoreConfig('gifts/settings/spend_over_message') ?>
+                <?php if (Mage::helper('bonusoffers/gifts')->isShowPopup()): ?>
+                    <a href="javascript:;" class="link12_red view_gift"><?php echo $this->__('View gifts') ?></a>
+                <?php endif ?>
+            </td>
+        </tr>
+    <?php endif ?>
+<?php endif ?>

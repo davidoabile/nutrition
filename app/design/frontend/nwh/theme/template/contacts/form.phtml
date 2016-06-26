@@ -1,0 +1,76 @@
+<div class="contactForm-block">
+    <div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+    <div class="c_left">
+        <div class="comman">
+            <div class="comman bodr_botm mrgn_b20">
+                <h4><?php echo $this->__('HEAD OFFICE') ?></h4>
+                <div class="font12_gry mrgn_t10 mrgn_b10 left">
+                    <?php echo nl2br(Mage::getStoreConfig('general/store_information/address')) ?>
+                    <br />
+                    <span class="font12_red mrgn_t5 left"><strong><?php echo Mage::getStoreConfig('general/store_information/phone') ?></strong></span>
+                </div>
+            </div>
+            <div class="comman bodr_botm mrgn_b20">
+                <h4><?php echo Mage::helper('local')->getStaticBlockTitle('contact_page_connect') ?></h4>
+                <div class="side_social">
+                    <?php echo Mage::helper('local')->getStaticBlockHtml('contact_page_connect') ?>
+                </div>
+            </div>
+            <div class="comman bodr_botm mrgn_b20">
+                <h4><?php echo Mage::helper('local')->getStaticBlockTitle('contact_page_information') ?></h4>
+                <div class="side_information">
+                    <?php echo Mage::helper('local')->getStaticBlockHtml('contact_page_information') ?>
+                </div>
+            </div>
+            <div class="comman mrgn_b20">
+                <?php echo Mage::helper('local')->getStaticBlockHtml('contact_page_faq') ?>
+            </div>
+        </div>
+    </div>
+    <div class="c_right">
+        <h4><?php echo $this->__('ENQUIRY') ?></h4>
+        <form action="<?php echo $this->getFormAction(); ?>" id="contactForm" method="post">
+            <div class="comman">
+                <div style="border:none;" class="form_c_m_three_in">
+                    <input name="name" placeholder="Name*" id="name" title="<?php echo Mage::helper('contacts')->__('Name') ?>" value="<?php echo $this->escapeHtml($this->helper('contacts')->getUserName()) ?>" class="required-entry l_field_in left" type="text" />
+                    <input type="text" placeholder="Fax" name="fax" value="" title="<?php echo Mage::helper('contacts')->__('Fax') ?>" class="l_field_in right">
+                    <input type="text" placeholder="Company" name="company" value="" class="l_field_in left mrgn_t20">
+                    <input type="text" name="email" placeholder="Email*" id="email" title="<?php echo Mage::helper('contacts')->__('Email') ?>" value="<?php echo $this->escapeHtml($this->helper('contacts')->getUserEmail()) ?>" class="l_field_in right mrgn_t20">
+                    <div class="dropdown_new_c mrgn_t20 left">
+                        <?php
+                            $_countries = Mage::getResourceModel('directory/country_collection')
+                                ->loadData()
+                                ->toOptionArray(false)
+                        ?>
+                        <?php if (count($_countries) > 0): ?>
+                            <select name="country"  class="required-entry"  id="country">
+                                <option value="">Country*</option>
+                                <?php foreach ($_countries as $_country): ?>
+                                    <option  value="<?php echo $_country['value']; ?>">
+                                        <?php echo $_country['label']; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        <?php endif; ?>
+                    
+                    </div>
+                    <div class="dropdown_new_c mrgn_t20 right">
+                    <select class="" name="reason">
+                        <option value=""><?php echo $this->__('Reason for contact') ?></option>
+                    </select>
+                    </div>
+                    <input type="text" name="telephone" id="telephone" placeholder="Phone*" title="<?php echo Mage::helper('contacts')->__('Phone') ?>" class="l_field_in left mrgn_t20">
+                    <input type="text" name="subject" placeholder="Subject*" value="" class="l_field_in right mrgn_t20">
+                    <textarea placeholder="Message*" style="width: 97%; height: 117px;" name="comment" id="comment" title="<?php echo Mage::helper('contacts')->__('Message') ?>" cols="" rows="10" class="l_field_txt mrgn_t20"></textarea>
+                    <div class="right mrgn_t20 font12_red">
+                        *<?php echo $this->__('Required Fields') ?>
+                    </div>
+                    <input type="button" name="" value="Subject*" class="btn_red left mrgn_t20">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    var contactForm = new VarienForm('contactForm', true);
+</script>

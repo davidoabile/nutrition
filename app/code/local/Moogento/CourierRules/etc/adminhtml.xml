@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<config>
+    <menu>
+        <sales>
+            <children>
+                <manifest translate="title" module="moogento_courierrules">
+                    <title>Shipping manifests</title>
+                    <sort_order>70</sort_order>
+                    <children>
+                        <gfs translate="title" module="moogento_courierrules">
+                            <title>GFS</title>
+                            <sort_order>10</sort_order>
+                            <action>adminhtml/sales_manifest/list/connector/gfs</action>
+                        </gfs>
+                    </children>
+                </manifest>
+            </children>
+        </sales>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <courierrules_zones translate="title" module="moogento_courierrules">
+                                        <title>Shipping zones Section</title>
+                                    </courierrules_zones>
+                                    <courierrules_rules translate="title" module="moogento_courierrules">
+                                        <title>Courier rules Section</title>
+                                    </courierrules_rules>
+                                    <courierrules_tracking translate="title" module="moogento_courierrules">
+                                        <title>Tracking pools Section</title>
+                                    </courierrules_tracking>
+                                    <courierrules_connectors translate="title" module="moogento_courierrules">
+                                        <title>Shipping Connectors Section</title>
+                                    </courierrules_connectors>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

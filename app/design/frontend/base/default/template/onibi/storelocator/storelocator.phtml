@@ -1,0 +1,203 @@
+<div class="left"><a href="<?php echo $this->getUrl(''); ?>" class="link_back">&lt; BACK</a></div>
+<div class="bread_crumbs_txt font14_blk">
+    <span class="font14_red">YOU ARE HERE:</span> Locations
+</div>
+<div id="search" class="location_banner">
+<div class="lf_shadow">
+                    <div class="lf_bg">
+     <label for="address" class="lf_title font30_wht"><?php echo $this->__('FIND A STORE NEAR YOU ');?></label>
+     <form id="store-search-form" action="<?php echo $this->getUrl('*/*/');?>" method="post">
+     
+     	<input <?php if($this->getPostValues("search-postcode")) {echo " value='" . $this->getPostValues("search-postcode") . "' ";}?> placeholder="Enter postcode" type="text" name="search-postcode"  class="text-input-search"/> <span class="or">OR</span>
+     	<!--<select  name="search-country" class="text-input-search">
+     		<option value="">Select Country</option>
+     		<?php foreach($this->getCountries() as $country):?>
+     			<option <?php if($this->getPostValues("search-country") && $this->getPostValues("search-country") == $country) {echo " selected='selected' ";}?> value="<?php echo $country;?>"><?php echo $this->getCountryByCode($country);?></option>
+     		<?php endforeach;?>
+     	</select>-->
+     	
+        <select  name="search-state" class="text-input-search filterSearch">
+     		<option value="">Enter state/region</option>
+     		<?php foreach($this->getStates() as $country):?>
+     			<option <?php if($this->getPostValues("search-state") && $this->getPostValues("search-state") == $country) {echo " selected='selected' ";}?> value="<?php echo $country;?>"><?php echo $country;?></option>
+     		<?php endforeach;?>
+     	</select>
+     	
+<!--     	<img class="search-submit-icon" onclick="jQuery('#store-search-form').submit();"  src="<?php //echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA); ?>storelocator/search-icon.png"/>-->
+     	
+     </form>
+    
+</div>
+</div>
+ </div>
+
+<div id="middle">
+    <?php //foreach($this->getStores() as $store) :?>
+
+<!--            <table id="store-table" class="store-table">
+                <tbody>
+
+
+                    <tr>
+                        <td>
+                        	<img class="market-icon" style="display:inline-block;" src="<?php //echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA); ?>storelocator/marker_crop.png"/>
+                            <h3 class='store-name' style="display:inline-block;" id="store<?php //echo $store->getId(); ?>"><?php //echo $store->getName()?></h3><br>
+                            <a href="<?php //echo $this->getUrl() . "onibi_storelocator/index/shop/id/" . $store->getId();?>">Details</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-address">
+                            <?php //echo $store->getAddress()?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-address">
+                            <?php //echo $store->getZipcode()." ".$store->getCity()?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-address">
+                            <?php //echo $store->getCountryId(); ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <?php //if(!is_null($store->getStoreUrl()) && $store->getStoreUrl() != ''):?>
+                                <?php //echo $this->__('Website : %s', "<a href='".$store->getStoreUrl()."' target='_blank'>");?><?php //echo $this->__('%s', $store->getStoreUrl());?></a>
+                            <?php //endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <?php //if(!is_null($store->getPhone())&& $store->getPhone()!= ''):?>
+                                <?php //echo $this->__('Phone : %s', $store->getPhone()); ?>
+                            <?php //endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                         <?php //if(!is_null($store->getFax()) && $store->getFax() != ''):?>
+                               <?php //echo $this->__('Fax : %s', $store->getFax());?>
+                        <?php //endif; ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>-->
+    <?php //endforeach;?>
+
+<div class="fl_left">
+        <ul class="scroll filtter">
+            <?php foreach ($this->getStores() as $store) : ?>
+
+            <li class="newitem">
+                    <div class="location_title font18_blk"><img src="<?php echo $this->getSkinUrl('images/location_iconred.png'); ?>" /> <span class='store-name' id="store<?php echo $store->getId(); ?>"><?php echo $store->getName() ?></span></div>
+                     <a class="font12_red mrgn_t5" href="<?php echo $this->getUrl() . "onibi_storelocator/index/shop/id/" . $store->getId();?>">Details</a>
+                    <div class="location_adrs font12_gry mrgn_t5"><?php echo $store->getAddress() ?>,<?php echo $store->getCity() ?> , <?php echo $store->getZipcode() ?> , <?php echo $store->getState(); ?> , <?php echo $store->getCountryId(); ?></div>
+                    <div class="location_ph font12_red mrgn_t10"><?php if (!is_null($store->getPhone()) && $store->getPhone() != ''): ?>
+                            <?php echo $this->__('Ph: %s', $store->getPhone()); ?>
+                        <?php endif; ?></div>
+                </li>
+
+            <?php endforeach; ?>
+        </ul>              
+    </div>
+    <div class="middle_right">
+    <input type="hidden" name="address" id="address" class="input-text"/>
+        <div id="maps">
+            <?php if(count($this->getStores()) != 0): ?>
+            <div  style="width:710px;height:466px;" id="map_canvas"></div>
+            <?php endif;?>
+        </div>
+    </div>
+    <div id="panel"></div>                                
+    <?php if(count($this->getStores()) == 0):?>
+    	No Stores Found
+    <?php endif;?>
+
+</div>
+<script>
+    (function($){
+        $(window).load(function(){
+            /* custom scrollbar fn call */
+            $(".scroll").mCustomScrollbar({
+                scrollButtons:{
+                    enable:true
+                }
+            });
+        });
+    })(jQuery);
+    
+</script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+//   jQuery( ".filterSearch" ).live('change',function() {
+//       jQuery("#store-search-form").submit();
+//    });
+//    });
+
+
+jQuery('.filterSearch').live("change", function (e){
+       
+        jQuery.ajax({
+            type: "POST",
+            url: '<?php echo $this->getUrl('*/*/filter/');?>',
+            data:jQuery("#store-search-form").serialize(),
+            success: function(data){
+              	
+                jQuery('.filtter').html(data);
+            }
+        });
+        e.preventDefault(); 
+    });
+
+ });
+
+ 
+ 
+    //var estimateDirectionLabel = '<?php //echo $this->__('Calculating the estimated'); ?>';
+    var gmapUrl = '<?php echo $this->getGoogleApiUrl(); ?>';
+    var apiSensor = <?php echo Mage::getStoreConfig('storelocator/general/apisensor'); ?>;
+    var stores = <?php echo Mage::helper('core')->jsonEncode($this->getStores()->toArray()); ?>;
+    var mediaUrl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) ?>';
+    var pathMarker = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) ?>';
+    var defaultMarker = '<?php echo $this->getDefaultMarker(); ?>';
+    var directionEnable = <?php echo Mage::getStoreConfig('storelocator/general/direction'); ?>;
+    window.onload = loadScript;
+</script>
+<style>
+     		.search-postcode{float:left;}
+     		.search-region{float:left;}
+     		.search-submit-icon{
+     		float:right;
+     		cursor:pointer;
+     		display:inline-block;
+     		margin-right: 39px;
+     		margin-top: 7px;
+     		}
+     		.text-input-search{
+     		 border: 1px solid #cbc9c9;
+    border-radius: 2px;
+    color: #8d8c8c;
+    font-size: 14px;
+    margin-top: 9px;
+    padding: 15px;
+    width: 178px;
+    vertical-align: initial;
+    }
+    .lf_title {
+    float: left;
+    line-height: 28px;
+    margin-top: 9px;
+    width: 213px;
+   
+}
+.or {
+color:white; font-family: exomedium;
+ padding-left: 10px;
+    padding-right: 10px;
+
+}
+.gmnoprint img {
+    max-width: none; 
+}
+     	</style>

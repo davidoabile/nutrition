@@ -1,0 +1,754 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php /** @var Moogento_Clean_Block_Adminhtml_Dashboard_Sales $this */ ?>
+<?php
+$doughnut_data = Mage::helper('core')->jsonDecode($this->getOverviewDataForDoughnutGraph());
+?>
+<?php if (Mage::getStoreConfig('moogento_clean/dashboard/show_overview')) : ?>
+    <script>
+    overviewOrdersCount_flag = 1;
+    overviewOrderSum_flag = 1;
+    overviewVisitors_flag = 1;
+    overviewConversion_flag = 1;
+    overviewFirstClick_flag = 1;
+    overviewLineChart_edit = true;
+
+    overviewOrdersCount = {
+        axis: 0,
+        label: "Orders Count",
+        fillColor: "rgba(220,0,0,0.2)",
+        strokeColor: "rgba(220,0,0,1)",
+        pointColor: "rgba(220,0,0,1)",
+        pointStrokeColor: "#fff",
+        pointHighlightFill: "#fff",
+        pointHighlightStroke: "rgba(220,0,0,1)",
+        data: <?php echo $this->getOverviewOrderCountForGraph(); ?>
+    };
+    overviewOrderSum = {
+        axis: 1,
+        label: "Orders Sum",
+        fillColor: "rgba(220,220,220,0.2)",
+        strokeColor: "rgba(220,220,220,1)",
+        pointColor: "rgba(220,220,220,1)",
+        pointStrokeColor: "#fff",
+        pointHighlightFill: "#fff",
+        pointHighlightStroke: "rgba(220,220,220,1)",
+        data: <?php echo $this->getOverviewOrderSumForGraph(); ?>
+    };
+    overviewVisitors = {
+        axis: 2,
+        label: "Visitors",
+        fillColor: "rgba(0, 255, 127, 0.2)",
+        strokeColor: "rgba(0, 255, 127, 1)",
+        pointColor: "rgba(0, 255, 127, 1)",
+        pointStrokeColor: "#fff",
+        pointHighlightFill: "#fff",
+        pointHighlightStroke: "rgba(0, 255, 127, 1)",
+        data: <?php echo $this->getOverviewVisitorsForGraph(); ?>
+    };
+    overviewConversion = {
+        axis: 3,
+        label: "Conversion",
+        fillColor: "rgba(151,187,205,0.2)",
+        strokeColor: "rgba(151,187,205,1)",
+        pointColor: "rgba(151,187,205,1)",
+        pointStrokeColor: "#fff",
+        pointHighlightFill: "#fff",
+        pointHighlightStroke: "rgba(151,187,205,1)",
+        data: <?php echo $this->getOverviewConversionForGraph(); ?>
+    };
+
+    function getOverviewDatasets() {
+        var overview_datasets = [];
+        if (overviewOrdersCount_flag) {
+            overview_datasets.push(overviewOrdersCount);
+        }
+        if (overviewOrderSum_flag) {
+            overview_datasets.push(overviewOrderSum);
+        }
+        if (overviewVisitors_flag) {
+            overview_datasets.push(overviewVisitors);
+        }
+        if (overviewConversion_flag) {
+            overview_datasets.push(overviewConversion);
+        }
+
+        return overview_datasets;
+    }
+    function getOverviewOptions() {
+        var overview_scale = [],
+            mainScale,
+            labelSymbols = [],
+            tooltipTemplate = "<%if (label){%><%=label%>: <%}%><%= value %>";
+
+        if (overviewOrdersCount_flag) {
+            overview_scale.push(0);
+            labelSymbols.push('# ');
+        }
+        if (overviewOrderSum_flag) {
+            overview_scale.push(1);
+            labelSymbols.push('<?php echo $this->_getCurrencySymbol() ?> ');
+        }
+        if (overviewVisitors_flag) {
+            overview_scale.push(2);
+            labelSymbols.push(':) ');
+        }
+        if (overviewConversion_flag) {
+            overview_scale.push(3);
+            labelSymbols.push('% ');
+        }
+
+        if (overviewConversion_flag) {
+            mainScale = 3;
+            tooltipTemplate = "<%if (label){%><%=label%>: <%}%> % <%= value %>";
+        }
+        if (overviewVisitors_flag) {
+            mainScale = 2;
+            tooltipTemplate = "<%if (label){%><%=label%>: <%}%> :) <%= value %>";
+        }
+        if (overviewOrderSum_flag) {
+            mainScale = 1;
+            tooltipTemplate = "<%if (label){%><%=label%>: <%}%> <?php echo $this->_getCurrencySymbol() ?> <%= value %>";
+        }
+        if (overviewOrdersCount_flag) {
+            mainScale = 0;
+            tooltipTemplate = "<%if (label){%><%=label%>: <%}%> # <%= value %>";
+        }
+
+        return {
+            mainScale: mainScale,
+            drawScale: [mainScale], //overview_scale,
+            drawScaleStroke: [mainScale], //overview_scale,
+            padding: 5,
+            scaleShowGridLines: true,
+            scaleGridLineColor: "rgba(255,255,255,.08)",
+            scaleLineColor: "rgba(255,255,255,.2)",
+            tooltipTemplate: tooltipTemplate,
+            customTooltips: function (tooltip) {
+                if (!tooltip) return;
+                var labels = [];
+                if (tooltip.labels) {
+                    Chart.helpers.each(tooltip.labels, function (label, index) {
+                        labels[index] = labelSymbols[index] + label;
+                    });
+
+                    var titleWidth = tooltip.ctx.measureText(tooltip.title).width,
+                        labelWidth = Chart.helpers.longestText(tooltip.ctx, tooltip.font, labels) + tooltip.fontSize + 13,
+                        longestTextWidth = (Chart.helpers.max([labelWidth, titleWidth]) * 1.15);
+
+                    Chart.helpers.drawRoundedRectangle(tooltip.ctx, tooltip.x, tooltip.y - tooltip.height / 2, longestTextWidth, tooltip.height, tooltip.cornerRadius);
+                    var ctx = tooltip.ctx;
+                    ctx.fillStyle = tooltip.fillColor;
+                    ctx.fill();
+                    ctx.closePath();
+
+                    ctx.textAlign = "left";
+                    ctx.textBaseline = "middle";
+                    ctx.fillStyle = tooltip.titleTextColor;
+                    ctx.font = tooltip.titleFont;
+
+                    ctx.fillText(tooltip.title, tooltip.x + tooltip.xPadding, tooltip.getLineHeight(0));
+
+                    ctx.font = tooltip.font;
+                    Chart.helpers.each(labels, function (label, index) {
+                        ctx.fillStyle = this.textColor;
+                        ctx.fillText(label, this.x + this.xPadding + this.fontSize + 3, this.getLineHeight(index + 1));
+
+                        ctx.fillStyle = this.legendColorBackground;
+                        ctx.fillRect(this.x + this.xPadding, this.getLineHeight(index + 1) - this.fontSize / 2, this.fontSize, this.fontSize);
+
+                        ctx.fillStyle = this.legendColors[index].fill;
+                        ctx.fillRect(this.x + this.xPadding, this.getLineHeight(index + 1) - this.fontSize / 2, this.fontSize, this.fontSize);
+
+
+                    }, tooltip);
+                } else {
+                    var ctx = tooltip.chart.ctx;
+
+                    ctx.font = Chart.helpers.fontString(tooltip.fontSize, tooltip.fontStyle, tooltip.fontFamily);
+
+                    tooltip.xAlign = "center";
+                    tooltip.yAlign = "above";
+
+                    //Distance between the actual element.y position and the start of the tooltip caret
+                    var caretPadding = tooltip.caretPadding = 2;
+
+                    var tooltipWidth = ctx.measureText(tooltip.text).width + 2 * tooltip.xPadding,
+                        tooltipRectHeight = tooltip.fontSize + 2 * tooltip.yPadding,
+                        tooltipHeight = tooltipRectHeight + tooltip.caretHeight + caretPadding;
+
+                    if (tooltip.x + tooltipWidth / 2 > tooltip.chart.width) {
+                        tooltip.xAlign = "left";
+                    } else if (tooltip.x - tooltipWidth / 2 < 0) {
+                        tooltip.xAlign = "right";
+                    }
+
+                    if (tooltip.y - tooltipHeight < 0) {
+                        tooltip.yAlign = "below";
+                    }
+
+
+                    var tooltipX = tooltip.x - tooltipWidth / 2,
+                        tooltipY = tooltip.y - tooltipHeight;
+
+                    ctx.fillStyle = tooltip.fillColor;
+
+                    switch (tooltip.yAlign) {
+                        case "above":
+                            //Draw a caret above the x/y
+                            ctx.beginPath();
+                            ctx.moveTo(tooltip.x, tooltip.y - caretPadding);
+                            ctx.lineTo(tooltip.x + tooltip.caretHeight, tooltip.y - (caretPadding + tooltip.caretHeight));
+                            ctx.lineTo(tooltip.x - tooltip.caretHeight, tooltip.y - (caretPadding + tooltip.caretHeight));
+                            ctx.closePath();
+                            ctx.fill();
+                            break;
+                        case "below":
+                            tooltipY = tooltip.y + caretPadding + tooltip.caretHeight;
+                            //Draw a caret below the x/y
+                            ctx.beginPath();
+                            ctx.moveTo(tooltip.x, tooltip.y + caretPadding);
+                            ctx.lineTo(tooltip.x + tooltip.caretHeight, tooltip.y + caretPadding + tooltip.caretHeight);
+                            ctx.lineTo(tooltip.x - tooltip.caretHeight, tooltip.y + caretPadding + tooltip.caretHeight);
+                            ctx.closePath();
+                            ctx.fill();
+                            break;
+                    }
+
+                    switch (tooltip.xAlign) {
+                        case "left":
+                            tooltipX = tooltip.x - tooltipWidth + (tooltip.cornerRadius + tooltip.caretHeight);
+                            break;
+                        case "right":
+                            tooltipX = tooltip.x - (tooltip.cornerRadius + tooltip.caretHeight);
+                            break;
+                    }
+
+                    Chart.helpers.drawRoundedRectangle(ctx, tooltipX, tooltipY, tooltipWidth, tooltipRectHeight, tooltip.cornerRadius);
+
+                    ctx.fill();
+
+                    ctx.fillStyle = tooltip.textColor;
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText(tooltip.text, tooltipX + tooltipWidth / 2, tooltipY + tooltipRectHeight / 2);
+                }
+            },
+            scaleFontColor: "#fff",
+            scaleGridLineWidth: 1,
+            scaleShowHorizontalLines: true,
+            scaleShowVerticalLines: true,
+            bezierCurve: true,
+            bezierCurveTension: 0.4,
+            pointDot: true,
+            pointDotRadius: 4,
+            pointDotStrokeWidth: 1,
+            pointHitDetectionRadius: 20,
+            datasetStroke: true,
+            datasetStrokeWidth: 2,
+            datasetFill: true,
+            legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets{[i].label}){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+        };
+    }
+
+    function getOverviewData() {
+        return {
+            labels: <?php echo $this->getOverviewDiagramTime(); ?>,
+            datasets: getOverviewDatasets()
+        };
+    }
+
+    function changeOverviewDatasets(type) {
+        if (overviewFirstClick_flag) {
+            overviewFirstClick_flag = 0;
+            overviewOrdersCount_flag = 0;
+            overviewOrderSum_flag = 0;
+            overviewVisitors_flag = 0;
+            overviewConversion_flag = 0;
+        }
+        switch (type) {
+            case "order_count":
+                overviewOrdersCount_flag = !overviewOrdersCount_flag;
+                break;
+            case "order_sum":
+                overviewOrderSum_flag = !overviewOrderSum_flag;
+                break;
+            case "visitors":
+                overviewVisitors_flag = !overviewVisitors_flag;
+                break;
+            case "conversion":
+                overviewConversion_flag = !overviewConversion_flag;
+                break;
+        }
+    }
+
+    function showOverviewLineChart() {
+
+        var ctx_overviewLineChart = jQuery("#overviewLineChart").get(0).getContext("2d");
+        var overViewData = getOverviewData();
+        if (overViewData.datasets.length) {
+            overviewLineChart = new Chart(ctx_overviewLineChart).MultiAxisLine(overViewData, getOverviewOptions());
+        } else {
+            setTimeout(function () {
+                var canvas = jQuery("#overviewLineChart");
+                canvas.get(0).getContext("2d").clearRect(0, 0, canvas.width(), canvas.height());
+            }, 500);
+        }
+    }
+
+    jQuery(document).ready(function ($) {
+        if (!$.cookie("clean_overview")) {
+            showOverviewLineChart();
+        }
+        $('.donut-body .moo_chart_body').on('click', function (e) {
+            e.preventDefault();
+            if (overviewLineChart_edit) {
+                changeOverviewDatasets($(this).data('link'));
+                if (overviewLineChart) {
+                    overviewLineChart.clear();
+                    overviewLineChart.destroy();
+                    overviewLineChart = false;
+                }
+                showOverviewLineChart();
+            }
+        });
+    });
+
+    </script>
+    <div class="entry-edit clean_dash clean_pie" id="clean_overview">
+        <div class="entry-edit-head"><h4><?php echo $this->__('24h Overview') ?><em></em></h4><span
+                class="graph_img"></span><span class="drop_graph_img"></span></div>
+        <fieldset class="a-center bold">
+                <span class="graph" width="100%">
+                    <canvas id="overviewLineChart"
+                            style="max-width:650px; width:100%!important; height: auto!important;"></canvas>
+                </span>
+
+            <div>
+                <div class="hint"><?php echo $this->__('Today vs. Yesterday') ?></div>
+                <div class="left donut-body">
+                    <?php echo $this->_formatOutputDonut('# Orders', $doughnut_data["order_count_today"], $doughnut_data["order_count_yesterday"], "order_count"); ?>
+                </div>
+                <?php if (Mage::getStoreConfig('moogento_clean/dashboard/show_prices')) : ?>
+                    <div class="left donut-body">
+                        <?php echo $this->_formatOutputDonut('Total', $doughnut_data["order_totals_today"], $doughnut_data["order_totals_yesterday"], "order_sum", true); ?>
+                    </div>
+                <?php endif; ?>
+                <div class="left donut-body">
+                    <?php echo $this->_formatOutputDonut('Visitors', $doughnut_data["visitors_today"], $doughnut_data["visitors_yesterday"], "visitors"); ?>
+                </div>
+                <div class="left donut-body">
+                    <?php echo $this->_formatOutputDonut('Convert', $doughnut_data["conversions_today"], $doughnut_data["conversions_yesterday"], "conversion", false, '%', false); ?>
+                </div>
+            </div>
+            <?php if ($this->_hasDirtyData()): ?>
+                <span class="value-hint"><?php echo $this->__('Sync pending : may not be 100% accurate') ?></span>
+            <?php endif; ?>
+        </fieldset>
+    </div>
+<?php endif; ?>
+
+<?php /*if (false && Mage::getStoreConfig('moogento_clean/dashboard/show_today')) : ?>
+    <div class="entry-edit clean_dash clean_pie" id="clean_packing_overview">
+        <div class="entry-edit-head"><h4><?php echo $this->__('Packing Today') ?><em></em></h4><span
+                class="drop_graph_img"></span></div>
+        <fieldset class="a-center">
+	        <span>                    
+	            <table width="100%">
+                    <tr class="clean_donut_body">
+                        <td>
+                            <?php echo $this->format_output('/hour', 5, '', '12', '13'); ?>
+                        </td>
+                        <td>
+                            <?php echo $this->format_output('Packed', 3, '', '30', '120'); ?>
+                        </td>
+                        <td>
+                            <?php echo $this->format_output('Extra?', 4.5, '&bull;', '12', '10'); ?>
+                        </td>
+                        <td>
+                            <?php echo $this->format_output('On Time?', 1, '', Mage::getModel('core/date')->date('H:i'),
+                                '18:10'); ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="clean_note">
+                            * Order Cutoff = 15:00
+                        </td>
+                    </tr>
+                </table>
+	         </span>
+        </fieldset>
+    </div>
+<?php endif;*/ ?>
+
+<?php /*if (Mage::getStoreConfig('moogento_clean/dashboard/show_today')) : 
+	<div class="entry-edit clean_dash" id="clean_today">
+	    <div class="entry-edit-head"><h4><?php echo $this->__('Packing Overview') ?></h4></div>
+	    <fieldset class="a-center">
+	        <span>
+	            <table width="100%">
+	                <tr class="clean_title clean_sales_title">
+	                    <td>Remaining</td>
+	                    <td>Packed</td>
+	                    <td>Per Packer</td>
+	                    <td>ETD</td>
+	                    <td>Est Extra?</td>
+	                </tr>
+	                <tr>
+	                    <td class="clean_24h">210</td>
+	                    <td>640</td>
+	                    <td>120</td>
+	                    <td>18:30</td>
+	                    <td class="clean_etx">! 2</td>
+	                </tr>
+					<tr>
+						<td colspan="5" class="clean_note">
+							* Order Cutoff = 15:00
+						</td>
+					</tr>
+	            </table>
+	         </span>
+	    </fieldset>
+	</div>
+	<?php endif; 
+	*/
+?>
+
+<?php /*if (false && Mage::getStoreConfig('moogento_clean/dashboard/show_pickers')) : ?>
+    <div class="entry-edit clean_dash" id="clean_highscores">
+        <div class="entry-edit-head"><h4><?php echo $this->__('Packing Highscores') ?><em class="left"></em><em
+                    class="right"></em></h4><span class="drop_graph_img"></span></div>
+        <fieldset class="a-center">
+	        <span>
+	            <table width="100%">
+                    <tr class="clean_title clean_sales_title">
+                        <td><em></em>Rank</td>
+                        <td>Packer</td>
+                        <td>Today</td>
+                        <td>Today (/hour)</td>
+                        <td>Week (/hour)*</td>
+                    </tr>
+                    <tr class="winner">
+                        <td><em class="trophy"></em>#1</td>
+                        <td>Bob</td>
+                        <td>120</td>
+                        <td>15</td>
+                        <td>12</td>
+                    </tr>
+                    <tr>
+                        <td><em></em>#2</td>
+                        <td>Bill</td>
+                        <td>120</td>
+                        <td>15</td>
+                        <td>12</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="clean_note">
+                            * 7 day avg.
+                        </td>
+                    </tr>
+                </table>
+	         </span>
+        </fieldset>
+    </div>
+<?php endif;*/ ?>
+
+<?php $_quaters = $this->getQuatersList() ?>
+<?php $_quaters_names = $this->getQuartersNamesList();?>
+<div class="entry-edit clean_dash" id="clean_sales">
+    <div class="entry-edit-head">
+        <h4><?php echo $this->__('Totals') ?><em></em></h4><span class="drop_graph_img"></span>
+    </div>
+    <?php $_totals = $this->getTotalsList() ?>
+    <fieldset class="a-center">
+        <span>
+            <table width="100%">
+                <tr class="clean_title clean_sales_title">
+                    <td class="clean_row_icon"></td>
+                    <td class="clean_24h">24h</td>
+                    <td>7d</td>
+                    <td>30d</td>
+                    <td class="quaters tooltiped" title="<?php echo $_quaters_names['Q1']; ?>"><span class="hidden_quaters"></span>Q-1</td>
+                    <td class="quaters tooltiped" title="<?php echo $_quaters_names['Q2']; ?>">Q-2</td>
+                    <td class="quaters tooltiped" title="<?php echo $_quaters_names['Q3']; ?>">Q-3</td>
+                    <td class="quaters tooltiped" title="<?php echo $_quaters_names['Q4']; ?>">Q-4</td>
+                    <td><span class="showing_quaters"></span>365d</td>
+                    <td><?php echo $this->__('All') ?></td>
+                </tr>
+                <tr>
+                    <td class="clean_sales_qty clean_row_icon tooltiped" title="<?php echo $this->__('Total # Orders'); ?>">
+                        <em></em>
+                    </td>
+                    <td class="clean_24h">
+                        <?php echo $this->_formatOutput($_totals["order_qty/now/1"], $_totals["order_qty/last/1"]); ?>
+                    </td>
+                    <td>
+                        <?php echo $this->_formatOutput($_totals["order_qty/now/7"], $_totals["order_qty/last/7"]); ?>
+                    </td>
+                    <td>
+                        <?php echo $this->_formatOutput($_totals["order_qty/now/30"], $_totals["order_qty/last/30"]); ?>
+                    </td>
+                    <td class="quaters">
+                        <?php echo $this->_formatOutput($_quaters["order_qty/now/Q1"], $_quaters["order_qty/last/Q1"]); ?>
+                    </td>
+                    <td class="quaters">
+                        <?php echo $this->_formatOutput($_quaters["order_qty/now/Q2"], $_quaters["order_qty/last/Q2"]); ?>
+                    </td>
+                    <td class="quaters">
+                        <?php echo $this->_formatOutput($_quaters["order_qty/now/Q3"], $_quaters["order_qty/last/Q3"]); ?>
+                    </td>
+                    <td class="quaters">
+                        <?php echo $this->_formatOutput($_quaters["order_qty/now/Q4"], $_quaters["order_qty/last/Q4"]); ?>
+                    </td>
+                    <td>
+                        <?php echo $this->_formatOutput($_totals["order_qty/now/365"], $_totals["order_qty/last/365"]); ?>
+                    </td>
+                    <td>
+                        <?php echo $this->_formatOutput($_totals["order_qty/now/all"], false); ?>
+                    </td>
+                </tr>
+                <?php if (Mage::getStoreConfig('moogento_clean/dashboard/show_prices')) : ?>
+                    <tr>
+                        <td class="clean_sales_amount clean_row_icon tooltiped" title="<?php echo $this->__('Total %s Revenue', $this->_getCurrencySymbol()); ?>">
+                            <em></em>
+                        </td>
+                        <td class="clean_24h">
+                            <?php echo $this->_formatCurrency($_totals["order_totals/now/1"], $_totals["order_totals/last/1"]); ?>
+                        </td>
+                        <td>
+                            <?php echo $this->_formatCurrency($_totals["order_totals/now/7"], $_totals["order_totals/last/7"]); ?>
+                        </td>
+                        <td>
+                            <?php echo $this->_formatCurrency($_totals["order_totals/now/30"], $_totals["order_totals/last/30"]); ?>
+                        </td>
+                        <td class="quaters" title="внешний вид зависит от браузера, его нельзя изменить">
+                            <?php echo $this->_formatCurrency($_quaters["order_totals/now/Q1"], $_quaters["order_totals/last/Q1"]); ?>
+                        </td>
+                        <td class="quaters" title="внешний вид зависит от браузера, его нельзя изменить">
+                            <?php echo $this->_formatCurrency($_quaters["order_totals/now/Q2"], $_quaters["order_totals/last/Q2"]); ?>
+                        </td>
+                        <td class="quaters">
+                            <?php echo $this->_formatCurrency($_quaters["order_totals/now/Q3"], $_quaters["order_totals/last/Q3"]); ?>
+                        </td>
+                        <td class="quaters">
+                            <?php echo $this->_formatCurrency($_quaters["order_totals/now/Q4"], $_quaters["order_totals/last/Q4"]); ?>
+                        </td>
+                        <td>
+                            <?php echo $this->_formatCurrency($_totals["order_totals/now/365"], $_totals["order_totals/last/365"]); ?>
+                        </td>
+                        <td>
+                            <?php echo $this->_formatCurrency($_totals["order_totals/now/all"], false); ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            </table>
+         </span>
+    </fieldset>
+</div>
+<?php if (Mage::getStoreConfig('moogento_clean/dashboard/show_averages')
+          && ((Mage::getStoreConfig('moogento_clean/dashboard/show_average_order_amount')
+               + Mage::getStoreConfig('moogento_clean/dashboard/show_average_product_price')
+               + Mage::getStoreConfig('moogento_clean/dashboard/show_average_products_per_order')
+               + Mage::getStoreConfig('moogento_clean/dashboard/show_average_day')) > 0)) : ?>
+    <?php $_averages = $this->getAverages() ?>
+    <div class="entry-edit clean_dash" id="clean_orders">
+        <div class="entry-edit-head">
+            <h4><?php echo $this->__('Averages') ?><em></em></h4>
+            <span class="drop_graph_img"></span>
+        </div>
+        <fieldset class="a-center">
+        <span>
+            <table width="100%">
+                <tr class="clean_title clean_sales_title">
+                    <td class="clean_row_icon"></td>
+                    <td class="clean_24h">24h</td>
+                    <td>7d</td>
+                    <td>30d</td>
+                    <td class="quaters tooltiped" title="<?php echo $_quaters_names['Q1']; ?>"><span class="hidden_quaters"></span>Q-1</td>
+                    <td class="quaters tooltiped" title="<?php echo $_quaters_names['Q2']; ?>">Q-2</td>
+                    <td class="quaters tooltiped" title="<?php echo $_quaters_names['Q3']; ?>">Q-3</td>
+                    <td class="quaters tooltiped" title="<?php echo $_quaters_names['Q4']; ?>">Q-4</td>
+                    <td><span class="showing_quaters"></span>365d</td>
+                    <td><?php echo $this->__('All') ?></td>
+                </tr>
+                <?php if (Mage::getStoreConfig('moogento_clean/dashboard/show_prices')) : ?>
+                    <?php if (Mage::getStoreConfig('moogento_clean/dashboard/show_average_order_amount')) : ?>
+                        <tr>
+                            <td class="clean_avg_order clean_row_icon tooltiped" title="<?php echo $this->__('Average Order %s Amount', $this->_getCurrencySymbol()) ?>">
+                                <em></em>
+                            </td>
+                            <td class="clean_24h">
+                                <?php echo $this->_formatCurrency($_averages["avg_order_totals/now/1"], $_averages["avg_order_totals/last/1"]); ?>
+                            </td>
+                            <td>
+                                <?php echo $this->_formatCurrency($_averages["avg_order_totals/now/7"], $_averages["avg_order_totals/last/7"]); ?>
+                            </td>
+                            <td>
+                                <?php echo $this->_formatCurrency($_averages["avg_order_totals/now/30"], $_averages["avg_order_totals/last/30"]); ?>
+                            </td>
+                            <td class="quaters">
+                                <?php echo $this->_formatCurrency($_quaters["avg_order_totals/now/Q1"], $_quaters["avg_order_totals/last/Q1"]); ?>
+                            </td>
+                            <td class="quaters">
+                                <?php echo $this->_formatCurrency($_quaters["avg_order_totals/now/Q2"], $_quaters["avg_order_totals/last/Q2"]); ?>
+                            </td>
+                            <td class="quaters">
+                                <?php echo $this->_formatCurrency($_quaters["avg_order_totals/now/Q3"], $_quaters["avg_order_totals/last/Q3"]); ?>
+                            </td>
+                            <td class="quaters">
+                                <?php echo $this->_formatCurrency($_quaters["avg_order_totals/now/Q4"], $_quaters["avg_order_totals/last/Q4"]); ?>
+                            </td>
+                            <td>
+                                <?php echo $this->_formatCurrency($_averages["avg_order_totals/now/365"], $_averages["avg_order_totals/last/365"]); ?>
+                            </td>
+                            <td>
+                                <?php echo $this->_formatCurrency($_averages["avg_order_totals/now/all"], false); ?>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                    <?php if (Mage::getStoreConfig('moogento_clean/dashboard/show_average_product_price')) : ?>
+                        <tr>
+                            <td class="clean_avg_product clean_row_icon tooltiped"
+                                title="<?php echo $this->__('Average Product Price') ?>">
+                                <em></em>
+                            </td>
+                            <td class="clean_24h">
+                                <?php echo $this->_formatCurrency($_averages["avg_product_cost/now/1"], $_averages["avg_product_cost/last/1"]); ?>
+                            </td>
+                            <td>
+                                <?php echo $this->_formatCurrency($_averages["avg_product_cost/now/7"], $_averages["avg_product_cost/last/7"]); ?>
+                            </td>
+                            <td>
+                                <?php echo $this->_formatCurrency($_averages["avg_product_cost/now/30"], $_averages["avg_product_cost/last/30"]); ?>
+                            </td>
+                            <td class="quaters">
+                                <?php echo $this->_formatCurrency($_quaters["avg_product_cost/now/Q1"], $_quaters["avg_product_cost/last/Q1"]); ?>
+                            </td>
+                            <td class="quaters">
+                                <?php echo $this->_formatCurrency($_quaters["avg_product_cost/now/Q2"], $_quaters["avg_product_cost/last/Q2"]); ?>
+                            </td>
+                            <td class="quaters">
+                                <?php echo $this->_formatCurrency($_quaters["avg_product_cost/now/Q3"], $_quaters["avg_product_cost/last/Q3"]); ?>
+                            </td>
+                            <td class="quaters">
+                                <?php echo $this->_formatCurrency($_quaters["avg_product_cost/now/Q4"], $_quaters["avg_product_cost/last/Q4"]); ?>
+                            </td>
+                            <td>
+                                <?php echo $this->_formatCurrency($_averages["avg_product_cost/now/365"], $_averages["avg_product_cost/last/365"]); ?>
+                            </td>
+                            <td>
+                                <?php echo $this->_formatCurrency($_averages["avg_product_cost/now/all"], false); ?>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if (Mage::getStoreConfig('moogento_clean/dashboard/show_average_products_per_order')) : ?>
+                    <tr>
+                        <td class="clean_avg_qty clean_row_icon tooltiped" title="<?php echo $this->__('Average # Products in Each Order') ?>">
+                            <em></em>
+                        </td>
+                        <td class="clean_24h">
+                            <?php echo $this->_formatOutput($_averages["avg_qty_items_in_order/now/1"], $_averages["avg_qty_items_in_order/last/1"]); ?>
+                        </td>
+                        <td>
+                            <?php echo $this->_formatOutput($_averages["avg_qty_items_in_order/now/7"], $_averages["avg_qty_items_in_order/last/7"]); ?>
+                        </td>
+                        <td>
+                            <?php echo $this->_formatOutput($_averages["avg_qty_items_in_order/now/30"], $_averages["avg_qty_items_in_order/last/30"]); ?>
+                        </td>
+                        <td class="quaters">
+                            <?php echo $this->_formatOutput($_quaters["avg_qty_items_in_order/now/Q1"], $_quaters["avg_qty_items_in_order/last/Q1"]); ?>
+                        </td>
+                        <td class="quaters">
+                            <?php echo $this->_formatOutput($_quaters["avg_qty_items_in_order/now/Q2"], $_quaters["avg_qty_items_in_order/last/Q2"]); ?>
+                        </td>
+                        <td class="quaters">
+                            <?php echo $this->_formatOutput($_quaters["avg_qty_items_in_order/now/Q3"], $_quaters["avg_qty_items_in_order/last/Q3"]); ?>
+                        </td>
+                        <td class="quaters">
+                            <?php echo $this->_formatOutput($_quaters["avg_qty_items_in_order/now/Q4"], $_quaters["avg_qty_items_in_order/last/Q4"]); ?>
+                        </td>
+                        <td>
+                            <?php echo $this->_formatOutput($_averages["avg_qty_items_in_order/now/365"], $_averages["avg_qty_items_in_order/last/365"]); ?>
+                        </td>
+                        <td>
+                            <?php echo $this->_formatOutput($_averages["avg_qty_items_in_order/now/all"], false); ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+
+                <?php if (Mage::getStoreConfig('moogento_clean/dashboard/show_average_day')) : ?>
+                    <tr>
+                        <td class="clean_avg_day clean_row_icon tooltiped" title="<?php echo $this->__('Average 24h %s Revenue', $this->_getCurrencySymbol()) ?>">
+                            <em></em>
+                        </td>
+                        <td class="clean_24h">
+                            <?php echo $this->_formatCurrency($_averages["avg_order_day/now/1"], $_averages["avg_order_day/last/1"]); ?>
+                        </td>
+                        <td>
+                            <?php echo $this->_formatCurrency($_averages["avg_order_day/now/7"], $_averages["avg_order_day/last/7"]); ?>
+                        </td>
+                        <td>
+                            <?php echo $this->_formatCurrency($_averages["avg_order_day/now/30"], $_averages["avg_order_day/last/30"]); ?>
+                        </td>
+                        <td class="quaters">
+                            <?php echo $this->_formatCurrency($_quaters["avg_order_day/now/Q1"], $_quaters["avg_order_day/last/Q1"]); ?>
+                        </td>
+                        <td class="quaters">
+                            <?php echo $this->_formatCurrency($_quaters["avg_order_day/now/Q2"], $_quaters["avg_order_day/last/Q2"]); ?>
+                        </td>
+                        <td class="quaters">
+                            <?php echo $this->_formatCurrency($_quaters["avg_order_day/now/Q3"], $_quaters["avg_order_day/last/Q3"]); ?>
+                        </td>
+                        <td class="quaters">
+                            <?php echo $this->_formatCurrency($_quaters["avg_order_day/now/Q4"], $_quaters["avg_order_day/last/Q4"]); ?>
+                        </td>
+                        <td>
+                            <?php echo $this->_formatCurrency($_averages["avg_order_day/now/365"], $_averages["avg_order_day/last/365"]); ?>
+                        </td>
+                        <td>
+                            <?php echo $this->_formatCurrency($_averages["avg_order_day/now/all"], false); ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            </table>
+        </span>
+        </fieldset>
+    </div>
+<?php endif; ?>
+<script>
+    jQuery(document).ready(function ($) {
+        $('.tooltiped').tooltipster({
+            delay: 100,
+            maxWidth: 500,
+            speed: 300,
+            interactive: true,
+            animation: 'grow',
+            trigger: 'hover'
+        });
+    });
+</script>

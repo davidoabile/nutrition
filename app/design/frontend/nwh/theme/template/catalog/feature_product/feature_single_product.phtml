@@ -1,0 +1,117 @@
+<?php
+    $connection = Mage::getSingleton('core/resource')->getConnection('distributor_read');
+    //I assuming that you created the model for your table
+    $results = $connection->fetchAll("SELECT * FROM feature_product WHERE id = 1 limit 1");
+    $Featureproduct = Mage::getModel('catalog/product')->loadByAttribute('sku', $results[0]['sku']);
+?>
+<head>
+<meta property="og:title" content="<?php echo $Featureproduct->getName() ?>" />
+<meta property="og:type" content="product" />
+<meta property="og:url" content="<?php echo $this->helper('catalog/product')->getProductUrl($Featureproduct) ?>" />
+<meta property="og:image" content="<?php echo $this->helper('catalog/image')->init($Featureproduct, 'image')->resize(300, 300) ?>" />
+<meta property="og:description" content="<?php echo strip_tags($Featureproduct->getShortDescription()) ?>" />
+<meta property="og:site_name" content="<?php echo Mage::app()->getStore()->getName() ?>" />
+</head>
+<div class="main_part mrgn_b20">
+    <div class="hadd_pink2">
+        <h1>FEATURED PRODUCT</h1>
+        <div class="triangle-bottomleft"></div>
+    </div>
+    <div class="fw_area">
+        <div class="left">
+            <div class="fwimg"><span><img  src="<?php echo $this->helper('catalog/image')->init($Featureproduct, 'small_image')->resize(115, 115) ?>" alt="<?php echo $this->htmlEscape($Featureproduct->getName()) ?>" /></span></div>
+            <div class="fwimg_detl">
+                <h4><?php echo $this->htmlEscape($Featureproduct->getName()) ?></h4>
+                <div class="comman mrgn_t10 font14_blk">
+                    <?php
+                        $shordesc = strip_tags($Featureproduct->getShortDescription());
+                        if (strlen($shordesc) > 34) {
+                            echo substr($this->htmlEscape($shordesc), 0, 34) . '...';
+                        } else {
+                            echo $this->htmlEscape($shordesc);
+                        }
+                    ?>
+                </div>
+                <div class="comman mrgn_t5 font12_gry">
+                    <?php
+                        $description = strip_tags($Featureproduct->getDescription());
+                        if (strlen($description) > 335) {
+                            echo substr($this->htmlEscape($description), 0, 335) . '...';
+                        } else {
+                            echo $this->htmlEscape($description);
+                        }
+                    ?>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="pricing">
+                <ul>
+		            <div style="float: left; height: 105px;">
+                        <?php if ($Featureproduct->getSpecialPrice()): ?>
+                            <?php if ($Featureproduct->getPrice() < $Featureproduct->getSpecialPrice()): ?>
+                                <li>
+                                    <div class="pricingleft font18_gry">RRP</div>
+                                    <div class="pricingright font30_gry">$0.00</div>
+                                </li>
+                                <li>
+                                    <div class="pricingleft font18_red">WP</div>
+                                    <div class="pricingright font30_red"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol() ?><?php echo number_format($Featureproduct->getPrice(), '2', '.', ',') ?></div>
+                                </li>
+                            <?php else: ?>
+                                <li>
+                                    <div class="pricingleft font18_gry">RRP</div>
+                                    <div class="pricingright font30_gry"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol() ?><?php echo number_format($Featureproduct->getPrice(), '2', '.', ',') ?></div>
+                                </li>
+                                <li>
+                                    <div class="pricingleft font18_red">WP</div>
+                                    <div class="pricingright font30_red"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol() ?><?php echo number_format($Featureproduct->getSpecialPrice(), '2', '.', ',') ?></div>
+                                </li>
+                            <?php endif ?>
+                        <?php else: ?>
+                            <li>
+                                <div class="pricingleft font18_gry">RRP</div>
+                                <div class="pricingright font30_gry">$0.00</div>
+                            </li>
+                            <li>
+                                <div class="pricingleft font18_red">WP</div>
+                                <div class="pricingright font30_red"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol() ?><?php echo number_format($Featureproduct->getPrice(), '2', '.', ',') ?></div>
+                            </li>
+                        <?php endif ?>
+                        <?php
+                            $_finalPrice = $Featureproduct->getFinalPrice();
+                            $_price = $Featureproduct->getPrice();
+                        ?>
+                        <?php if ($_finalPrice < $_price): ?>
+                            <?php
+                                $_savePercent = 100 - round(($_finalPrice / $_price) * 100);
+                                $_saveAmount  = number_format(($_price - $_finalPrice), 2);
+                            ?>
+                            <li>
+                                <div class="pricingleft font14_blk">SAVE</div>
+                                <div class="pricingright font14_blk"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol() ?><?php echo $_saveAmount ?></div>
+                            </li>
+                        <?php endif ?>
+                    </div>
+                    <?php $_compareUrl = $this->helper('catalog/product_compare')->getAddUrl($Featureproduct) ?>
+                    <li class="mrgn_t5"><a class="link12_red" href="<?php echo $_compareUrl ?>">+ Add to compare</a></li>
+                    <li><a href="<?php echo $Featureproduct->getProductUrl() ?>" class="view_detail_button">VIEW DETAILS</a></li>
+                    <li class="mrgn_t5">
+                        <div style="line-height:20px;width: auto;" class="pricingleft font14_blk">SHARE +</div>
+                        <div class="pricingright">
+                            <div class="social_small">
+                                <?php $share_url = urlencode($Featureproduct->getProductUrl()) ?>
+                                <a href="javascript:popWin('https://www.facebook.com/sharer/sharer.php?s=100&p[title]=<?php echo urlencode($Featureproduct->getName()) ?>&p[summary]=<?php echo urlencode($shordesc) ?>&p[url]=<?php echo urlencode($Featureproduct->getProductUrl()) ?>&p[images][0]=<?php echo urlencode($this->helper('catalog/image')->init($Featureproduct, 'small_image')->resize(115, 115)) ?>', 'facebook', 'width=640,height=480,left=0,top=0,location=no,status=yes,scrollbars=yes,resizable=yes');" >
+                                    <img src="<?php echo $this->getSkinUrl('images/fb_red.png') ?>">
+                                </a>
+                                <a href="javascript:popWin('http://twitter.com/home/?status=<?php echo urlencode($Featureproduct->getName() . '' . $Featureproduct->getProductUrl()) ?>', 'twitter', 'width=640,height=480,left=0,top=0,location=no,status=yes,scrollbars=yes,resizable=yes');" title="<?php echo $this->__('Tweet') ?>">
+                                    <img src="<?php echo $this->getSkinUrl('images/twitter_red.png') ?>">
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div> 

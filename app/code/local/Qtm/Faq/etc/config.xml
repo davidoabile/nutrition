@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Qtm_Faq>
+      <version>0.0.9</version>
+    </Qtm_Faq>
+  </modules>
+  <global>
+    <helpers>
+      <faq>
+        <class>Qtm_Faq_Helper</class>
+      </faq>
+    </helpers>
+	<blocks>
+	  <faq>
+		<class>Qtm_Faq_Block</class>
+	  </faq>
+	</blocks>
+	<models>
+	  <faq>
+		<class>Qtm_Faq_Model</class>
+		<resourceModel>faq_mysql4</resourceModel>
+	  </faq>
+	  <faq_mysql4>
+		<class>Qtm_Faq_Model_Mysql4</class>
+		<entities>		  
+			  <faq>
+				<table>faq</table>
+			  </faq>
+		</entities>
+	  </faq_mysql4>
+	</models>
+	<resources>
+	  <faq_setup>
+		<setup>
+		  <module>Qtm_Faq</module>
+		</setup>
+		<connection>
+		  <use>core_setup</use>
+		</connection>
+	  </faq_setup>
+	  <faq_write>
+		<connection>
+		  <use>core_write</use>
+		</connection>
+	  </faq_write>
+	  <faq_read>
+		<connection>
+		  <use>core_read</use>
+		</connection>
+	  </faq_read>
+	</resources>
+  </global>
+  <admin>
+	<routers>
+	  <adminhtml>
+				<args>
+					<modules>
+						<faq before="Mage_Adminhtml">Qtm_Faq_Adminhtml</faq>
+					</modules>
+				</args>
+			</adminhtml>
+	</routers>
+  </admin>
+  <adminhtml>
+	<menu>
+	  <faq module="faq">
+		<title>Faq</title>
+		<sort_order>100</sort_order>
+		<children>
+		  <faq module="faq">
+		    <title>Manage Faq</title>
+			<sort_order>0</sort_order>
+			<action>adminhtml/faq_faq</action>
+		  </faq>
+		</children>
+	  </faq>
+	</menu>
+	<acl>
+	  <resources>
+		<all>
+		  <title>Allow Everything</title>
+		</all>
+		<admin>
+		  <children>
+			<faq translate="title" module="faq">
+			  <title>Faq</title>
+			  <sort_order>1000</sort_order>
+			  <children>
+		  <faq translate="title">
+			<title>Manage Faq</title>
+			<sort_order>0</sort_order>
+		  </faq>
+			  </children>
+			</faq>
+		  </children>
+		</admin>
+	  </resources>
+	</acl>
+	<layout>
+	  <updates>
+		<faq>
+		  <file>faq.xml</file>
+		</faq>
+	  </updates>
+	</layout>
+  </adminhtml>
+</config> 

@@ -1,0 +1,99 @@
+<?php
+/**
+ * Use this template to display the sidebar menu inside static blocks and pages.
+ */
+?>
+<?php
+    $helper = Mage::helper('ultramegamenu');
+    $visibilityClass = $helper->getCfg('sidemenu/hide_on_mobile') ? ' hide-below-768' : '';
+
+    //Get starting category - a point where traverse begins
+    $categoryId = $this->getParent();
+    if ($categoryId === NULL) //Param not set
+    {
+        $categoryId = $helper->getCfg('sidemenu/parent');
+    }
+
+    //Get depth of recursion - how many levels of subcategories retrieve
+    $depth = $this->getDepth();
+    if ($depth === NULL) //Param not set
+    {
+        $depth = intval($helper->getCfg('sidemenu/depth'));
+    }
+    else
+    {
+        $depth = intval($depth);
+    }
+//$depth=5;
+    //Render categories menu HTML
+    $html = $this->renderMe(TRUE, $categoryId, $depth);
+    if (!$html)
+    {
+        return '';
+    }
+?>
+<div class="block block-vertnav<?php echo $visibilityClass; ?>" id="main_sidebar">
+    <div class="block-title"><?php echo $this->renderBlockTitle(); ?></div>
+    <div class="block-content">
+        <ul class="accordion accordion-style1 vertnav vertnav-side clearer root_list"> <?php //Class "vertnav-side" left for backward compatibility ?>
+            <?php echo $html; ?>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        var all_list = jQuery("#main_sidebar").find("li.level0");
+        var count_list = all_list.length;
+        all_list.each(function(index){
+            if (index >= 5) {
+                jQuery(this).addClass("sidebar_hiden");
+            }
+        });
+        if (count_list >= 5) {
+            jQuery("#main_sidebar .root_list").append("<li><a href='javascript:void(0)' onclick='showmore(this)' class='link_showmore'><?php echo $this->__("show more")?></a></li>");
+        };
+    });
+    function showmore(obj){
+        var text = jQuery(obj).html();
+        if(text == "<?php echo $this->__("show more")?>") {
+            jQuery("#main_sidebar").find("li.sidebar_hiden").addClass("sidebar_show").removeClass("sidebar_hiden");
+            jQuery(obj).html("<?php echo $this->__("show less")?>");
+        }else{
+            jQuery("#main_sidebar").find("li.sidebar_show").addClass("sidebar_hiden").removeClass("sidebar_show");
+            jQuery(obj).html("<?php echo $this->__("show more")?>")
+        }
+    }
+</script>
+<style type="text/css">
+    .sidebar_hiden{display: none!important;}
+    .link_showmore{ border: none!important; text-align: center;}
+</style>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        var all_filter = jQuery("#narrow-by-list").find(".collapsible");
+        all_filter.each(function(index, value){
+            var all_list = jQuery(this).find("li");
+            var count_list = all_list.length;
+            all_list.each(function(index){
+                if (index >= 5) {
+                    jQuery(this).addClass("sidebar_hiden");
+                }
+            });
+            if (count_list >= 5) {
+                jQuery(this).find("ol").append("<li><a href='javascript:void(0)' onclick='showmore_filter(this)' class='link_showmore'><?php echo $this->__("show more")?></a></li>");
+            };
+        });
+        
+    });
+    function showmore_filter(obj){
+        var text = jQuery(obj).html();
+        if(text == "<?php echo $this->__("show more")?>") {
+            jQuery(obj).parent().parent().find("li.sidebar_hiden").addClass("sidebar_show").removeClass("sidebar_hiden");
+            jQuery(obj).html("<?php echo $this->__("show less")?>");
+            console.log('ss');
+        }else{
+            jQuery(obj).parent().parent().find("li.sidebar_show").addClass("sidebar_hiden").removeClass("sidebar_show");
+            jQuery(obj).html("<?php echo $this->__("show more")?>")
+        }
+    }
+</script>

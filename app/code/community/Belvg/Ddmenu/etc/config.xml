@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * BelVG LLC.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ *
+/**********************************************
+ *        MAGENTO EDITION USAGE NOTICE        *
+ **********************************************/
+/* This package designed for Magento COMMUNITY edition
+ * BelVG does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * BelVG does not provide extension support in case of
+ * incorrect edition usage.
+/**********************************************
+ *        DISCLAIMER                          *
+ **********************************************/
+/* Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future.
+ **********************************************
+ * @category   Belvg
+ * @package    Belvg_DropDownMenu
+ * @copyright  Copyright (c) 2010 - 2014 BelVG LLC. (http://www.belvg.com)
+ * @license    http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ */
+-->
+<config>
+    <modules>
+        <Belvg_Ddmenu>
+            <version>1.2.2</version>
+            <update>13-07-2014</update>
+            <desc>Stock Version</desc>
+        </Belvg_Ddmenu>
+    </modules>
+    <admin>
+        <routers>
+            <adminhtml>
+				<args>
+					<modules>
+						<ddmenu before="Mage_Adminhtml">Belvg_Ddmenu_Adminhtml</ddmenu>
+					</modules>
+				</args>
+			</adminhtml>
+        </routers>
+    </admin>
+    <frontend>
+        <routers>
+            <ddmenu>
+                <use>standard</use>
+                <args>
+                    <module>Belvg_Ddmenu</module>
+                    <frontName>ddmenu</frontName>
+                </args>
+            </ddmenu>
+        </routers>
+        <layout>
+            <updates>
+                <ddmenu>
+                    <file>belvg/ddmenu.xml</file>
+                </ddmenu>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Belvg_Ddmenu>
+                    <files>
+                        <default>Belvg_Ddmenu.csv</default>
+                    </files>
+                </Belvg_Ddmenu>
+            </modules>
+        </translate>
+    </frontend>        
+    <adminhtml>
+        <layout>
+            <updates>
+                <ddmenu>
+                    <file>belvg/ddmenu.xml</file>
+                </ddmenu>
+            </updates>
+        </layout>
+        <events>
+            <core_block_abstract_prepare_layout_after>
+                <observers>
+                    <belvg_category_ddmenu_injectTabs>
+                        <class>ddmenu/observer_category</class>
+                        <method>injectTabs</method>
+                    </belvg_category_ddmenu_injectTabs>
+                </observers>
+            </core_block_abstract_prepare_layout_after>
+            <catalog_category_save_after>
+                <observers>
+                    <belvg_save_category_ddmenu_data>
+                        <class>ddmenu/observer_category</class>
+                        <method>saveTabData</method>
+                    </belvg_save_category_ddmenu_data>
+                </observers>
+            </catalog_category_save_after>
+        </events>
+    </adminhtml>   
+    <global>
+        <resources>
+            <ddmenu_setup>
+                <setup>
+                    <module>Belvg_Ddmenu</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </ddmenu_setup>
+            <ddmenu_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </ddmenu_write>
+            <ddmenu_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </ddmenu_read>
+        </resources>
+        <blocks>
+            <ddmenu><class>Belvg_Ddmenu_Block</class></ddmenu>
+            <page>
+                <rewrite>
+                    <html_topmenu>Belvg_Ddmenu_Block_Navigation17</html_topmenu>
+                </rewrite>
+            </page>
+        </blocks>
+        <helpers>
+            <ddmenu>
+                <class>Belvg_Ddmenu_Helper</class>
+            </ddmenu>
+        </helpers>
+        <models>
+            <ddmenu>
+                <class>Belvg_Ddmenu_Model</class>
+                <resourceModel>ddmenu_mysql4</resourceModel>
+            </ddmenu>
+            <ddmenu_mysql4>
+                <class>Belvg_Ddmenu_Model_Mysql4</class>
+                <entities>
+                    <ddmenu>
+                        <table>belvg_dropdown_menu</table>
+                    </ddmenu>
+                </entities>
+            </ddmenu_mysql4>
+        </models>
+    </global>
+    <default>
+        <ddmenu>
+            <settings>
+                <home>1</home>
+                <fly>1</fly>
+                <fly_background>#BBBBBB</fly_background>
+                <fly_opacity>0.8</fly_opacity>
+                <overlay_show>1</overlay_show>
+                <overlay_color>#000000</overlay_color>
+                <overlay_opacity>0.7</overlay_opacity>
+            </settings>
+            <animate>
+                <transition_in>fade</transition_in>
+                <transition_in_easing>linear</transition_in_easing>
+                <speed_in>300</speed_in>
+                <transition_out>fade</transition_out>
+                <transition_out_easing>linear</transition_out_easing>
+                <speed_out>200</speed_out>
+            </animate>
+        </ddmenu>
+    </default>
+</config>

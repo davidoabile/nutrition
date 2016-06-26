@@ -1,0 +1,290 @@
+<?php
+$helper = Mage::helper('ultramegamenu');
+$mode = $helper->getCfg('general/mode');
+$_category = Mage::getModel('catalog/category')->load(Belvg_Local_Helper_Data::ATTRIBUTE_CATEGORIES);
+$_categories = $_category->getChildrenCategories();
+if($_categories->count()):?>
+    <div class="main_part mrgn_b20 shop-by-goal " id="shopby_category">
+        <div class="block-red">
+            <div class="block-title">
+                <h1 class="pc"><?php echo $this->__('SHOP BY CATEGORIES') ?></h1>
+                <h1 class="mb"><?php echo $this->__('SHOP BY CATEGORIES') ?></h1>
+            </div>
+        </div>
+        <div class="banner6_area">
+            <div class="pc">
+                <div class="comman">
+                    <?php
+                    $i       = 0;
+                    $columns = 3;
+                    $c       = $_categories->count();
+                    ?>
+                    <?php foreach ($_categories AS $_category): ?>
+                    <?php
+                    $i++;
+                    $_category = Mage::getModel('catalog/category')->load($_category->getEntityId());
+                    $url=($_category->getImage())?($_category->getImage()):$_category->getThumbnail();
+                   if(!empty($url)){
+                        $url=Mage::getBaseUrl('media').'catalog/category/'.$url;
+                    }
+                    ?>
+                    <a href="<?php echo $_category->getUrl() ?>" title="<?php echo $this->htmlEscape($_category->getName()) ?>" class="banner6">
+                        <img src="<?php echo $url;?>" alt="<?php echo $this->htmlEscape($_category->getName()) ?>" class="shopby-categories" />
+
+                    </a>
+                    <?php if (!($i % $columns) && ($i < $c)): ?>
+                </div>
+                <div class="comman">
+                    <?php endif ?>
+                    <?php endforeach ?>
+                </div>
+            </div>
+            <div class="mb">
+                    <?php echo $this->renderCategoriesMenuHtml($_categories); ?>
+            </div>
+            
+        </div>
+    </div>
+<?php endif;?>
+
+<script type="text/javascript">
+    //<![CDATA[
+
+
+
+        var MegaMenu_shopby = {
+
+            mobileMenuThreshold_shopby: <?php echo intval($helper->getCfg('mobilemenu/threshold')); ?>
+            , bar: jQuery('#shopbycategory')
+            , panels: null
+            , mobnavTriggerWrapper: null
+            , itemSelector: 'li'
+            , panelSelector: '.nav-panel'
+            , openerSelector: '.opener'
+            , isTouchDevice: ('ontouchstart' in window) || (navigator.msMaxTouchPoints > 0)
+            , ddDelayIn: 50
+            , ddDelayOut: 200
+            , ddAnimationDurationIn: 50
+            , ddAnimationDurationOut: 200
+
+            , init : function()
+            {
+                MegaMenu_shopby.panels = MegaMenu_shopby.bar.find(MegaMenu_shopby.panelSelector);
+                MegaMenu_shopby.mobnavTriggerWrapper = jQuery('.mobnav-trigger-wrapper');
+            }
+
+            , initDualMode : function()
+            {
+                MegaMenu_shopby.init();
+                MegaMenu_shopby.bar.accordion(MegaMenu_shopby.panelSelector, MegaMenu_shopby.openerSelector, MegaMenu_shopby.itemSelector);
+                if (jQuery(window).width() >= MegaMenu_shopby.mobileMenuThreshold_shopby)
+                {
+                    MegaMenu_shopby.cleanUpAfterMobileMenu(); //Required for IE8
+                }
+
+                if(typeof enquire != "undefined")  enquire
+                    .register('screen and (max-width: ' + (MegaMenu_shopby.mobileMenuThreshold_shopby - 1) + 'px)', {
+                        match: MegaMenu_shopby.activateMobileMenu,
+                        unmatch: MegaMenu_shopby.cleanUpAfterMobileMenu
+                    })
+                    .register('screen and (min-width: ' + MegaMenu_shopby.mobileMenuThreshold_shopby + 'px)', {
+                        deferSetup: true,
+                        setup: MegaMenu_shopby.cleanUpAfterMobileMenu,
+                        match: MegaMenu_shopby.activateRegularMenu,
+                        unmatch: MegaMenu_shopby.prepareMobileMenu
+                    });
+            }
+
+            , initMobileMode : function()
+            {
+                MegaMenu_shopby.init();
+                MegaMenu_shopby.bar.accordion(MegaMenu_shopby.panelSelector, MegaMenu_shopby.openerSelector, MegaMenu_shopby.itemSelector);
+                MegaMenu_shopby.activateMobileMenu();
+            }
+
+            , activateMobileMenu : function()
+            {
+                MegaMenu_shopby.mobnavTriggerWrapper.show();
+                MegaMenu_shopby.bar.addClass('nav-mobile acco').removeClass('nav-regular');
+            }
+
+            , activateRegularMenu : function() //Default state
+            {
+                MegaMenu_shopby.bar.addClass('nav-regular').removeClass('nav-mobile acco');
+                MegaMenu_shopby.mobnavTriggerWrapper.hide();
+            }
+
+            , cleanUpAfterMobileMenu : function()
+            {
+                <?php //Remove "display" modifications from all panels ?>
+                MegaMenu_shopby.panels.css('display', '');
+            }
+
+            , prepareMobileMenu : function()
+            {
+                <?php //Hide all panels ?>
+                MegaMenu_shopby.panels.hide();
+
+                <?php //Show panels of items with active class ?>
+                MegaMenu_shopby.bar.find('.item-active').each( function() {
+                    jQuery(this).children('.nav-panel').show();
+                });
+            }
+
+        }; //end: MegaMenu_shopby
+
+
+
+    <?php //Mode: mobile or both ------------------------------------------------- ?>
+    <?php if ($mode <= 0): ?>
+
+        <?php if ($mode == 0): //Mode: both ?>
+            MegaMenu_shopby.initDualMode();
+        <?php else: //Mode: mobile ($mode < 0) ?>
+            MegaMenu_shopby.initMobileMode();
+        <?php endif; ?>
+
+        //Toggle mobile menu
+        jQuery('a.mobnav-trigger').on('click', function(e) {
+            e.preventDefault();
+            if (jQuery(this).hasClass('active'))
+            {
+                MegaMenu_shopby.bar.removeClass('show');
+                jQuery(this).removeClass('active');
+            }
+            else
+            {
+                MegaMenu_shopby.bar.addClass('show');
+                jQuery(this).addClass('active');                    
+            }
+        })<?php if (!$helper->getCfg('mobilemenu/collapsed')): ?>.click()<?php endif; //Menu initially collapsed/opened ?>;
+
+    <?php endif; //end: mode mobile or both  ?>
+
+
+
+    <?php //Mode: regular or both ------------------------------------------------- ?>
+    <?php if ($mode >= 0): ?>
+
+        jQuery(function($) {
+
+            var menubar = MegaMenu_shopby.bar;
+
+            <?php //Non-clickable links ?>
+            menubar.on('click', '.no-click', function(e) {
+                e.preventDefault();
+            });
+
+            <?php //Menu top-level dropdowns ?>
+            menubar.on('mouseenter', 'li.parent.level0', function() {
+                
+                if (false === menubar.hasClass('nav-mobile'))
+                {
+                    var item = $(this);
+                    var dd = item.children('.nav-panel');
+
+                    var itemPos = item.position();
+                    var ddPos = { left: itemPos.left, top: itemPos.top + item.height() };
+                    if (dd.hasClass('full-width')) { ddPos.left = 0; }
+
+                    <?php ///////////////////////////////////////////////////////////////////// ?>
+                    <?php //Prevent dropdowns from spilling out of the viewport ?>
+                    dd.removeClass('tmp-full-width');
+
+                <?php if ($helper->getCfg('mainmenu/spill')): //Align dropdown with menu bar ?>
+                    var ddConOffset = 0;
+                    var outermostCon = menubar;
+                <?php else: //Align dropdown with viewport ?>
+                    var ddConOffset = menubar.offset().left;
+                    var outermostCon = $(window);
+                <?php endif; ?>
+
+                    var outermostContainerWidth = outermostCon.width();
+                    var ddOffset = ddConOffset + ddPos.left;
+                    var ddWidth = dd.outerWidth();
+
+                    <?php //If the dropdown will stick out of the outermostContainer (menu bar) ?>
+                    if ((ddOffset + ddWidth) > outermostContainerWidth)
+                    {
+                        <?php //Calculate width of the dropdown part that will stick out of the viewport and calculate the new corrected position of the dropdown ?>
+                        var diff = (ddOffset + ddWidth) - outermostContainerWidth;
+                        var ddPosLeft_NEW = ddPos.left - diff;
+
+                        <?php //Calculate new offset of the dropdown using the new corrected position of the dropdown ?>
+                        var ddOffset_NEW = ddOffset - diff;
+
+                        <?php //Check, if the dropdown will stick out of the viewport at the other side too ?>
+                        if (ddOffset_NEW < 0)
+                        {
+                            <?php //If yes, apply special class and set position of the dropdown to zero ?>
+                            dd.addClass('tmp-full-width');
+                            ddPos.left = 0;
+                        }
+                        else
+                        {
+                            <?php //If no, apply the new corrected position of the dropdown ?>
+                            ddPos.left = ddPosLeft_NEW;
+                        }
+                    }
+                    <?php ///////////////////////////////////////////////////////////////////// ?>
+
+                    dd
+                        .css({
+                            'left' : ddPos.left + 'px',
+                            'top'  : ddPos.top + 'px'
+                        })
+                        .stop(true, true).delay(MegaMenu_shopby.ddDelayIn).fadeIn(MegaMenu_shopby.ddAnimationDurationIn, "easeOutCubic");
+                }
+
+            }).on('mouseleave', 'li.parent.level0', function() {
+                
+                if (false === menubar.hasClass('nav-mobile'))
+                {
+                    $(this).children(".nav-panel")
+                    .stop(true, true).delay(MegaMenu_shopby.ddDelayOut).fadeOut(MegaMenu_shopby.ddAnimationDurationOut, "easeInCubic");
+                }
+
+            }); //end: menu top-level dropdowns
+            <?php if ($tmpHtml = $this->getChildHtml('block_header_nav_dropdown_right')): ?>
+                 <?php  $tmpHtml = str_replace("\n", "", $tmpHtml);
+                        $tmpHtml = str_replace("\r", "", $tmpHtml);?>
+                jQuery('.nav-submenu--mega').after('<?php echo $tmpHtml; ?>');
+                jQuery('.nav-submenu--mega').addClass('nav-ul-left');
+            <?php else: ?>
+                jQuery('.nav-submenu--mega').removeClass('nav-ul-left');
+            <?php endif;?>
+
+        }); //end: on document ready
+
+        jQuery(window).on("load", function() {
+
+            var menubar = MegaMenu_shopby.bar;
+
+            if (MegaMenu_shopby.isTouchDevice)
+            {
+                menubar.on('click', 'a', function(e) {
+
+                    link = jQuery(this);
+                    if (!menubar.hasClass('nav-mobile') && link.parent().hasClass('nav-item--parent'))
+                    {
+                        if (!link.hasClass('ready'))
+                        {
+                            e.preventDefault();
+                            menubar.find('.ready').removeClass('ready');
+                            link.parents('li').children('a').addClass('ready');
+                        }
+                    }
+
+                }); //end: on click
+            } //end: if isTouchDevice
+
+            jQuery(menubar).find("li.level0.nav-item--only-subcategories.parent").each(function(){
+                jQuery(this).find("a.level-top").attr("href","javascript:void(0)");
+            });
+            //console.log(menubar);
+
+        }); //end: on load
+
+    <?php endif; //end: regular or both ?>
+
+</script>

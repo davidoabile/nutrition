@@ -1,0 +1,256 @@
+<?php if (Mage::helper('bonusoffers/gifts')->isShowPopup()): ?>
+    <?php echo $this->getChildHtml('gift_popup') ?>
+<?php endif ?>
+ 
+<div class="a_step">
+    <ul>
+        <li>
+            <div class="num bg_red">1</div>
+            <div class="text font12_dgry">SHOPPING<br>CART</div>
+        </li>
+        <li>
+            <div class="num bg_gry">2</div>
+            <div class="text font12_lgry">CHECKOUT<br>METHOD</div>
+        </li>
+        <li>
+            <div class="num bg_gry">3</div>
+            <div class="text font12_lgry">PERSONAL<br>DETAILS</div>
+        </li>
+        <li>
+            <div class="num bg_gry">4</div>
+            <div class="text font12_lgry">SHIPPING &amp;<br>PAYMENT</div>
+        </li>
+        <li>
+            <div class="num bg_gry">5</div>
+            <div class="text font12_lgry">ORDER<br>CONFIRMATION</div>
+        </li>
+    </ul>
+</div>
+<div class="form_main cart">
+    <div class="form_heading">
+        <div class="form_heading_left">
+            <?php echo $this->__('Shopping cart') ?>
+            <div class="form_heading_left_text">
+                <?php echo $this->__('Please check your cart') ?>
+            </div>
+        </div>
+        <div class="form_heading_right">
+            <?php echo $this->__('Need help?') . ' ' . Mage::getStoreConfig('general/store_information/phone') ?>
+            <div class="form_heading_right_text">
+                <a class="link14_gry" href="<?php echo $this->getContinueShoppingUrl() ?>"><?php echo $this->__('Continue shopping') ?></a>
+            </div>
+        </div>
+    </div>
+    <div class="form_center_line"></div>
+    <div class="sc_area mrgn_t20">
+        <div class="sc_left">
+            <div class="cartaera">
+                <div class="cart_hadd">
+                    <?php echo $this->__('Your order') ?>
+                </div>
+                <div class="item_detl mrgn_t20">
+                    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+                    <?php echo $this->getChildHtml('form_before') ?>
+                    <form action="<?php echo $this->getUrl('checkout/cart/updatePost') ?>" method="post">
+                        <?php echo $this->getBlockHtml('formkey') ?>
+                        <table id="shopping-cart-table" width="100%" class="cart-table">
+                            <col width="1" />
+                            <col />
+                            <col width="1" />
+                            <?php if ($this->helper('wishlist')->isAllowInCart()) : ?>
+                                <col width="1" />
+                            <?php endif ?>
+                            <?php if ($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                                <col width="1" />
+                            <?php endif ?>
+                            <?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                                <col width="1" />
+                            <?php endif ?>
+                            <col width="1" />
+                            <?php if ($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                                <col width="1" />
+                            <?php endif ?>
+                            <?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                                <col width="1" />
+                            <?php endif ?>
+                            <col width="1" />
+
+                            <?php $mergedCells = ($this->helper('tax')->displayCartBothPrices() ? 2 : 1) ?>
+                            <thead>
+                                <tr>
+                                    <th rowspan="<?php echo $mergedCells ?>">&nbsp;</th>
+                                    <th rowspan="<?php echo $mergedCells ?>"><span class="nobr"><?php echo $this->__('Item') ?></span></th>
+                                    <?php if ($this->helper('wishlist')->isAllowInCart()): ?>
+                                        <th rowspan="<?php echo $mergedCells ?>" class="a-center"><span class="nobr"><?php echo $this->__('Move to Wishlist') ?></span></th>
+                                    <?php endif ?>
+                                    <th class="a-center" colspan="<?php echo $mergedCells ?>"><span class="nobr"><?php echo $this->__('Price') ?></span></th>
+                                    <th rowspan="<?php echo $mergedCells ?>" class="a-center"><?php echo $this->__('Qty') ?></th>
+                                    <th class="a-center" rowspan="<?php echo $mergedCells ?>"><?php echo $this->__('Status') ?></th>
+                                    <th class="a-center" colspan="<?php echo $mergedCells ?>"><?php echo $this->__('Total') ?></th>
+                                </tr>
+                                <?php if ($this->helper('tax')->displayCartBothPrices()): ?>
+                                    <tr>
+                                        <th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>
+                                        <th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+                                        <th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>
+                                        <th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+                                    </tr>
+                                <?php endif ?>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($this->getItems() as $_item): ?>
+                                    <?php echo $this->getItemHtml($_item) ?>
+                                <?php endforeach ?>
+                            </tbody>
+                        </table>
+                        <script type="text/javascript">decorateTable('shopping-cart-table')</script>
+                    </form>
+                </div>
+                <?php if (Mage::helper('bonusoffers')->isShowPopup()): ?>
+                    <?php echo $this->getChildHtml('bonus_offer_popup') ?>
+                <?php endif ?>
+
+                <?php
+                    /*$cart = Mage::getModel('checkout/session')->getQuote();
+                    $shippingMethod = $cart->getShippingAddress();
+                    $shipping = false;
+                    if ($shippingMethod['shipping_amount'] != 0.00) {
+                        $shipping = true;
+                    }*/
+                ?>
+
+                <?php echo ($this->getIsVirtual()) ? '' : $this->getChildHtml('shipping') ?>
+                <?php /*
+                <div class="shipping_part mrgn_t40">
+                    <div class="cart_hadd">SHIPPING</div>
+                    <div class="shipping_detl">
+                        <ul>
+                            <li>
+                                <div class="left">
+                                    <input type="radio" name="radiog_dark" id="radio4" class="css-radiobox" <?php if($shipping == true){echo "checked=checked";} ?> value="1"/>
+                                    <label for="radio4" class="css-label2 radGroup2">
+                                        <span class="">FREIGHT</span><br />
+                                        <span class="shipping_subtitle">No postage insurance</span>
+                                    </label>
+                                </div>
+                                <div class="right font18_gry">$9.95</div>
+                            </li>
+                            <div class="divider"></div>
+                            <li>
+                                <div class="left">
+                                    <input type="radio" name="radiog_dark" id="radio5" class="css-radiobox" <?php if($shipping != true){echo "checked=checked";} ?> value="0"/>
+                                    <label for="radio5" class="css-label2 radGroup2">
+                                        <span class="">LOCAL PICK UP</span><br />
+                                        <span class="shipping_subtitle">Gold Coast warehouse only</span>
+                                    </label>
+                                </div>
+                                <div class="right font18_gry">$0.00</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                */ ?>
+                <div class="shipping_part">
+                    <div class="cart_hadd">INSURANCE</div>
+                    <?php
+                        $insrance = Mage::getSingleton("core/session")->getInsuranceAdd();
+                        $found = false;
+                        if ($insrance == 1){
+                            $found = true;
+                        }
+                    ?>
+                    <div class="shipping_detl">
+                        <ul>
+                            <li>
+                                <div class="left">
+                                    <input type="radio" <?php if($found == true){echo "checked=checked";} ?> name="radio_insurance" id="radio6" class="css-radiobox1" value="freight" />
+                                    <label for="radio6" class="css-label2 radGroup2">
+                                        <span class="">FREIGHT PROTECTION</span><br />
+                                        <span class="shipping_subtitle">Protect your order</span>
+                                    </label>
+                                </div>
+                                <div class="right font18_gry">$2.95</div>
+                            </li>
+                            <div class="divider"></div>
+                            <li>
+                                <div class="left">
+                                    <input type="radio" <?php echo ($found != true) ? 'checked=checked' : '' ?> name="radio_insurance" id="radio7" class="css-radiobox1" />
+                                    <label for="radio7" class="css-label2 radGroup2">
+                                        <span class="">NO THANKS</span><br />
+                                        <span class="shipping_subtitle">Protect your order</span>
+                                    </label>
+                                </div>
+                                <div class="right font18_gry">$0.00</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="cart-collaterals">
+                <div class="col2-set">
+                    <div class="col-1">
+                        <?php echo $this->getChildHtml('crosssell') ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shipping_part mrgn_t40">
+                <?php echo $this->getLayout()->createBlock("Mage_Core_Block_Template")->setTemplate("checkout/cart/coupon_ajax_cart.phtml")->toHtml() ?>
+            </div>
+            <div class="shipping_part mrgn_t40">
+                <?php echo $this->getChildHtml('checkout.cart.extra') ?>
+                <?php echo $this->getChildHtml('coupon') ?>
+            </div>
+        </div>
+        <div class="sc_right" id="order_summary_sidebar">
+            <div class="order_summary_content">
+                <div class="order_summary_hadd"><?php echo $this->__('ORDER SUMMARY') ?></div>
+                <?php echo $this->getChildHtml('totals') ?>
+                <?php if (!$this->hasError()): ?>
+                    <ul class="checkout-types">
+                        <?php foreach ($this->getMethods('methods') as $method): ?>
+                            <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
+                                <li class="comman mrgn_t10" style="text-align: center;"><?php echo $methodHtml ?></li>
+                            <?php endif ?>
+                        <?php endforeach ?>
+                        <li class="comman mrgn_t10" style="text-align: center;">
+                            <a title="<?php echo $this->__('Continue Shopping') ?>" class="link14_gry" href="<?php echo $this->getContinueShoppingUrl() ?>"><?php echo $this->__('Continue Shopping') ?></a> 
+                        </li>
+                    </ul>
+                <?php endif ?>
+            </div>
+            <div class="order_summary_footer">
+                <div id="confidance">
+                    <img src="<?php echo $this->getSkinUrl('images/cart_confidence.jpg') ?>"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="url_ajax_checkout" value="<?php echo $this->getUrl()?>">
+
+<?php
+    $session = Mage::getSingleton('checkout/session');
+    $quote   = $session->getQuote();
+    $address = $quote->getShippingAddress();
+    $country = null;
+
+    $customerSession = Mage::getSingleton("customer/session");
+    if ($customerSession -> isLoggedIn()) {
+        $customerAddress = $customerSession -> getCustomer() -> getDefaultShippingAddress();
+        if ($customerAddress != null) {
+            if ($customerAddress -> getId()) {
+                $country = $customerAddress -> getCountryId();
+            }
+        }
+    }
+
+    if ($country == null) {
+        $country = 'AU';
+    }
+
+    $address->setCountryId($country)->setCollectShippingRates(true)->collectShippingRates();
+    $method = $quote->getShippingMethod();
+    $quote->save();
+    $session->resetCheckout();
+?>

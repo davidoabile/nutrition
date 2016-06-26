@@ -1,0 +1,59 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<!--<form id="discount-coupon-form2" action="" method="post">-->
+	    <?php echo  Mage::getSingleton('customer/session')->getGiftmessage(); 
+Mage::getSingleton('customer/session')->setGiftmessage('');
+?>
+	        
+	        <div class="discount-form" style="float: left;">
+	            <label for="coupon_code" style="font-size: 12px;"><?php echo $this->__('Enter gift certificate number.') ?></label>
+	            
+<div class="" style="margin-top: 12px; float: left; margin-bottom: 10px;">
+	                <input style="width: 120px; margin-bottom: 0px; margin-top: 0px; padding-top: 6px; border-radius: 0px;" class="b_form_txtfld addgift" id="coupon_code1" name="coupon_code2" value="<?php echo $this->htmlEscape(Mage::getSingleton('checkout/session')->getQuote()->getCouponCode2()) ?>" />
+	             
+	             <?php if(strlen(Mage::getSingleton('checkout/session')->getQuote()->getCouponCode2())): ?>
+	                    <button type="button" title="<?php echo $this->__('Cancel') ?>" class="order_btn cancelcoupon" value="<?php echo $this->__('Cancel') ?>"><span><span><?php echo $this->__('Cancel') ?></span></span></button>
+	                    <?php else:?>
+	                    <button type="button" title="<?php echo $this->__('Apply') ?>" class="order_btn addcoupon" value="<?php echo $this->__('Apply') ?>"><span><span><?php echo $this->__('Apply') ?></span></span></button>
+	                    
+	                <?php endif;?>
+		            <span class="coupon-please-wait" id="coupon-please-wait" style="display:none; line-height:19px; margin-left:5px;"> <img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" alt="<?php echo $this->__('Submitting coupon information...') ?>" title="<?php echo $this->__('Submitting coupon information...') ?>" class="v-middle" />
+				        </span>
+	               
+	                </div>
+	           
+	        </div>
+	    
+<!--	</form>-->
+<input type="hidden" name="url_copond_onepage" value="?php echo $this->getUrl() ?>">
+<script>
+	jQuery.noConflict();
+	jQuery(document).ready(function(){
+		counpondOnepage();
+		
+	});
+</script>

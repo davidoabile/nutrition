@@ -1,0 +1,184 @@
+<?php
+    $helper = Mage::helper('moogento_clean');
+    $menu = $this->getMenuArray();
+    $_startupUurl = Mage::getSingleton('admin/session')->getUser()->getStartupPageUrl();
+?>
+
+<div class="nav-bar">
+	<?php
+		/**
+		Add page title here	
+		*/
+		$clean_pagetitle = '';
+		$clean_pagetitle_full = '';
+		$clean_pagetitle = $this->getLayout()->getBlock('head');
+		
+		// Make sure it doesn't return an error
+		if ($clean_pagetitle) {
+
+			$clean_pagetitle = $clean_pagetitle->getTitle();
+			$clean_pagetitle = preg_replace('~ /.*~', '', $clean_pagetitle);
+			// keep original for tooltip
+			$clean_pagetitle_full = $clean_pagetitle;
+			
+			$trim_pagetitle = '';
+			// check it's no too long
+			$trim_pagetitle = trim(mb_substr($clean_pagetitle, 0, 9));
+	
+			if($trim_pagetitle != $clean_pagetitle || ($trim_pagetitle == 'Dashboard')){
+				switch ($trim_pagetitle) {
+					case 'Cache Mana':
+					case 'Cache Man':
+					case 'Cache M':
+						$clean_pagetitle = 'Caches';
+						break;
+					
+					case 'Index Man':
+					case 'Index M':
+						$clean_pagetitle = 'Indexes';
+						break;
+						
+					case 'Configurat':
+					case 'Configura':
+					case 'Configu':
+						$clean_pagetitle = 'Config.';
+						break;
+				
+					case 'Credit Me':
+						$clean_pagetitle = 'Credit<em> Memo</em>s';
+						break;	
+						
+					case 'Dashboard':
+					case 'Dashboar':
+					case 'Dashboa':
+						$clean_pagetitle = 'Dash<em>board</em>';
+						break;
+								
+					case 'Magento A':
+						$clean_pagetitle = '<em>Magento </em>Admin';
+						break;	
+											
+					case 'Manage At':
+						if($clean_pagetitle_full == 'Manage Attribute Sets') $clean_pagetitle = 'Attrib<em>ute</em> Sets';
+						else $clean_pagetitle = 'Attrib<em>ute</em>s';
+						break;					
+					
+					case 'Manage Cat':
+					case 'Manage Ca':
+						$clean_pagetitle = 'Cat<em>egorie</em>s';
+						break;	
+
+					case 'Manage Co':
+						$clean_pagetitle = 'CMS<em>: Pages</em>';
+						break;
+							
+					case 'Static Bl':
+						$clean_pagetitle = 'CMS: Static<em> Blocks</em>';
+						break;
+										
+					case 'Manage Cus':
+					case 'Manage Cu':
+						$clean_pagetitle = 'Cust<em>omer</em>s';
+						break;
+													
+					case 'Manage Pro':
+					case 'Manage Pr':
+					case 'Manage P':
+						$clean_pagetitle = 'Prod<em>uct</em>s';
+						break;	
+						
+					case 'New Categ':
+						$clean_pagetitle = 'Cat<em>egory</em>: New';
+						break;
+
+					case 'New Invoi':
+						$clean_pagetitle = 'New Inv<em>oice</em>';
+						break;
+						
+					case 'New Produc':
+					case 'New Produ':
+						$clean_pagetitle = 'Prod<em>uct</em>s: New';
+						break;
+					
+					case 'New Templ':
+						$clean_pagetitle = '<em>New Transactional </em>Email Template';
+						break;
+				
+					case 'Online Cu':
+						$clean_pagetitle = 'Online<em> Customers</em>';
+						break;											
+
+					case 'Product &':
+						$clean_pagetitle = 'Stock H<em>isto</em>ry';
+						break;	
+						
+					case 'Process O':
+						$clean_pagetitle = '<em>Process </em>Orders : CSV';
+						break;	
+					
+					case 'Process S':
+						$clean_pagetitle = '<em>Process </em>Stock : CSV';
+						break;	
+						
+					
+					case 'Rewrite R':
+						$clean_pagetitle = 'Rewrite <em>(URLs)</em>';
+						break;	
+
+					case 'Sell On e':
+						$clean_pagetitle = '<em>m2Epro: </em>eBay';
+						break;	
+						
+					case 'Sell On M':
+						$clean_pagetitle = '<em>m2Epro: </em>Channels';
+						break;	
+												
+					case 'Shopping':
+					case 'Shoppin':
+						$clean_pagetitle = 'Rules (C<em>ar</em>t)';
+						break;	
+					
+					case '<em>Stockeasy Qty Changes':
+						$clean_pagetitle = 'Stockeasy Report<em> : Qty Changes</em>';
+						break;							
+
+					case 'View Ship':
+						$clean_pagetitle = '<em>View </em>Shipment';
+						break;	
+
+					case 'Catalog P':
+						$clean_pagetitle = 'Rules (Cat<em>alog</em>)';
+						break;	
+
+					default:
+						if (strpos($clean_pagetitle, '000') !== false)
+						{
+							// shorten order ids
+							$clean_pagetitle = str_replace(array('000','000'),'<span style="font-size:50%">00</span>',$clean_pagetitle);
+						}
+						else
+						{
+							// trim long titles
+							$clean_pagetitle = $trim_pagetitle.'&hellip;';
+						}
+						break;
+				}
+					
+			}
+			
+			echo '<h3 id="clean_title" title="'.$clean_pagetitle_full.'">'.$clean_pagetitle.'</h3>';
+		}
+		
+	?>
+<!-- menu start -->
+<?php echo $helper->getMenuLevel($menu); ?>
+<!-- menu end -->
+
+    <a id="page-help-link" href="<?php echo Mage::helper('adminhtml')->getPageHelpUrl() ?>"><?php echo $this->__('Get help for this page') ?></a>
+    <script type="text/javascript">$('page-help-link').target = 'magento_page_help'</script>
+    <?php if (strpos($_startupUurl, 'dashboard') !== false): ?>
+    <style>
+        #nav .dashboard {display: none;}
+    </style>
+    <?php endif; ?>
+</div>

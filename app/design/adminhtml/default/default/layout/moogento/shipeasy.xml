@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<!--
+  Moogento
+  
+  SOFTWARE LICENSE
+  
+  This source file is covered by the Moogento End User License Agreement
+  that is bundled with this extension in the file License.html
+  It is also available online here:
+  http://www.moogento.com/License.html
+  
+  NOTICE
+  
+  If you customize this file please remember that it will be overwrtitten
+  with any future upgrade installs. 
+  If you'd like to add a feature which is not in this software, get in touch
+  at www.moogento.com for a quote.
+  
+  ID          pe+sMEDTrtCzNq3pehW9DJ0lnYtgqva4i4Z=
+  File        shipeasy.xml
+  @category   Moogento
+  @package    pickPack
+  @copyright  Copyright (c) 2014 Moogento <info@moogento.com> / All rights reserved.
+  @license    http://www.moogento.com/License.html
+-->
+<layout>
+    <order_grid_handle>
+        <reference name="adminhtml_sales_order.grid">
+            <action method="setTemplate"><template>moogento/shipeasy/sales/order/grid.phtml</template></action>
+        </reference>
+    </order_grid_handle>
+    <adminhtml_sales_order_create_index>
+        <reference name="items_grid">
+            <action method="setTemplate"><template>moogento/shipeasy/sales/order/create/items/grid.phtml</template></action>
+        </reference>
+        <reference name="gift_options_link">
+            <action method="setTemplate"><template>moogento/shipeasy/sales/order/create/giftoptions.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_create_index>
+
+    <adminhtml_sales_order_create_load_block_data>
+        <reference name="gift_options_link">
+            <action method="setTemplate"><template>moogento/shipeasy/sales/order/create/giftoptions.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_create_load_block_data>
+
+    <adminhtml_sales_order_create_load_block_items>
+        <reference name="gift_options_link">
+            <action method="setTemplate"><template>moogento/shipeasy/sales/order/create/giftoptions.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_create_load_block_items>
+
+    <adminhtml_sales_order_view>
+        <reference name="head">
+            <action method="addJs"><script>moogento/general/jquery.min.js</script></action>
+            <action method="addJs"><script>moogento/general/autocomplete.js</script></action>
+            <action method="addJs"><script>moogento/shipeasy/adminhtml/orderView.js</script></action>
+            <action method="addCss"><file>moogento/general/autocomplete/autocomplete.css</file></action>
+            <action method="addCss"><file>moogento/shipeasy/shipeasy_view.css</file></action>
+            <action method="addCss"><script>moogento/general/spinner/spinner.css</script></action>
+        </reference>
+        <reference name="order_info">
+            <action method="setTemplate"><template>moogento/shipeasy/sales/order/view/info.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_view>
+
+    <ADD_MODALBOX_ITEMS_TO_HEAD>
+        <reference name="head">
+            <action method="addJs"><script>moogento/shipeasy/modalBox.js</script></action>
+            <action method="addJs"><script>moogento/shipeasy/adminhtml/popupMassaction.js</script></action>
+            <action ifconfig="moogento_shipeasy/general/use_ship_easy_css" method="addCss"><name>moogento/shipeasy/shipeasy_grid_extra.css</name></action>
+            <action method="addCss"><name>moogento/shipeasy/shipeasy_core.css</name></action>
+            <action method="addCss"><script>moogento/shipeasy/shipeasy_grid_style.css</script></action>   
+            <action method="addCss"><script>moogento/general/spinner/spinner.css</script></action>         
+        </reference>
+    </ADD_MODALBOX_ITEMS_TO_HEAD>
+
+    <!-- Sales order grid -->
+    <adminhtml_sales_order_index>
+
+        <reference name="content">
+            <block type="adminhtml/template" name="sales.order.after.chat" template="moogento/shipeasy/sales/order/chat.phtml" />
+            <block type="adminhtml/template" name="sales.order.after.scan" template="moogento/shipeasy/sales/order/scan.phtml" />
+        </reference>
+        <update handle="order_grid_handle" />
+        <reference name="head">
+            <action method="addJs"><script>moogento/general/jquery.min.js</script></action>
+            <action method="addJs"><script>moogento/general/jquery-ui.min.js</script></action>
+            <action method="addJs"><script>moogento/general/jquery.ddslick.js</script></action>
+            <action method="addJs"><script>moogento/general/chosen.jquery.js</script></action>
+            <action method="addJs"><script>moogento/shipeasy/adminhtml/orderGrid.js</script></action>
+            <action method="addJs"><script>moogento/general/spinner.js</script></action>
+            <action method="addJs"><script>moogento/shipeasy/adminhtml/persianDatepicker.js</script></action>
+            <action method="addJs"><script>moogento/shipeasy/adminhtml/jquery.ui.datepicker.ext.be.js</script></action>
+            <action method="addItem"><type>skin_css</type><name>moogento/general/chosen/chosen.css</name></action>         
+            <action method="addItem"><type>skin_css</type><name>moogento/general/jqueryui/jquery-ui.min.css</name></action>
+            <action method="addItem"><type>skin_css</type><name>moogento/general/jqueryui/persianDatePicker-default.css</name></action>
+            <action method="addItem"><type>skin_css</type><name>moogento/general/font-awesome/css/font-awesome.min.css</name></action>
+            <action method="addJs"><script>moogento/shipeasy/modalBox.js</script></action>
+            <action method="addJs"><script>moogento/shipeasy/adminhtml/popupMassaction.js</script></action>
+            <action ifconfig="moogento_shipeasy/general/use_ship_easy_css" method="addCss"><name>moogento/shipeasy/shipeasy_grid_extra.css</name></action>
+            <action method="addCss"><name>moogento/shipeasy/shipeasy_core.css</name></action>
+            <action method="addCss"><script>moogento/shipeasy/shipeasy_grid_style.css</script></action>
+            <action method="addCss"><script>moogento/general/spinner/spinner.css</script></action>
+        </reference>
+    </adminhtml_sales_order_index>
+
+    <adminhtml_sales_order_grid>
+        <block type="core/template" name="formkey" as="formkey" template="formkey.phtml"/>
+        <update handle="order_grid_handle" />
+    </adminhtml_sales_order_grid>
+    
+    <adminhtml_system_config_edit>
+        <reference name="head">
+            <action method="addJs"><script>moogento/shipeasy/adminhtml/grouping.js</script></action>
+            <action method="addJs"><script>moogento/jscolor/jscolor.js</script></action>
+            <!-- add css vs js for config section here -->
+            <action  method="addCss"><name>moogento/general/config.css</name></action>
+            <action  method="addCss"><name>moogento/shipeasy/shipeasy_core.css</name></action>
+        </reference>
+
+        <update handle="order_grid_handle" />
+    </adminhtml_system_config_edit>
+
+    <adminhtml_sales_order_action_attributeupdate>
+        <reference name="left">
+            <block type="moogento_shipeasy/adminhtml_sales_order_edit_action_attribute_tabs" name="attributes_tabs">
+                <block type="moogento_shipeasy/adminhtml_sales_order_edit_action_attribute_tab_general" name="general_tab"/>
+                <action method="addTab"><name>general</name><block>general_tab</block></action>
+            </block>
+        </reference>
+        <reference name="content">
+            <block type="moogento_shipeasy/adminhtml_sales_order_edit_action_attribute" name="attribute" template="moogento/shipeasy/sales/order/edit/action/attribute.phtml" />
+        </reference>
+    </adminhtml_sales_order_action_attributeupdate>
+
+    <adminhtml_sales_order_view>
+        <!--<update handle="ADD_MODALBOX_ITEMS_TO_HEAD" />-->
+        <reference name="order_history">
+            <action method="setTemplate"><template>moogento/shipeasy/sales/order/view/history.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_view>
+
+    <adminhtml_sales_order_comment_delete>
+        <block type="adminhtml/sales_order_view_history" name="order_history" template="moogento/shipeasy/sales/order/view/history.phtml" output="toHtml"/>
+    </adminhtml_sales_order_comment_delete>
+
+
+    <adminhtml_system_convert_shipments_index>
+        <reference name="head">
+            <action method="addJs"><script>moogento/shipeasy/adminhtml/import.js</script></action>
+        </reference>
+        <reference name="content">
+            <block type="moogento_shipeasy/adminhtml_sales_order_import" name="sales_order.import" before="-" />
+        </reference>
+    </adminhtml_system_convert_shipments_index>
+
+
+    <adminhtml_system_convert_shipments_post>
+        <remove name="root"/>
+        <block type="adminhtml/page" name="convert_root" output="toHtml" template="page.phtml">
+            <block type="adminhtml/page_head" name="convert_root_head" as="head" template="page/head.phtml">
+                <action method="addJs"><script>prototype/prototype.js</script></action>
+                <action method="addJs"><script>prototype/validation.js</script></action>
+                <action method="addJs"><script>varien/js.js</script></action>
+                <action method="addJs"><script>mage/translate.js</script></action>
+                <action method="addJs"><script>mage/adminhtml/tools.js</script></action>
+            </block>
+            <block type="adminhtml/system_convert_profile_run" name="system_convert_profile_run" template="system/convert/profile/process.phtml" output="toHtml"/>
+        </block>
+    </adminhtml_system_convert_shipments_post>
+    <adminhtml_sales_order_view>
+        <reference name="order_items">
+            <action method="setTemplate"><template>moogento/shipeasy/sales/order/items.phtml</template></action>
+            <action method="addItemRender"><type>default</type><block>adminhtml/sales_order_view_items_renderer_default</block><template>moogento/shipeasy/sales/order/items/renderer/default.phtml</template></action>
+            <action method="addItemRender"><type>bundle</type><block>bundle/adminhtml_sales_order_view_items_renderer</block><template>moogento/shipeasy/sales/order/items/renderer/bundle/renderer.phtml</template></action>
+            <action method="addItemRender"><type>downloadable</type><block>adminhtml/sales_order_view_items_renderer_default</block><template>moogento/shipeasy/sales/order/items/renderer/downloadable/downloadable.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_view>
+</layout>

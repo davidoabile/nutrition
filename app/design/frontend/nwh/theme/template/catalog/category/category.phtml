@@ -1,0 +1,166 @@
+<?php
+$category = Mage::getSingleton('catalog/layer')->getCurrentCategory();
+$categories = $category->getCollection()
+        //->addAttributeToSelect(array('name', 'thumbnail'))
+        ->addAttributeToSelect('*')
+        ->addAttributeToFilter('is_active', 1)
+        ->addIdFilter($category->getChildren())
+        ?>
+<div class="sc_detl">
+
+    <?php
+    $count11 = 0;
+    foreach ($categories as $category): ?>
+    <?php
+    $count11 += 1;
+                            $cur_category = Mage::getModel('catalog/category')->load($category->getId());
+                            $fileName = $cur_category->getThumbnail();
+
+                            if (!$fileName) {
+                                $url = Mage::getBaseUrl('media') . 'catalog/category/small_image.jpg';
+                            } else {
+                                $url = Mage::getBaseUrl('media') . 'catalog/category/' . $fileName;
+
+                            }
+                            ?>
+    <?php if($count11 == 3){ ?>
+    <div class="sc_part">
+        <?php 
+        $count11 = 0;
+        }else { ?>
+    <div class="sc_part mrgn_r10">
+    <?php } ?>
+       
+    <div class="comman"><a href="<?php echo $category->getUrl() ?>"><img src="<?php echo $url; ?>" alt="<?php echo $this->htmlEscape($category->getName()) ?>" /></a></div>
+                  <div class="sc_part_detl">
+                                <ul>
+                                    <li class="font18_b_red"><?php echo $category->getName() ?></li>
+                                    <li class="font12_gry"><?php 
+                                    if(strlen($category->getDescription()) > 95){
+                                    echo substr($category->getDescription(),0,95).'...';
+                                    }else {
+                                        echo substr($category->getDescription(),0,95);
+                                    }   
+                                            ?></li>
+                                    <li style="margin-top: 10px;"><a class="link14_red2" href="<?php echo $category->getUrl() ?>">SHOP PRODUCTS &gt;&gt;</a></li>
+                                </ul>
+                            </div>
+                
+        </div>
+    <?php endforeach; ?>
+
+</div>
+</div>
+    <div class="brandpromr_banner mrgn_b20"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('brand_promo_banner')->toHtml() ?></div>
+    <!--single feature product-->
+    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('feature_single_product')->toHtml() ?>
+ <?php
+ //$collection = '';
+ foreach ($categories as $category1): ?>
+    <?php
+$categoryid = $category1->getId();
+$category2 = new Mage_Catalog_Model_Category();
+$category2->load($categoryid);
+$collection = $category2->getProductCollection();
+if(count($_GET) > 0){
+  foreach ($_GET as $k => $v) {
+    if($v !='' && ($k == 'brand' || $k == 'goal' || $k == 'ingredients')){
+    $collection->addAttributeToFilter($k, $v);
+    } 
+} 
+}
+$collection->addAttributeToSelect('*');
+    
+    
+    
+//    $collection = Mage::getModel('catalog/category')->load($category1->getId())
+// ->getProductCollection()
+// ->addAttributeToSelect('*') // add all attributes - optional
+// ->addAttributeToFilter('status', 1) // enabled
+// ->addAttributeToFilter('visibility', 4) //visibility in catalog,search
+// ->setOrder('price', 'ASC'); //sets the order by price
+    
+
+?>
+<?php if(count($collection) > 0){ ?>
+ <div class="main_part mrgn_b20">
+        <div class="hadd_pink2">
+            <h1><?php echo $category1->getName() ?></h1><div class="triangle-bottomleft"></div>
+            <a class="link14_gry right" href="<?php echo $category1->getUrl(); ?>">VIEW ALL</a>
+
+        </div>
+        <div class="prod_slider fp_area_main">
+        <ul  id="" class="category_jcarousel jcarousel-skin-tango">
+            <?php foreach ($collection as $product) {  
+              
+                ?>
+
+                <li>
+                        <div class="ps_part">
+                                <ul>
+                                    <li>
+                                        
+                                            <div class="ps_img_cntr">
+                                                <div class="ps_img">
+                                       <a class="EnableQuickView" id="pb_item_<?php echo $product->getId() ?>" href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>" >
+                                            <img  src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(115,115) ?>" alt="<?php echo $this->htmlEscape($product->getName()) ?>" />
+                                        </a>
+                                                </div>
+                                            </div>
+                                            <div class="quickview">&nbsp;</div>
+                                        </a>
+                                    </li>
+                                    <li class="font14_blk"><a class="font14_blk" href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>)">
+                                            <?php
+                                           $Lengthname = $this->htmlEscape($product->getName());
+                                             if(strlen($Lengthname) > 16)
+                                    echo substr($Lengthname,0,16).'...'; 
+                                    else 
+                                    echo substr($Lengthname,0,16);
+                                            
+                                             ?>
+                                        </a>
+                                    </li>
+<li class="font12_gry"><?php
+                                   $length = $this->htmlEscape(strip_tags($product->getShortDescription()));
+                                   if(strlen($length) > 18)
+                                    echo substr($length,0,18).'...'; 
+                                    else 
+                                    echo substr($length,0,18);
+                                     ?></li>
+                                    <li class="mrgn_t5">
+                                        <span class="font16_red"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php  echo number_format($product->getPrice(), '2', '.', ','); ?>
+                                        </span>
+                                        <?php if($product->getSpecialPrice()){  ?>
+                                        <span class="font16_gry"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($product->getSpecialPrice(), '2', '.', ','); ?></span>
+                                        <?php } ?>
+                                    </li>
+<!--                                    <li class="font14b_blk">SAVE $888.00</li>-->
+<?php $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($product) ?>
+
+                                    <li class="mrgn_t5"><a class="link12_red" href="<?php echo $_compareUrl ?>">+ Add to compare</a></li>
+                                    
+                                    <?php if ($product->isSaleable()): ?>
+
+                                     <li class="mrgn_t5"><a class="buy_btn" href="<?php echo $product->getProductUrl(); ?>">BUY NOW</a></li>       
+                                            
+                                        <?php else: ?>
+                                           <li class="mrgn_t5"><?php echo $this->__('Out of stock') ?></li>
+                                        <?php endif; ?>
+                                    
+                                </ul>
+                            </div>
+                        
+                    <?php //echo $this->getReviewsSummaryHtml($product, 'short') ?>
+                </li>
+               
+            
+            <?php  } ?>
+                
+        </ul>
+</div>
+    </div>
+    
+<?php } ?>
+    <?php endforeach; ?>
+    

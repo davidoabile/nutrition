@@ -1,0 +1,26 @@
+<?php
+
+$displaySingle = 0;// Mage::getStoreConfigFlag('moogento_shipeasy/weight/show_single');
+$displayLink = Mage::getStoreConfigFlag('moogento_shipeasy/grid/szy_product_skus_mkt_link');
+
+$_items = $this->getItemsCollection();
+$displayed = false;
+foreach ($_items as $_item){
+    if ($this->_isSimpleWeDisplay($_item)){
+        $classColor = $this->_getItemAvailableColor($_item);
+        echo $this->showResult($classColor, $_item, $displaySingle, $displayLink);
+        $displayed = true;
+    }elseif ($this->_isBundleProduct($_item)){
+        $classColor = $this->_getItemAvailableColor($_item);
+        echo $this->showResult($classColor, $_item, $displaySingle, $displayLink);
+        foreach ($_item->getChildrenItems() as $_childItem){
+            $classColor = $this->_getItemAvailableColor($_childItem);
+            echo $this->showResult($classColor, $_childItem, $displaySingle, $displayLink);
+        }
+        $displayed = true;
+    } elseif ($this->_isGroupedProduct($_item)){
+        $classColor = $this->_getItemAvailableColor($_item);
+        echo $this->showResult($classColor, $_item, $displaySingle, $displayLink);
+        $displayed = true;
+    }
+}

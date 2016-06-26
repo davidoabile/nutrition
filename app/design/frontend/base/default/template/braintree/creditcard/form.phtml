@@ -1,0 +1,390 @@
+<?php
+/**
+* Braintree Payments Extension
+*
+* This source file is subject to the Braintree Payment System Agreement (https://www.braintreepayments.com/legal)
+*
+* DISCLAIMER
+* This file will not be supported if it is modified.
+*
+* @copyright   Copyright (c) 2015 Braintree. (https://www.braintreepayments.com/)
+*/
+?>
+<?php
+$_form = $this;
+$_code = $_form->getMethodCode();
+$_model = Mage::getModel('braintree_payments/creditcard');
+$_loggedIn = Mage::getSingleton('customer/session')->isLoggedIn();
+$_storedCards = $this->getStoredCards();
+$_useVault = $_loggedIn && $_model->useVault() && count($_storedCards);
+$_autoDetection = Mage::getStoreConfig('payment/braintree/enable_cc_detection');
+?>
+<ul class="form-list braintree" id="payment_form_<?php echo $_code ?>" style="display:none;">
+    <input type="hidden" name="payment[cc_last4]" id="<?php echo $_code ?>_cc_last4" value="" />
+    <?php if ($_autoDetection) : ?>
+        <input type="hidden" id="card_type_autoselect" value="" />
+    <?php endif; ?>
+    <?php if ($_useVault): ?>
+        <li id="<?php echo $_code ?>_token_selector">
+            <label for="<?php echo $_code ?>_cc_token"><?php echo $this->__('Payment Information') ?></label>
+            <div class="input-box">
+                <select id="<?php echo $_code ?>_cc_token" name="payment[cc_token]">
+                    <?php foreach ($_storedCards as $creditCard): ?>
+                        <option value="<?php echo $this->escapeHtml($creditCard->token)?>" <?php echo $creditCard->default ? 'selected="selected"' : '' ?>>
+                            <?php echo $this->escapeHtml($creditCard->maskedNumber) . ' - ' . $this->escapeHtml($creditCard->cardType); ?>
+                        </option>
+                    <?php endforeach; ?>
+                        <option value=''><?php echo $this->__('Add new card') ?></option>
+                </select>
+            </div>
+        </li>
+    <?php endif; ?>
+    <li class="hide_if_token_selected" id="cc_type_manual_row" <?php echo $_autoDetection ? 'style="display:none;"' : '';?>>
+        <label for="<?php echo $_code ?>_cc_type" class="required"><em>*</em><?php echo $this->__('Credit Card Type') ?></label>
+        <div class="input-box">
+            <select id="<?php echo $_code ?>_cc_type" name="payment[cc_type]" title="<?php echo $this->__('Credit Card Type') ?>" class="required-entry">
+                <option value="">--<?php echo $this->__('Please Select') ?>--</option>
+            <?php $_ccType = $this->getInfoData('cc_type') ?>
+            <?php foreach ($this->getCcAvailableTypes() as $_typeCode => $_typeName): ?>
+                <option value="<?php echo $_typeCode ?>"<?php if($_typeCode==$_ccType): ?> selected="selected"<?php endif ?>><?php echo $_typeName ?></option>
+            <?php endforeach ?>
+            </select>
+            <input type="hidden" name="payment[hidden][cc_type]" id="<?php echo $_code ?>_cc_type_hidden"/>
+        </div>
+    </li>
+    <li class="hide_if_token_selected" id="cc_type_auto_row" <?php echo $_autoDetection ? '' : 'style="display:none;"';?>>
+        <label><?php echo $this->__('Accepted payment methods') ?></label>
+        <div class="input-box">
+            <?php foreach ($this->getCcAvailableTypes() as $_typeCode => $_typeName):
+                if (in_array($_typeCode, $this->getCardTypesWithImages())): ?>
+                    <div class="payment-type-image" id="payment-type-<?php echo $_typeCode;?>"><img src="<?php echo $this->getSkinUrl('braintree/images/'.$_typeCode.'.png');?>"/></div>
+                <?php elseif ($_typeCode == 'OT'): ?>
+                    <div class="payment-type-image" id="payment-type-<?php echo $_typeCode;?>"></div>
+                <?php endif;?>
+            <?php endforeach;?>
+            <div class="clearer"></div>
+        </div>
+    </li>
+    <li class="hide_if_token_selected">
+        <label for="<?php echo $_code ?>_cc_number" class="required"><em>*</em><?php echo $this->__('Credit Card Number') ?></label>
+        <div class="input-box">
+            <input type="text" id="<?php echo $_code ?>_cc_number" data-braintree-name="number"  title="<?php echo $this->__('Credit Card Number') ?>" class="input-text required-entry validate-cc-number <?php echo $_autoDetection ? 'validate-cc-type-autodetect' : 'validate-cc-type'; ?>" value="" autocomplete="off"/>
+        </div>
+    </li>
+    <li class="hide_if_token_selected">
+        <label for="<?php echo $_code ?>_expiration" class="required"><em>*</em><?php echo $this->__('Expiration Date') ?></label>
+        <div class="input-box">
+            <div class="v-fix">
+                <select id="<?php echo $_code ?>_expiration" data-braintree-name="expiration_month" class="month validate-cc-exp required-entry">
+                <?php $_ccExpMonth = $this->getInfoData('cc_exp_month') ?  $this->getInfoData('cc_exp_month') :
+                    Mage::helper('braintree_payments')->getTodayMonth();?>
+                <?php foreach ($this->getCcMonths() as $k=>$v): ?>
+                    <option value="<?php echo $k?$k:'' ?>"<?php if($k==$_ccExpMonth): ?> selected="selected"<?php endif ?>><?php echo $v ?></option>
+                <?php endforeach ?>
+                </select>
+            </div>
+            <div class="v-fix">
+                <?php $_ccExpYear = $this->getInfoData('cc_exp_year') ? $this->getInfoData('cc_exp_year') :
+                    Mage::helper('braintree_payments')->getTodayYear(); ?>
+                <select id="<?php echo $_code ?>_expiration_yr" class="year required-entry" data-braintree-name="expiration_year">
+                <?php foreach ($this->getCcYears() as $k=>$v): ?>
+                    <option value="<?php echo $k?$k:'' ?>"<?php if($k==$_ccExpYear): ?> selected="selected"<?php endif ?>><?php echo $v ?></option>
+                <?php endforeach ?>
+                </select>
+            </div>
+        </div>
+    </li>
+    <?php echo $this->getChildHtml() ?>
+    <?php if($this->hasVerification()): ?>
+        <li class="hide_if_token_selected">
+            <label for="<?php echo $_code ?>_cc_cid" class="required"><em>*</em><?php echo $this->__('Card Verification Number') ?></label>
+            <div class="input-box">
+                <div class="v-fix">
+                    <input type="text" title="<?php echo $this->__('Card Verification Number') ?>"  class="input-text cvv required-entry <?php echo $_autoDetection ? 'validate-cc-cvn-autodetect' : 'validate-cc-cvn'; ?>" id="<?php echo $_code ?>_cc_cid" data-braintree-name="cvv" value="" autocomplete="off"/>
+                </div>
+                <a href="#" class="cvv-what-is-this"><?php echo $this->__('What is this?') ?></a>
+            </div>
+        </li>
+    <?php endif; ?>
+    <?php if($this->canSaveCard()): ?>
+        <li id="<?php echo $_code ?>_store_in_vault_div" style="text-align:left;" class="hide_if_token_selected">
+            <input type="checkbox" title="<?php echo $this->__('Save this card for future use') ?>" class="input-checkbox" id="<?php echo $_code ?>_store_in_vault" name="payment[store_in_vault]" value="1" />
+            <label for="<?php echo $_code ?>_store_in_vault" class="required" style="float:none;"><?php echo $this->__('Save this card for future use') ?></label>
+        </li>
+    <?php endif; ?>
+    <?php if (Mage::helper('braintree_payments')->is3DSecureAvailable(true)): ?>
+        <li class="braintree-3dsecure" id="<?php echo $_code ?>_3dsecure_available">
+            <div class="input-box">
+            <?php foreach ($this->getCcAvailableTypes() as $_typeCode => $_typeName):
+                if (in_array($_typeCode, $this->getCardTypesWith3DSecureImages())): ?>
+                    <div class="payment-type-image-3dsecure">
+                        <img src="<?php echo $this->getSkinUrl('braintree/images/3dsecure/'.$_typeCode.'.png');?>"/>
+                    </div>
+                <?php endif;?>
+            <?php endforeach;?>
+            </div>
+            <div class="clearer"></div>
+        </li>
+    <?php endif; ?>
+</ul>
+
+<script type="text/javascript">
+//<![CDATA[
+(function() {
+
+<?php if ($_useVault): ?>
+    var selectBox = $('<?php echo $_code ?>_cc_token');
+    var initToken = selectBox.getValue();
+
+    if (initToken)
+    {
+        $('<?php echo $_code ?>_cc_last4').value = selectBox[selectBox.selectedIndex].text.split(' - ')[0].slice(-4);
+        $('<?php echo $_code ?>_cc_type').value = "";
+
+        <?php if($_autoDetection):?>
+            $('cc_type_manual_row').hide();
+            $('cc_type_auto_row').show();
+        <?php else:?>
+            $('cc_type_manual_row').show();
+            $('cc_type_auto_row').hide();
+        <?php endif;?>
+
+        $$('.hide_if_token_selected').invoke('hide');
+
+
+    }
+
+    $('<?php echo $_code ?>_cc_token').observe('change', function (e) {
+        var selectBox = $(this);
+        var token = selectBox.getValue();
+        if (token)
+        {
+            $('<?php echo $_code ?>_cc_last4').value = selectBox[selectBox.selectedIndex].text.split(' - ')[0].slice(-4);
+            $('<?php echo $_code ?>_cc_type').value = "";
+            $$('.hide_if_token_selected').invoke('hide');
+
+            <?php if($_autoDetection):?>
+                $('cc_type_manual_row').hide();
+                $('cc_type_auto_row').hide();
+            <?php else:?>
+                $('cc_type_manual_row').hide();
+                $('cc_type_auto_row').hide();
+            <?php endif;?>
+        }
+        else
+        {
+            $$('.hide_if_token_selected').invoke('show');
+
+            <?php if($_autoDetection):?>
+            $('cc_type_manual_row').hide();
+            $('cc_type_auto_row').show();
+            <?php else:?>
+            $('cc_type_manual_row').show();
+            $('cc_type_auto_row').hide();
+            <?php endif;?>
+        }
+
+
+    });
+<?php endif ?>
+
+$('<?php echo $_code ?>_cc_number').observe('change', function(){
+    $('<?php echo $_code ?>_cc_last4').value = $("<?php echo $_code ?>_cc_number").value.slice(-4);
+});
+
+$('<?php echo $_code ?>_cc_type').observe('change', function(){
+    $('<?php echo $_code ?>_cc_type_hidden').value = $("<?php echo $_code ?>_cc_type").value;
+});
+
+})();
+//]]></script>
+
+<script type="text/javascript">
+    if (typeof braintreeUtils !== 'object') {
+        var braintreeUtils = new BraintreeUtils();
+    }
+    braintreeUtils.createHiddenInput(
+        {id: "cardholder_name"},
+        "<?php echo $this->getFormId()?>"
+    );
+    $('cardholder_name').writeAttribute('data-braintree-name', 'cardholder_name');
+    $('cardholder_name').value = '<?php echo Mage::helper('braintree_payments')->getCardholderName() ?>';
+
+    var onPaymentMethodReceived = function(obj) {
+        var nonceInputId = '<?php echo Mage::helper('braintree_payments')->getNonceInputId() ?>';
+        braintreeUtils.createHiddenInput(
+            {name: "payment[nonce]", id: nonceInputId},
+            "<?php echo $this->getFormId()?>"
+        );
+        $(nonceInputId).value = obj.nonce;
+        var dataForm = new VarienForm('co-checkout-form');
+        dataForm.submitForm = function() {
+            if (this.validator.validate()) {
+                $('<?php echo $this->getFormId()?>').submit();
+            }
+        }.bind(dataForm);
+        dataForm.submitForm();
+    };
+    <?php if (Mage::helper('braintree_payments')->isBraintreeCreditCardEnabled()) : ?>
+        braintreeUtils.setup(
+            "<?php echo Mage::helper('braintree_payments')->getToken(); ?>",
+            "co-checkout-form",
+            onPaymentMethodReceived
+        );
+    <?php endif; ?>
+</script>
+
+<script type="text/javascript">
+<?php if ($_autoDetection): ?>
+
+        var ccTypesObject = $H({
+            'VI': [new RegExp('^4[0-9]{12}([0-9]{3})?$'), new RegExp('^[0-9]{3}$')],
+            'MC': [new RegExp('^5[1-5][0-9]{14}$'), new RegExp('^[0-9]{3}$')],
+            'AE': [new RegExp('^3[47][0-9]{13}$'), new RegExp('^[0-9]{4}$')],
+            'DI': [new RegExp('^6011[0-9]{12}$'), new RegExp('^[0-9]{3}$')],
+            'JCB': [new RegExp('^(3[0-9]{15}|(2131|1800)[0-9]{11})$'), new RegExp('^[0-9]{3,4}$')],
+            'OT': [new RegExp('^([0-9]{12,19})$'), new RegExp('^([0-9]{3,4})$')]
+        });
+        var ccTypes = ccTypesObject._object;
+
+        function validateCcTypeAutodetect(ccNumber) {
+            ccNumber = ccNumber.replace(/\D/g,''); //remove all but the digits
+            var matchFound = 0;
+            var disabledTypeFound = false;
+            for(var ccType in ccTypes) {
+                if(ccTypes.hasOwnProperty(ccType)) {
+                    var ccRegex = ccTypes[ccType][0];
+                    if(ccRegex && ccNumber.match(ccRegex)) {
+                        var optionsLength = ccTypeField.options.length;
+                        var checkedOptions = 0;
+                        for(var i=0; i<optionsLength; i++) {
+                            if(ccTypeField.options[i].value == ccType) {
+                                matchFound++;
+                                if (matchFound == 1) {
+                                    ccTypeField.selectedIndex = i;
+                                    $$('.payment-type-image').each(function(element) {
+                                        if(element.id == 'payment-type-'+ccType) {
+                                            element.removeClassName('disabled-payment-method');
+                                        } else {
+                                            element.addClassName('disabled-payment-method');
+                                        }
+                                    });
+                                }
+
+                                break;
+                            } else {
+                                checkedOptions++;
+                            }
+                        }
+                        if (checkedOptions == optionsLength) {
+                            if (ccType != 'OT') {
+                                disabledTypeFound = true;
+                            }
+                        }
+                        if (matchFound == 0 || disabledTypeFound) {
+                            //disable all payment methods
+                            $$('.payment-type-image').each(function(element) {
+                                element.addClassName('disabled-payment-method');
+                            });
+                            ccType.selectedIndex = 0;
+                            $('card_type_autoselect').value = '';
+                        } else if (matchFound == 1) {
+                            $('card_type_autoselect').value = ccType;
+                        }
+                    }
+                }
+            }
+            return Boolean($('card_type_autoselect').value);
+        };
+
+        Validation.addAllThese([
+            ['validate-cc-type-autodetect', 'Credit card type is not allowed for this payment method.', function(v, elm) {
+                elm.value = removeDelimiters(elm.value);
+                ccNumber = elm.value;
+                return validateCcTypeAutodetect(ccNumber);
+            }],
+            ['validate-cc-cvn-autodetect', 'Please enter a valid credit card verification number.', function(v) {
+                var ccType = $('card_type_autoselect').value;
+                if(ccTypes.hasOwnProperty(ccType)) {
+                    var ccRegex = ccTypes[ccType][1];
+                    if (!ccRegex.test(v)) {
+                        return false;
+                    }
+                }
+                return true;
+            }]
+        ]);
+
+        var ccNumberFieldId = 'braintree_cc_number';
+        var ccTypeField = $('braintree_cc_type');
+
+        Event.observe($(ccNumberFieldId),'blur',function(){
+            var ccNumber = this.value;
+            validateCcTypeAutodetect(ccNumber);
+        });
+<?php else:?>
+    Validation.creditCartTypes = $H({
+        'VI': [new RegExp('^4[0-9]{12}([0-9]{3})?$'), new RegExp('^[0-9]{3}$'), true],
+        'MC': [new RegExp('^5[1-5][0-9]{14}$'), new RegExp('^[0-9]{3}$'), true],
+        'AE': [new RegExp('^3[47][0-9]{13}$'), new RegExp('^[0-9]{4}$'), true],
+        'DI': [new RegExp('^6011[0-9]{12}$'), new RegExp('^[0-9]{3}$'), true],
+        'JCB': [new RegExp('^(3[0-9]{15}|(2131|1800)[0-9]{11})$'), new RegExp('^[0-9]{3,4}$'), true],
+        'OT': [false, new RegExp('^([0-9]{3}|[0-9]{4})?$'), false]
+    });
+<?php endif;?>
+</script>
+<script type="text/javascript">
+    var braintreeUtilsDataJs = new BraintreeUtils();
+    var formId = '<?php echo $this->getFormId()?>';
+    if (!$(formId)) {
+        formId = 'co-payment-form';
+    }
+    braintreeUtilsDataJs.setupDataJSOnEvent(
+        '<?php echo Mage::helper('braintree_payments')->getKountEnvironment()?>',
+        '<?php echo Mage::helper('braintree_payments')->getKountId()?>',
+        'd22rgvxkmy3q395b',
+        'co-checkout-form'
+    );
+</script>
+<?php $_code = Braintree_Payments_Model_Creditcard::PAYMENT_METHOD_CODE ?>
+<?php if (Mage::helper('braintree_payments')->isBraintreeCreditCardEnabled()) : ?>
+<script type="text/javascript">
+// This rewrites native save method to receive nonce
+
+
+function preparePayment(checkout){
+       (function(){
+       
+        var validator = new VarienForm('co-checkout-form').validator;
+        if (validator.validate()) {
+           // checkout.setLoadWaiting('payment');
+            var tokenField = $('<?php echo $_code ?>_cc_token');
+            var makeNativeAjaxRequest = function(thisClass){
+                <?php if (Mage::helper('braintree_payments')->isAdvancedFraudProtectionEnabled()): ?>
+                    if ($('device_data')) {
+                        $('device_data').disabled = false;
+                    }
+                <?php endif;?>
+               
+      
+            };
+            braintreeUtils.createHiddenInput(
+                {name: "payment[nonce]", id: '<?php echo Mage::helper('braintree_payments')->getNonceInputId() ?>'},
+                "co-payment-form"
+            );
+            if (payment.currentMethod == '<?php echo $_code ?>' && (!tokenField || (tokenField && tokenField.value == ''))) {
+                braintreeUtils.getPaymentNonce(
+                    '<?php echo $_code ?>',
+                    '<?php echo Mage::helper('braintree_payments')->getCardholderName() ?>',
+                    makeNativeAjaxRequest(this),
+                    "<?php echo Mage::helper('braintree_payments')->getToken(); ?>"
+                );
+            } else {
+                makeNativeAjaxRequest(this);
+            }
+        }
+    })();
+    }
+
+</script>
+<?php endif; ?>

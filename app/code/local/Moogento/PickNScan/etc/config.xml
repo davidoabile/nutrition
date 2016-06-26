@@ -1,0 +1,250 @@
+<?xml version="1.0"?>
+<!--
+  Moogento
+  
+  SOFTWARE LICENSE
+  
+  This source file is covered by the Moogento End User License Agreement
+  that is bundled with this extension in the file License.html
+  It is also available online here:
+  http://www.moogento.com/License.html
+  
+  NOTICE
+  
+  If you customize this file please remember that it will be overwrtitten
+  with any future upgrade installs. 
+  If you'd like to add a feature which is not in this software, get in touch
+  at www.moogento.com for a quote.
+  
+  ID          pe+sMEDTrtCzNq3pehW9DJ0lnYtgqva4i4Z=
+  File        config.xml
+  @category   Moogento
+  @package    pickPack
+  @copyright  Copyright (c) 2014 Moogento <info@moogento.com> / All rights reserved.
+  @license    http://www.moogento.com/License.html
+-->
+<config>
+    <modules>
+        <Moogento_PickNScan>
+            <version>1.1.5</version>
+        </Moogento_PickNScan>
+    </modules>
+    <global>
+
+        <helpers>
+            <moogento_pickscan>
+                <class>Moogento_PickNScan_Helper</class>
+            </moogento_pickscan>
+        </helpers>
+
+        <blocks>
+            <moogento_pickscan>
+                <class>Moogento_PickNScan_Block</class>
+            </moogento_pickscan>
+        </blocks>
+
+        <models>
+            <moogento_pickscan>
+                <class>Moogento_PickNScan_Model</class>
+                <resourceModel>moogento_pickscan_resource</resourceModel>
+            </moogento_pickscan>
+            <moogento_pickscan_resource>
+                <class>Moogento_PickNScan_Model_Resource</class>
+                <entities>
+                    <picking>
+                        <table>moogento_pickscan_picking</table>
+                    </picking>
+                    <picking_aggregated>
+                        <table>moogento_pickscan_picking_aggregated</table>
+                    </picking_aggregated>
+                </entities>
+            </moogento_pickscan_resource>
+        </models>
+
+        <resources>
+            <moogento_pickscan_setup>
+                <setup>
+                    <module>Moogento_PickNScan</module>
+                </setup>
+            </moogento_pickscan_setup>
+        </resources>
+        <template>
+            <email>
+                <moogento_pickscan_pack_print_template translate="label" module="moogento_pickscan">
+                    <label>Low stock warnings per product</label>
+                    <file>moogento/pickscan/print_template.html</file>
+                    <type>html</type>
+                </moogento_pickscan_pack_print_template>
+            </email>
+        </template>
+    </global>
+    <adminhtml>
+
+        <translate>
+            <modules>
+                <moogento_pickscan>
+                    <files>
+                        <default>Moogento_PickNScan.csv</default>
+                    </files>
+                </moogento_pickscan>
+            </modules>
+        </translate>
+
+        <layout>
+            <updates>
+                <moogento_pickscan>
+                    <file>moogento/pickscan.xml</file>
+                </moogento_pickscan>
+            </updates>
+        </layout>
+
+        <events>
+            <moogento_core_sales_order_prepare>
+                <observers>
+                    <moogento_pickscan>
+                        <class>moogento_pickscan/observer</class>
+                        <method>moogento_core_sales_order_prepare</method>
+                    </moogento_pickscan>
+                </observers>
+            </moogento_core_sales_order_prepare>
+            <moogento_core_order_grid_actions>
+                <observers>
+                    <moogento_pickscan>
+                        <class>moogento_pickscan/observer</class>
+                        <method>moogento_core_order_grid_actions</method>
+                    </moogento_pickscan>
+                </observers>
+            </moogento_core_order_grid_actions>
+            <moogento_core_order_grid_columns>
+                <observers>
+                    <moogento_pickscan>
+                        <class>moogento_pickscan/observer</class>
+                        <method>moogento_core_order_grid_columns</method>
+                    </moogento_pickscan>
+                </observers>
+            </moogento_core_order_grid_columns>
+
+            <moogento_core_order_grid_collection_prepare>
+                <observers>
+                    <moogento_pickscan>
+                        <class>moogento_pickscan/observer</class>
+                        <method>moogento_core_order_grid_collection_prepare</method>
+                    </moogento_pickscan>
+                </observers>
+            </moogento_core_order_grid_collection_prepare>
+            <moogento_powerlogin_create_options_startup_page>
+                <observers>
+                    <moogento_pickscan>
+                        <class>moogento_pickscan/observer</class>
+                        <method>moogento_admin_create_options_startup_page</method>
+                    </moogento_pickscan>
+                </observers>
+            </moogento_powerlogin_create_options_startup_page>
+            <moogento_core_order_grid_columns_prepare>
+                <observers>
+                    <moogento_pickscan>
+                        <class>moogento_pickscan/observer</class>
+                        <method>moogento_core_order_grid_columns_prepare</method>
+                    </moogento_pickscan>
+                </observers>
+            </moogento_core_order_grid_columns_prepare>
+            <admin_session_user_login_success>
+                <observers>
+                    <moogento_pickscan_notification>
+                        <type>singleton</type>
+                        <class>moogento_pickscan/feed_updates</class>
+                        <method>check</method>
+                    </moogento_pickscan_notification>
+                </observers>
+            </admin_session_user_login_success>
+        </events>
+    </adminhtml>
+    <crontab>
+        <jobs>
+            <moogento_pickscan_aggregate>
+                <schedule>
+                    <cron_expr>0 * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>moogento_pickscan/observer::aggregate</model>
+                </run>
+            </moogento_pickscan_aggregate>
+        </jobs>
+    </crontab>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <moogento_pickscan before="Mage_Adminhtml">Moogento_PickNScan_Adminhtml</moogento_pickscan>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <default>
+        <moogento>
+            <general>
+                <url>https://moogento.com/</url>
+            </general>
+        </moogento>
+        <moogento_pickscan>
+            <settings>
+                <show_button>1</show_button>
+                <sort_by>sku</sort_by>
+                <sort_by_limit>0</sort_by_limit>
+                <barcode>sku</barcode>
+                <show_in_title>name</show_in_title>
+                <customer_comments>1</customer_comments>
+                <admin_comments>1</admin_comments>
+                <order_progress>1</order_progress>
+                <trolley_progress>1</trolley_progress>
+                <total_progress>1</total_progress>
+                <enable_commenting>1</enable_commenting>
+                <show_column>1</show_column>
+                <assign_limit>10</assign_limit>
+                <custom_1>sku</custom_1>
+                <custom_2>name</custom_2>
+                <show_configurable_options>1</show_configurable_options>
+                <show_logout>1</show_logout>
+                <enable_correct_sound>1</enable_correct_sound>
+                <autoreturn>0</autoreturn>
+            </settings>
+            <background>
+                <type>default</type>
+                <repeat>no-repeat</repeat>
+                <vertical_align>bottom</vertical_align>
+                <horizontal_align>right</horizontal_align>
+            </background>
+            <manual_substitution>
+                <enable>1</enable>
+                <allowance_enable>0</allowance_enable>
+                <allowance_multiplier>1</allowance_multiplier>
+            </manual_substitution>
+            <ignore_error>
+                <enable>1</enable>
+            </ignore_error>
+            <pack>
+                <mark_complete>1</mark_complete>
+                <print_template>moogento_pickscan_pack_print_template</print_template>
+                <api_enable>1</api_enable>
+                <api_start>startRecord</api_start>
+                <api_start_params>account_id,user_id,packstation_id,overlay_a,overlay_b</api_start_params>
+                <api_stop>stopRecord</api_stop>
+                <api_stop_params>account_id,user_id,packstation_id</api_stop_params>
+                <overlay_text_a>{{order_id}}</overlay_text_a>
+                <overlay_text_b>{{name}} | {{datetime}}</overlay_text_b>
+            </pack>
+        </moogento_pickscan>
+        <moogento_shipeasy>
+            <grid>
+                <moogento_pickscan_pick_show>1</moogento_pickscan_pick_show>
+                <moogento_pickscan_pick_order>1000</moogento_pickscan_pick_order>
+                <moogento_pickscan_assigned_show>1</moogento_pickscan_assigned_show>
+                <moogento_pickscan_assigned_order>1100</moogento_pickscan_assigned_order>
+                <moogento_pickscan_show>1</moogento_pickscan_show>
+                <moogento_pickscan_order>4100</moogento_pickscan_order>
+            </grid>
+        </moogento_shipeasy>
+    </default>
+</config>

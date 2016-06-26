@@ -1,0 +1,120 @@
+<?php $collection = $this->_getCollection() ?>
+
+<h1><?php echo $this->__('Connector suggestions') ?></h1>
+<div class="grid">
+    <table class="data">
+        <thead>
+        <tr class="headings">
+            <th><?php echo $this->__('Order') ?></th>
+            <th><?php echo $this->__('Suggestion') ?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($collection as $suggestion): ?>
+            <tr>
+                <td>
+                    <strong>
+                        <a href="<?php echo $this->getUrl('*/sales_order/view', array('order_id' => $suggestion->getOrder()->getId())) ?>"><?php echo $this->__('Order #%s', $suggestion->getOrder()->getIncrementId()) ?></a>
+                    </strong>
+                    <br/>
+                    <?php echo $suggestion->getOrder()->getShippingAddress()->format('html') ?>
+                </td>
+                <td>
+                    <?php if (count($suggestion->getSuggestions())): ?>
+                        <?php foreach ($suggestion->getActiveSuggestions() as $connectorCode => $carriers): ?>
+                            <?php $connector = Mage::getSingleton('moogento_courierrules/connector_manager')->getConnector($connectorCode) ?>
+                            <?php if ($connector): ?>
+                            <h5><?php echo $connector->getName() ?></h5>
+                            <ul>
+                                <?php foreach ($carriers as $carrierCode => $serviceList): ?>
+                                    <?php $carrier = $connector->getCarrier($carrierCode); ?>
+                                    <?php if ($carrier): ?>
+                                        <li style="padding-left: 10px;">
+                                            <strong><?php echo $carrier->getLabel() ?></strong>
+                                            <ul style="padding-left: 10px;">
+                                                <?php foreach($serviceList as $serviceCode): ?>
+                                                    <?php $service = $carrier->getService($serviceCode); ?>
+                                                    <?php if ($service): ?>
+                                                        <li>
+                                                            - <?php echo $service->getLabel() ?>
+                                                            <a href="#" class="use-link" data-id="<?php echo $suggestion->getOrder()->getId() ?>" data-code="<?php echo 'connect:'.$connectorCode.':' . $carrierCode . ':' . $serviceCode ?>">Use for order</a>
+                                                        </li>
+                                                    <?php endif;?>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </li>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </ul>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                        <hr/>
+                        <?php $disabledSuggestions = $suggestion->getDisabledSuggestion() ?>
+                        <?php if (count($disabledSuggestions)): ?>
+                            <p class="note"><?php echo $this->__('These services are avaliable for order but should be enabled in connector configuration first') ?></p>
+                            <?php foreach ($suggestion->getDisabledSuggestion() as $connectorCode => $carriers): ?>
+                                <?php $connector = Mage::getSingleton('moogento_courierrules/connector_manager')->getConnector($connectorCode) ?>
+                                <?php if ($connector): ?>
+                                    <h5><?php echo $connector->getName() ?></h5>
+                                    <ul>
+                                        <?php foreach ($carriers as $carrierCode => $serviceList): ?>
+                                            <?php $carrier = $connector->getCarrier($carrierCode); ?>
+                                            <?php if ($carrier): ?>
+                                                <li style="padding-left: 10px;">
+                                                    <strong><?php echo $carrier->getLabel() ?></strong>
+                                                    <ul style="padding-left: 10px;">
+                                                        <?php foreach($serviceList as $serviceCode): ?>
+                                                            <?php $service = $carrier->getService($serviceCode); ?>
+                                                            <?php if ($service): ?>
+                                                                <li>
+                                                                    - <?php echo $service->getLabel() ?>
+                                                                </li>
+                                                            <?php endif;?>
+                                                        <?php endforeach; ?>
+                                                    </ul>
+                                                </li>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <?php echo $this->__('There are no matching shipping services for this address') ?>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+<script>
+    jQuery(function($){
+        $('.use-link').on('click', function(e){
+            e.preventDefault();
+            var el = $(this);
+            showSpinner(el.parents('td'));
+            $.ajax({
+                method: 'post',
+                dataType: 'json',
+                url: '<?php echo $this->getUrl('*/*/useSuggestion') ?>',
+                data: {
+                    form_key: FORM_KEY,
+                    order_id: el.data('id'),
+                    code: el.data('code')
+                },
+                success: function(data) {
+                    if (data.success) {
+                        window.location = '<?php echo Mage::helper('moogento_courierrules')->getRefererUrl() ?>';
+
+                    } else if (data.message) {
+                        alert(data.message);
+                    }
+                },
+                complete: function() {
+                    hideSpinner(el.parents('td'));
+                }
+            })
+        })
+    });
+</script>

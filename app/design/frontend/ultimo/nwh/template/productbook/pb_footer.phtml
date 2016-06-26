@@ -1,0 +1,7 @@
+<?php if ($this->getPBConfigByName('pb_enabled')): ?>
+    <input type="hidden" id="pbClass" value="<?php echo $this->getPBConfigByName('pb_class') ?>">
+    <input type="hidden" id="pb_url" value="<?php echo $this->getUrl() ?>">
+    <input type="hidden" id="pb_caption" value="<?php echo $this->getSkinUrl('images/quickView.png') ?>">
+    <input type="hidden" id="pb_anima" value="<?php echo $this->getSkinUrl('images/animat1.gif'); ?>">
+<?php endif; ?>
+

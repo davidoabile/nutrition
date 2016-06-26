@@ -1,0 +1,34 @@
+<?php
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+?>
+<ul class="form-list">
+<?php foreach($this->getFields() as $field): ?>
+    <li>
+        <div class="input-box">
+		<?php echo $field->getHtml() ?>
+		<div>
+	</li>
+<?php endforeach?>
+</ul> 
+<script type="text/javascript">
+//<![CDATA[
+
+    aitCheckout.createStep('deliverydate',{
+            }, {
+                doCheckErrors : false,
+                isLoadWaiting : false,
+                isUpdateOnReload : false,
+                container: 'checkout-step-deliverydate'
+            }
+    );
+
+//]]>
+</script>

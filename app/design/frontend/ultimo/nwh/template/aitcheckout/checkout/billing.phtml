@@ -1,0 +1,416 @@
+<?php
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+$cfmHelper = Mage::helper('aitcheckout/aitcheckoutfields');
+$ccHelper = Mage::helper('aitcheckout/aitconfcheckout');
+if($this->helper('aitcheckout')->isCompactDesign()) {
+    $compact = ' compact';
+    $name_block = 'aitcheckout/customer_widget_name';
+} else {
+    $compact = '';
+    $name_block = 'customer/widget_name';
+}
+?>
+<div id="co-billing-form">          
+<fieldset>
+    <div style="display:none;" id="billing-notice" class="error-msg"></div>
+    <ul class="form-list">
+    <!--     START AITOC CHECKOUT ATTRIBUTES     -->
+    <?php if ($aFieldList = $cfmHelper->getCustomFieldList('billing', 1)): ?>
+        <li id="billing-aitcheckoutfields-top">
+            <fieldset>
+                <ul class="form-list">
+                <?php foreach ($aFieldList as $aField): ?>
+                    <?php echo $cfmHelper->getFieldHtml('billing', $aField); ?>
+                <?php endforeach; ?>
+                </ul>                
+            </fieldset>
+        </li>
+    <?php endif; ?>
+    <!--     FINISH AITOC CHECKOUT ATTRIBUTES     --> 
+    
+   
+    <?php if ($this->customerHasAddresses()): ?>     
+        <li class="wide">
+            <label for="billing-address-select"><?php echo Mage::helper('checkout')->__('Select a billing address from your address book or enter a new address.') ?></label>
+            <div class="input-box">
+                <?php echo $this->getAddressesHtmlSelect('billing') ?>
+            </div>
+        </li>
+    <?php endif; ?>
+    <li id="billing-new-address-form"<?php if ($this->customerHasAddresses()): ?> style="display:none;"<?php endif; ?>>
+        <fieldset>
+            <input type="hidden" name="billing[address_id]" value="<?php echo $this->getAddress()->getId() ?>" id="billing:address_id" />
+            <ul>
+                <li class="fields"><?php echo $this->getLayout()->createBlock($name_block)->setObject($this->getAddress()->getFirstname() ? $this->getAddress() : $this->getQuote()->getCustomer())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?></li>
+    
+    <?php if ($ccHelper->checkFieldShow('billing', 'company') || !$this->isCustomerLoggedIn()):       // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                <li class="fields">
+
+        <?php if ($ccHelper->checkFieldShow('billing', 'company')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                    <div class="field<?php echo $compact ?>">
+                        <label for="billing:company"><?php echo Mage::helper('checkout')->__('Company') ?></label>
+                        <div class="input-box">
+                            <input type="text" id="billing:company" name="billing[company]" value="<?php echo $this->htmlEscape($this->getAddress()->getCompany()) ?>" title="<?php echo Mage::helper('checkout')->__('Company') ?>" class="input-text" />
+                        </div>
+                    </div>
+        <?php endif                                     // AITOC CONFIGURABLE CHECKOUT CODE ?>
+
+        <?php if(!$this->isCustomerLoggedIn()): ?>
+                    <div class="field<?php echo $compact ?>">
+                        <label for="billing:email" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('Email Address') ?></label>
+                        <div class="input-box">
+                            <input type="text" placeholder="<?php echo $this->__('Please enter your email'); ?>" name="billing[email]" id="billing:email" value="<?php echo $this->htmlEscape($this->getAddress()->getEmail()) ?>" title="<?php echo Mage::helper('checkout')->__('Email Address') ?>" class="input-text validate-email required-entry" />
+                        </div>
+                    </div>
+        <?php endif ?>
+        
+                </li>
+    <?php endif ?>
+    
+    <?php if ($ccHelper->checkFieldShow('billing', 'address')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                <li class="wide">
+                    <label for="billing:street1" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('Address') ?></label>
+                    <div class="input-box">
+                        <input type="text" placeholder="<?php echo $this->__('Please enter your address'); ?>" title="<?php echo Mage::helper('checkout')->__('Street Address') ?>" name="billing[street][]" id="billing:street1" value="<?php echo $this->htmlEscape($this->getAddress()->getStreet(1)) ?>" class="input-text required-entry" />
+                    </div>
+                </li>
+        <?php for ($_i=2, $_n=$this->helper('customer/address')->getStreetLines(); $_i<=$_n; $_i++): ?>
+                <li class="wide">
+                    <div class="input-box">
+                        <input type="text" title="<?php echo $this->__('Street Address %s', $_i) ?>" name="billing[street][]" id="billing:street<?php echo $_i?>" value="<?php echo $this->htmlEscape($this->getAddress()->getStreet($_i)) ?>" class="input-text" />
+                    </div>
+                </li>
+        <?php endfor ?>
+    <?php endif // AITOC CONFIGURABLE CHECKOUT CODE  ?>
+            <div id="checkout-step-billinglocation">
+            <?php if ($ccHelper->checkFieldShow('billing', 'city') || $ccHelper->checkFieldShow('billing', 'postcode')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                <li class="fields">
+            
+                <?php if ($ccHelper->checkFieldShow('billing', 'city')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                    <div class="field<?php echo $compact ?>">
+                        <label for="billing:city" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('Suburb') ?></label>
+                        <div class="input-box">
+                            <input type="text" placeholder="<?php echo $this->__('Please enter your suburb'); ?>" title="<?php echo Mage::helper('checkout')->__('Suburb') ?>" name="billing[city]" value="<?php echo $this->htmlEscape($this->getAddress()->getCity()) ?>" class="input-text required-entry" id="billing:city" />
+                        </div>
+                    </div>
+                <?php endif // AITOC CONFIGURABLE CHECKOUT CODE  ?>
+
+                <?php if ($ccHelper->checkFieldShow('billing', 'postcode')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                <div class="field <?php echo $compact ?>">
+                    <label for="billing:postcode" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('Zip/Postal Code') ?></label>
+                    <div class="input-box">
+                        <input type="text" placeholder="<?php echo $this->__('Please enter your postcode'); ?>" title="<?php echo Mage::helper('checkout')->__('Zip/Postal Code') ?>" name="billing[postcode]" id="billing:postcode" value="<?php echo $this->htmlEscape($this->getAddress()->getPostcode()) ?>" class="input-text validate-zip-international required-entry" />
+                    </div>
+                </div>
+                <?php endif // AITOC CONFIGURABLE CHECKOUT CODE  ?>
+
+                </li>
+            <?php endif // AITOC CONFIGURABLE CHECKOUT CODE  ?>
+                
+            <?php if (!$ccHelper->checkFieldShow('billing', 'region')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                <li style="display: none;">
+                    <select id="billing:region_id"  name="billing[region_id]" title="<?php echo Mage::helper('checkout')->__('State/Province') ?>" class="validate-select" style="display:none">
+                        <option value=""><?php echo Mage::helper('checkout')->__('Please select region, state or province') ?></option>
+                    </select>
+                    <input type="text" placeholder="<?php echo $this->__('Please enter your state'); ?>" id="billing:region" name="billing[region]" value="" class="input-text" style="display:none" />
+                    <script type="text/javascript">
+                    //<![CDATA[
+                        function checkShippReqAttrib() {
+                            var bHashRequered = '<?php echo $cfmHelper->checkStepHasRequired(); ?>';
+                            if (!bHashRequered) return true;
+
+                            if ($('billing:use_for_shipping_yes'))
+                                $('billing:use_for_shipping_yes').checked = false;
+
+                            if ($('billing:use_for_shipping_no'))
+                                $('billing:use_for_shipping_no').checked = true;
+
+                            if ($('billing:same_as_billing'))
+                                $('shipping:same_as_billing').checked = false;
+                        }
+                    //]]>
+                    </script>
+                </li>
+            <?php endif // AITOC CONFIGURABLE CHECKOUT CODE  ?>
+                
+            <?php if ($ccHelper->checkFieldShow('billing', 'region') || $ccHelper->checkFieldShow('billing', 'country')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                <li class="fields">
+
+                    <?php if ($ccHelper->checkFieldShow('billing', 'region')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                    <div class="field">
+                        <label for="billing:region_id" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('State/Province') ?></label>
+                        <div class="input-box">
+                            <select id="billing:region_id" name="billing[region_id]" title="<?php echo Mage::helper('checkout')->__('State/Province') ?>" class="validate-select" style="display:none;">
+                                <option value=""><?php echo Mage::helper('checkout')->__('Please select region, state or province') ?></option>
+                            </select>
+                            <script type="text/javascript">
+                                //<![CDATA[
+                                $('billing:region_id').setAttribute('defaultValue',  "<?php echo $this->getAddress()->getRegionId() ?>");
+                                //]]>
+                            </script>
+                            <input type="text" placeholder="<?php echo $this->__('Please enter your state'); ?>" id="billing:region" name="billing[region]" value="<?php echo $this->htmlEscape($this->getAddress()->getRegion()) ?>"  title="<?php echo Mage::helper('checkout')->__('State/Province') ?>" class="input-text" style="display:none;" />
+                        </div>
+                    </div>
+                    <?php endif // AITOC CONFIGURABLE CHECKOUT CODE  ?> 
+                
+                <?php if ($ccHelper->checkFieldShow('billing', 'country')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                    <div class="field">
+                        <label for="billing:country_id" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('Country') ?></label>
+                        <div class="input-box">
+                            <select title="Country" class="validate-select" id="billing:country_id" name="billing[country_id]"><option selected="selected" value="AU">Australia</option></select>
+                            <?php //echo $this->getCountryHtmlSelect('billing') ;Zend_debug::dump(get_class($this));?>
+                        </div>
+                    </div>
+                <?php endif // AITOC CONFIGURABLE CHECKOUT CODE  ?>
+                
+                </li>
+            <?php endif // AITOC CONFIGURABLE CHECKOUT CODE  ?>
+            </div>
+            <?php if (!$ccHelper->checkFieldShow('billing', 'country')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                <li style="display: none;">
+                    <input type="hidden" name="billing[country_id]" id="billing:country_id" value="<?php echo $ccHelper->getDefaultCountryId() ?>" />
+                </li>
+            <?php endif // AITOC CONFIGURABLE CHECKOUT CODE  ?>
+                
+            <?php if ($ccHelper->checkFieldShow('billing', 'telephone') || $ccHelper->checkFieldShow('billing', 'fax')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                <li class="fields">
+                
+                <?php if ($ccHelper->checkFieldShow('billing', 'telephone')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                    <div class="field<?php echo $compact ?>">
+                        <label for="billing:telephone" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('Telephone') ?></label>
+                        <div class="input-box">
+                            <input type="text" name="billing[telephone]" placeholder="<?php echo $this->__('Please enter your phone number'); ?>" value="<?php echo $this->htmlEscape($this->getAddress()->getTelephone()) ?>" title="<?php echo Mage::helper('checkout')->__('Phone Number') ?>" class="input-text required-entry validate-digits" id="billing:telephone" />
+                        </div>
+                    </div>
+                <?php endif // AITOC CONFIGURABLE CHECKOUT CODE  ?>
+                
+                <?php if ($ccHelper->checkFieldShow('billing', 'fax')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                    <div class="field<?php echo $compact ?>">
+                        <label for="billing:fax"><?php echo Mage::helper('checkout')->__('Fax') ?></label>
+                        <div class="input-box">
+                            <input type="text" name="billing[fax]" value="<?php echo $this->htmlEscape($this->getAddress()->getFax()) ?>" title="<?php echo Mage::helper('checkout')->__('Fax') ?>" class="input-text" id="billing:fax" />
+                        </div>
+                    </div>
+                <?php endif // AITOC CONFIGURABLE CHECKOUT CODE  ?>
+                    
+                </li>
+            <?php endif // AITOC CONFIGURABLE CHECKOUT CODE  ?>
+            
+                <?php if(!$this->isCustomerLoggedIn()): ?>
+
+        <?php $_dob = $this->getLayout()->createBlock('customer/widget_dob') ?>
+        <?php $_gender = $this->getLayout()->createBlock('customer/widget_gender') ?>
+            <?php if ($_dob->isEnabled() || $_gender->isEnabled()): ?>
+                <li class="fields">
+                <?php if ($_dob->isEnabled()): ?>
+                    <div class="field">
+                        <?php echo $_dob->setDate($this->getQuote()->getCustomerDob())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+                    </div>
+                <?php endif; ?>
+                <?php if ($_gender->isEnabled()): ?>
+                    <div class="field">
+                        <?php echo $_gender->setGender($this->getQuote()->getCustomerGender())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+                    </div>
+                <?php endif ?>
+                </li>
+            <?php endif ?>
+
+        <?php $_taxvat = $this->getLayout()->createBlock('customer/widget_taxvat') ?>
+        <?php if ($_taxvat->isEnabled()): ?>
+                <li>
+                    <?php echo $_taxvat->setTaxvat($this->getQuote()->getCustomerTaxvat())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+                </li>
+        <?php endif ?>
+
+                <?php endif; ?>
+                
+
+                <?php if ($this->isCustomerLoggedIn() && $this->customerHasAddresses()):?>
+                    <li class="control">
+                        <input type="checkbox" name="billing[save_in_address_book]" value="1" title="<?php echo Mage::helper('checkout')->__('Save in address book') ?>" id="billing:save_in_address_book" onchange=""<?php if ($this->getAddress()->getSaveInAddressBook()):?> checked="checked"<?php endif;?> class="checkbox" /><label for="billing:save_in_address_book"><?php echo Mage::helper('checkout')->__('Save in address book') ?></label>
+                    </li>
+                <?php else:?>
+                    <li class="no-display"><input type="hidden" name="billing[save_in_address_book]" value="1" /></li>
+                <?php endif; ?>
+            </ul>
+        </fieldset>
+    </li>
+    
+    <!--     START AITOC REQUIRED FIELDS    -->
+    <?php if($this->isCustomerLoggedIn()): ?>
+    <div id="aitoc-required-fields">
+        <?php $_dob = $this->getLayout()->createBlock('customer/widget_dob') ?>
+        <?php $_gender = $this->getLayout()->createBlock('customer/widget_gender') ?>
+            <?php if ($_dob->isEnabled() || $_gender->isEnabled()): ?>
+                <li class="fields">
+                <?php if ($_dob->isEnabled() AND $_dob->isRequired() AND !$this->getQuote()->getCustomerDob()): ?>
+                    <div class="field">
+                        <?php echo $_dob->setDate($this->getQuote()->getCustomerDob())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+                    </div>
+                <?php endif; ?>
+                <?php if ($_gender->isEnabled() AND $_gender->isRequired() AND !$this->getQuote()->getCustomerGender()): ?>
+                    <div class="field">
+                        <?php echo $_gender->setGender($this->getQuote()->getCustomerGender())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+                    </div>
+                <?php endif ?>
+                </li>
+            <?php endif ?>
+
+        <?php $_taxvat = $this->getLayout()->createBlock('customer/widget_taxvat') ?>
+        <?php if ($_taxvat->isEnabled() AND $_taxvat->isRequired() AND !$this->getQuote()->getCustomerTaxvat()): ?>
+                <li>
+                    <?php echo $_taxvat->setTaxvat($this->getQuote()->getCustomerTaxvat())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+                </li>
+        <?php endif ?>
+    </div>
+    <?php endif; ?>
+    <!--     FINISH AITOC REQUIRED FIELDS    -->
+    
+    <!--     START AITOC CHECKOUT ATTRIBUTES     -->
+    <?php if ($aFieldList = $cfmHelper->getCustomFieldList('billing', 2)): ?>
+    <li id="billing-aitcheckoutfields-bottom">
+        <fieldset>
+            <ul class="form-list">
+            <?php foreach ($aFieldList as $aField): ?>
+                <?php echo $cfmHelper->getFieldHtml('billing', $aField); ?>
+            <?php endforeach; ?>
+            </ul>                
+        </fieldset>
+    </li>
+    <?php endif; ?>
+    <!--     FINISH AITOC CHECKOUT ATTRIBUTES     -->
+    <?php if(!$this->isCustomerLoggedIn()): ?> 
+        <?php if ( $this->getQuote()->isAllowedGuestCheckout() ): ?>
+    <li class="control" id="register_control">
+        <input type="checkbox" name="billing[register]" value="1"<?php if($this->getMethod() == Mage_Checkout_Model_Type_Onepage::METHOD_REGISTER): ?> checked="checked"<?php endif; ?> title="<?php echo $this->__('Create an account') ?>" id="billing:register" onchange="" class="checkbox" /><label for="billing:register"><?php echo $this->__('Create an account') ?></label>
+    </li>
+    <li class="fields" id="register-customer-password"<?php if($this->getMethod() != Mage_Checkout_Model_Type_Onepage::METHOD_REGISTER): ?> style="display:none;"<?php endif; ?>> 
+        <?php else: ?>        
+    <li class="fields" id="register-customer-password">
+        <?php endif; ?>
+        <div class="field">
+            <label for="billing:customer_password" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('Password') ?></label>
+            <div class="input-box">
+                <input type="password" name="billing[customer_password]" id="billing:customer_password" title="<?php echo Mage::helper('checkout')->__('Password') ?>" class="input-text required-entry validate-password" />
+            </div>
+        </div>
+        <div class="field">
+            <label for="billing:confirm_password" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('Confirm Password') ?></label>
+            <div class="input-box">
+                <input type="password" name="billing[confirm_password]" title="<?php echo Mage::helper('checkout')->__('Confirm Password') ?>" id="billing:confirm_password" class="input-text required-entry validate-cpassword" />
+            </div>
+        </div>
+        <!--     START AITOC CHECKOUT ATTRIBUTES     -->
+        <?php if ($aFieldList = $cfmHelper->getRegCustomFieldList()): ?>
+        <div id="billing-aitcheckoutfields-reg">
+            <ul class="form-list">
+                <?php foreach ($aFieldList as $aField): ?>
+                    <?php echo $cfmHelper->getFieldHtml('billing', $aField); ?>
+                <?php endforeach; ?>
+            </ul>                
+        </div>
+        <?php endif; ?>
+        <!--     FINISH AITOC CHECKOUT ATTRIBUTES     -->
+    </li>    
+        <?php if($this->helper('aitcheckout/captcha')->checkIfFormAdditionalInfoAllowed()): ?>
+            <?php echo $this->getChildHtml('aitcheckout.checkout.billing.info'); ?>
+        <?php endif; ?>                                    
+    <?php endif; ?>
+
+    <?php if ($this->canShip() && $ccHelper->checkStepActive('shipping') && $ccHelper->checkSkipShippingAllowed()): ?>
+        <li class="control">
+            <input type="checkbox" autocomplete="off" name="billing[use_for_shipping]" value="1"<?php if($this->isUseBillingAddressForShipping()): ?> checked="checked"<?php endif; ?> title="<?php echo Mage::helper('checkout')->__('Ship to this address') ?>" id="billing:use_for_shipping" onchange="" class="checkbox" /><label for="billing:use_for_shipping"><?php echo Mage::helper('checkout')->__('Ship to this address') ?></label>
+        </li>
+    <?php endif; ?>
+    </ul>
+    <?php if (!$this->canShip()): ?>
+        <input type="hidden" name="billing[use_for_shipping]" value="1" />
+    <?php endif; ?>
+</fieldset>
+</div>
+
+<?php if (!$ccHelper->checkStepActive('payment')): ?>    
+    
+    
+    <div id="checkout-step-payment" class="box-no-padding a-item" style="display:none;"></div> 
+    
+    <div style="display:none;">   
+        <div id="co-payment-form">
+            <dl class="sp-methods" id="checkout-payment-method-load">
+                <dt>
+                    <input id="p_method_checkmo" value="checkmo" type="radio" name="payment[method]" title="Check / Money order" class="radio"  checked="checked" />
+                </dt>
+            </dl>
+        </div>
+    </div>
+        
+    <script type="text/javascript">
+    //<![CDATA[
+        var payment = new Payment('co-payment-form', '<?php echo $this->getUrl('checkout/onepage/savePayment') ?>');
+
+        aitCheckout.createStep('payment',{}, {
+                    doCheckErrors : false,
+                    isLoadWaiting : true,
+                    isUpdateOnReload : false,
+                    container: 'checkout-step-payment'
+                }
+        );
+
+    //]]>
+    </script>        
+        
+<?php endif; ?>
+<script type="text/javascript">
+//<![CDATA[
+
+    var billingRegionUpdater = new RegionUpdater('billing:country_id', 'billing:region', 'billing:region_id', countryRegions, undefined, 'billing:postcode');
+
+    aitCheckout.createStep('billing',{
+            saveMethodUrl : '<?php echo $this->getUrl('checkout/onepage/saveMethod') ?>'
+        }, {
+            doCheckErrors : true,
+            isLoadWaiting : false,
+            isUpdateOnReload : false,
+            captchaOption: <?php echo (!$this->getQuote()->isAllowedGuestCheckout() || $this->getMethod() == Mage_Checkout_Model_Type_Onepage::METHOD_REGISTER) ? 'true' : 'false' ?>,
+            isVirtual: <?php echo ($this->getQuote()->isVirtual()) ? 'true' : 'false' ?>,
+            container: 'checkout-step-billing',
+            ids: {
+                addressSelect  : 'billing-address-select',
+                addressForm    : 'billing-new-address-form',
+                requiredFields  :'aitoc-required-fields',
+                guestCaptcha    :'captcha-input-box-guest_checkout',
+                registerCaptcha :'captcha-input-box-register_during_checkout',
+                billingRegister :'billing:register',
+                customerPassword:'register-customer-password'
+            }
+        }
+    );
+    <?php if (Mage::app()->getRequest()->getParam("usertype")=="register"): ?>
+    jQuery(document).ready(function(){
+        var checked = jQuery("input#billing\\:register:checked").length;
+        if (!checked) {
+            jQuery("#billing\\:register").trigger("change");
+            jQuery("#billing\\:register").click();
+        };
+        
+    });
+    <?php elseif (Mage::app()->getRequest()->getParam("usertype")=="guest"):?>
+        jQuery(document).ready(function(){
+        var checked = jQuery("input#billing\\:register:checked").length;
+        if (checked) {
+            jQuery("#billing\\:register").trigger("change");
+            jQuery("#billing\\:register").click();
+        };
+        
+    });
+    <?php endif; ?>
+//]]>
+</script>

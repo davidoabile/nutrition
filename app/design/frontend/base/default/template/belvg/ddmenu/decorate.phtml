@@ -1,0 +1,59 @@
+<?php
+/**
+ * BelVG LLC.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ *
+/**********************************************
+ *        MAGENTO EDITION USAGE NOTICE        *
+ **********************************************/
+/* This package designed for Magento COMMUNITY edition
+ * BelVG does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * BelVG does not provide extension support in case of
+ * incorrect edition usage.
+/**********************************************
+ *        DISCLAIMER                          *
+ **********************************************/
+/* Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future.
+ **********************************************
+ * @category   Belvg
+ * @package    Belvg_DropDownMenu
+ * @copyright  Copyright (c) 2010 - 2012 BelVG LLC. (http://www.belvg.com)
+ * @license    http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ */
+
+    $settings  = Mage::helper('ddmenu')->getSettings();
+?>
+
+<?php if ($settings['overlay']): ?>
+    <?php
+        $hider = 'background-color: ' . $settings['overlayColor'] . ';' .
+                 'opacity: ' . $settings['opacity'] . ';' .
+                 'filter:progid:DXImageTransform.Microsoft.Alpha(opacity=' . 100 * $settings['opacity'] . ');' .
+                 '-moz-opacity: ' . $settings['opacity'] . ';' .
+                 '-khtml-opacity: ' . $settings['opacity'] . ';';
+    ?>
+    <div id="overlay-nav" style="display:none;<?php echo $hider ?>"></div>
+<?php endif ?>
+
+<?php if ($settings['fly']): ?>
+    <?php
+        $hider = 'background-color: ' . $settings['flyBackground'] . ';' .
+                 'opacity: ' . $settings['flyOpacity'] . ';' .
+                 'filter:progid:DXImageTransform.Microsoft.Alpha(opacity=' . 100 * $settings['flyOpacity'] . ');' .
+                 '-moz-opacity: ' . $settings['flyOpacity'] . ';' .
+                 '-khtml-opacity: ' . $settings['flyOpacity'] . ';';
+    ?>
+    <div id="top-nav-ddmenu_fly_bg" style="display:none;<?php echo $hider ?>"></div>
+<?php endif ?>
+
+<script>
+    jQblvg('#nav').ddmenu(<?php echo Mage::helper('ddmenu')->getJsonSettings() ?>);
+</script>

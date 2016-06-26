@@ -1,0 +1,115 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var $this Mage_Tax_Block_Checkout_Grandtotal
+ * @see Mage_Tax_Block_Checkout_Grandtotal
+ */
+?>
+<?php if ($this->includeTax() && $this->getTotalExclTax() >= 0): ?>
+    <tr class="os_part2 mrgn_t5">
+        <td style="<?php echo $this->getStyle() ?>" class="a-right left order_ttlst_txt_grn" colspan="<?php echo $this->getColspan(); ?>">
+            <strong><?php echo $this->helper('tax')->__('TOTAL EXCL. TAX')?></strong>
+        </td>
+        <td style="<?php echo $this->getStyle() ?>" class="a-right right font18_grn">
+            <strong><?php echo $this->helper('checkout')->formatPrice($this->getTotalExclTax()) ?></strong>
+        </td>
+    </tr>
+    <?php echo $this->renderTotals('taxes', $this->getColspan()); ?>
+    <tr class="os_part2 mrgn_t5">
+        <td style="<?php echo $this->getStyle() ?>" class="a-right left order_ttlst_txt_grn" colspan="<?php echo $this->getColspan(); ?>">
+            <strong><?php echo $this->helper('tax')->__('TOTAL INCL. TAX')?></strong>
+        </td>
+        <td style="<?php echo $this->getStyle() ?>" class="a-right right font18_grn">
+            <strong><?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue()) ?></strong>
+        </td>
+    </tr>
+<?php else: ?>
+    <?php
+        $cart = Mage::getModel('checkout/session')->getQuote();
+        $shippingMethod = $cart->getShippingAddress();
+        // Mage::helper('core')->currency(,true,false);
+
+
+        if (Mage::app()->getFrontController()->getRequest()->getRouteName() == 'checkout') {
+            $width = "width:99px;";
+        }
+    ?>
+    <?php if($shippingMethod['shipping_amount'] == 0.00 && $shippingMethod['shipping_method'] == 'flatrate_flatrate'): ?>
+        <tr class="os_part mrgn_t5">
+            <td style="<?php echo $width; ?> margin:0px;<?php echo $this->getStyle(); ?>" class="a-right left" colspan="<?php echo $this->getColspan(); ?>"> 
+                <span class="font14_gry"><?php echo "SHIPPING FEE"; ?></span>
+            </td>
+            
+            <td style="<?php echo $this->getStyle() ?>" class="a-right right font18_grn">
+                <span class="right font18_gry2">-$00.00</spna>
+            </td>
+        </tr> 
+    <?php endif ?>
+
+
+     <!--<tr class="os_part mrgn_t5">
+        <td style="<?php //echo $width; ?> margin:0px;<?php //echo $this->getStyle(); ?>" class="a-right left" colspan="<?php echo $this->getColspan(); ?>" style=""> 
+            <span class="font14_gry"><?php //echo "PROMO"; ?></span>
+        </td>
+        
+        <td style="<?php //echo $this->getStyle() ?>" class="a-right right font18_grn">
+            <span class="right font18_gry2">-$00.00</spna>
+        </td>
+    </tr>-->                
+
+    <!--<tr class="os_part mrgn_t5">
+        <td style="<?php echo $width; ?> margin:0px;<?php echo $this->getStyle(); ?>" class="a-right left" colspan="<?php echo $this->getColspan(); ?>" style=""> 
+             <span class="font14_gry"><?php echo "VOUCHER"; ?></span>
+        </td>
+        
+        <td style="<?php echo $this->getStyle() ?>" class="a-right right font18_grn">
+            <span class="right font18_gry2">-$00.00</spna>
+        </td>
+    </tr>-->
+    <?php //$insrance = Mage::getSingleton("core/session")->getInsuranceAdd(); 
+
+    //if ($insrance == 1){ ?>
+    <!--<tr class="os_part mrgn_t5">
+        <td style="<?php echo $width; ?> margin:0px;<?php echo $this->getStyle(); ?>" class="a-right left" colspan="<?php echo $this->getColspan(); ?>" style=""> 
+             <span class="font14_gry"><?php echo "INSURANCE"; ?></span>
+        </td>
+        
+        <td style="<?php echo $this->getStyle() ?>" class="a-right right font18_grn">
+            <span class="right font18_gry2">$2.95</spna>
+        </td>
+    </tr>-->                  
+    <?php //} ?>                
+    <tr class="os_part2 mrgn_t5">
+        <td style="<?php echo $width; ?> margin:0px;<?php echo $this->getStyle(); ?>" class="a-right left order_ttlst_txt_grn" colspan="<?php echo $this->getColspan(); ?>" style=""> 
+            <strong><?php echo "TOTAL" ;//$this->getTotal()->getTitle() ?></strong>
+        </td>
+        
+        <td style="<?php echo $this->getStyle() ?>" class="a-right right font18_grn">
+            <strong><?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue()) ?></strong>
+        </td>
+    </tr>
+<?php endif ?>
+

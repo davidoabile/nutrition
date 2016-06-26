@@ -1,0 +1,18 @@
+<?php
+/**
+* Braintree Payments Extension
+*
+* This source file is subject to the Braintree Payment System Agreement (https://www.braintreepayments.com/legal)
+*
+* DISCLAIMER
+* This file will not be supported if it is modified.
+*
+* @copyright   Copyright (c) 2015 Braintree. (https://www.braintreepayments.com/)
+*/
+?>
+<?php $helper = Mage::helper('braintree_payments'); ?>
+<?php if ($helper->isIwdOpcExtensionEnabled()) :?>
+    <script type="text/javascript">
+        braintree3DSecureGrandTotal = "<?php echo $helper->getOrderAmount()?>";
+    </script>
+<?php endif; ?>

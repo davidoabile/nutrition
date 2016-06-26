@@ -1,0 +1,115 @@
+<?php
+/**
+ * BelVG LLC.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ *
+/**********************************************
+ *        MAGENTO EDITION USAGE NOTICE        *
+ **********************************************/
+/* This package designed for Magento COMMUNITY edition
+ * BelVG does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * BelVG does not provide extension support in case of
+ * incorrect edition usage.
+/**********************************************
+ *        DISCLAIMER                          *
+ **********************************************/
+/* Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future.
+ **********************************************
+ * @category   Belvg
+ * @package    Belvg_ProductZoomLight
+ * @copyright  Copyright (c) 2010 - 2012 BelVG LLC. (http://www.belvg.com)
+ * @license    http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ */
+
+    $section = Mage::app()->getRequest()->getParam('section');
+    if ($section == 'productzoomlight'):
+        $quickviewConfig      = (array) Mage::getConfig()->getNode('modules/Belvg_Quickviewpro');
+        if (isset($quickviewConfig['active']) && $quickviewConfig['active']) {
+            $isQuickviewExtension = TRUE;
+        } else {
+            $isQuickviewExtension = FALSE;
+        }
+?>
+
+<script type="text/javascript">
+    Event.observe(window, 'load', function() {
+        var productzoomlightCloudzoomTint        = new jscolor.color($('productzoomlight_cloudzoom_tint'), {hash:true});
+        var productzoomlightFancyboxOverlayColor = new jscolor.color($('productzoomlight_fancybox_overlay_color'), {hash:true});
+
+        var ids = [
+            'productzoomlight_fancybox_show',
+            'productzoomlight_fancybox_nav'
+        ];
+
+        ids.each(function(id) {
+            effectSettingsCheck(id);
+            $(id + '_effect').observe('change', function() {
+                effectSettingsCheck(id);
+            });
+        });
+
+        <?php if (!$isQuickviewExtension): ?>
+            var ids = [
+                'row_productzoomlight_images_title_quickview',
+                'row_productzoomlight_images_quickview_main_width',
+                //'row_productzoomlight_images_quickview_main_height',
+                'row_productzoomlight_images_quickview_thumbs_width',
+                'row_productzoomlight_images_quickview_thumbs_height',
+                'row_productzoomlight_cloudzoom_title_quickview',
+                'row_productzoomlight_cloudzoom_zoom_width_quickview',
+                'row_productzoomlight_cloudzoom_zoom_height_quickview',
+                'row_productzoomlight_cloudzoom_position_quickview',
+                'row_productzoomlight_cloudzoom_position_element_quickview',
+                'row_productzoomlight_cloudzoom_adjust_x_quickview',
+                'row_productzoomlight_cloudzoom_adjust_y_quickview'
+            ];
+
+            ids.each(function(id) {
+                console.log(id);
+                $(id).hide();
+            });
+        <?php endif ?>
+    });
+
+    function effectSettingsCheck(id)
+    {
+        var value = $(id + '_effect').value;
+        switch (value) {
+            case 'fade':
+                effectSettingsShow(id);
+                break;
+            case 'elastic':
+                effectSettingsShow(id);
+                break;
+            default:
+                effectSettingsHide(id);
+        }
+    }
+    
+    function effectSettingsShow(id)
+    {
+        $('row_' + id + '_easing').show();
+        $('row_' + id + '_speed').show();
+
+        $(id + '_easing').enable();
+        $(id + '_speed').enable();
+    }
+    
+    function effectSettingsHide(id)
+    {
+        $('row_' + id + '_easing').hide();
+        $('row_' + id + '_speed').hide();
+
+        $(id + '_easing').disable();
+        $(id + '_speed').disable();
+    }
+</script>
+<?php endif ?>

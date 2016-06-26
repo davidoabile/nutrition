@@ -1,0 +1,1010 @@
+<?xml version="1.0"?>
+<!--
+  Moogento
+  
+  SOFTWARE LICENSE
+  
+  This source file is covered by the Moogento End User License Agreement
+  that is bundled with this extension in the file License.html
+  It is also available online here:
+  http://www.moogento.com/License.html
+  
+  NOTICE
+  
+  If you customize this file please remember that it will be overwrtitten
+  with any future upgrade installs. 
+  If you'd like to add a feature which is not in this software, get in touch
+  at www.moogento.com for a quote.
+  
+  ID          pe+sMEDTrtCzNq3pehW9DJ0lnYtgqva4i4Z=
+  File        system.xml
+  @category   Moogento
+  @package    pickPack
+  @copyright  Copyright (c) 2014 Moogento <info@moogento.com> / All rights reserved.
+  @license    http://www.moogento.com/License.html
+-->
+<config>
+    <tabs>
+        <moogento translate="label" module="moogento_pickscan">
+            <label><![CDATA[<img src="//moogento.com/logo/moogento_tinylogo.ls.png" alt="Moogento" width="20" style="vertical-align:bottom;margin-left:-1px;"/> MOOGENTO Extensions]]></label>
+            <sort_order>200</sort_order>
+        </moogento>
+    </tabs>
+    <sections>
+
+        <moogento_pickscan translate="label" module="moogento_pickscan">
+            <label><![CDATA[- pickNScan]]></label>
+            <header_css>moogento-header</header_css>
+            <tab>moogento</tab>
+            <frontend_model>moogento_pickscan/adminhtml_config</frontend_model>
+            <frontend_type>text</frontend_type>
+            <sort_order>800</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>0</show_in_website>
+            <show_in_store>0</show_in_store>
+            <groups>
+                <hint>
+                    <frontend_model>moogento_pickscan/adminhtml_system_config_fieldset_hint</frontend_model>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                </hint>
+                <moodetails>
+                    <label>License</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <server_name translate="label">
+                            <label>Server Name</label>
+                            <frontend_type>text</frontend_type>
+                            <backend_model>moogento_pickscan/adminhtml_system_config_backend_import_name</backend_model>
+                            <frontend_model>moogento_pickscan/adminhtml_system_config_fieldset_name</frontend_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </server_name>
+                        <license translate="label">
+                            <label>License Key</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <frontend_model>moogento_pickscan/adminhtml_system_config_fieldset_key</frontend_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Enter your license key here</comment>
+                        </license>
+                    </fields>
+                </moodetails>
+                <settings>
+                    <label><![CDATA[Settings]]></label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <show_button translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Show "Pick & Scan" button?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_button>
+
+                        <skip_products>
+                            <label><![CDATA[Skip products]]></label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[Newline separated list of SKUs to be automatically skipped]]></comment>
+                        </skip_products>
+
+                        <barcode translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Use as barcode]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_product_attribute</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_class>required-entry</frontend_class>
+                        </barcode>
+
+                        <barcode_update translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Option to update barcode attribute?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>16</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </barcode_update>
+
+                        <barcode_update_auth translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Barcode update requires authorization?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>17</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><barcode_update>1</barcode_update></depends>
+                        </barcode_update_auth>
+
+                        <sort_by translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Item location]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_product_attribute</source_model>
+                            <sort_order>19</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_class>required-entry</frontend_class>
+                        </sort_by>
+
+                        <sort_by_limit translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Characters that count in item location]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_location_limit</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sort_by_limit>
+
+                        <show_in_title translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Show in title]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_product_title</source_model>
+                            <sort_order>21</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_in_title>
+
+                        <show_in_title_custom translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Title custom attribute]]></label>
+                            <frontend_type>select</frontend_type>
+                            <depends><show_in_title>custom</show_in_title></depends>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_product_attribute</source_model>
+                            <sort_order>22</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_class>required-entry</frontend_class>
+                        </show_in_title_custom>
+
+                        <custom_1 translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Detail box attribute 1]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_product_attribute</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </custom_1>
+                        <custom_2 translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Detail box attribute 2]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_product_attribute</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </custom_2>
+                        <custom_3 translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Detail box attribute 3]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_product_attribute</source_model>
+                            <sort_order>42</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </custom_3>
+                        <custom_4 translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Detail box attribute 4]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_product_attribute</source_model>
+                            <sort_order>45</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </custom_4>
+
+                        <show_configurable_options translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Show configurable options in detail box?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>48</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_configurable_options>
+
+                        <customer_comments translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Show customer comments?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </customer_comments>
+                        <admin_comments translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Show admin comments?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </admin_comments>
+
+                        <status_on_start>
+                            <label><![CDATA[Auto-set order status on pick'n'scan start]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_order_status</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </status_on_start>
+                        <status_on_finish>
+                            <label><![CDATA[Auto-set order status on pick'n'scan finish]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_order_status</source_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </status_on_finish>
+
+                        <notify_status>
+                            <label><![CDATA[Notify customer about new invoices/shipments?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>81</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </notify_status>
+
+                        <order_progress translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Show order progressbar?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </order_progress>
+                        <trolley_progress translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Show trolley progressbar?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </trolley_progress>
+                        <total_progress translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Show total progressbar?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </total_progress>
+
+                        <enable_commenting>
+                            <label><![CDATA[Enable commenting?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable_commenting>
+
+                        <show_column>
+                            <label><![CDATA[Show picking column?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_column>
+
+                        <show_logout>
+                            <label><![CDATA[Show logout button?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_logout>
+
+                        <enable_correct_sound>
+                            <label><![CDATA[Enable "Correct" sound effect?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable_correct_sound>
+
+                        <save_condition translate="label">
+                            <label>Save current grid settings as pickAssigned condition</label>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>moogento_pickscan/adminhtml_system_config_form_button</frontend_model>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </save_condition>
+
+                        <assign_limit>
+                            <label><![CDATA[Auto-assign per user]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>26</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </assign_limit>
+
+                        <logo translate="label comment" module="moogento_pickscan">
+                            <label>Logo</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">moogento</upload_dir>
+                            <base_url type="media" scope_info="1">moogento</base_url>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Recomended size: 188px x 100px</comment>
+                        </logo>
+
+                        <assign_tracking>
+                            <label><![CDATA[Assign tracking by scan?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </assign_tracking>
+
+                        <autoreturn>
+                            <label><![CDATA[Auto-return after picking is finished?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>160</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </autoreturn>
+                    </fields>
+                </settings>
+                <manual_substitution>
+                    <label><![CDATA[Manual Substitution]]></label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>200</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enable translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Enable?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+
+                        <set_flag>
+                            <label><![CDATA[Auto-set order flag]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_order_flag</source_model>
+                            <if_module_enabled>Moogento_ShipEasy</if_module_enabled>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </set_flag>
+
+                        <set_flag_1>
+                            <label><![CDATA[Order flag value]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_order_flag_first</source_model>
+                            <sort_order>25</sort_order>
+                            <if_module_enabled>Moogento_ShipEasy</if_module_enabled>
+                            <depends><set_flag>1</set_flag></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </set_flag_1>
+
+                        <set_flag_1_custom>
+                            <label><![CDATA[Order flag custom value]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>26</sort_order>
+                            <depends><set_flag_1>custom</set_flag_1></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </set_flag_1_custom>
+
+                        <set_flag_2>
+                            <label><![CDATA[Order flag value]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_order_flag_second</source_model>
+                            <sort_order>25</sort_order>
+                            <if_module_enabled>Moogento_ShipEasy</if_module_enabled>
+                            <depends><set_flag>2</set_flag></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </set_flag_2>
+
+                        <set_flag_2_custom>
+                            <label><![CDATA[Order flag custom value]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>26</sort_order>
+                            <if_module_enabled>Moogento_ShipEasy</if_module_enabled>
+                            <depends><set_flag_2>custom</set_flag_2></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </set_flag_2_custom>
+
+                        <set_flag_3>
+                            <label><![CDATA[Order flag value]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_order_flag_third</source_model>
+                            <sort_order>25</sort_order>
+                            <if_module_enabled>Moogento_ShipEasy</if_module_enabled>
+                            <depends><set_flag>3</set_flag></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </set_flag_3>
+
+                        <set_flag_3_custom>
+                            <label><![CDATA[Order flag custom value]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>26</sort_order>
+                            <if_module_enabled>Moogento_ShipEasy</if_module_enabled>
+                            <depends><set_flag_3>custom</set_flag_3></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </set_flag_3_custom>
+
+                        <set_order_status translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Auto-set order status]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_order_status</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </set_order_status>
+
+                        <allowance_enable translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Product Replacement Allowance]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </allowance_enable>
+
+                        <allowance_multiplier>
+                            <label><![CDATA[Allowance Multiplier]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><allowance_enable>1</allowance_enable></depends>
+                        </allowance_multiplier>
+                    </fields>
+                </manual_substitution>
+                <ignore_error>
+                    <label><![CDATA[Skip]]></label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>300</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enable translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Enable?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+
+                        <set_flag>
+                            <label><![CDATA[Auto-set order flag]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_order_flag</source_model>
+                            <sort_order>20</sort_order>
+                            <if_module_enabled>Moogento_ShipEasy</if_module_enabled>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </set_flag>
+
+                        <set_flag_1>
+                            <label><![CDATA[Order flag value]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_order_flag_first</source_model>
+                            <sort_order>25</sort_order>
+                            <if_module_enabled>Moogento_ShipEasy</if_module_enabled>
+                            <depends><set_flag>1</set_flag></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </set_flag_1>
+
+                        <set_flag_1_custom>
+                            <label><![CDATA[Order flag custom value]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>26</sort_order>
+                            <if_module_enabled>Moogento_ShipEasy</if_module_enabled>
+                            <depends><set_flag_1>custom</set_flag_1></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </set_flag_1_custom>
+
+                        <set_flag_2>
+                            <label><![CDATA[Order flag value]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_order_flag_second</source_model>
+                            <sort_order>25</sort_order>
+                            <if_module_enabled>Moogento_ShipEasy</if_module_enabled>
+                            <depends><set_flag>2</set_flag></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </set_flag_2>
+
+                        <set_flag_2_custom>
+                            <label><![CDATA[Order flag custom value]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>26</sort_order>
+                            <if_module_enabled>Moogento_ShipEasy</if_module_enabled>
+                            <depends><set_flag_2>custom</set_flag_2></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </set_flag_2_custom>
+
+                        <set_flag_3>
+                            <label><![CDATA[Order flag value]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_order_flag_third</source_model>
+                            <sort_order>25</sort_order>
+                            <if_module_enabled>Moogento_ShipEasy</if_module_enabled>
+                            <depends><set_flag>3</set_flag></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </set_flag_3>
+
+                        <set_flag_3_custom>
+                            <label><![CDATA[Order flag custom value]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>26</sort_order>
+                            <if_module_enabled>Moogento_ShipEasy</if_module_enabled>
+                            <depends><set_flag_3>custom</set_flag_3></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </set_flag_3_custom>
+
+                        <set_order_status translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Auto-set order status]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_order_status</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </set_order_status>
+
+                    </fields>
+                </ignore_error>
+                <background>
+                    <label><![CDATA[Background]]></label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>150</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <type translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Use for background:]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_background_type</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </type>
+                        <image translate="label comment" module="moogento_pickscan">
+                            <label>Image</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>moogento_pickscan/adminhtml_system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">moogento</upload_dir>
+                            <base_url type="media" scope_info="1">moogento</base_url>
+                            <depends><type>custom</type></depends>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Recomended size: 1920px x 1080px</comment>
+                        </image>
+                        <repeat translate="label comment" module="moogento_pickscan">
+                            <label><![CDATA[Repeat background?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_background_repeat</source_model>
+                            <depends><type>custom</type></depends>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </repeat>
+                        <vertical_align>
+                            <label><![CDATA[Align vertically]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_background_align_vertical</source_model>
+                            <depends><type>custom</type></depends>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vertical_align>
+                        <horizontal_align>
+                            <label><![CDATA[Align horizontally]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_background_align_horizontal</source_model>
+                            <depends><type>custom</type></depends>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </horizontal_align>
+                        <size>
+                            <label><![CDATA[Size]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_background_size</source_model>
+                            <depends><type>custom</type></depends>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </size>
+                        <preview translate="label">
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>moogento_pickscan/adminhtml_system_config_form_button_preview</frontend_model>
+                            <depends><type>custom</type></depends>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </preview>
+                        <color>
+                            <label><![CDATA[Color]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <depends><type>color</type></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_class>color {hash:true}</frontend_class>
+                        </color>
+                    </fields>
+                </background>
+                <trolley>
+                    <label><![CDATA[Print trolley barcodes]]></label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <amount>
+                            <label><![CDATA[Number of Trolleys]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </amount>
+                        <start>
+                            <label><![CDATA[Starting trolley number]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </start>
+                        <stop>
+                            <label><![CDATA[Ending trolleys number]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </stop>
+                        <box_amount>
+                            <label><![CDATA[Number of Boxes per trolley]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </box_amount>
+                        <start_box>
+                            <label><![CDATA[Starting box number]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>22</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </start_box>
+                        <stop_box>
+                            <label><![CDATA[Ending box number]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </stop_box>
+                        <page_size>
+                            <label><![CDATA[Page Size]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_page_size</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </page_size>
+                        <page_width>
+                            <label><![CDATA[Page width (mm)]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>53</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><page_size>custom</page_size></depends>
+                        </page_width>
+                        <page_height>
+                            <label><![CDATA[Page height (mm)]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>55</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><page_size>custom</page_size></depends>
+                        </page_height>
+                        <generate_barcodes translate="label">
+                            <label>Generate barcodes for trolley boxes</label>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>moogento_pickscan/adminhtml_system_config_form_button_generate</frontend_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Please save settings before generating barcodes</comment>
+                        </generate_barcodes>
+                    </fields>
+                </trolley>
+
+                <barcode_update_auth_print translate="label">
+                    <label><![CDATA[Print admin auth cards]]></label>
+                    <frontend_model>moogento_pickscan/adminhtml_system_config_form_auth</frontend_model>
+                    <sort_order>1100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                </barcode_update_auth_print>
+                <pack>
+                    <label><![CDATA[Pack settings]]></label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>900</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <print>
+                            <label><![CDATA[Print type]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_pickscan/adminhtml_system_config_source_pack_print</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </print>
+                        <print_email>
+                            <label><![CDATA[Sent Print Email to]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><print>email</print></depends>
+                        </print_email>
+                        <print_ftp_host>
+                            <label><![CDATA[FTP host]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><print>ftp</print></depends>
+                        </print_ftp_host>
+                        <print_ftp_port>
+                            <label><![CDATA[FTP post]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><print>ftp</print></depends>
+                        </print_ftp_port>
+                        <print_ftp_username>
+                            <label><![CDATA[FTP username]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><print>ftp</print></depends>
+                        </print_ftp_username>
+                        <print_ftp_password>
+                            <label><![CDATA[FTP post]]></label>
+                            <frontend_type>password</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><print>ftp</print></depends>
+                        </print_ftp_password>
+                        <print_ftp_path>
+                            <label><![CDATA[FTP path]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><print>ftp</print></depends>
+                        </print_ftp_path>
+                        <mark_complete>
+                            <label><![CDATA[Mark order complete on pack finish?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </mark_complete>
+
+                        <api_enable>
+                            <label><![CDATA[Enable API commands?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>85</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </api_enable>
+
+                        <api_url>
+                            <label><![CDATA[API URL]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><api_enable>1</api_enable></depends>
+                        </api_url>
+
+                        <api_account_id>
+                            <label><![CDATA[API account id]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><api_enable>1</api_enable></depends>
+                        </api_account_id>
+
+                        <api_start>
+                            <label><![CDATA[API start command]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><api_enable>1</api_enable></depends>
+                        </api_start>
+
+                        <api_start_params>
+                            <label><![CDATA[API start command params]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><api_enable>1</api_enable></depends>
+                        </api_start_params>
+
+                        <api_stop>
+                            <label><![CDATA[API stop command]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><api_enable>1</api_enable></depends>
+                        </api_stop>
+
+                        <api_stop_params>
+                            <label><![CDATA[API stop command params]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><api_enable>1</api_enable></depends>
+                        </api_stop_params>
+
+                        <overlay_text_a>
+                            <label><![CDATA[Overlay text line 1]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><api_enable>1</api_enable></depends>
+                        </overlay_text_a>
+
+                        <overlay_text_b>
+                            <label><![CDATA[Overlay text line 2]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><api_enable>1</api_enable></depends>
+                        </overlay_text_b>
+                    </fields>
+                </pack>
+            </groups>
+        </moogento_pickscan>
+    </sections>
+</config>

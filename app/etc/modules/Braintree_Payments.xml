@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+* Braintree Payments Extension
+*
+* This source file is subject to the Braintree Payment System Agreement (https://www.braintreepayments.com/legal)
+*
+* DISCLAIMER
+* This file will not be supported if it is modified.
+*
+* @copyright   Copyright (c) 2015 Braintree. (https://www.braintreepayments.com/)
+*/
+-->
+<config>
+    <modules>
+        <Braintree_Payments>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+                <Mage_Payment />
+            </depends>
+        </Braintree_Payments>
+    </modules>
+</config>

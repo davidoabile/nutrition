@@ -1,0 +1,31 @@
+<?php
+    $groups      = Mage::getResourceModel('attributeSplash/group_collection')
+        ->addFieldToFilter('attribute_id', Belvg_Local_Helper_Data::ATTRIBUTE_GOALS_ID);
+    $splashGroup = $groups->getFirstItem();
+    $splashPages = $splashGroup
+        ->getSplashPages()
+        ->addOrderBySortOrder();
+?>
+<ul class="level0-sub">
+    <li class="level1 first parent">
+        <h4>
+            <a class="level1 has-children" href="<?php echo $splashGroup->getUrl() ?>">
+                <span><?php echo $splashGroup->getName() ?></span>
+            </a>
+        </h4>
+        <ul class="level1">
+            <?php $i = 0 ?>
+            <?php foreach ($splashPages as $splashPage): ?>
+                <?php
+                    $i++;
+                    $name = explode('(', trim($this->escapeHtml($splashPage->getName())));
+                ?>
+                <li class="level2<?php echo ($i == 1) ? ' first' : '' ?>">
+                    <a class="level2" href="<?php echo $splashPage->getUrl() ?>">
+                        <span><?php echo $name[0] ?></span>
+                    </a>
+                </li>
+            <?php endforeach ?>
+        </ul>
+    </li>
+</ul>

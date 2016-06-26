@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Aitoc_Aitcheckout>
+            <active>true</active>
+            <codePool>local</codePool>
+            <self_name>One-page Checkout Booster</self_name>
+            <priority>1600</priority>
+        </Aitoc_Aitcheckout>
+    </modules>
+</config>
+<!--
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+-->

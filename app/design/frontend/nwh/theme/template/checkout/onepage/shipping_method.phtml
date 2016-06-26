@@ -1,0 +1,196 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+<!--<div class="checkout_main">
+    <div class="billing_main mrgn_r10">
+        <div class="heading_main mrgn_r10">BILLING DETAILS</div>
+        <div class="billing_form_main">
+            <div class="b_form_textstyle">Personal Details</div>
+            <input name="" type="text" value="First Name" class="b_form_txtfld"/>
+            <input name="" type="text" value="Last Name" class="b_form_txtfld"/>
+            <input name="" type="text" value="Email" class="b_form_txtfld"/>
+            <input name="" type="text" value="Phone" class="b_form_txtfld"/>
+            <div class="b_form_textstyle">Billing Address</div>
+            <input name="" type="text" value="Street No. & Name" class="b_form_txtfld"/>
+            <input name="" type="text" value="" class="b_form_txtfld"/>
+            <select name="State" class="b_form_drpdwn">
+                <option>Select Country</option>
+            </select>
+            <input name="" type="text" value="City" class="b_form_txtfld"/>
+            <input name="" type="text" value="Post Code" class="b_form_txtfld_small"/>
+            <select name="State" class="b_form_drpdwn_small">
+                <option>State</option>
+            </select>
+            <div class="comman">
+                <input id="check" type="checkbox" class="CheckBoxClass" name="group1" >
+                <label id="Label5" for="check" class="CheckBoxLabelClass font12_blk">Ship to different address</label>
+            </div>
+            <div class="comman mrgn_t10">
+                <input id="check1" type="checkbox" class="CheckBoxClass" name="group1" >
+                <label id="Label6" for="check" class="CheckBoxLabelClass font12_blk">Create an account for next time</label>
+            </div>
+        </div>
+    </div>
+    <div class="billing_main mrgn_r10">
+        <div class="heading_main mrgn_r10">PAYMENT METHOD</div>
+        <div class="billing_form_main">
+            <div class="b_radiobtn">
+                <input type="radio" name="radiog_dark" id="radio4" class="css-radiobox" />
+                <label for="radio4" class="css-label2 radGroup2">
+                    <img src="<?php echo $this->getSkinUrl("images/visa_img.png");?>" />
+                </label>
+            </div>
+            <div class="b_radiobtn">
+                <input type="radio" name="radiog_dark" id="radio5" class="css-radiobox" />
+                <label for="radio5" class="css-label2 radGroup2">
+                    <img src="<?php echo $this->getSkinUrl("images/visa_one.png");?>" />
+                </label>
+            </div>
+            <div class="b_radiobtn">
+                <input type="radio" name="radiog_dark" id="radio6" class="css-radiobox" />
+                <label for="radio6" class="css-label2 radGroup2">
+                    <img src="<?php echo $this->getSkinUrl("images/visa_two.png");?>" />
+                    <span class="b_radiobtn_txt">DIRECT BANKING</span>
+                </label>
+            </div>
+            <div class="b_radiobtn">
+                <input type="radio" name="radiog_dark" id="radio7" class="css-radiobox" />
+                <label for="radio7" class="css-label2 radGroup2">
+                    <img src="<?php echo $this->getSkinUrl("images/visa_three.png");?>" />
+                    <span class="b_radiobtn_txt">GIFT CARD</span>
+                </label>
+            </div>
+            <div class="b_radiobtn_txtstyl mrgn_t10">
+                Your information and credit card transactions are<br />
+                transmitted through a secure connection using<br />
+                secure socket layering (ssl) encryption technology
+            </div>
+        </div>
+    </div>
+    <div class="billing_main clear_right">
+        <div class="heading_main mrgn_r10">ORDER SUMMARY</div>
+        <div class="order_main">
+            <div class="comman">
+                <div class="left">
+                    <div class="order_img"><img src="<?php echo $this->getSkinUrl("images/order_summary_img1.png");?>" /></div>
+                    <div class="left">
+                        <span class="font14_blk">1 x PRODUCT NAME</span><br />
+                        <span class="font12_gry">Sub description here</span>
+                    </div>
+                </div>
+                <div class="font14_blk right">$888.00</div>
+            </div>
+            <div class="order_line"></div>
+            <div class="comman">
+                <div class="left">
+                    <div class="order_img"><img src="<?php echo $this->getSkinUrl("images/order_summary_img2.png");?>" /></div>
+                    <div class="left">
+                        <span class="font14_blk">1 x GENETIX<br />LEAN WHEY</span><br />
+                        <span class="font12_gry">100% whey protein</span>
+                    </div>
+                </div>
+                <div class="font14_blk right">$888.00</div>
+            </div>
+            <div class="comman mrgn_t20">
+                <div class="order_totalshit_main">
+                    <div class="order_ttlst_txt">ORDER TOTAL</div>
+                </div>
+                <div class="order_totalshit_rigt">
+                    <div class="order_ttlst_txttwo">$888.00</div>
+                </div>
+            </div>
+            <div class="comman">
+                <div class="order_totalshit_main">
+                    <div class="order_ttlst_txt">SHIPPING FEE</div>
+                </div>
+                <div class="order_totalshit_rigt">
+                    <div class="order_ttlst_txttwo">$12.90</div>
+                </div>
+            </div>
+            <div class="comman">
+                <div class="order_totalshit_main">
+                    <div class="order_ttlst_txt">PROMO</div>
+                </div>
+                <div class="order_totalshit_rigt">
+                    <div class="order_ttlst_txttwo_gry">-$00.00</div>
+                </div>
+            </div>
+            <div class="comman">
+                <div class="order_totalshit_main">
+                    <div class="order_ttlst_txt">VOUCHER</div>
+                </div>
+                <div class="order_totalshit_rigt">
+                    <div class="order_ttlst_txttwo_gry">-$00.00</div>
+                </div>
+            </div>
+            <div class="comman">
+                <div class="order_totalshit_main_grn">
+                    <div class="order_ttlst_txt_grn">TOTAL</div>
+                </div>
+                <div class="order_totalshit_rigt_grn">
+                    <div class="order_ttlst_txttwo_grn">$900.90</div>
+                </div>
+            </div>
+            <div class="order_bgmain">
+                <div class="comman order_txt_styl">
+                    <div class="left" style="line-height:35px;">PROMO CODE</div>
+                    <div class="right">
+                        <input name="" type="text" class="order_txtfld" />
+                        <input name="" type="button" class="order_btn" value="apply" />
+                    </div>
+                </div>
+                <div class="comman font11_gry mrgn_t10">
+                    One coupon per order.<a href="#" class="link11_gry">Terms and Conditions</a> apply.
+                </div>
+            </div>
+            <input name="" type="button" value="SUBMIT ORDER" class="order_btn_grn mrgn_t10" /><br />
+            <a href="#" class="link12_gry2 mrgn_t10 left">Edit order</a>
+        </div>
+    </div>
+</div>-->
+<form id="co-shipping-method-form" action="" class="form_center" >
+    <div id="checkout-shipping-method-load">
+        <!-- Content loaded dynamically -->
+    </div>
+    <script type="text/javascript">
+        //<![CDATA[
+        var shippingMethod = new ShippingMethod('co-shipping-method-form', "<?php echo $this->getUrl('checkout/onepage/saveShippingMethod') ?>");
+        //]]>
+    </script>
+    <div id="onepage-checkout-shipping-method-additional-load">
+        <?php echo $this->getChildHtml('additional') ?>
+    </div>
+    <div class="buttons-set" id="shipping-method-buttons-container" style=" border-top:none;padding-right: 20px;padding-left: 20px;">
+        <p class="back-link"><a href="#" onclick="checkout.back();
+                return false;"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>
+        <button type="button" class="button" onclick="shippingMethod.save()"><span><span><?php echo $this->__('Continue') ?></span></span></button>
+        <span id="shipping-method-please-wait" class="please-wait" style="display:none;">
+            <img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" alt="<?php echo $this->__('Loading next step...') ?>" title="<?php echo $this->__('Loading next step...') ?>" class="v-middle" /> <?php echo $this->__('Loading next step...') ?>
+        </span>
+    </div>
+    <div class="mrgn_b10">&nbsp;</div>
+</form>

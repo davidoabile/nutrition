@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_sales_order_index>
+        <reference name="head">
+            <action method="addJs">
+                <script>moogento/general/jquery.min.js</script>
+            </action>
+            <action method="addJs">
+                <script>moogento/general/jquery.ddslick.js</script>
+            </action>
+        </reference>
+     
+    </adminhtml_sales_order_index>
+    <adminhtml_retailexpress_paymentmethod_index>
+        <reference name="menu">
+            <action method="setActive">
+                <menupath>sales/moogento_retailexpress/paymentmethod</menupath>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="moogento_retailexpress/adminhtml_paymentmethod" name="paymentmethod" />
+
+        </reference>
+    </adminhtml_retailexpress_paymentmethod_index>
+    <adminhtml_retailexpress_paymentmethod_grid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="moogento_retailexpress/adminhtml_paymentmethod_grid" name="paymentmethod_grid"/>
+        </block>
+    </adminhtml_retailexpress_paymentmethod_grid>
+    <!-- Paymentmethod add/edit action -->
+    <adminhtml_retailexpress_paymentmethod_edit>
+        <update handle="editor"/>
+        <reference name="menu">
+            <action method="setActive">
+                <menupath>sales/moogento_retailexpress/paymentmethod</menupath>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="moogento_retailexpress/adminhtml_paymentmethod_edit" name="paymentmethod_edit"></block>
+        </reference>
+        <reference name="left">
+            <block type="moogento_retailexpress/adminhtml_paymentmethod_edit_tabs" name="paymentmethod_tabs"></block>
+        </reference>
+    </adminhtml_retailexpress_paymentmethod_edit>
+</layout>

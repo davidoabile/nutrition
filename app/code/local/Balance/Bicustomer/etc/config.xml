@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Balance_Bicustomer>
+      <version>0.1.0</version>
+    </Balance_Bicustomer>
+  </modules>
+  <frontend>
+    <routers>
+      <bicustomer>
+        <use>standard</use>
+        <args>
+          <module>Balance_Bicustomer</module>
+          <frontName>Bicustomer</frontName>
+        </args>
+      </bicustomer>
+    <customer>
+        <args>
+            <modules>
+                <balance_bicustomer before="Mage_Customer">Balance_Bicustomer</balance_bicustomer>
+            </modules>
+        </args>
+    </customer>
+    </routers>
+  </frontend>
+  <global>
+  </global>
+</config> 

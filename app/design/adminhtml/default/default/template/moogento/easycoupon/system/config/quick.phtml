@@ -1,0 +1,140 @@
+<?php
+    $element = $this->getElement();
+    $htmlId = $element->getHtmlId();
+    $storeOptions = $this->_getStoreSelectOptions();
+
+    if ($element->getExpanded() !== null) {
+        $collapseState = 1;
+    } else {
+        $extra = Mage::getSingleton('admin/session')->getUser()->getExtra();
+        if (isset($extra['configState'][$element->getId()])) {
+            $collapseState = (int)$extra['configState'][$element->getId()];
+        } else {
+            $collapseState = 1;
+        }
+    }
+?>
+<div class="quick-start">
+    <div class="collapseable">
+        <a class="quick-header" onclick="Fieldset.toggleCollapse('<?php echo $htmlId ?>', '<?php echo $this->getUrl('*/*/state/')?>'); return false;" href="#" id="<?php echo $htmlId ?>-head" class="">
+            <?php echo $element->getLegend() ?>
+        </a>
+        <input type="hidden" value="<?php echo $collapseState ?>" name="config_state[<?php echo $htmlId ?>]" id="<?php echo $htmlId ?>-state">
+    </div>
+    <div id="<?php echo $htmlId ?>">
+        <div class="generator">
+            <h5><?php echo $this->__('easyCoupon Link Generator') ?></h5>
+            <select data-bind="value: website, chosen:{width: '150px'}" data-placeholder="<?php echo $this->__('Target website') ?>">
+                <option value=""></option>
+                <?php foreach ($storeOptions as $_value => $_option): ?>
+                <?php if (isset($_option['is_group'])): ?>
+                <?php if ($_option['is_close']): ?>
+                    </optgroup>
+                <?php else: ?>
+                <optgroup label="<?php echo $this->escapeHtml($_option['label']) ?>" style="<?php echo $_option['style'] ?>">
+                    <?php endif; ?>
+                    <?php continue ?>
+                    <?php endif; ?>
+                    <option value="<?php echo $this->escapeHtml($_value) ?>" style="<?php echo $_option['style'] ?>">
+                        <?php echo $this->escapeHtml($_option['label']) ?>
+                    </option>
+                    <?php endforeach ?>
+            </select>
+            <span class="url-part">?coupon=</span>
+            <div class="bootstrap-tagsinput">
+                <input type="text" data-bind="typeahead: { name: 'coupon', taOptions: couponOptions, displayKey: 'code' }, value: coupon"/>
+            </div>
+            <span class="url-part">&target=</span>
+            <select data-bind="value: target, chosen:{width: '150px', allow_single_deselect: true}" data-placeholder="<?php echo $this->__('Target') ?>">
+                <option></option>
+                <option value="checkout"><?php echo $this->__('Checkout') ?></option>
+                <option value="cart"><?php echo $this->__('Cart') ?></option>
+                <option value="product"><?php echo $this->__('Product') ?></option>
+            </select>
+            <!-- ko if: skus().length == 1 -->
+                <!-- ko foreach: skus -->
+                    <div class="product-block">
+                        <span class="url-part">&ezsku=</span>
+                        <div class="bootstrap-tagsinput">
+                            <input type="text" data-bind="typeahead: { name: 'sku', taOptions: $parent.skuOptions, displayKey: 'sku' }, value: sku"/>
+                        </div>
+                        <span class="url-part">&ezqty=</span>
+                        <div class="bootstrap-tagsinput qty">
+                            <input type="text" data-bind="value: qty"/>
+                        </div>
+                    </div>
+                <!-- /ko -->
+            <!-- /ko -->
+            <!-- ko if: skus().length > 1 -->
+                <!-- ko foreach: skus -->
+                    <div class="product-block multi">
+                        <span class="url-part">&ezsku[<span data-bind="text: $index"></span>]=</span>
+                        <div class="bootstrap-tagsinput">
+                            <input type="text" data-bind="typeahead: { name: 'sku', taOptions: $parent.skuOptions, displayKey: 'sku' }, value: sku"/>
+                        </div>
+                        <span class="url-part">&ezqty[<span data-bind="text: $index"></span>]=</span>
+                        <div class="bootstrap-tagsinput qty">
+                            <input type="text" data-bind="value: qty"/>
+                        </div>
+                        <a href="#" class="remove" data-bind="click: $parent.removeProduct">X</a>
+                    </div>
+                <!-- /ko -->
+            <!-- /ko -->
+            <br/>
+            <a href="#" class="add-link" data-bind="click: addProduct"><?php echo $this->__('&#43; Add another product') ?></a>
+            <br/><br/>
+            <div class="generated_link" data-bind="text: generated_link"></div>
+            <label>
+                <input type="checkbox" value="1" data-bind="checked: createShortLink" />
+                Make shortlink?
+            </label>
+            <div data-bind="visible: createShortLink">
+                <input type="text" maxlength="3" data-bind="value: shortLink"/>
+                <div class="generated_link" data-bind="text: generated_short_link"></div>
+                <button class="button" data-bind="click: saveShortLink"><span>Save shortlink</span></button>
+                <div data-bind="visible: saveFinished">
+                    <!-- ko if: error -->
+                    <div class="error" data-bind="text: error"></div>
+                    <!-- /ko -->
+                    <!-- ko if: !error() -->
+                    <div class="success">Shortlink successfully saved.</div>
+                    <!-- /ko -->
+                </div>
+            </div>
+            <p class="note">* Empty options and options set to default values are omitted in link</p>
+        </div>
+        <ul class="info">
+            <li>All fields are optional.</li>
+            <li>Set a <b>product</b> to add to the cart</li>
+            <li> &nbsp; &nbsp; <i>(good for promoting specific products)</i></li>
+            <li>Add different products to the cart at the same time</li>
+            <li>Set <b>qty</b> of each product to add to the cart</li>
+            <li> &nbsp; &nbsp; <i>(good for 'Buy One Get One Free' type coupons)</i></li>
+            <li>Set <b>target</b> page, ie. where the visitor ends up</li>
+            <li> &nbsp; &nbsp; <i>Classic use would be the checkout (so products are added, coupon is applied, and your visitor now just has to click 'Buy') or the product page.</i></li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    Fieldset.applyCollapse('<?php echo $htmlId ?>');
+    jQuery(function($){
+        if(typeof($.fn.popover) != 'undefined') {
+            jQuery.fn.typeahead.noConflict();
+        }
+        var settings = {
+            couponUrl: '<?php echo $this->getUrl('*/easycoupon_ajax/coupon', array('search' => '%QUERY')) ?>',
+            skuUrl: '<?php echo $this->getUrl('*/easycoupon_ajax/sku', array('search' => '%QUERY')) ?>',
+            saveShortLinkUrl: '<?php echo $this->getUrl('*/easycoupon_ajax/saveShortLink') ?>',
+            storeUrls: {
+                <?php foreach ($storeOptions as $key => $data): ?>
+                    <?php if (isset($data['url'])): ?>
+                        <?php echo $key ?>: '<?php echo $data['url'] ?>',
+                    <?php endif; ?>
+                <?php endforeach; ?>
+                base: '<?php echo Mage::app()->getDefaultStoreView()->getBaseUrl() ?>'
+            }
+        };
+        ko.applyBindings(new EasyCouponQuick(settings), document.getElementById('<?php echo $htmlId ?>'));
+    });
+
+</script>

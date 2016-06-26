@@ -1,0 +1,98 @@
+<?php
+$_categories = $this->getCurrentChildCategories();
+$_currentCategory = Mage::registry("current_category");
+if ($_categories->count()):
+    $cache = Mage::helper('nwhcache');
+    $redis = $cache->connect();
+    $redKey = $cache->getKey('SUBCAT' . $_currentCategory->getName() . $_currentCategory->getId());
+    if (!$contents = $redis->get($redKey)) :
+        ob_start();
+        ?>
+        <div class="block-red clearfix list-sub-category">
+            <div class="block-title clearfix">
+                <h1><?php echo $this->__("Sub category") ?></h1>
+            </div>
+            <div class="block-content">
+                <div class="category-products1 subcategorylist">
+                    <ul class="products-grid itemgrid itemgrid-adaptive itemgrid-4col single-line-name size-s">
+                        <?php
+                        $categorycount = 0;
+                        foreach ($_categories as $_category):
+                            if ($_category->getIsActive()):
+                                $_category = Mage::getModel("catalog/category")->load($_category->getId());
+                                $cur_category = Mage::getModel('catalog/category')->load($_category->getId());
+                                $catName = $this->getCurrentCategory()->getName();
+                                if ($categorycount == 0) {
+                                    $class = "first";
+                                } elseif ($categorycount == 3) {
+                                    $class = "last";
+                                } else {
+                                    $class = "";
+                                }
+                                ?>
+                                <li class="item sub-cat <?php echo $class ?>">
+                                    <a href="<?php echo $_category->getUrl() ?>" title="<?php echo $this->htmlEscape($_category->getName()) ?>">
+                                        <img src="<?php echo $_category->getImageUrl() ?>" alt="<?php echo $this->htmlEscape($_category->getName()) ?>" width="295" />
+                                    </a>
+                                    <!-- <h2 class="sub-name"><a href="<?php //echo $_category->getUrl()  ?>" title="<?php //echo $this->htmlEscape($_category->getName())  ?>"><?php //echo $this->htmlEscape($_category->getName())  ?></a></h2> -->
+                                    <!--<div>
+                <?php /* if (($_description=$_category->getDescription())): */ ?>
+                                    <?php /* $_description = $this->htmlEscape($_description);
+                                      echo mb_substr($_description, 0, 70, 'utf-8') . "...";
+                                     */ ?>
+                                                    <a href="<?php /* echo $_category->getUrl() */ ?>" title="<?php /* echo $this->htmlEscape($_category->getName()) */ ?>"><?php /* echo $this->__("read more") */ ?></a>
+                                    <?php /* endif */ ?>
+                                    </div>-->
+                                </li>
+                <?php
+            endif;
+            if ($categorycount == 3) {
+                $categorycount = 0;
+                echo "</ul>\n\n<ul class=\"products-grid itemgrid itemgrid-adaptive itemgrid-4col single-line-name size-s\">";
+            } else {
+                $categorycount++;
+            }
+        endforeach;
+        ?>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+
+        <script type="text/javascript">
+
+            jQuery(document).ready(function () {
+                var listBlockSub = jQuery(".subcategorylist").find("ul.products-grid");
+                var blockSize = listBlockSub.length;
+                listBlockSub.each(function (index) {
+                    if (index >= 3) {
+                        jQuery(this).addClass("hidden");
+                    }
+                });
+
+                if (blockSize >= 3)
+                    jQuery(".subcategorylist").append("<a href='javascript:void(0)' onclick='showmoreSub(this)' class='pull-right'><?php echo $this->__("show more") ?></a>");
+            });
+
+
+            function showmoreSub(obj) {
+                var text = jQuery(obj).html();
+                if (text == '<?php echo $this->__("show more") ?>') {
+                    jQuery(".subcategorylist").find("ul.products-grid.hidden").addClass("show").removeClass("hidden");
+                    jQuery(obj).html('<?php echo $this->__("show less") ?>');
+                } else {
+                    jQuery(".subcategorylist").find("ul.products-grid.show").addClass("hidden").removeClass("show");
+                    jQuery(obj).html('<?php echo $this->__("show more") ?>')
+                }
+            }
+        </script>
+        <?php
+        $contents = ob_get_contents();
+        ob_end_clean();
+        $redis->set($redKey, $contents, NWH_Cache_Helper_Data::PAGE_TTL);
+    endif;
+    echo $contents
+    ?>
+<?php endif; ?>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Moogento_ShipEasy>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+                <Mage_Sales />
+                <Mage_Adminhtml />
+            </depends>
+        </Moogento_ShipEasy>
+    </modules>
+</config>

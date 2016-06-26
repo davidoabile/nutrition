@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Moogento_PowerLogin>
+      <active>true</active>
+      <codePool>local</codePool>
+    </Moogento_PowerLogin>
+  </modules>
+</config>

@@ -1,0 +1,9 @@
+<?php
+$_ingredients = $this->getProduct()->getIngredients();
+?>
+<?php if ($_ingredients): ?>
+    <h2><?php echo $this->__('Ingredients') ?></h2>
+    <div class="std">
+        <?php echo $this->helper('catalog/output')->productAttribute($this->getProduct(), $_ingredients, 'ingredients') ?>
+    </div>
+<?php endif; ?>

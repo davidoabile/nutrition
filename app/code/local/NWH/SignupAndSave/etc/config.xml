@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <NWH_SignupAndSave>
+      <version>0.1.0</version>
+    </NWH_SignupAndSave>
+  </modules>
+  <frontend>
+    <routers>
+      <signupandsave>
+          <args>
+            <modules>
+              <nwh_signupandsave before="Mage_Newsletter">NWH_SignupAndSave</nwh_signupandsave>
+            </modules>
+          </args>
+      </signupandsave>
+    </routers>
+  </frontend>
+  <global>
+		<helpers>
+      <signupandsave>
+        <class>NWH_SignupAndSave_Helper</class>
+      </signupandsave>
+    </helpers>
+  </global>
+  <admin>
+	<routers>
+	  <adminhtml>
+				<args>
+					<modules>
+						<signupandsave before="Mage_Adminhtml">NWH_SignupAndSave_Adminhtml</signupandsave>
+					</modules>
+				</args>
+			</adminhtml>
+	</routers>
+  </admin>
+</config> 

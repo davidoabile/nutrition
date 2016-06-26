@@ -1,0 +1,75 @@
+<?php
+	$_helper   = Mage::helper('catsidebarnav');
+	$showtype  = $_helper->getShowType();
+	//$_menu   = $this->renderCategoriesMenuHtml(0, 'level-top'); //Belvg_Local_Helper_Data::CATEGORY_CATEGORY
+	$category  = Mage::helper('local')->getCategoryCategory();
+	$_menu     = '';
+	foreach ($this->getStoreCategories() as $child) {
+		if ($child->getEntityId() == Belvg_Local_Helper_Data::CATEGORY_CATEGORY) {
+			//print_r($child->getData()); die;
+			$categories = $child->getChildren();
+			foreach ($categories as $category) {
+				$_menu .= $this->_renderCategoryMenuItemHtml( $category, 0 );
+			}
+		}
+	}
+?>
+<?php if ($this->getUrl('') == $this->getUrl('*/*/*', array('_current' => true, '_use_rewrite' => true))): ?> 
+	<?php if ($_helper->isEnabled()): ?>
+		<?php if ($showtype == 'static'): ?>
+			<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/magebuzz/catsidebarnav/static.css') ?>" media="all" />
+			<?php if ($_menu): ?>
+				<div class="block block-category-nav">
+					<div class="block-title">
+						<strong><span><?php echo $this->__('CATEGORIES') ?></span></strong>
+					</div>
+					<div class="block-content">
+						<ul id="sidenav">
+							<?php echo $_menu ?>
+						</ul>
+					</div>	
+				</div>
+			<?php endif ?>
+		<?php elseif ($showtype == 'click-2-click'): ?>
+			<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/magebuzz/catsidebarnav/click.css') ?>" media="all" />
+			<script type="text/javascript">
+				var $j = jQuery.noConflict(); 
+				$j(document).ready(function () {
+				  	showMenuClick();
+				});
+			</script>
+			<?php if ($_menu): ?>
+				<div class="block block-category-nav">
+					<div class="block-title pc">
+						<strong><span><?php echo $this->__('CATEGORIES') ?></span></strong>
+					</div>
+					<div class="block-title mb">
+						<strong><span><?php echo $this->__('SHOP BY CATEGORY') ?></span></strong>
+					</div>
+					<div class="block-content">
+						<ul id="sidenav">
+							<?php echo $_menu ?>
+						</ul>
+					</div>
+				</div>
+			<?php endif ?>
+		<?php elseif ($showtype == 'fly-out'): ?>
+			<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/magebuzz/catsidebarnav/fly-out.css')?>" media="screen">
+			<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/magebuzz/catsidebarnav/hoverIntent.js')?>"></script>
+			<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/magebuzz/catsidebarnav/superfish.js')?>"></script>
+			<?php if ($_menu): ?>
+				<div class="block block-category-nav">
+					<div class="block-title">
+						<strong><span><?php echo $this->__('CATEGORIES') ?></span></strong>
+					</div>
+					<div class="block-content">
+						<ul class="sf-menu" id="left-nav">
+							<?php echo $_menu ?>
+						</ul>
+					</div>	
+				</div>
+			<?php endif ?>
+		<?php endif ?>
+	<?php endif ?>
+<?php endif ?>
+		

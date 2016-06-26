@@ -1,0 +1,60 @@
+<?php
+/**
+* Braintree Payments Extension
+*
+* This source file is subject to the Braintree Payment System Agreement (https://www.braintreepayments.com/legal)
+*
+* DISCLAIMER
+* This file will not be supported if it is modified.
+*
+* @copyright   Copyright (c) 2015 Braintree. (https://www.braintreepayments.com/)
+*/
+?>
+<?php $_code = Braintree_Payments_Model_Creditcard::PAYMENT_METHOD_CODE ?>
+<?php if (Mage::helper('braintree_payments')->isBraintreeCreditCardEnabled()) : ?>
+<script type="text/javascript">
+// This rewrites native save method to receive nonce
+Payment.addMethods({
+    save: function(){
+        if (checkout.loadWaiting!=false) return;
+
+        var validator = new Validation(this.form);
+        if (this.validate() && validator.validate()) {
+            checkout.setLoadWaiting('payment');
+            var tokenField = $('<?php echo $_code ?>_cc_token');
+            var makeNativeAjaxRequest = function(thisClass){
+                <?php if (Mage::helper('braintree_payments')->isAdvancedFraudProtectionEnabled()): ?>
+                    if ($('device_data')) {
+                        $('device_data').disabled = false;
+                    }
+                <?php endif;?>
+                new Ajax.Request(
+                    thisClass.saveUrl,
+                    {
+                        method:'post',
+                        onComplete: thisClass.onComplete,
+                        onSuccess: thisClass.onSave,
+                        onFailure: checkout.ajaxFailure.bind(checkout),
+                        parameters: Form.serialize(thisClass.form)
+                    }
+                );
+            };
+            braintreeUtils.createHiddenInput(
+                {name: "payment[nonce]", id: '<?php echo Mage::helper('braintree_payments')->getNonceInputId() ?>'},
+                "<?php echo $this->getFormId()?>"
+            );
+            if (this.currentMethod == '<?php echo $_code ?>' && (!tokenField || (tokenField && tokenField.value == ''))) {
+                braintreeUtils.getPaymentNonce(
+                    '<?php echo $_code ?>',
+                    '<?php echo Mage::helper('braintree_payments')->getCardholderName() ?>',
+                    makeNativeAjaxRequest(this),
+                    "<?php echo Mage::helper('braintree_payments')->getToken(); ?>"
+                );
+            } else {
+                makeNativeAjaxRequest(this);
+            }
+        }
+    }
+});
+</script>
+<?php endif; ?>

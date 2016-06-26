@@ -1,0 +1,120 @@
+<?php
+    $displayOnlyBarcode = false;
+    $pageSize = Mage::getStoreConfig('moogento_pickscan/trolley/page_size') ? Mage::getStoreConfig('moogento_pickscan/trolley/page_size') : 'A4';
+    switch ($pageSize) {
+        case 'A4':
+            $width = 210;
+            $height = 297;
+            $boxWidth = round(($width - 40)/3);
+            $boxHeight = round(($height - 40)/6);
+            $barcodeWidth = $boxWidth - 10;
+            $trolleyPadding = 20;
+            $fontSize          = $boxHeight * 0.6;
+            $boxFontSize       = $boxHeight * 0.85;
+            $barcodeFontSize   = $boxHeight / 3;
+            $barcodeTopPadding = $boxHeight / 6;
+            $marginBottom = 5;
+            break;
+        case 'Letter':
+            $width = 216;
+            $height = 279;
+            $boxWidth = round(($width - 40)/3);
+            $boxHeight = round(($height - 40)/6);
+            $barcodeWidth = $boxWidth - 10;
+            $fontSize          = $boxHeight * 0.6;
+            $boxFontSize       = $boxHeight * 0.85;
+            $barcodeFontSize   = $boxHeight / 3;
+            $barcodeTopPadding = $boxHeight / 6;
+            $marginBottom = 5;
+            break;
+        case 'custom':
+            $width = Mage::getStoreConfig('moogento_pickscan/trolley/page_width');
+            $height = Mage::getStoreConfig('moogento_pickscan/trolley/page_height');
+            if ($width > $height) {
+                $boxWidth          = round(($width - 10) / 3);
+                $boxHeight         = $height - 15;
+                $fontSize          = $boxHeight * 0.6;
+                $boxFontSize       = $boxHeight * 0.85;
+                $barcodeFontSize   = $boxHeight / 3;
+                $barcodeTopPadding = $boxHeight / 6;
+                $marginBottom      = 0;
+                $displayOnlyBarcode = true;
+            } else {
+                $boxWidth          = $width;
+                $boxHeight         = round(($height - 15) / 3);
+                $fontSize          = $boxHeight * 0.6;
+                $boxFontSize       = $boxHeight * 0.85;
+                $barcodeFontSize   = $boxHeight / 3;
+                $barcodeTopPadding = $boxHeight / 6;
+                $marginBottom      = 0;
+            }
+            $barcodeWidth = $boxWidth - 12;
+            break;
+    }
+
+?>
+<style>
+    barcode {width: 100%}
+    .trolley {
+        width: <?php echo $boxWidth ?>mm;
+        height: <?php echo $boxHeight ?>mm;
+        float: left;
+        background-image: url(<?php echo $this->getSkinUrl('moogento/pickscan/images/trolley.png') ?>);
+        background-size: contain;
+        background-repeat: no-repeat;
+        color: grey;
+    }
+    .trolley div {
+        text-align: center;
+    }
+    .box {
+        width: <?php echo $boxWidth ?>mm;
+        height: <?php echo $boxHeight ?>mm;
+        float: left;
+        font-size: <?php echo $boxFontSize ?>mm;
+        text-align: center;
+        line-height: 1;
+    }
+    .barcode {
+        width: <?php echo $boxWidth ?>mm;
+        height: <?php echo $boxHeight - $barcodeTopPadding ?>mm;
+        float: right;
+        font-size: <?php echo $barcodeFontSize ?>mm;
+        padding-top: <?php echo $barcodeTopPadding ?>mm;
+        line-height: 1;
+        text-align: center;
+        border: 1mm solid black;
+    }
+    .wrapper {
+        padding: 0;
+        font-size: <?php echo $fontSize ?>mm;
+        margin-bottom: <?php echo $marginBottom?>mm;
+    }
+</style>
+<?php
+   $trolleyStart = Mage::getStoreConfig('moogento_pickscan/trolley/start') ? (int)Mage::getStoreConfig('moogento_pickscan/trolley/start') : 1;
+   $trolleyStop = Mage::getStoreConfig('moogento_pickscan/trolley/stop') ? (int)Mage::getStoreConfig('moogento_pickscan/trolley/stop') : (int)Mage::getStoreConfig('moogento_pickscan/trolley/amount');
+   $boxStart = Mage::getStoreConfig('moogento_pickscan/trolley/start_box') ? (int)Mage::getStoreConfig('moogento_pickscan/trolley/start_box') : 1;
+   $boxStop = Mage::getStoreConfig('moogento_pickscan/trolley/stop_box') ? (int)Mage::getStoreConfig('moogento_pickscan/trolley/stop_box') : (int)Mage::getStoreConfig('moogento_pickscan/trolley/box_amount');
+?>
+<?php for ($i = $trolleyStart; $i <= $trolleyStop; $i++): ?>
+    <?php for ($j = $boxStart; $j <= $boxStop; $j++): ?>
+        <div class="wrapper">
+            <?php if (!$displayOnlyBarcode):?>
+            <div class="trolley">
+                <div>
+                    <?php echo $i; ?>
+                </div>
+            </div>
+            <div class="box">
+                <?php echo $j; ?>
+            </div>
+            <?php endif; ?>
+            <div class="barcode">
+                <barcode code="PKNSCN<?php echo $i; ?>-<?php echo $j; ?>" type="C128A" /><br/>
+                <?php echo $i; ?>-<?php echo $j; ?>
+            </div>
+        </div>
+    <?php endfor; ?>
+<?php endfor; ?>
+ 

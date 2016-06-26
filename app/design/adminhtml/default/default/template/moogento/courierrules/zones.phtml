@@ -1,0 +1,88 @@
+<?php 
+    $modules = Mage::getConfig()->getNode('modules')->children();
+    $modulesArray = (array)$modules;
+    if(isset($modulesArray['Moogento_Pickpack'])) {
+?>
+<div id="zones-list">
+    <div data-bind="if: dirty">
+        <ul class="messages">
+            <li class="notice-msg">
+                <ul>
+                    <li><?php echo $this->__('You have unsaved changes.') ?></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="left">
+        <button data-bind="click: addZone" class="add blue-button" type="button"><span><span><span><?php echo $this->__('Add zone') ?></span></span></span></button>
+    </div>
+    <div class="right">
+        <span id="import" class="import-hide"><strong><?php echo $this->__('Import') ?></strong>: <input type="file" name="shipping_zones_file" /> <span class="note" style="color: grey; "><?php echo $this->__('Please note that comma should be used for column separation') ?></span></span>
+        <button onclick="$('import').removeClassName('import-hide'); this.hide();" class="add import-button" type="button"><span><span><span><?php echo $this->__('Import') ?></span></span></span></button>
+        | <button onclick="setLocation('<?php echo $this->getUrl('*/courierrules_zone/exportCsv') ?>')" class="add export-button" type="button"><span><span><span><?php echo $this->__('Export') ?></span></span></span></button>
+    </div>
+    <br/><br/>
+    <div class="entry-edit" data-bind="foreach: zones">
+        <div class="section-config">
+            <div class="entry-edit-head collapseable" data-bind="click: toggleCollapse">
+                <div class="left" data-bind="text: name">
+                </div>
+                <div class="right">
+                    <span class="collapse-icon" data-bind="css: {collaped: collapsed()}"></span>
+                    <button data-bind="click: $root.removeZone" class="scalable delete" type="button"><span><span><span><?php echo $this->__('Delete zone') ?></span></span></span></button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <fieldset class="config collapseable" data-bind="style: {display: collapsed() ? 'none' : 'inherit'}">
+                <table class="form-list" cellspacing="0">
+                    <tr>
+                        <td class="label">
+                            <label><?php echo $this->__('Zone name') ?></label>
+                        </td>
+                        <td class="value">
+                            <input type="text" class="input-text required-entry" data-bind="value: name, attr: {name: buildName('name') }" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <label><?php echo $this->__('Countries') ?></label>
+                        </td>
+                        <td class="value">
+                            <select class="chosen" multiple="true" data-bind="selectedOptions: countries, chosen: {width: '280px'}, attr: {name: buildName('countries', true)}" data-placeholder="<?php echo $this->__('Select countries...') ?>">
+                                <?php foreach ($this->_getCountries() as $country): ?>
+                                <option value="<?php echo $country['value'] ?>"><?php echo Mage::helper('core')->__($country['label']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <label><?php echo $this->__('Zip code(s)') ?></label>
+                        </td>
+                        <td class="value">
+                            <ul data-bind="foreach: zip_codes">
+                                <li>
+                                    <input type="text" class="input-text" data-bind="value: code, attr: {name: 'shipping_zone[' + $parent.id + '][zip_codes][]'}" />
+                                    <button data-bind="click: $parent.removeZip" class="scalable delete empty" type="button"><span><span><span></span></span></span></button>
+                                </li>
+                            </ul>
+                            <button data-bind="click: addZip" class="scalable" type="button"><span><span><span><?php echo $this->__('Add') ?></span></span></span></button>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </div>
+    </div>
+    <br/>
+    <div data-bind="visible: zones().length > 0">
+        <button data-bind="click: addZone" class="add blue-button" type="button"><span><span><span><?php echo $this->__('Add zone') ?></span></span></span></button>
+    </div>
+</div>
+<script>
+    ko.applyBindings(new ShippingZones(<?php echo $this->_getZonesJson() ?>), document.getElementById('zones-list'));
+</script>
+<?php 
+    } else {
+?>
+<h1>To make the module work you should have <a href="https://moogento.com/magento-pickpack-picklist">Moogento Pickpack</a> module installed.</h1>
+<?php } ?>

@@ -1,0 +1,108 @@
+<?php
+/**
+ * @category    Fishpig
+ * @package     Fishpig_AttributeSplash
+ * @license     http://fishpig.co.uk/license.txt
+ * @author      Ben Tideswell <help@fishpig.co.uk>
+ */
+ ?>
+<?php if ($splashPage = $this->getSplashPage()): ?>
+	<?php if ($splashPage->getImage()): ?>
+		<div class="splash-image">
+			<div class="page-title category-title splash-title">
+				<h1><?php echo $this->escapeHtml($splashPage->getName()) ?></h1>
+			</div>
+			<?php if ($splashPage->getImageUrl()): ?>
+				<a href="<?php echo $splashPage->getImageUrl() ?>" title="<?php echo $this->escapeHtml($splashPage->getName()) ?>">
+			<?php endif ?>
+			<img src="<?php echo $this->helper('attributeSplash/image')->init($splashPage, 'image')->resize(null, null) ?>" alt="<?php echo $this->escapeHtml($splashPage->getName()) ?>"/>
+			<?php if ($splashPage->getImageUrl()): ?>
+				</a>
+			<?php endif ?>
+		</div>
+	<?php else: ?>
+		<div class="page-title category-title splash-title">
+			<h1><?php echo $this->escapeHtml($splashPage->getName()) ?></h1>
+		</div>
+	<?php endif ?>
+	<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+	<?php
+		$shortDescription = trim($splashPage->getShortDescription());
+		$video            = trim($splashPage->getVideo());
+		$promo            = trim($splashPage->getPromoBlock());
+	?>
+	<?php if ($shortDescription || $video): ?>
+		<div class="comman">
+	        <ul class="tabs">
+				<?php if ($shortDescription): ?>
+	            	<li id="splash-description" class="first active"><a href="javascript:void(0)"><?php echo $this->__('Overview') ?></a></li>
+	            <?php endif ?>
+				<?php if ($video): ?>
+	            	<li id="splash-video" class=""><a href="javascript:void(0)"><?php echo $this->__('Video') ?></a></li>
+				<?php endif ?>
+	        </ul>
+			<div class="padder">
+	            <div id="splash-description_contents">
+					<?php if ($shortDescription): ?>
+						<div class="splash-description std"><?php echo $shortDescription ?></div>
+					<?php endif ?>
+			    </div>
+			    <div id="splash-video_contents" style="display: none;">
+					<?php if ($video): ?>
+						<div class="splash-video std"><?php echo $video ?></div>
+					<?php endif ?>
+			    </div>
+		    </div>
+			<script>
+				var EasyTabs = Class.create();
+				EasyTabs.prototype = {
+				    initialize: function(selector) {
+				        $$(selector).each(this.initTab.bind(this));
+				    },
+
+				    initTab: function(el) {
+				        el.href = 'javascript:void(0)';
+				        if ($(el).up('li').hasClassName('active')) {
+				            this.showContent(el);
+				        }
+				        el.observe('click', this.showContent.bind(this, el));
+				    },
+
+				    showContent: function(a) {
+				        var li = $(a).up('li'),
+				            ul = $(li).up('ul');
+
+				        ul.select('li'/*, 'ol'*/).each(function(el) {
+				            var contents = $(el.id + '_contents');
+				            if (el.id == li.id) {
+				                el.addClassName('active');
+				                contents.show();
+				            } else {
+				                el.removeClassName('active');
+				                contents.hide();
+				            }
+				        });
+				    }
+				}
+				new EasyTabs('.tabs a');
+			</script>
+	    </div>
+	<?php endif ?>
+	<?php if ($promo): ?>
+		<div class="comman">
+		<div class="splash-promo-block std"><?php echo $promo ?></div>
+		</div>
+	<?php endif ?>
+	<?php if($this->isContentMode()): ?>
+		<?php echo $this->getCmsBlockHtml() ?>
+	<?php elseif($this->isMixedMode()): ?>
+		<?php echo $this->getCmsBlockHtml() ?>
+		<?php echo $this->getProductListHtml() ?>
+	<?php else: ?>
+		<?php echo $this->getProductListHtml() ?>
+	<?php endif ?>
+	<?php if ($description = $splashPage->getDescription()): ?>
+		<div class="splash-description-full std"><?php echo $description ?></div>
+	<?php endif ?>
+<?php endif ?>

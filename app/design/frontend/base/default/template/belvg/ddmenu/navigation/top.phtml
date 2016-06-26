@@ -1,0 +1,114 @@
+<?php
+/**
+ * BelVG LLC.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ *
+/**********************************************
+ *        MAGENTO EDITION USAGE NOTICE        *
+ **********************************************/
+/* This package designed for Magento COMMUNITY edition
+ * BelVG does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * BelVG does not provide extension support in case of
+ * incorrect edition usage.
+/**********************************************
+ *        DISCLAIMER                          *
+ **********************************************/
+/* Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future.
+ **********************************************
+ * @category   Belvg
+ * @package    Belvg_DropDownMenu
+ * @copyright  Copyright (c) 2010 - 2012 BelVG LLC. (http://www.belvg.com)
+ * @license    http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ */
+
+    $settings = Mage::helper('ddmenu')->getSettings();
+?>
+
+<ul id="top-nav">
+    <?php $first     = 'first' ?>
+    <?php if ($settings['home']): ?>
+        <li class="first"><a href='<?php echo $this->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) ?>'><span><?php echo $this->__('Home page')?></span></a></li>
+        <?php $first = ''?>
+    <?php else: ?>
+        <?php $first = 'first' ?>
+    <?php endif ?>
+    <?php
+        $children    = $this->getStoreCategories();
+        $count       = count($children);
+        $i           = 0;
+    ?>
+    <?php foreach ($children as $child): ?>
+        <?php
+            $i++;
+            $ddmenu      = $this->getDdmenuObject($child->getId());
+            $showProduct = $ddmenu->getLastProduct();
+            $this->categoryIds = array($child->getId());
+
+            // html - sub categories
+            $subHtml           = false;
+            if ($this->maxRows = $ddmenu->getRows()) {
+                $subHtml       = $this->getSubCategoryHtml($child, true);
+            } else if($showProduct) {
+                $this->searchCategoriesForLastProduct($child);
+            }
+
+            // html - last product
+            $prodHtml          = false;
+            if ($showProduct) {
+                $prodHtml      = $this->getChild('ddmenu_last_product')
+                                    ->setCategoryIds($this->categoryIds)
+                                    ->_toHtml();
+            }
+            // html - friend category
+            $friendHtml        = false;
+            if ($ddmenu->getCategoriesList()) {
+                $friendHtml    = $this->getChild('ddmenu_category_friends')
+                                    ->setCategoryIds($ddmenu->getCategoriesList())
+                                    ->_toHtml();
+            }
+
+            // html - static block
+            $staticHtml        = false;
+            if ($ddmenu->getStaticBlockId()) {
+                $staticHtml    = $this->getChild('ddmenu_static_block')
+                                    ->setId($ddmenu->getStaticBlockId())
+                                    ->_toHtml();
+            }
+
+
+            if ($subHtml || $prodHtml || $friendHtml || $staticHtml) {
+                $showMenu = true;
+            } else {
+                $showMenu = false;
+            }
+        ?>
+        <li class="<?php echo $first?><?php echo ($showMenu)?' sub-menu':'' ?><?php echo ($i==$count)?' last':'' ?><?php echo ($this->isCategoryActive($child))?' current':'' ?>">
+            <a href='<?php echo $this->getCategoryUrl($child) ?>'><span><?php echo $this->escapeHtml($child->getName()) ?></span></a>
+            <?php if ($showMenu): ?>
+                <div class="sub" style="display:none">
+                    <table><tr>
+                    <?php
+                        $blockIds = explode(',', $ddmenu->getBlocksLoc());
+                        foreach ($blockIds AS $blockId) {
+                            if ($blockId=='b1' && $subHtml)    echo '<td>' . $subHtml . '</td>';
+                            if ($blockId=='b2' && $friendHtml) echo '<td>' . $friendHtml . '</td>';
+                            if ($blockId=='b3' && $prodHtml)   echo '<td>' . $prodHtml . '</td>';
+                            if ($blockId=='b4' && $staticHtml) echo '<td>' . $staticHtml . '</td>';
+                        }
+                    ?>
+                    </tr></table>
+                </div>
+            <?php endif ?>
+
+        </li>
+        <?php $first       = ''?>
+    <?php endforeach ?>
+</ul>

@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!--
+  Moogento
+  
+  SOFTWARE LICENSE
+  
+  This source file is covered by the Moogento End User License Agreement
+  that is bundled with this extension in the file License.html
+  It is also available online here:
+  http://www.moogento.com/License.html
+  
+  NOTICE
+  
+  If you customize this file please remember that it will be overwrtitten
+  with any future upgrade installs. 
+  If you'd like to add a feature which is not in this software, get in touch
+  at www.moogento.com for a quote.
+  
+  ID          pe+sMEDTrtCzNq3pehW9DJ0lnYtgqva4i4Z=
+  File        adminhtml.xml
+  @category   Moogento
+  @package    pickPack
+  @copyright  Copyright (c) 2014 Moogento <info@moogento.com> / All rights reserved.
+  @license    http://www.moogento.com/License.html
+-->
+<config>
+    <menu>
+        <report>
+           <children>
+               <pickscan translate="title" module="moogento_pickscan">
+                   <title>Pick'n'Scan</title>
+                   <sort_order>70</sort_order>
+                   <action>adminhtml/report_pickscan</action>
+               </pickscan>
+           </children>
+        </report>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <moogento_pickscan translate="title" module="moogento_pickscan">
+                                        <title>Moogento pickNScan</title>
+                                        <sort_order>303</sort_order>
+                                    </moogento_pickscan>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                    <moogento>
+                        <title>Moogento</title>
+                        <sort_order>10</sort_order>
+                        <children>
+                            <pickscan>
+                                <title>pickNScan</title>
+                                <children>
+                                    <pick translate="title" module="moogento_pickscan">
+                                        <title>pickManual</title>
+                                        <sort_order>10</sort_order>
+                                    </pick>
+                                    <quickpick translate="title" module="moogento_pickscan">
+                                        <title>pickAssigned</title>
+                                        <sort_order>20</sort_order>
+                                    </quickpick>
+                                    <quickpick translate="title" module="moogento_pickscan">
+                                        <title>pack</title>
+                                        <sort_order>22</sort_order>
+                                    </quickpick>
+                                    <update_barcode translate="title" module="moogento_pickscan">
+                                        <title>Update barcode attribute</title>
+                                        <sort_order>25</sort_order>
+                                    </update_barcode>
+                                    <pdf_packingsheet translate="title" module="moogento_pickscan">
+                                        <title>PDF (Packing Sheet)</title>
+                                        <sort_order>30</sort_order>
+                                    </pdf_packingsheet>
+                                    <pdf_separated translate="title" module="moogento_pickscan">
+                                        <title>PDF (Order-separated Picklist)</title>
+                                        <sort_order>40</sort_order>
+                                    </pdf_separated>
+                                    <pdf_combined translate="title" module="moogento_pickscan">
+                                        <title>PDF (Order-combined Picklist)</title>
+                                        <sort_order>50</sort_order>
+                                    </pdf_combined>
+                                </children>
+                            </pickscan>
+                        </children>
+                    </moogento>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

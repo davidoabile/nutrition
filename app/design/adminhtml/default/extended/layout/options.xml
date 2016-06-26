@@ -1,0 +1,12 @@
+<layout>
+    <default>
+        <reference name="head">
+            <action method="addJs"><script>moogento/general/jquery.min.js</script></action>
+            <action method="addJs"><script>colorpicker/colorpicker.js</script></action>
+            <action method="addJs"><script>colorpicker/eye.js</script></action>
+            <action method="addJs"><script>colorpicker/utils.js</script></action>
+            <action method="addJs"><script>colorpicker/layout.js</script></action>
+            <action method="addCss"><name>colorpicker.css</name></action>
+        </reference>
+    </default>
+</layout>

@@ -1,0 +1,22 @@
+<?php
+$loc = $this->getLocations()->getFirstItem();
+?>
+<?php if ($loc->getManagerStore()): ?>
+    <div class="view_store_manager">
+        <div class="store-img">
+            <?php if ($loc->getManagerImage()):
+                $srcImageManager = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'ak_locator_location' . $loc->getManagerImage();
+                if (strpos($loc->getStorePic(), 'franchisee/files/') !== false):
+                    $srcImageManager = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $loc->getManagerImage();
+                endif;?>
+                <img src="<?php echo $srcImageManager ?>" title="<?php echo $loc->getManagerImage() ?>"
+                     class="manager-image" width="284"/>
+            <?php endif ?>
+            </div>
+        <div class="store-desc">
+            <h2><?php echo $this->__('Store manager'); ?></h2>
+            <h1 class="store-manager-name"><?php echo $loc->getManagerStore() ?></h1>
+            <div class="std"><?php echo $loc->getManagerDescription() ?></div>
+        </div>
+    </div>
+<?php endif; ?>

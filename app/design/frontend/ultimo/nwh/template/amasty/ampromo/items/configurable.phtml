@@ -1,0 +1,93 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Promo
+ */
+?>
+<?php
+$_product    = $this->getProduct();
+/*this fix conflict extension with Ayasoftware*/
+if ($this instanceof Ayasoftware_SimpleProductPricing_Catalog_Block_Product_View_Type_Configurable ){
+    if($_product->getTypeId()=='configurable')
+        $_attributes = Mage::helper('core')->decorateArray(Mage_Catalog_Block_Product_View_Type_Configurable::getAllowAttributes());
+    $_jsonConfig = Mage_Catalog_Block_Product_View_Type_Configurable::getJsonConfig();
+}else{
+    if($_product->getTypeId()=='configurable')
+        $_attributes = Mage::helper('core')->decorateArray($this->getAllowAttributes());
+    $_jsonConfig = $this->getJsonConfig();
+
+}
+
+$_containerId = "ampromo_items_options-{$_product->getId()}";
+$_idKey = strtr($_product->getId(),'0123456789','abcdefghij');
+?>
+<?php if ($_product->isSaleable() && count($_attributes)):?>
+    <dl id="<?php echo $_containerId?>">
+        <?php foreach($_attributes as $_attribute): ?>
+        <?php 
+			if (count($_attributes) > 1) : ?>
+			<span class="grid12-6">
+			<?php endif ?>
+			<dt><label class="required"><em>*</em> <?php echo $_attribute->getLabel() ?></label></dt>
+            <dd<?php if ($_attribute->decoratedIsLast){?> class="last"<?php }?>>
+                <div class="input-box" style="margin: 2px;">
+                    <select name="<?php echo "super_attributes[{$_attribute->getAttributeId()}]"?>" id="<?php echo $_idKey?>attribute<?php echo $_attribute->getAttributeId() ?>" class="required-entry super-attribute-select">
+                        <option><?php echo $this->__('Choose an Option...') ?></option>
+                    </select>
+                </div>
+                <div id="requared-attribute<?php echo $_attribute->getAttributeId() ?>-<?php echo $_product->getEntityId() ?>" style="color:red"></div>
+            </dd>
+			<?php if (count($_attributes) > 1) : ?>
+			</span><?php endif ?>
+        <?php endforeach; ?>
+    </dl>
+<?php
+    if($_product->getTypeId() == 'configurable'){
+        $childSku='';
+        $_productId    = $_product->getEntityId();
+        $ruleid='';
+        $quote = Mage::getSingleton('checkout/session')->getQuote();
+        $cartItems = $quote->getAllVisibleItems();
+        $super_attribute =array();
+        foreach ($cartItems as $item) {
+            $option=$item->getBuyRequest();
+            if($_productId == $option->getProduct()){
+                $super_attribute=$option->getSuperAttribute();
+                $childSku=$item->getSku();
+            }
+            if($_productId == $item->getProductId()){
+                $ruleid=$ruleid.",".$item->getAppliedRuleIds();
+            }
+        }
+        $ruleid = explode(",",$ruleid);
+        $samebonus=Mage::getStoreConfig('ampromo/gift/buy1id');
+        if(!empty($samebonus) && in_array($samebonus,$ruleid)){
+            $prd_id = Mage::getModel('catalog/product')
+                ->getIdBySku(trim($childSku));
+            $decode=Mage::helper('core')->jsonDecode($_jsonConfig);
+            foreach($decode['attributes'] as $k1 => $attb){
+                $newoptions=array();
+                $index="100000";
+                foreach ($attb['options'] as $k2 => $option ){
+                    if(in_array($prd_id,$option['products'])) {
+                        $index=$k1;
+                        $newoptions=$decode['attributes'][$k1]['options'][$k2] ;
+                    }
+                }
+                if($index != "100000"){
+                    $decode['attributes'][$index]['options'] =array();
+                    $decode['attributes'][$index]['options'][] =$newoptions;
+                }
+            }
+            $_jsonConfig=Mage::helper('core')->jsonEncode($decode);
+        }
+    }
+?>
+    <script type="text/javascript">
+        Event.observe(window, 'load', function() {
+            var spConfig = new Product.Config(Object.extend(<?php echo $_jsonConfig ?>, {containerId:'<?php echo $_containerId?>'}));
+            var optionsPrice = new Product.OptionsPrice(<?php echo $_jsonConfig?>);
+        });
+    </script>
+<?php endif;?>

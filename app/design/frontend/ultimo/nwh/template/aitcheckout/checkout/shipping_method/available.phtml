@@ -1,0 +1,115 @@
+<?php
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+if (!($_shippingRateGroups = $this->getShippingRates())): ?>
+    <p><?php echo Mage::helper('checkout')->__('Sorry, no quotes are available for this order at this time.') ?></p>
+<?php else: ?>
+<dl class="sp-methods">
+    <?php $shippingMe = array(); 
+        $default_shipping = Mage::getStoreConfig('checkout/aitcheckout/default_shipping_method');
+    ?>
+    <?php $_sole = count($_shippingRateGroups) == 1; foreach ($_shippingRateGroups as $code => $_rates):     ?>
+        <dt><?php echo $this->getCarrierName($code) ?></dt>
+        <dd>
+            <ul>
+            <?php $_sole = $_sole && count($_rates) == 1; foreach ($_rates as $_rate): 
+                $code_matrixrate = 'matrixrate_matrixrate';
+                $checked = strpos($_rate->getCode(), $code_matrixrate);
+                $code = $_rate->getCode();
+                if($checked === 0){
+                    $code = $code_matrixrate;
+                }
+                if($_rate->getCode() == 'matrixrate_matrixrate_free'){
+                    $default_shipping=$_rate->getCode();
+                    $code= $default_shipping;
+                }
+            ?>
+                <?php $shippingMe[] = "'".$_rate->getCode()."':".(float)$_rate->getPrice(); ?>
+                <li>
+                   <?php if ($_rate->getErrorMessage()): ?>
+                    <ul class="messages"><li class="error-msg"><ul><li><?php echo $_rate->getErrorMessage() ?></li></ul></li></ul>
+                   <?php else: ?>
+                        <?php if ($_sole) : ?>
+
+                        <span class="no-display"><input name="shipping_method" type="radio" value="<?php echo $_rate->getCode() ?>" id="s_method_<?php echo $_rate->getCode() ?>" checked="checked" /></span>
+                        <?php else: ?>
+                        <input name="shipping_method" type="radio" value="<?php echo $_rate->getCode() ?>" id="s_method_<?php echo $_rate->getCode() ?>"<?php if($code===$default_shipping) echo ' checked="checked"' ?> class="radio validate-one-required-by-name" onchange=""/>
+
+                        <script type="text/javascript">
+                        //<![CDATA[
+                            <?php if ($code===$default_shipping): ?>
+                                lastPrice = <?php echo (float)$_rate->getPrice(); ?>;
+                            <?php endif; ?>
+                        //]]>
+                        </script>
+
+                        <?php endif; ?>
+                        <label for="s_method_<?php echo $_rate->getCode() ?>"><?php echo $_rate->getMethodTitle() ?>
+                        <?php $_excl = $this->getShippingPrice($_rate->getPrice(), $this->helper('tax')->displayShippingPriceIncludingTax()); ?>
+                        <?php $_incl = $this->getShippingPrice($_rate->getPrice(), true); ?>
+                        <?php echo $_excl; ?>
+                        <?php if ($this->helper('tax')->displayShippingBothPrices() && $_incl != $_excl): ?>
+                            (<?php echo Mage::helper('checkout')->__('Incl. Tax'); ?> <?php echo $_incl; ?>)
+                        <?php endif; ?>
+                        </label>
+                   <?php endif ?>
+                </li>
+            <?php endforeach; ?>
+            </ul>
+        </dd>
+    <?php endforeach; ?>
+        <?php
+                  $insrance = Mage::getSingleton("core/session")->getInsuranceAdd();
+                    $found = false;
+                    if ($insrance == 1){
+                        $found = true;
+                    }
+                ?>
+                    <div class="shipping_detl">
+                        <ul>
+                            <li>
+                                <div class="left">
+                                    <input type="checkbox" checked=checked name="radio_insurance" id="radio6" class="css-radiobox1" value="freight" />
+                                    <label for="radio6" class="css-label2 radGroup2">
+                                        <span class="">FREIGHT PROTECTION</span>
+                                        <span class="shipping_subtitle">Protect your order  +$2.95 </span>
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                
+</dl>
+<!--<script type="text/javascript">
+//<![CDATA[
+    <?php if (!empty($shippingMe)): ?>
+        var shippingMe = {<?php echo implode(',',$shippingMe); ?>};
+    <?php endif; ?>
+
+    function includingShipping(getShippingCode)
+    {
+        <?php if (!empty($shippingMe)): ?>
+            var newPrice = shippingMe[getShippingCode];
+            if (!lastPrice) {
+                lastPrice = newPrice;
+                quoteBaseGrandTotal += newPrice;
+            }
+            if (newPrice != lastPrice) {
+                quoteBaseGrandTotal += (newPrice-lastPrice);
+                lastPrice = newPrice;
+
+            }
+        <?php endif; ?>
+        checkQuoteBaseGrandTotal = quoteBaseGrandTotal;
+        return false;
+    }
+//]]>
+</script> -->
+<?php endif; ?>

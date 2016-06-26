@@ -1,0 +1,47 @@
+<?php
+    $currentCat = Mage::getModel('catalog/layer')->getCurrentCategory();
+    $ajaxAction = $this->getUrl('local/index/shopAssistence');
+    if ($currentCat == Belvg_Local_Helper_Data::CATEGORY_CATEGORY) {
+        $actionUrl = $currentCat->getUrl();
+    } else {
+        $cat = Mage::getModel('catalog/category')->load(Belvg_Local_Helper_Data::CATEGORY_CATEGORY);
+        $actionUrl = $cat->getUrl();
+    }
+?>
+<div class="mrgn_b20" id="filter">
+    <div class="hadd_pink"><?php echo $this->__('SHOP ASSISTANT') ?></div>
+    <div class="filter_area">
+        <input type="hidden" id="form-ajax-action" value="<?php echo $ajaxAction?>">
+        <form id="shop-assistant" method="post" action="<?php echo $actionUrl ?>">
+            <ul>
+                <li>
+                    <div class="dropdown">
+                        <select class="dropdown-brand" rel="brand" name="assistant[brand]">
+                            <?php echo $this->getBrandCollection() ?>
+                        </select>
+                    </div>
+                </li>
+                <li>
+                    <div class="dropdown">
+                        <select class="dropdown-goal" rel="goal" name="assistant[goal]">
+                            <?php echo $this->getGoalCollection() ?>
+                        </select>
+                    </div>
+                </li>
+                <li>
+                    <div class="dropdown">
+                        <select class="dropdown-ingredient" rel="ingredient" name="assistant[ingredient]">
+                            <?php echo $this->getIngredientCollection() ?>
+                        </select>
+                    </div>
+                </li>
+            </ul>
+            <div class="shop_assistenceClear">
+                <input type="reset" name="reset" value="<?php echo $this->__('Clear') ?>" onclick="setLocation('<?php echo $actionUrl ?>')"/>
+            </div>
+            <div class="shop_assistenceButton">
+                <input type="submit" name="Search" value="<?php echo $this->__('Search') ?>"/>
+            </div>
+        </form>
+    </div>
+</div>

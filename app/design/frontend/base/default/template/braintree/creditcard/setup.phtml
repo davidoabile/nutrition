@@ -1,0 +1,23 @@
+<?php
+/**
+* Braintree Payments Extension
+*
+* This source file is subject to the Braintree Payment System Agreement (https://www.braintreepayments.com/legal)
+*
+* DISCLAIMER
+* This file will not be supported if it is modified.
+*
+* @copyright   Copyright (c) 2015 Braintree. (https://www.braintreepayments.com/)
+*/
+?>
+<script type="text/javascript">
+    if (typeof braintreeUtils !== 'object') {
+        var braintreeUtils = new BraintreeUtils();
+    }
+    <?php if (Mage::helper('braintree_payments')->isBraintreeCreditCardEnabled()) : ?>
+        braintreeUtils.setup(
+            "<?php echo Mage::helper('braintree_payments')->getToken(); ?>",
+            "<?php echo $this->getFormId()?>"
+        );
+    <?php endif; ?>
+</script>

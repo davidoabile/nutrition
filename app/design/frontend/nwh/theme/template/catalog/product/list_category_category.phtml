@@ -1,0 +1,151 @@
+<?php
+    $_helper = $this->helper('catalog/output');
+    //$_productCollection = $this->getLoadedProductCollection();
+    $category = Mage::helper('local')->getCategoryCategory();
+    $_productCollection = Mage::getModel('catalog/product')->getCollection();
+    $_productCollection
+        //->addFieldToFilter('entity_id', array('in', $productIds))
+        ->addCategoryFilter($category)
+        ->addAttributeToSelect('*')
+        ->addUrlRewrite();
+?>
+
+<?php if (!$_productCollection->count()): ?>
+    <p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+<?php else: ?>
+    <div class="category-products prod_slider">
+        <?php
+            $productIds  = $_productCollection->getAllIds();
+            $categoryIds = array();
+            $allCategory = array();
+            $allProduct  = array();
+
+            $readConnection = Mage::getSingleton('core/resource')->getConnection('core_read');
+            $catProdTable   = Mage::getSingleton('core/resource')->getTableName('catalog/category_product');
+
+            $query   = 'SELECT category_id, ' . new Zend_Db_Expr('GROUP_CONCAT(DISTINCT product_id ORDER BY product_id DESC SEPARATOR \',\') AS product_ids') .
+                       ' FROM ' . $catProdTable .
+                       ' WHERE product_id IN (' . implode(',', $productIds) . ')' .
+                       ' GROUP BY category_id';
+            $catProdResults = $readConnection->fetchAll($query);
+
+            foreach ($catProdResults as $result) {
+                $productIds    = explode(',', $result['product_ids']);
+                $categoryIds[] = $result['category_id'];
+
+                $allCategory[$result['category_id']]['product_ids'] = $productIds;
+                foreach ($productIds AS $id) {
+                    if (!isset($allProduct[$id]['categories'])) {
+                        $allProduct[$id]['categories'] = array();
+                    }
+
+                    $allProduct[$id]['categories'][] = $result['category_id'];
+                }
+            }
+
+            foreach ($_productCollection as $_product) {
+                if (isset($allProduct[$_product->getId()])) {
+                    $catIds = $allProduct[$_product->getId()]['categories'];
+                    foreach ($catIds AS $id) {
+                        if (!isset($allCategory[$id]['products'])) {
+                            $allCategory[$id]['products'] = array();
+                        }
+
+                        $allCategory[$id]['products'][] = $_product;
+                    }
+                }
+            }
+
+            $categories  = Mage::getModel('catalog/category')
+                ->getCollection()
+                ->addAttributeToSelect('name')
+                ->addAttributeToSelect('is_active')
+                ->addUrlRewriteToResult()
+                ->addAttributeToFilter('entity_id', array('in' => $categoryIds));
+
+
+            $catHelper= Mage::helper('catalog/category');
+            foreach($categories AS $cat) {
+                $allCategory[$cat->getId()]['name']  = $cat->getName();
+                $allCategory[$cat->getId()]['url']   = $catHelper->getCategoryUrl($cat);
+                $allCategory[$cat->getId()]['level'] = $cat->getLevel();
+            }
+        ?>
+
+        <?php foreach ($allCategory AS $cat): ?>
+            <?php if (count($cat['products']) && $cat['level'] == 3): ?>
+                <div class="hadd_pink2 page-title category-title" style="float:none">
+                    <h1><?php echo $cat['name'] ?></h1>
+                    <div class="triangle-bottomleft"></div>
+                    <a class="link14_gry right" href="<?php echo $cat['url'] ?>">
+                        <?php echo $this->__('VIEW ALL') ?>
+                    </a>
+                </div>
+                <?php $quickViewId = 'quickview' . str_replace(' ', '', $cat['name']) ?>
+                <div class="prod_slider fp_area_main">
+                    <ul class="jcarousel-skin-tango">
+                        <?php $i = 0 ?>
+                        <?php foreach ($cat['products'] as $product): ?>
+                            <?php
+                                $i++;
+                                if ($i > 8) {
+                                    break;
+                                }
+                            ?>
+                            <li>
+                                <div class="ps_part">
+                                    <ul id="<?php echo strtolower(str_replace(' ', '_', $cat['name'])) ?>">
+                                        <li>
+                                            <div class="ps_img_cntr">
+                                                <div class="ps_img">
+                                                    <a data-link="<?php echo $quickViewId ?>" id="pb_item_<?php echo $product->getId() ?>" class="EnableQuickView" href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>" >
+                                                        <img height="115" width="115"  src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(115,115) ?>" alt="<?php echo $this->htmlEscape($product->getName()) ?>" />
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="quickview">&nbsp;</div>
+                                        </li>
+                                        <li class="font14_blk">
+                                            <a class="font14_blk" href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>)">
+                                                <?php
+                                                    $Lengthname = $this->htmlEscape($product->getName());
+                                                    if (strlen($Lengthname) > 16) {
+                                                        echo substr($Lengthname,0, 16) . '...'; 
+                                                    } else {
+                                                        echo substr($Lengthname,0, 16);
+                                                    }
+                                                ?>
+                                            </a>
+                                        </li>
+                                        <li class="font12_gry">
+                                            <?php
+                                                $length = $this->htmlEscape(strip_tags($product->getShortDescription()));
+                                                if (strlen($length) > 18) {
+                                                    echo substr($length, 0, 18) . '...'; 
+                                                } else {
+                                                    echo substr($length, 0, 18);
+                                                }
+                                            ?>
+                                        </li>
+                                        <li class="mrgn_t5">
+                                            <span class="font16_red">
+                                                <?php echo $this->getPriceHtml($product, true) ?>
+                                            </span>
+                                        </li>
+                                        <li class="mrgn_t5">
+                                            <?php $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($product) ?>
+                                            <a class="link12_red" href="<?php echo $_compareUrl ?>">+ Add to compare</a>
+                                        </li>
+                                        <li class="mrgn_t5"><?php echo ($product->isSaleable()) ? '' : $this->__('Out of stock') ?></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        <?php endforeach ?>
+                    </ul>
+                </div>
+                <div id="<?php echo $quickViewId ?>" class="slidmain" style="float: left; display: none;"></div>
+            <?php endif ?>
+        <?php endforeach ?>
+
+    </div>
+<?php endif ?>

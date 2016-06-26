@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * BelVG LLC.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ *
+/**********************************************
+ *        MAGENTO EDITION USAGE NOTICE        *
+ **********************************************/
+/* This package designed for Magento COMMUNITY edition
+ * BelVG does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * BelVG does not provide extension support in case of
+ * incorrect edition usage.
+/**********************************************
+ *        DISCLAIMER                          *
+ **********************************************/
+/* Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future.
+ **********************************************
+ * @category   Belvg
+ * @package    Belvg_ProductZoomLight
+ * @copyright  Copyright (c) 2010 - 2012 BelVG LLC. (http://www.belvg.com)
+ * @license    http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ */
+-->
+<config>
+    <modules>
+        <Belvg_ProductZoomLight>
+            <version>1.1.5</version>
+            <update>28-10-2014</update>
+            <desc>Stock Version</desc>
+        </Belvg_ProductZoomLight>
+    </modules>
+    <frontend>
+        <routers>
+            <productzoomlight>
+                <use>standard</use>
+                <args>
+                    <module>Belvg_ProductZoomLight</module>
+                    <frontName>productzoomlight</frontName>
+                </args>
+            </productzoomlight>
+        </routers>
+        <layout>
+            <updates>
+                <productzoomlight>
+                    <file>belvg/productzoomlight.xml</file>
+                </productzoomlight>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Belvg_ProductZoomLight>
+                    <files>
+                        <default>Belvg_ProductZoomLight.csv</default>
+                    </files>
+                </Belvg_ProductZoomLight>
+            </modules>
+        </translate>        
+    </frontend>
+    <adminhtml>
+        <layout>
+            <updates>
+                <productzoomlight>
+                    <file>belvg/productzoomlight.xml</file>
+                </productzoomlight>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Belvg_ProductZoomLight>
+                    <files>
+                        <default>Belvg_ProductZoomLight.csv</default>
+                    </files>
+                </Belvg_ProductZoomLight>
+            </modules>
+        </translate>
+        <events>
+            <adminhtml_block_system_config_init_tab_sections_before>
+                <observers>
+                    <belvg_productzoomlight_system_config_init_tab_sections_before>
+                        <type>singleton</type>
+                        <class>productzoomlight/observer</class>
+                        <method>systemConfigInitTabSectionsBefore</method>
+                    </belvg_productzoomlight_system_config_init_tab_sections_before>
+                </observers>
+            </adminhtml_block_system_config_init_tab_sections_before>
+        </events>
+    </adminhtml>
+    <global>
+        <blocks>
+            <productzoomlight>
+                <class>Belvg_ProductZoomLight_Block</class>
+            </productzoomlight>
+        </blocks>
+        <helpers>
+            <productzoomlight>
+                <class>Belvg_ProductZoomLight_Helper</class>
+            </productzoomlight>
+        </helpers>
+        <models>
+            <productzoomlight>
+                <class>Belvg_ProductZoomLight_Model</class>
+            </productzoomlight>
+        </models>
+        <events>
+            <controller_action_layout_load_before>
+                <observers>
+                    <belvg_productzoomlight_layout_load_before>
+                        <type>singleton</type>
+                        <class>productzoomlight/observer</class>
+                        <method>layoutLoadBefore</method>
+                    </belvg_productzoomlight_layout_load_before>
+                </observers>
+            </controller_action_layout_load_before>
+        </events>
+    </global>
+    <default>
+        <productzoomlight>
+            <images>
+                <main_width>590</main_width>
+                <main_height>590</main_height>
+                <thumbs_width>75</thumbs_width>
+                <thumbs_height>75</thumbs_height>
+                <quickview_main_width>400</quickview_main_width>
+                <quickview_main_height>400</quickview_main_height>
+                <quickview_thumbs_width>75</quickview_thumbs_width>
+                <quickview_thumbs_height>75</quickview_thumbs_height>
+            </images>
+            <cloudzoom>
+                <enabled>1</enabled>
+                <zoom_width_quickview>0</zoom_width_quickview>
+                <zoom_height_quickview>0</zoom_height_quickview>
+                <zoom_width>0</zoom_width>
+                <zoom_height>0</zoom_height>
+                <position_quickview>right</position_quickview>
+                <adjust_x_quickview>10</adjust_x_quickview>
+                <adjust_y_quickview>-3</adjust_y_quickview>
+                <position>right</position>
+                <adjust_x>10</adjust_x>
+                <adjust_y>0</adjust_y>
+                <tint_show>1</tint_show>
+                <tint>#FFFFFF</tint>
+                <tint_opacity>0.5</tint_opacity>
+                <lens_opacity>0.5</lens_opacity>
+                <soft_focus>1</soft_focus>
+                <smooth_move>5</smooth_move>
+                <show_title>1</show_title>
+                <title_opacity>0.5</title_opacity>
+            </cloudzoom>
+            <fancybox>
+                <enabled>1</enabled>
+                <padding>10</padding>
+                <margin>20</margin>
+                <title_show>1</title_show>
+                <title_position>over</title_position>
+                <overlay_show>1</overlay_show>
+                <overlay_opacity>0.3</overlay_opacity>
+                <close_btn>1</close_btn>
+                <content_click>next</content_click>
+                <show_effect>elastic</show_effect>
+                <show_easing>swing</show_easing>
+                <nav_effect>elastic</nav_effect>
+                <nav_easing>swing</nav_easing>
+                <arrows>1</arrows>
+                <mouse_wheel>1</mouse_wheel>
+                <auto_play>0</auto_play>
+                <play_speed>3000</play_speed>
+                <loop>1</loop>
+                <buttons_show>1</buttons_show>
+                <buttons_position>bottom</buttons_position>
+                <thumbnail_show>1</thumbnail_show>
+                <thumbnail_width>50</thumbnail_width>
+                <thumbnail_height>50</thumbnail_height>
+                <thumbnail_position>top</thumbnail_position>
+            </fancybox>
+        </productzoomlight>
+    </default>
+    <jquery>
+        <compatibility>
+            <Belvg_ProductZoomLight>
+                <v1_8_3/>
+                <v1_9_0/>
+                <v1_9_1/>
+                <v2_0_2/>
+                <v2_0_3/>
+            </Belvg_ProductZoomLight>
+        </compatibility>
+    </jquery>
+</config> 

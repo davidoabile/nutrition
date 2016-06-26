@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Moogento_EasyCoupon>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Moogento_EasyCoupon>
+    </modules>
+</config> 

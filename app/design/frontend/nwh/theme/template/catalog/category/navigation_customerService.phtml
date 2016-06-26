@@ -1,0 +1,72 @@
+<script type="text/javascript">
+jQuery(document).ready(function() { 
+jQuery(".ddmenu_block_service").hover(function(){
+      
+    jQuery('.ddmenu_service').show();
+    jQuery(".ddmenu_frame_service").on({
+    mouseover: function() {
+        jQuery(".ddmenu_service").show();
+        jQuery(".ddmenu_block_service").css('background-color','#9A9B9D');
+    },
+    
+    mouseout: function() {
+        jQuery(".ddmenu_service").hide();
+         jQuery(".ddmenu_block_service").css('background-color','');
+    }
+})
+},function(){
+    
+    jQuery('.ddmenu_service').hide();
+});
+    });
+</script> 
+<?php
+$parentCategoryId = 4;
+$categories = Mage::getModel('catalog/category')->getCategories($parentCategoryId);
+$cat = Mage::getModel('catalog/category')->load($parentCategoryId);
+        ?>
+<div class="ddmenu_service" style="display:none;">
+<div class="ddmenu_frame_service">
+	<div class="ddmenu_left">
+    	<div style="min-height:100px !important;" class="ddmenu_catg ddmenu_rbodr">
+        	<div class="ddmenu_hadd">f</div>
+        	<ul>
+            	<li><a href="<?php echo $this->getUrl('contact'); ?>">Contact</a></li>
+                <li><a href="<?php echo $this->getUrl('onibi_storelocator'); ?>">Find a store</a></li>
+                <li><a href="<?php echo $this->getUrl('checkout/cart'); ?>">Checkout</a></li>
+            </ul>
+        </div>
+        <div style="min-height:100px !important;" class="ddmenu_catg ddmenu_rbodr">
+        	<div class="ddmenu_hadd">&nbsp;</div>
+        	<ul>
+            	<li><a href="#">Shipping</a></li>
+                <li><a href="#">Returns</a></li>
+                <li><a href="<?php echo $this->getUrl('privacy-policy-cookie-restriction-mode'); ?>">Privacy Policy</a></li>
+            </ul>
+        </div>
+        <div class="ddmenu_prod">
+            <ul>
+                <li style="text-align:center;">
+                    <a href="https://www.facebook.com/"><img src="<?php echo $this->getSkinUrl('images/dd_fb.png'); ?>"></a>
+                    <a href="http://instagram.com/"><img src="<?php echo $this->getSkinUrl('images/dd_instagram.png'); ?>"></a>
+                    <a href="https://twitter.com/"><img src="<?php echo $this->getSkinUrl('images/dd_twitter.png'); ?>"></a>
+                    <a href="https://www.youtube.com/"><img src="<?php echo $this->getSkinUrl('images/dd_youtube.png'); ?>"></a>
+                </li>
+            </ul>
+        </div>    
+            
+    </div>
+    <div class="ddmenu_right">
+    	<ul>
+        	<li class="font18_dgry ddmenu_bbodr">
+            	<div class="left mrgn_r10"><img src="<?php echo $this->getSkinUrl('images/dd_location.png'); ?>"></div>
+                <div class="left">FIND A STORE<br><span class="font18_dgry2">NEAR YOU</span></div>
+            </li>
+            <li class="font18_dgry">
+            	<div class="left mrgn_r10"><img src="<?php echo $this->getSkinUrl('images/dd_phone.png'); ?>"></div>
+                <div class="left">SPEAK WITH<br><span class="font18_dgry2">A PROFESSIONAL</span></div>
+            </li>
+        </ul>
+    </div>
+</div>
+</div>

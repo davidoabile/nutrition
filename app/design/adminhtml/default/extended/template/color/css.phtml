@@ -1,0 +1,260 @@
+<?php
+    $headerBackground = new Moogento_Clean_Helper_Color(Mage::getStoreConfig('moogento_clean/colors/header_background'));
+    $activeMenuBackground = new Moogento_Clean_Helper_Color(Mage::getStoreConfig('moogento_clean/colors/menu_active_item_background'));
+    $footerBackground = new Moogento_Clean_Helper_Color(Mage::getStoreConfig('moogento_clean/colors/footer_background'));
+    $fieldsetHeaderBackground = new Moogento_Clean_Helper_Color(Mage::getStoreConfig('moogento_clean/colors/fieldset_header_background'));
+    $fieldsetBodyBackground = new Moogento_Clean_Helper_Color(Mage::getStoreConfig('moogento_clean/colors/fieldset_body_background'));
+
+	$change_body_background = Mage::getStoreConfig('moogento_clean/colors/change_body_background');
+	$bodyBackground = new Moogento_Clean_Helper_Color(Mage::getStoreConfig('moogento_clean/colors/body_background'));
+	
+    $buttonAction = new Moogento_Clean_Helper_Color(Mage::getStoreConfig('moogento_clean/colors/button_action'));
+    $buttonBack = new Moogento_Clean_Helper_Color(Mage::getStoreConfig('moogento_clean/colors/button_back'));
+    $buttonRemove = new Moogento_Clean_Helper_Color(Mage::getStoreConfig('moogento_clean/colors/button_remove'));
+
+    $tabs = new Moogento_Clean_Helper_Color(Mage::getStoreConfig('moogento_clean/colors/left_column_tabs'));
+    $tabsActive = new Moogento_Clean_Helper_Color(Mage::getStoreConfig('moogento_clean/colors/left_column_tabs_active'));
+    $tabsHeader = new Moogento_Clean_Helper_Color(Mage::getStoreConfig('moogento_clean/colors/left_column_tabs_header'));
+	$show_image_dash = Mage::getStoreConfig('moogento_clean/dashboard/show_image_dash');
+	$show_menu_icon_hints = Mage::getStoreConfig('moogento_clean/css/show_menu_icon_hints');
+
+?>
+<style>
+<?php 
+if($show_image_dash == 1) {
+	echo '
+	.adminhtml-dashboard-index {
+		background: #FED380;
+		background-image: url("/skin/adminhtml/default/extended/img/clean_top_bg_2.jpg"), url("/skin/adminhtml/default/extended/img/clean_bot_bg_2.jpg");
+		background-repeat: repeat-x, repeat;
+	}
+	.adminhtml-dashboard-index .span6 .entry-edit, #clean_chart_extra_grids #grid_tab_content, #diagram_tab_content, #clean_chart_summary {
+		box-shadow: 1px 1px 5px #333333;
+	}
+	#clean_overview fieldset, #clean_packing_overview fieldset {
+		background: none repeat scroll 0 0 rgba(0, 0, 0, 0.4);
+	}
+	.clean_pie fieldset {
+		background: none repeat scroll 0 0 rgba(0, 0, 0, 0.4);
+	}
+	';
+} else {
+	echo '
+	.adminhtml-dashboard-index {
+		background-color: #0E74AF;
+	}
+	.adminhtml-dashboard-index .span6 .entry-edit, #clean_chart_extra_grids #grid_tab_content, #diagram_tab_content, #clean_chart_summary {
+		box-shadow:none;
+	}
+	#clean_overview fieldset, #clean_packing_overview fieldset {
+		background:#666;
+	}';
+}
+if(Mage::getStoreConfig('moogento_clean/dashboard/show_personality') == 0) {
+	echo '
+	.entry-edit-head em {
+		display:none;
+	}
+	';
+} else {
+	echo '
+	#clean_highscores {
+	  font-size: 12px !important;
+	}
+	#clean_highscores, #clean_highscores h4 {
+	  font-family: "PressStart","Helvetica Neue",opensansreg,helvetica,sans-serif;
+	  font-size: 12px;
+	}
+	#clean_highscores .clean_24h {
+	  font-size: 12px;
+	}
+	';
+}
+if($change_body_background == 1) {
+	//body.adminhtml-sales-order-index to only color orders page (and not config)
+	echo '
+		body {
+        background-color: #'.Mage::getStoreConfig('moogento_clean/colors/body_background').';
+    }';
+	list($r, $g, $b) = sscanf('#'.Mage::getStoreConfig('moogento_clean/colors/body_background'), "#%02x%02x%02x");
+	echo '#quote_today {
+	    background: rgba('.$r.','.$g.','.$b.',0.6);
+	}
+	#mooinfo h4 a {
+	  text-shadow: none;
+	  color:'.$headerBackground->fontColor().';
+	}
+	div.moogento-notice {
+	  background-image: linear-gradient(to right, #'.Mage::getStoreConfig('moogento_clean/colors/fieldset_header_background').' 10%, #'.Mage::getStoreConfig('moogento_clean/colors/fieldset_header_background').' 30%, #'.Mage::getStoreConfig('moogento_clean/colors/body_background').' 61%, #'.Mage::getStoreConfig('moogento_clean/colors/body_background').' 91%);
+	  border-color: #'.Mage::getStoreConfig('moogento_clean/colors/fieldset_header_background').';';
+
+	// add shadow for light backgrounds
+	if (strtoupper($bodyBackground->fontColor()) != '#FFFFFF'){
+		echo '
+	  box-shadow: 1px 1px 5px #333;';
+	}
+	echo '}';
+	
+	echo '#content .content-header h3.head-categories {
+		color:'.$bodyBackground->fontColor().' !important;
+	}';
+}
+?>
+    .header, .header .link-logout.active {
+        background: #<?php echo Mage::getStoreConfig('moogento_clean/colors/header_background') ?>;
+    }
+    .header, .header-right, #nav li.level0 > a {
+        color: <?php echo $headerBackground->fontColor() ?>;
+    }
+    #nav li.active {
+        background: #<?php echo Mage::getStoreConfig('moogento_clean/colors/menu_active_item_background') ?>;
+    }
+
+    #nav li.active a {
+        color: <?php echo $activeMenuBackground->fontColor() ?>;
+    }
+
+<?php	
+
+if($show_menu_icon_hints == 1)
+{
+	/* hover to show label above icons */
+	echo '
+	#nav li:hover a span.moocon {
+		text-indent: 0;
+		font-size:8px;
+		margin: -21px 0 0 -13px;
+	}
+
+	#nav li.sales:hover a span.moocon {
+		margin: -21px 0 0 7px;
+	}
+	#nav li.catalog:hover a span.moocon {
+		margin: -21px 0 0 2px;
+	}
+	#nav li.customer:hover a span.moocon {
+		margin: -21px 0 0 -4px;
+	}
+	#nav li.promo:hover a span.moocon {
+		margin: -21px 0 0 -6px;
+	}
+	#nav li.system:hover a span.moocon {
+		margin: -21px 0 0 -3px;
+	}
+	';
+}
+?>
+<?php if (Mage::getStoreConfigFlag(Moogento_Clean_Helper_Data::XML_PATH_FOOTER_CSS)): ?>
+    .footer {
+        background: #<?php echo Mage::getStoreConfig('moogento_clean/colors/footer_background') ?>;
+        color: <?php echo $footerBackground->fontColor() ?> !important;
+    }
+<?php endif; ?>
+    .entry-edit .entry-edit-head {
+        background: #<?php echo Mage::getStoreConfig('moogento_clean/colors/fieldset_header_background') ?>;
+        color: #<?php echo $fieldsetHeaderBackground->fontColor() ?>;
+    }
+    .entry-edit .entry-edit-head a {
+        color: <?php echo $fieldsetHeaderBackground->fontColor() ?>;
+    }
+
+
+	<?php 
+	if (strtoupper($fieldsetHeaderBackground->fontColor()) == '#FFFFFF'){
+		echo '.entry-edit .entry-edit-head .tools a:hover {
+	    color: #FFF;
+		}
+		.tools:hover a::after {
+			background-image: url("/skin/adminhtml/default/extended/img/edit_icon_wht.png");
+		}
+		';
+	}else{
+		echo '.entry-edit .entry-edit-head .tools a:hover {
+	    color: #111;
+		}';
+	}
+	   echo '.entry-edit .entry-edit-head .tools a {
+	    color: #'.Mage::getStoreConfig('moogento_clean/colors/fieldset_header_background').';
+		}';
+	
+	?>
+	
+
+    .entry-edit fieldset, .entry-edit .fieldset {
+        background: #<?php echo Mage::getStoreConfig('moogento_clean/colors/fieldset_body_background') ?>;
+        color: <?php echo $fieldsetBodyBackground->fontColor() ?>
+    }
+    .entry-edit label, .entry-edit .scope-label {
+        color: <?php echo $fieldsetBodyBackground->fontColor() ?>
+    }
+<?php 
+if (strtoupper($bodyBackground->fontColor()) == '#FFFFFF'){
+	echo '.content-header h3, .span2 h3 {
+        color: #FFF;
+    }';
+}else{
+   echo '.content-header h3, .span2 h3 {
+        color: #'.Mage::getStoreConfig('moogento_clean/colors/page_title').';
+    }';
+}
+?>
+    .btn,
+    .btn:focus {
+        <?php echo $buttonBack->getCssGradient(10) ?>
+        color: #<?php echo Mage::getStoreConfig('moogento_clean/colors/button_back_text') ?>;
+    }
+
+    .btn:hover {
+        <?php
+            $lighter = new Moogento_Clean_Helper_Color($buttonBack->lighten());
+            echo $lighter->getCssGradient()
+        ?>
+    }
+
+    .btn-warning,
+    .btn-warning:focus {
+        <?php echo $buttonAction->getCssGradient(10) ?>
+        color: #<?php echo Mage::getStoreConfig('moogento_clean/colors/button_action_text') ?>;
+    }
+
+    .btn-warning:hover {
+        <?php
+            $lighter = new Moogento_Clean_Helper_Color($buttonAction->lighten());
+            echo $lighter->getCssGradient()
+        ?>
+    }
+
+    .btn-danger,
+    .btn-danger:focus {
+        <?php echo $buttonRemove->getCssGradient(10) ?>
+        color: #<?php echo Mage::getStoreConfig('moogento_clean/colors/button_remove_text') ?>;
+    }
+
+    .btn-danger:hover {
+        <?php
+            $lighter = new Moogento_Clean_Helper_Color($buttonRemove->lighten());
+            echo $lighter->getCssGradient()
+        ?>
+    }
+
+    ul.tabs, ul.tabs a {
+        background: #<?php echo Mage::getStoreConfig('moogento_clean/colors/left_column_tabs') ?>;
+        color: <?php echo $tabs->fontColor() ?>
+    }
+    ul.tabs a:hover {
+        background: #<?php echo $tabs->darken() ?>;
+    }
+
+    ul.config-tabs dt {
+        background: #<?php echo Mage::getStoreConfig('moogento_clean/colors/left_column_tabs_header') ?>;
+        color: #<?php echo $tabsHeader->darken(40) ?>;
+        border-top-color: #<?php echo $tabsHeader->darken(40) ?>;
+        border-bottom-color: #<?php echo $tabsHeader->darken(40) ?>;
+    }
+
+    ul.tabs a.active span {
+        background: #<?php echo Mage::getStoreConfig('moogento_clean/colors/left_column_tabs_active') ?>;
+        color: <?php echo $tabsActive->fontColor() ?>;
+    }
+
+</style>

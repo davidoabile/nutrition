@@ -1,0 +1,5 @@
+David:
+
+I have modified the checkout plugin to use split cart. Major changes are done on the /local/Aitoc/Aitcheckout/Helper/Data.php
+on a method called private function _getDesignType(). I added the ability to detect query params and pass whatever version 
+has been passed into the framework. I also created some phtml. Method _setCompact2Template in the Checkout Block

@@ -1,0 +1,856 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <moogento translate="label" module="moogento_clean">
+            <label><![CDATA[<img src="//www.moogento.com/logo/moogento_tinylogo.ls.png" alt="Moogento" style="width: 20px;vertical-align:bottom;margin-left:-1px;"/> MOOGENTO Extensions]]></label>
+            <sort_order>200</sort_order>
+        </moogento>
+    </tabs>
+    <sections>
+        <moogento_clean translate="label" module="moogento_clean">
+            <label>Clean</label>
+            <tab>moogento</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>5000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>0</show_in_website>
+            <show_in_store>0</show_in_store>
+            <groups>
+                <hint>
+                    <frontend_model>moogento_clean/adminhtml_system_config_fieldset_hint</frontend_model>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                </hint>
+                <moodetails>
+                    <label>License</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <server_name translate="label">
+                            <label>Server Name</label>
+                            <frontend_type>text</frontend_type>
+                            <backend_model>moogento_clean/adminhtml_system_config_backend_import_name</backend_model>
+                            <frontend_model>moogento_clean/adminhtml_system_config_fieldset_name</frontend_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </server_name>
+                        <license translate="label">
+                            <label>License Key</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <frontend_model>moogento_clean/adminhtml_system_config_fieldset_key</frontend_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Enter your license key here</comment>
+                        </license>
+                    </fields>
+                </moodetails>
+                <general translate="label">
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <theme translate="label">
+                            <label>Use <![CDATA[<b>Clean</b> admin theme?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_clean/system_config_source_theme</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </theme>
+                        <logo translate="label comment">
+                            <label><![CDATA[<i> - - Custom titlebar logo (default theme)</i>]]></label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>moogento_clean/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">moogento</upload_dir>
+                            <base_url type="media" scope_info="1">moogento</base_url>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[(Use : <b>jpeg</b>, <b>gif</b>, <b>png</b>)<br />If empty, default will be shown.]]></comment>
+							<depends>
+								<theme>default</theme>
+							</depends>
+                        </logo>
+                        <logo_small translate="label comment">
+                            <label><![CDATA[<i> - - Custom menubar logo</i>]]></label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">moogento</upload_dir>
+                            <base_url type="media" scope_info="1">moogento</base_url>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[(Use : <b>jpeg</b>, <b>gif</b>, <b>png</b>)<br />If empty, default will be shown.]]></comment>
+							<depends>
+								<theme>extended</theme>
+							</depends>
+                        </logo_small>
+                        <grid_refresh>
+                            <label>Auto-refresh order grid</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<comment><![CDATA[This auto-adds new orders into the Orders page grid - you may find this confusing if you're doing more than 1 sale every few minutes.]]></comment>
+                        </grid_refresh>
+                        <grid_refresh_interval>
+                            <label><![CDATA[<i> - - Auto-refresh frequency (mins)</i>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <comment><![CDATA[Default : 1]]></comment>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<depends>
+								<grid_refresh>1</grid_refresh>
+							</depends>
+                        </grid_refresh_interval>
+                        <showing_error_message translate="label">
+                            <label>Magento message display</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_clean/system_config_source_errormessage</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </showing_error_message>
+                    </fields>
+                </general>
+                <display>
+                    <label>Display</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <show_gravatar>
+                            <label><![CDATA[Show user <b>Gravatar<b>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_gravatar>
+                        <bottom_statistics>
+                            <label><![CDATA[Show <b>Order Statistics</b> block]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<comment><![CDATA[This shows a 24h/7d/30d summary of sales/cancels/refunds in the Orders page footer.<br /><i>This won't show in the Dashboard.</i>]]></comment>
+                        </bottom_statistics>
+                        <bottom_statistics_sold>
+                            <label><![CDATA[<i> - - Show <b>$ Sold</b></i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>22</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<depends>
+								<bottom_statistics>1</bottom_statistics>
+							</depends>
+                        </bottom_statistics_sold>
+                        <bottom_statistics_canceled>
+                            <label><![CDATA[<i> - - Show <b>$ Canceled</b></i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>24</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<depends>
+								<bottom_statistics>1</bottom_statistics>
+							</depends>
+                        </bottom_statistics_canceled>
+                        <bottom_statistics_refunded>
+                            <label><![CDATA[<i> - - Show <b>$ Refunded</b></i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>26</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<depends>
+								<bottom_statistics>1</bottom_statistics>
+							</depends>
+                        </bottom_statistics_refunded>
+                        <show_global_search>
+                            <label>Show global search</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_global_search>
+                        <show_magento_ads>
+                            <label>Show Magento ads</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_magento_ads>
+                        <show_copyright>
+                            <label>Show copyright</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_copyright>
+                        <export_csv>
+                            <label>Show 'Export csv/xml' option</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </export_csv>
+                    </fields>
+                </display>
+                <css>
+                    <label>Design</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <fonts>
+                            <label>Fonts</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </fonts>
+                        <header>
+                            <label>Header</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </header>
+                        <show_menu_icon_hints>
+                            <label><![CDATA[<i> - - Show menubar <b>icon hints</b>?</i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>(Turn off for a more minimal look)</comment>
+							<depends>
+								<header>1</header>
+							</depends>
+                        </show_menu_icon_hints>
+                        <main_part>
+                            <label>Main</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </main_part>
+                        <grid>
+                            <label>Grid</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </grid>
+                        <grid_actions>
+                            <label>Grid Actions</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>55</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </grid_actions>
+                        <footer>
+                            <label>Footer</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </footer>
+                        <buttons>
+                            <label>Buttons</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </buttons>
+                    </fields>
+                </css>
+                <colors>
+                    <label>Color</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>40</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <default_color translate="label">
+                            <label>Reset?</label>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>moogento_clean/adminhtml_system_config_form_button_backtodefaultcolor</frontend_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </default_color>
+                        <enable>
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </enable>
+                        <header_background>
+                            <label>Header background</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <frontend_class>color</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                        </header_background>
+                        <menu_active_item_background>
+                            <label>Top menu active item background</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <frontend_class>color</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                        </menu_active_item_background>
+                        <footer_background>
+                            <label>Footer background</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <frontend_class>color</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                        </footer_background>
+                        <page_title>
+                            <label>Page title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <frontend_class>color</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                        </page_title>
+                        <fieldset_header_background>
+                            <label>Fieldset header background</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <frontend_class>color</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                        </fieldset_header_background>
+                        <fieldset_body_background>
+                            <label>Fieldset body background</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <frontend_class>color</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                        </fieldset_body_background>
+                        <button_action>
+                            <label>Action button background</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>80</sort_order>
+                            <frontend_class>color</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                        </button_action>
+                        <button_action_text>
+                            <label>Action button text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>90</sort_order>
+                            <frontend_class>color</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                        </button_action_text>
+                        <button_back>
+                            <label>Back button background</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <frontend_class>color</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                        </button_back>
+                        <button_back_text>
+                            <label>Back button text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>110</sort_order>
+                            <frontend_class>color</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                        </button_back_text>
+
+                        <button_remove>
+                            <label>Remove button background</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>120</sort_order>
+                            <frontend_class>color</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                        </button_remove>
+                        <button_remove_text>
+                            <label>Remove button text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>130</sort_order>
+                            <frontend_class>color</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                        </button_remove_text>
+
+                        <left_column_tabs_header>
+                            <label>Left column tabs header background</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>140</sort_order>
+                            <frontend_class>color</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                        </left_column_tabs_header>
+
+                        <left_column_tabs>
+                            <label>Left column tabs background</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <frontend_class>color</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                        </left_column_tabs>
+
+                        <left_column_tabs_active>
+                            <label>Left column active tabs background</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>160</sort_order>
+                            <frontend_class>color</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                        </left_column_tabs_active>
+                        <change_body_background>
+                            <label>Change body background for all admin pages?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>170</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                        </change_body_background>
+                        <body_background>
+                            <label>Body background</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>180</sort_order>
+                            <frontend_class>color</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable>1</enable>
+                                <change_body_background>1</change_body_background>
+                            </depends>
+                        </body_background>
+                    </fields>
+                </colors>
+                <notifications>
+                    <label>Notifications</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>50</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <delivery_rate_orders>
+                            <label><![CDATA[<b>New orders</b> : Notify every (orders)]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_clean/system_config_source_deliveryrateorders</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </delivery_rate_orders>
+                        <show_order_summary>
+                            <label><![CDATA[<i> - - Include order details?</i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <delivery_rate_orders>1</delivery_rate_orders>
+                            </depends>
+                        </show_order_summary>
+                        <checking_time>
+                            <label><![CDATA[<i> - - Check frequency</i>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Seconds, default = 60</comment>
+                        </checking_time>
+                        <item_out_of_stock>
+                            <label><![CDATA[<b>Out-of-stock products</b> : Notify?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </item_out_of_stock>                    
+                    </fields>
+                </notifications>            
+                <dashboard>
+                    <label>Dashboard</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>60</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <!--<show_prices>-->
+                            <!--<label><![CDATA[Include <b>$ Amounts in Stats</b>?]]></label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>10</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>0</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+							<!--<comment><![CDATA[Eg. if you want to show the dashboard as a live screen to your team, you may want to only show <b>qty</b> and not <b>$</b>]]></comment>-->
+                        <!--</show_prices>-->
+                        <show_overview>
+                            <label><![CDATA[Show <b>24h Summary</b>?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_overview>
+                        <show_default_charts>
+                            <label><![CDATA[Use <b>Moogento Charting</b>?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>18</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<comment><![CDATA[('No' = default Magento)]]></comment>
+                        </show_default_charts>
+                        <chart_statuses translate="label comment" module="moogento_clean">
+                            <label><![CDATA[<i> - - Charts count which order statuses?</i>]]></label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>moogento_clean/adminhtml_system_config_source_order_status</source_model>
+                            <sort_order>19</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <show_default_charts>1</show_default_charts>
+                            </depends>
+							<comment><![CDATA[(Changing this will result in inaccurate charts for some time, while we re-index orders.)]]></comment>
+                        </chart_statuses>
+                        <show_averages translate="label comment" module="moogento_clean">
+                            <label><![CDATA[Show <b>Averages</b> panel?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>26</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_averages>
+                        <show_average_order_amount translate="label comment" module="moogento_clean">
+                            <label><![CDATA[<i> - - Show <b>Avg Order $ Amount</b>?</i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>27</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <show_averages>1</show_averages>
+                            </depends>
+                        </show_average_order_amount>
+                        <show_average_product_price translate="label comment" module="moogento_clean">
+                            <label><![CDATA[<i> - - Show <b>Avg Product $ Price</b>?</i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>28</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <show_averages>1</show_averages>
+                            </depends>
+                        </show_average_product_price>
+                        <show_average_products_per_order translate="label comment" module="moogento_clean">
+                            <label><![CDATA[<i> - - Show <b>Avg # Products-Per-Order</b>?</i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>29</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <show_averages>1</show_averages>
+                            </depends>
+                        </show_average_products_per_order>
+
+                        <show_average_day translate="label comment" module="moogento_clean">
+                            <label><![CDATA[<i> - - Show <b>Average 24h $ Revenue</b>?</i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <show_averages>1</show_averages>
+                            </depends>
+                        </show_average_day>
+						
+                        <show_low_stock_warnings>
+                            <label><![CDATA[Show <b>Low Stock Warnings</b> panel?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[You need <a href="https://www.moogento.com/stockeasy">stockEasy</a> installed for this to work]]></comment>
+                        </show_low_stock_warnings>
+						
+                        <show_bestsellers>
+                            <label><![CDATA[<i>Show <b>Bestsellers</b> tab?</i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>42</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Default: Yes</comment>
+                        </show_bestsellers>
+                        <show_vip_customers>
+                            <label><![CDATA[<i>Show <b>VIP Customers</b> tab?</i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>44</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Default: Yes</comment>
+                        </show_vip_customers>
+						<show_last_5_orders>
+                            <label><![CDATA[<i>Show <b>Last 5 Orders</b> tab?</i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>45</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_last_5_orders>
+                        <show_last_5_search_terms>
+                            <label><![CDATA[<i>Show <b>Last 5 Search Terms</b> tab?</i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_last_5_search_terms>
+                        <show_top_5_search_terms>
+                            <label><![CDATA[<i>Show <b>Top 5 Search Terms</b> tab?</i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>55</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_top_5_search_terms>
+                        <show_new_customers>
+                            <label><![CDATA[<i>Show <b>New Customers</b> tab?</i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_new_customers>
+                        <show_most_viewed_products>
+                            <label><![CDATA[<i>Show <b>Most Viewed Products</b> tab?</i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_most_viewed_products>
+                        <show_personality>
+                            <label><![CDATA[Add <b>Personality</b> to Dash?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_personality>
+                        <show_pithy_quote>
+                            <label><![CDATA[<i> - - Hit me with <b>Motivational Quotes</b></i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>105</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_pithy_quote>
+                        <show_image_dash>
+                            <label><![CDATA[<i> - - Show <b>Imaged Dash Bkg</b>?</i>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>(Or solid color)</comment>
+                        </show_image_dash>
+                        <cron_period>
+                            <label>Refresh dashboard data every (mins)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </cron_period>
+                        <show_annual_quarters>
+                            <label><![CDATA[<i> - - Show annual Quarters as</i>]]></label>                            
+                            <source_model>moogento_clean/adminhtml_system_config_source_annualquarters</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>160</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_annual_quarters>
+                        <fixed_annual_quarters_month>
+                            <label><![CDATA[<i> - - - Q1 starts when?</i>]]></label>
+                            <source_model>moogento_clean/adminhtml_system_config_source_month</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>170</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <show_annual_quarters>fixed</show_annual_quarters>
+                            </depends>
+                        </fixed_annual_quarters_month>
+                    </fields>
+                </dashboard>
+            </groups>
+        </moogento_clean>
+    </sections>
+</config>

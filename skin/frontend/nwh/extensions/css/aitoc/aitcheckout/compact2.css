@@ -1,0 +1,129 @@
+
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     n/a
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+#checkoutSteps li#right_collumn {
+    width: 65%;
+}
+
+#checkoutSteps li#right_collumn ol.sub li.section {
+    border-bottom: 1px solid #E5E5E5;
+    float: left;
+    margin-right: 15px;
+    min-height: 150px;
+    width: 47%;
+}
+
+#co-checkout-form #checkoutSteps li.section {
+    display: block;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+#checkoutSteps li#right_collumn ol.opc {
+    clear: both;
+}
+
+#co-checkout-form #checkoutSteps li#right_collumn ol.sub li.section {
+    border: none;
+    margin: 0 1% 1% 0;
+    width: 49%;
+}
+
+#co-checkout-form #checkoutSteps #left_collumn
+{
+    margin-right: 1%;
+}
+
+#checkoutSteps
+{
+    background: rgba(236, 236, 236, 0.93);
+    background-image: none;
+}
+
+#co-checkout-form #left_collumn .form-list
+{
+    padding-left: 10px;
+}
+
+#co-checkout-form .opc .step
+{
+    padding-right: 0px;
+}
+
+#co-checkout-form .opc .active .step-title h2
+{
+    background: none;
+}
+
+#co-checkout-form #checkout-step-billing,
+#co-checkout-form #checkout-step-shipping2
+{
+    padding:0;
+}
+
+
+#co-checkout-form #checkoutSteps .form-list .compact .input-box input,
+#co-checkout-form #checkoutSteps .form-list .name-firstname .input-box input,
+#co-checkout-form #checkoutSteps .form-list .name-lastname .input-box input {
+    width: 111px;
+}
+
+#co-checkout-form #checkoutSteps .form-list .compact .input-box,
+#co-checkout-form #checkoutSteps .form-list .name-firstname .input-box,
+#co-checkout-form #checkoutSteps .form-list .name-lastname .input-box {
+    width: 114px;
+}
+
+#co-checkout-form #checkoutSteps .form-list .compact,
+#co-checkout-form #checkoutSteps .form-list .name-firstname,
+#co-checkout-form #checkoutSteps .form-list .name-lastname {
+    width: 136px;
+}
+
+#co-checkout-form #checkoutSteps .form-list select {
+    width: 254px;
+}
+
+#co-checkout-form #checkoutSteps .form-list li.wide .input-box,
+#co-checkout-form #checkoutSteps .form-list .input-box {
+    width: 251px;
+}
+
+#co-checkout-form #checkoutSteps .form-list li.wide input.input-text,
+#co-checkout-form #checkoutSteps .form-list input.input-text,
+#co-checkout-form #checkoutSteps .form-list textarea {
+    width: 247px;
+}
+
+#co-checkout-form #co-billing-form .control label,
+#co-checkout-form #co-shipping-form .control label {
+    padding-left: 19px;
+}
+
+#co-checkout-form #checkoutSteps li#left_collumn {
+    width: 33%;
+}
+
+#co-checkout-form .buttons-set {
+    margin-left: 14px;
+}
+.page-title.title-buttons{
+    clear: both;
+}
+.cart-table {
+    width: 100% !important;
+}
+.cart-totals-wrapper .cart-totals{
+    background: none;
+    border: none;
+}
+#co-billing-form .form-list > li.control > input {
+    margin-left: 0px;
+}

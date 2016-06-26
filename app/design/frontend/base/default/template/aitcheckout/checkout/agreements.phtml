@@ -1,0 +1,126 @@
+<?php
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+if (!$this->getAgreements()) return; ?>
+
+<?php $hlpTerms = Mage::helper('aitcheckout/terms') ?>
+
+<?php if ($hlpTerms->getTocMode() == Aitoc_Aitcheckout_Helper_Data::CONDITIONS_POPUP): ?>
+
+    <script type="text/javascript">
+        //<![CDATA[
+        toggleLitebox = function(b) {
+            $('popup-litebox-agreem').style.display = b ? 'block' : 'none';
+        };
+
+        openPopup = function(id) {
+            toggleLitebox(true);
+            $(id).addClassName('show');
+
+            $('popup-litebox-agreem').observe('click', function() {
+                    closePopup(id);
+                });
+
+            Event.observe(document, 'keyup', function(evt) {
+                var code;
+                if (evt.keyCode) code = evt.keyCode;
+                else if (evt.which) code = evt.which;
+                if (code == Event.KEY_ESC) {
+                    closePopup(id);
+                }
+            });
+        };
+
+        closePopup = function(id) {
+            toggleLitebox(false);
+            $(id).removeClassName('show');
+        };
+        //]]>
+    </script>
+    <div id="popup-litebox-agreem" style="width: 100%; height: 100%;"></div> 
+    <?php foreach ($this->getAgreements() as $_a): ?>
+        <div id="agreement-content-<?php echo $_a->getId()?>" class="popup-agreement" style="height: <?php echo $hlpTerms->getTocPopupHeight() ?>px; width: <?php echo $hlpTerms->getTocPopupWidth() ?>px; margin-left: -<?php echo round($hlpTerms->getTocPopupWidth()/2+25); ?>px;">
+            <h2><?php echo $_a->getName()?></h2>
+            <?php if ($_a->getIsHtml()):?>
+                <?php echo $_a->getContent() ?>
+            <?php else:?>
+                <?php echo nl2br($this->htmlEscape($_a->getContent())) ?>
+            <?php endif; ?>
+            <div class="popup-agreement-close">
+                <a href="#" onclick="return false;" id="close-agreement-<?php echo $_a->getId()?>-agree">
+                        <?php echo $this->__('Accept & return to the checkout') ?>
+                </a><br />
+                <a href="#" onclick="return false;" id="close-agreement-<?php echo $_a->getId()?>-deny" class="deny">
+                        <?php echo $this->__('Don\'t accept & close this window') ?>
+                </a>
+            </div>
+        </div>
+        <p id="agreement-input-<?php echo $_a->getId()?>" class="agree">
+            <input type="checkbox" id="agreement-<?php echo $_a->getId()?>" name="agreement[<?php echo $_a->getId()?>]" value="1" title="<?php echo $this->htmlEscape($_a->getCheckboxText()) ?>" class="checkbox  validate-one-required-by-name" />
+            <label for="agreement-<?php echo $_a->getId()?>">
+                <?php echo $this->htmlEscape($_a->getCheckboxText())?> <a href="#" onclick="return false;" id="agreement-anchor-<?php echo $_a->getId()?>"><?php echo $_a->getName()?></a>
+            </label>
+        </p>
+
+        <script type="text/javascript">
+        //<![CDATA[
+            var tnc_viewed<?php echo $_a->getId()?> = false;
+            $('agreement-anchor-<?php echo $_a->getId()?>').observe('click', function(event) {
+                openPopup('agreement-content-<?php echo $_a->getId()?>');
+                tnc_viewed<?php echo $_a->getId()?> = true;
+            });
+            $('close-agreement-<?php echo $_a->getId()?>-agree').observe('click', function(event) {
+                closePopup('agreement-content-<?php echo $_a->getId()?>');
+                $('agreement-<?php echo $_a->getId()?>').checked = true;
+            });
+            $('close-agreement-<?php echo $_a->getId()?>-deny').observe('click', function(event) {
+                closePopup('agreement-content-<?php echo $_a->getId()?>');
+                $('agreement-<?php echo $_a->getId()?>').checked = false;
+            });
+            <?php if ($hlpTerms->getTocCheckboxBehavior() == Aitoc_Aitcheckout_Helper_Data::CHECKBOX_VIEWING_REQUIRED): ?>
+                $('agreement-<?php echo $_a->getId()?>').observe('click', function(event) {
+                    if (($('agreement-<?php echo $_a->getId()?>').checked == true) && (tnc_viewed<?php echo $_a->getId()?> == false)) {
+                        $('agreement-<?php echo $_a->getId()?>').checked = false;
+                        openPopup('agreement-content-<?php echo $_a->getId()?>');
+                        tnc_viewed<?php echo $_a->getId()?> = true;
+                    }
+                });
+            <?php endif ?>
+        //]]>
+        </script>
+        
+    <?php endforeach ?>
+        
+<?php else: ?>
+
+    <?php foreach ($this->getAgreements() as $_a): ?>
+        <div id="agreement-content-<?php echo $_a->getId()?>" class="agreement-content" style="display:none; <?php echo ($_a->getContentHeight() ? ' height:' . $_a->getContentHeight() : '')?>">
+            <?php if ($_a->getIsHtml()):?>
+                <?php echo $_a->getContent() ?>
+            <?php else:?>
+                <?php echo nl2br($this->htmlEscape($_a->getContent())) ?>
+            <?php endif; ?>
+        </div>
+        <p id="agreement-input-<?php echo $_a->getId()?>" class="agree">
+            <input type="checkbox" id="agreement-<?php echo $_a->getId()?>" name="agreement[<?php echo $_a->getId()?>]" value="1" title="<?php echo $this->htmlEscape($_a->getCheckboxText()) ?>" class="checkbox  validate-one-required-by-name" />
+            <label for="agreement-<?php echo $_a->getId()?>">
+                <?php echo $this->htmlEscape($_a->getCheckboxText())?> <a href="#" onclick="return false;" id="agreement-anchor-<?php echo $_a->getId()?>"><?php echo $_a->getName()?></a>
+            </label>
+        </p>
+        <script type="text/javascript">
+        //<![CDATA[
+            $('agreement-anchor-<?php echo $_a->getId()?>').observe('click', function(event) {
+                $('agreement-content-<?php echo $_a->getId()?>').toggle();
+            });
+        //]]>
+        </script>
+    <?php endforeach ?>
+
+<?php endif ?>

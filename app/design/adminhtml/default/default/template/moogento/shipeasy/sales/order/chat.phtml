@@ -1,0 +1,64 @@
+<?php 
+/** 
+* Moogento
+* 
+* SOFTWARE LICENSE
+* 
+* This source file is covered by the Moogento End User License Agreement
+* that is bundled with this extension in the file License.html
+* It is also available online here:
+* http://www.moogento.com/License.html
+* 
+* NOTICE
+* 
+* If you customize this file please remember that it will be overwrtitten
+* with any future upgrade installs. 
+* If you'd like to add a feature which is not in this software, get in touch
+* at www.moogento.com for a quote.
+* 
+* ID          pe+sMEDTrtCzNq3pehW9DJ0lnYtgqva4i4Z=
+* File        chat.phtml
+* @category   Moogento
+* @package    pickPack
+* @copyright  Copyright (c) 2014 Moogento <info@moogento.com> / All rights reserved.
+* @license    http://www.moogento.com/License.html
+*/ 
+?>
+<script type="text/javascript">
+var img = <?php echo "'".'<img src="'.Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN).'adminhtml/default/default/moogento/shipeasy/images/moo_alert_red.png" width="25" height="25" alt="close_comment">'."'"; ?>;
+
+function addOrderComment(aElm) {
+    Modalbox.show(
+        $(aElm).readAttribute('href'),
+        {
+            title: '<?php echo Mage::helper('moogento_shipeasy')->__('Order #')?>' + $(aElm).readAttribute('order_id'),
+            width: 600,
+            method: 'GET',
+            closeSymbol: img
+        }
+    );
+}
+
+function submitSzyCommentForm()
+{
+    value1 = $('admin_comment').getValue();
+    value2 = $('history_comment').getValue();
+    if (!value1 && !value2) {
+        alert('<?php echo Mage::helper('moogento_shipeasy')->__('You need to fill down at least one comment input.')?>');
+    } else {
+        $('history_form').select('button').each(function(elm){
+            $(elm).addClassName('disabled');
+            $(elm).onclick = 'return false;';
+        });
+        $('history_form').request({
+            onComplete: function(transport){
+                Modalbox._insertContent(transport.responseText);
+                if (globalGridHref) {
+                    globalGridHref.reload();
+                }
+                Modalbox.hide();
+            }
+        });
+    }
+}
+</script>

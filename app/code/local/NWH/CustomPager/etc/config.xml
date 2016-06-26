@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <NWH_CustomPager>
+      <version>0.1.0</version>
+    </NWH_CustomPager>
+  </modules>
+  <global>
+    <helpers>
+      <custompager>
+        <class>NWH_CustomPager_Helper</class>
+      </custompager>
+    </helpers>
+	<blocks>
+	  <custompager>
+		<class>NWH_CustomPager_Block</class>
+	  </custompager>
+			<catalog>
+				<rewrite>
+					<product_widget_html_pager>NWH_CustomPager_Block_Catalog_Product_Widget_Html_Pager</product_widget_html_pager>
+				</rewrite>
+			</catalog>
+	</blocks>
+  </global>
+</config> 

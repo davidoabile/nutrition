@@ -1,0 +1,67 @@
+<config>
+    <modules>
+        <nwh_common>
+            <version>0.1.0</version>
+        </nwh_common>
+    </modules>
+    <frontend>
+        <routers>
+            <common>
+                <use>standard</use>
+                <args>
+                    <module>NWH_CustomerRegister</module>
+                    <frontName>common</frontName>
+                </args>
+            </common>
+        </routers> 
+        
+    </frontend>
+    
+    <global>
+        <helpers>
+            <nwh_common>
+                <class>NWH_CustomerRegister_Helper</class>
+            </nwh_common>
+        </helpers>
+        <resources>
+            <nwh_common_setup>
+                <setup>
+                    <module>NWH_CustomerRegister</module>
+                </setup>
+            </nwh_common_setup>
+        </resources>
+        <models>
+            <nwh_common>
+                <class>NWH_CustomerRegister_Model</class>
+                <resourceModel>nwh_common_resource</resourceModel>
+            </nwh_common>
+            <nwh_common_resource>
+                <class>NWH_CustomerRegister_Model_Resource</class>
+                <entities>
+                    <region>
+                        <table>geo</table>
+                    </region>
+                </entities>
+            </nwh_common_resource>
+        </models>
+        
+        <models>
+            <customer>
+                <rewrite>
+                    <customer>NWH_CustomerRegister_Model_Customer</customer>
+                </rewrite>
+            </customer>
+        </models>
+        <events>
+            <customer_register_success>
+                <observers>
+                    <NWH_CustomerRegister_Customer_Register_Success>
+                        <type>singleton</type>
+                        <class>NWH_CustomerRegister_Model_Observer</class>
+                        <method>customerRegisterSuccess</method>
+                    </NWH_CustomerRegister_Customer_Register_Success>
+                </observers>
+            </customer_register_success>
+        </events>
+    </global>
+</config>

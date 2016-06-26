@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Aitoc_Aitconfcheckout>
+            <active>true</active>
+            <codePool>local</codePool>
+            <self_name>Configurable Checkout</self_name>
+            <priority>900</priority>
+        </Aitoc_Aitconfcheckout>
+    </modules>
+</config>
+<!--
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (CC Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitconfcheckout
+ * @version      1.0.9 - 2.1.23
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+-->

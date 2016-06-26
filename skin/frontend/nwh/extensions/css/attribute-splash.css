@@ -1,0 +1,221 @@
+/**
+ * @category    Fishpig
+ * @package     Fishpig_AttributeSplash
+ * @license     http://fishpig.co.uk/license.txt
+ * @author      Ben Tideswell <help@fishpig.co.uk>
+ */
+
+.splash-title h1 {
+	font-size: 32px;
+	line-height: 32px;
+	text-transform: uppercase;
+}
+.splash-group-grid { 
+	height: 1%;
+	overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.splash-group-grid li.item {
+	float: left;
+	text-align: left;
+	width: 32.3%;
+	margin-right: 1.5%;
+}
+.splash-group-grid li.item:last-child,
+.splash-group-grid li.item.last {
+    margin-right: 0%;
+}
+.splash-group-grid li.item .inner {
+	margin-bottom: 5px;
+}
+.splash-group-grid li.item img {
+	margin-bottom: 1em;
+	max-width: 100%;
+}
+
+.splash-image img {
+	max-width: 100%;
+}
+
+.splash-description {
+	margin-bottom: 2em;
+}
+
+.splash-description img {
+	max-width: 100%;
+}
+
+.splash-description-full {
+	padding-top: 2em;
+}
+
+.splash-description-full img {
+	max-width: 100%;
+}
+
+.attributesplash-group-view .page-title,
+.attributesplash-page-view .page-title {
+    clear: both;
+    margin-bottom: 20px;
+}
+    .attributesplash-group-view .page-title h1,
+    .attributesplash-page-view .page-title h1 {
+
+    }
+/*.attributesplash-group-view .splash-image,*/
+/*.attributesplash-page-view*/ .splash-image {
+    clear: both;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+.category-title .splash-image {
+    margin-bottom: 55px;
+}
+    /*.attributesplash-group-view .splash-image img,*/
+    /*.attributesplash-page-view*/ .splash-image img {
+        width: 100%;
+        height: auto;
+    }
+    /*.attributesplash-group-view .splash-image .page-title,*/
+    /*.attributesplash-page-view*/ .splash-image .page-title {
+        background-color: #E11E2F;
+        position: absolute;
+        width: 30%;
+        margin-bottom: 0;
+        height: 100%;
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+    }
+    /*.attributesplash-group-view .splash-image .page-title:after,*/
+    /*.attributesplash-page-view*/ .splash-image .page-title:after {
+        position: absolute;
+        right: -100px;
+        bottom: 0;
+        content:'';
+        border-top: 500px solid #E11E2F;
+        border-right: 100px solid transparent;
+    }
+
+        /*.attributesplash-group-view .splash-image .page-title h1,*/
+        /*.attributesplash-page-view*/ .splash-image .page-title h1 {
+            font-size: 32px;
+            line-height: 32px;
+            text-transform: uppercase;
+            margin: 50% 0 50% 25px;
+            width: auto;
+            float: none;
+            display: inline-block;
+            padding: 0;
+            text-align: left;
+        }
+        .attributesplash-page-view .splash-description.std,
+        .attributesplash-page-view .splash-video.std {
+            padding: 20px;
+            background: #EEE;
+            clear: both;
+            overflow: hidden;
+        }
+        .splash-description-full {
+            clear: both;
+        }
+
+.splash-pager {
+    clear: both;
+    background-color: #BEBCBC;
+    padding: 20px;
+    text-align: center;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+    .splash-pager ul {
+        width: auto;
+        margin: 0 auto;
+    }
+        .splash-pager li {
+            display: inline-block;
+            padding: 0 3px;
+        }
+            .splash-pager li a {
+                font-family: 'exomedium';
+                color: #FFF;
+                text-transform: uppercase;
+                font-weight: 700;
+            }
+.splash-pages-items {
+    clear: both;
+}
+    .splash-pages-items .item-label {
+        text-transform: uppercase;
+        font-weight: 700;
+        font-family: 'exomedium';
+        color: #E11E2F;
+        width: 100%;
+        clear: both;
+        margin: 0;
+        padding: 10px 3px;
+        border-bottom: 1px solid #EEE;
+        font-size: 16px;
+    }
+    .splash-pages-items .splash-group-grid-container {
+        border-bottom: 1px solid #EEE;
+        padding: 20px 0;
+    }
+    .splash-pages-items .splash-group-grid {
+        margin: 0;
+    }
+        .splash-pages-items .splash-group-grid li.item {
+            width: 24%;
+            margin-right: 0.9%;
+        }
+            .splash-pages-items .splash-group-grid a {
+				color: #848383;
+				font-size: 12px;
+                text-transform: none;
+            }
+                .splash-group-grid li a {
+                    color: #E11E2F;
+                    font-size: 13px;
+                    text-transform: uppercase;
+                    font-family: 'exomedium';
+                    font-weight: 700;
+                }
+                .splash-group-grid li a.product-image {
+                    width: 100%;
+                    height: 110px;
+                    display: block;
+                    overflow: hidden;
+                    position: relative;
+                }
+                    .splash-group-grid li a.product-image img {
+                        width: 100%;
+                        height: auto;
+                    }
+                .splash-group-grid li .product-name a {
+                    font-size: 15px;
+                    padding: 5% 0;
+                }
+                .splash-group-grid li .item-short-description {
+                    height: 40px;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    clear: both;
+                    font-size: 12px;
+                    position: relative;
+                }
+                .splash-group-grid li .item-short-description::after { 
+                    content: "...";
+                    background: #fff;
+                    position: absolute;
+                    bottom: 0px;
+                    right: 5px;
+                    padding-left: 10px;
+                    float: right;
+                }
+.splash-groups-pager-message {
+	color: #848383;
+	font-size: 11px;
+	margin-top: 10px;
+}

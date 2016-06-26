@@ -1,0 +1,650 @@
+<?xml version="1.0"?>
+<!--
+  Moogento
+  
+  SOFTWARE LICENSE
+  
+  This source file is covered by the Moogento End User License Agreement
+  that is bundled with this extension in the file License.html
+  It is also available online here:
+  http://moogento.com/License.html
+  
+  NOTICE
+  
+  If you customize this file please remember that it will be overwrtitten
+  with any future upgrade installs. 
+  If you'd like to add a feature which is not in this software, get in touch
+  at www.moogento.com for a quote.
+  
+  ID          pe+sMEDTrtCzNq3pehW9DJ0lnYtgqva4i4Z=
+  File        system.xml
+  @category   Moogento
+  @package    pickPack
+  @copyright  Copyright (c) 2014 Moogento <info@moogento.com> / All rights reserved.
+  @license    http://moogento.com/License.html
+-->
+<config>
+    <sections>
+        <sales_email>
+            <groups>
+                <shipment translate="label">
+                    <fields>
+                        <track_template translate="label">
+                            <label>Shipment Track Email Template</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_template</source_model>
+                            <sort_order>16</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </track_template>
+                        <guest_track_template translate="label">
+                            <label>Shipment Track Email Template for Guest</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_template</source_model>
+                            <sort_order>17</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </guest_track_template>
+                    </fields>
+                </shipment>
+            </groups>
+        </sales_email>
+        <moogento_shipeasy translate="label" module="moogento_shipeasy">
+            <label><![CDATA[shipEasy]]></label>
+            <header_css>moogento-header</header_css>
+            <tab>moogento</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>4000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>0</show_in_website>
+            <show_in_store>0</show_in_store>
+            <frontend_model>moogento_shipeasy/adminhtml_system_config_grid_column_form_order</frontend_model>
+            <groups>
+                <hint>
+                    <frontend_model>moogento_shipeasy/adminhtml_system_config_fieldset_hint</frontend_model>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                </hint>
+                <moodetails>
+                    <label>License</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <server_name translate="label">
+                            <label>Server Name</label>
+                            <frontend_type>text</frontend_type>
+                            <backend_model>moogento_shipeasy/adminhtml_system_config_backend_import_name</backend_model>
+                            <frontend_model>moogento_shipeasy/adminhtml_system_config_fieldset_name</frontend_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </server_name>
+                        <license translate="label">
+                            <label>License Key</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <frontend_model>moogento_shipeasy/adminhtml_system_config_fieldset_key</frontend_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Enter your license key here</comment>
+                        </license>
+                    </fields>
+                </moodetails>
+                <general>
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <frontend_model>moogento_shipeasy/adminhtml_system_config_general</frontend_model>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <allow_ship_without_invoice translate="label">
+                            <label>Allow sE Ship without invoice</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>115</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Yes/No Comment: If [Yes] and no invoice is set it will change status into 'Shipped'<br/>
+                            If [Yes or No] and invoice is set it will change status into 'Complete']]>
+                            </comment>
+                        </allow_ship_without_invoice>
+                        
+                        <use_ship_easy_css>
+                            <label>Use shipEasy grid styling? </label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>If you use a 3rd party admin theme, turn this off.</comment>
+                        </use_ship_easy_css>
+                        
+                        <override_bl_grid>
+                            <label>Override BL > orders grid?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Stops the conflict with BL Grid for the Sales>Orders page</comment>
+                        </override_bl_grid>
+
+                        <cron_period>
+                            <label>Fill order columns every (mins)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </cron_period>
+                    </fields>
+                </general>
+
+				<moo_head_grid>
+					<frontend_model>moogento_shipeasy/adminhtml_system_config_fieldset_mooheadgrid</frontend_model>
+					<sort_order>110</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+				</moo_head_grid>
+                <grid translate="label" module="moogento_shipeasy">
+                    <label>Column Setup</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>112</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <frontend_model>moogento_shipeasy/adminhtml_system_config_grid</frontend_model>
+                </grid>
+                <colors translate="label" module="moogento_shipeasy">
+                    <label>Row Colors</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>115</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                </colors>
+				
+                <country_groups translate="label" module="moogento_shipeasy">
+                    <label>Shipping Zones</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>122</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <comment><![CDATA[This enables you to filter based on country and/or postcode groups.]]></comment>
+                    <frontend_model>moogento_shipeasy/adminhtml_system_config_shipzone</frontend_model>
+                    <fields>
+                        <shipping_zone translate="label" module="moogento_shipeasy">
+                            <label><![CDATA[Choose <b>Shipping Zones</b> to use :<br />
+							&bull; <b>Shipping Zone column</b><br />
+							&bull; <b>Stats Bar grouping</b>]]></label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>moogento_shipeasy/adminhtml_system_config_source_country_group</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <can_be_empty>0</can_be_empty>
+                        </shipping_zone>
+                    </fields>
+                </country_groups>
+
+                <weight translate="label" module="moogento_shipeasy">
+                    <label><![CDATA[Order Stats Bar (Counts &amp; Weights)]]></label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>125</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <comment><![CDATA[This shows an <b>Order Stats Bar</b> in the Orders Grid.<br />
+					It shows a count of Orders in the Statuses chosen below, and the total weight for each group.<br />
+					It futher segments them by Shipping Zones selected above (if you have <a href = "https://moogento.com/courierrules">courierRules</a> installed).]]></comment>
+                    <fields>
+                        <enabled translate="label" module="moogento_shipeasy">
+                            <sort_order>11</sort_order>
+                            <label>Show Stats Bar?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>The Stats Bar appears at the footer of the Order Grid</comment>
+                        </enabled>
+                        <measure_unit translate="label" module="moogento_shipeasy">
+                            <label>Unit of Measure</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<depends><enabled>1</enabled></depends>
+                        </measure_unit>
+                        <statuses translate="label" module="moogento_shipeasy">
+                            <label>Orders statuses used in calculations.</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <sort_order>13</sort_order>
+                            <source_model>moogento_shipeasy/adminhtml_system_config_source_order_status</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <can_be_empty>0</can_be_empty>
+							<depends><enabled>1</enabled></depends>
+                        </statuses>
+                        <show_single translate="label" module="moogento_shipeasy">
+                            <label>Show Single Qty's?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>14</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<depends><enabled>1</enabled></depends>
+                        </show_single>
+                    </fields>
+                </weight>
+
+                <email_to>
+                    <label><![CDATA[1-Click Emails &amp; Comments Templates]]></label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>127</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <default_subject translate="label" module="moogento_shipeasy">
+                            <label>Default Email Subject</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Use <span class="comment_code">{customer-name}</span> and <span class="comment_code">{order-id}</span> directives here.]]></comment>
+                        </default_subject>
+                        <default_body>
+                            <label>Default Email Body</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Use <span class="comment_code">{website-url}</span>,<span class="comment_code">{website-name}</span>,<span class="comment_code">{customer-name}</span>,<span class="comment_code">{order-id}</span>,<span class="comment_code">{ordered-skus}</span>,<span class="comment_code">{sku-name}</span> and <span class="comment_code">{ordered-product-names}</span>.]]></comment>
+                        </default_body>
+                        <default_admin_message>
+                            <label>Default Admin Viewable Order Comment</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>13</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Use <span class="comment_code">{website-url}</span>,<span class="comment_code">{website-name}</span>,<span class="comment_code">{customer-name}</span>,<span class="comment_code">{order-id}</span>,<span class="comment_code">{ordered-skus}</span>,<span class="comment_code">{sku-name}</span> and <span class="comment_code">{ordered-product-names}</span>.]]></comment>
+                        </default_admin_message>
+                        <default_customer_message>
+                            <label>Default Customer Visible Order Comment</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>14</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Use <span class="comment_code">{website-url}</span>,<span class="comment_code">{website-name}</span>,<span class="comment_code">{customer-name}</span>,<span class="comment_code">{order-id}</span>,<span class="comment_code">{ordered-skus}</span>,<span class="comment_code">{sku-name}</span> and <span class="comment_code">{ordered-product-names}</span>.]]></comment>
+                        </default_customer_message>
+                    </fields>
+                </email_to>
+				
+                <!-- BEGIN ACTION MENU-->
+                <action_menu>
+                    <label>Action Menu Options</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>129</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <show_seperator1 translate="label comment" module="moogento_shipeasy">
+                            <label>Show Seperator 1?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_shipeasy/yesno</source_model>
+                            <sort_order>810</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_seperator1>
+        
+                        <show_ship translate="label comment" module="moogento_shipeasy">
+                            <label>Show "Ship"?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_shipeasy/yesno</source_model>
+                            <sort_order>820</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_ship>
+        
+                        <show_invoice translate="label comment" module="moogento_shipeasy">
+                            <label>Show "Invoice" ?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_shipeasy/yesno</source_model>
+                            <sort_order>830</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_invoice>
+
+                        
+                        <show_ship_and_invoice translate="label comment" module="moogento_shipeasy">
+                            <label>Show "Ship and Invoice"?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_shipeasy/yesno</source_model>
+                            <sort_order>840</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_ship_and_invoice>
+
+
+                       <show_change_status translate="label comment" module="moogento_shipeasy">
+                            <label>Show "Update Status"?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_shipeasy/yesno</source_model>
+                            <sort_order>850</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_change_status>
+
+
+        
+                        <show_update_custom_attribute translate="label comment" module="moogento_shipeasy">
+                            <label>Show "Update Custom Attribute"?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_shipeasy/yesno</source_model>
+                            <sort_order>860</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_update_custom_attribute>
+                    </fields>
+                </action_menu>
+                <fonts translate="label" module="moogento_shipeasy">
+                    <label>Fonts</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>180</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <font translate="label" module="moogento_shipeasy">
+                            <label>Font</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_shipeasy/adminhtml_system_config_source_font</source_model>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </font>
+                        <size translate="label,comment" module="moogento_shipeasy">
+                            <label>Size (px)</label>
+                            <comment><![CDATA[Leave empty to use default.]]></comment>
+                            <frontend_class>validate-number</frontend_class>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </size>
+                    </fields>
+                </fonts>
+				
+				<moo_head_process>
+					<frontend_model>moogento_shipeasy/adminhtml_system_config_fieldset_mooheadprocess</frontend_model>
+					<sort_order>1980</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+				</moo_head_process>
+                <orderpage translate="label">
+                    <label>Process : Scan</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1990</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <button_scan_enable translate="label">
+                            <label><![CDATA[Show <b>'Process Orders : Scan' button</b> in Orders page?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Shows a button to enable order processing via barcode scanner</comment>
+                        </button_scan_enable>
+                    </fields>
+                </orderpage>
+                <import translate="label" module="moogento_shipeasy">
+                    <label>Process : CSV</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>2000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <import_shipment>
+                            <label><![CDATA[Show <b>'Process Orders : CSV' button</b> in Orders page?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Shows a button to enable import shipments functionality</comment>
+                        </import_shipment>
+                        <add_track_email translate="label,comment" module="moogento_shipeasy">
+                            <label>Send specific transactional email if 2nd/3rd/etc. tracking number added?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<depends><import_shipment>1</import_shipment></depends>
+                        </add_track_email>
+                        <order_increment_id translate="label,comment" module="moogento_shipeasy">
+                            <label>CSV Column title for: Order ID</label>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<depends><import_shipment>1</import_shipment></depends>
+                            <comment>Needed, any line without an Order ID won't be processed</comment>
+                        </order_increment_id>
+                        <!-- <shipping_cost translate="label,comment" module="moogento_shipeasy">
+                            <label>Shipping Cost</label>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<depends><import_shipment>1</import_shipment></depends>
+                        </shipping_cost> -->
+                        <tracking_info translate="label,comment" module="moogento_shipeasy">
+                            <label>CSV Column title for: Tracking Info</label>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<depends><import_shipment>1</import_shipment></depends>
+                            <comment>Optional, any line with a tracking number will have it added to that order</comment>
+                        </tracking_info>
+                        <sku_column translate="label,comment" module="moogento_shipeasy">
+                            <label>CSV Column title for: Sku</label>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<depends><import_shipment>1</import_shipment></depends>
+                            <comment>Optional. With qty also specified, it will mark that qty of the order as shipped (if set to 'Ship'). If no qty specified, then all qty of this sku will be marked as shipped (if set to 'Ship')</comment>
+                        </sku_column>
+                        <qty_column translate="label,comment" module="moogento_shipeasy">
+                            <label>CSV Column title for: Qty</label>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<depends><import_shipment>1</import_shipment></depends>
+                            <comment>Optional, needs Sku on the same line to do anything. Will mark this part of an order as shipped (if set to 'Ship')</comment>
+                        </qty_column>
+                        <order_comment translate="label,comment" module="moogento_shipeasy">
+                            <label>CSV Column title for: Comment</label>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<depends><import_shipment>1</import_shipment></depends>
+                            <comment>Optional, needs Comments visible only for admins on the same line to do anything. Will mark this part of an order as shipped (if set to 'Ship')</comment>
+                        </order_comment>
+                        <order_comment_public translate="label,comment" module="moogento_shipeasy">
+                            <label>CSV Column title for: Comment</label>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<depends><import_shipment>1</import_shipment></depends>
+                            <comment>Optional, needs Comments visible for all on the same line to do anything. Will mark this part of an order as shipped (if set to 'Ship')</comment>
+                        </order_comment_public>
+                    </fields>
+                </import>
+
+               <!--
+ <charges translate="label" module="moogento_shipeasy">
+                    <label>Additional Payment Charges</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>190</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <fixed_amount translate="label" module="moogento_shipeasy">
+                            <label>Fixed Charge Amount</label>
+                            <frontend_type>text</frontend_type>
+                            <frontend_class>validate-number</frontend_class>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </fixed_amount>
+                        <percent_amount translate="label" module="moogento_shipeasy">
+                            <label>Percent Charge Amount</label>
+                            <frontend_type>text</frontend_type>
+                            <frontend_class>validate-number</frontend_class>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </percent_amount>
+                    </fields>
+                </charges>
+ -->
+
+                
+
+                <!--
+                <shipping_cost>
+                    <label>Shipping Cost</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1110</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <use_default translate="label" module="moogento_shipeasy">
+                            <label>Use Order Shipping Cost if Custom Shipping Cost empty</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[For COMPLETE orders only.]]></comment>
+                        </use_default>
+                        <default_currency>
+                            <label>Default Input Currency</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_currency</source_model>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </default_currency>
+                    </fields>
+                </shipping_cost>
+ -->
+
+                <!--
+                <image_background translate="label comment" module="moogento_shipeasy">
+                        <label>Extra Grid Columns</label>
+                        <frontend_type>text</frontend_type>
+                        <sort_order>125</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                        <fields>
+                            <shipping_address_background_shippingmethod translate="label" module="moogento_shipeasy">
+                                <frontend_type>hidden</frontend_type>
+                                <sort_order>1407</sort_order>
+                                <frontend_model>moogento_shipeasy/adminhtml_system_config_form_field_shippingbackground_pack</frontend_model>
+                                 <backend_model>pickpack/adminhtml_system_config_backend_field_shippingbackground_imagebackground</backend_model>
+                                <show_in_default>1</show_in_default>
+                                <show_in_website>0</show_in_website>
+                                <show_in_store>0</show_in_store>
+                            </shipping_address_background_shippingmethod>
+                        </fields>
+                </image_background>
+                -->
+				<moo_head_detail>
+					<frontend_model>moogento_shipeasy/adminhtml_system_config_fieldset_mooheaddetail</frontend_model>
+					<sort_order>2890</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+				</moo_head_detail>
+                <order_details_page translate="label">
+                    <label>Product Grid</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>2900</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <show_product_images translate="label comment" module="moogento_shipeasy">
+                            <label>Show product images?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_shipeasy/yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment><![CDATA[If enabled this will also show product images in the 'Create New Order' product grid.]]></comment>
+                        </show_product_images>
+                    </fields>
+                </order_details_page>
+
+                <!-- END ACTION MENU -->
+            </groups>
+        </moogento_shipeasy>
+    </sections>
+</config>

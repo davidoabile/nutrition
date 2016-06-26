@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+   <sections>
+        <aitsys>
+            <groups>
+                <modules>
+                    <fields>
+                        <Aitoc_Aitcheckout translate="label comment">
+                            <label>One-page Checkout Booster</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>aitsys/system_config_source_stores</source_model>
+                            <backend_model>aitsys/system_config_backend_stores</backend_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <can_be_empty>1</can_be_empty>
+                        </Aitoc_Aitcheckout>
+                    </fields>
+                </modules>
+            </groups>
+        </aitsys>
+        <checkout>
+            <groups>
+                <aitcheckout translate="label" module="aitcheckout">
+                    <label>One-page Checkout Booster</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>99</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <checkout_show_method translate="label comment">
+                            <label>Checkout and Cart display</label>
+                            <comment>&lt;b&gt;Move Checkout to Cart&lt;/b&gt; - places expanded Checkout steps below Cart content table;
+                            &lt;br/&gt;&lt;b&gt;Expand Checkout steps&lt;/b&gt; - removes "Continue" button and expands all the Checkout steps;
+                            &lt;br/&gt;&lt;b&gt;Move Cart to Checkout&lt;/b&gt; - replaces "Order Review" step with Cart content table, expands all the Checkout steps;
+                            &lt;br/&gt;&lt;b&gt;Turn Off the extension&lt;/b&gt; - displays standard Cart and Checkout;
+                            </comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>aitcheckout/system_config_source_show</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </checkout_show_method>
+                        <design_type translate="label comment">
+                            <label>Checkout Page Design</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>aitcheckout/system_config_source_design</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                        
+                        </design_type>
+                        <responsive translate="label comment">
+                            <label>Responsive Design</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>17</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </responsive>
+                        <show_title translate="label comment">
+                            <label>Show Checkout Page Title</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_title>
+                        <title_text translate="label comment">
+                            <label>Checkout Page Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </title_text>
+                        <show_proceed_to_checkout_button translate="label comment">
+                            <label>Show Proceed to Checkout Button</label>
+                            <comment>
+                                <![CDATA[
+                                    With this setting you can hide "Proceed to Checkout" button from Cart section while Move Checkout to Cart display method is selected. 
+                                    In case when button is shown it functions as anchor to Checkout placed below Cart content table. 
+                                    "Proceed to Checkout" button is always hidden for Compact Design of the "Checkout Page Design" setting.
+                                ]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_proceed_to_checkout_button>
+
+                        <conditions_mode translate="label comment">
+                            <label><![CDATA[Displaying method of the "Terms & Conditions" (T&C) content]]></label>
+                            <comment>
+                                <![CDATA[
+                                    Selecting "Text Area" places the content of the T&C into the text area displayed right above the clicked Condition Name.
+                                    Selecting "Pop-up Window" will open a pop-up window filled with the T&C content.
+                                ]]>
+                            </comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>aitcheckout/system_config_source_conditions</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </conditions_mode>
+                        <popup_width translate="label comment">
+                            <label>Width of the popup window (px)</label>
+                            <comment>Applicable only to the pop-up displaying method</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </popup_width>
+                        <popup_height translate="label comment">
+                            <label>Height of the popup window (px)</label>
+                            <comment>Applicable only to the pop-up displaying method</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </popup_height>
+                        <checkbox_behavior translate="label comment">
+                            <label><![CDATA[T&C checkbox behaviour]]></label>
+                            <comment>
+                                <![CDATA[
+                                    Applicable to "Pop-up window" displaying method only.
+                                    "Display a pop-up window" opens a pop-up window displaying the T&C content when clicking the corresponding checkbox.
+                                    Though the option "Display a pop-up window" is chosen, the checkbox will be marked instantly if the pop-up window has been displayed before.
+                                ]]>
+                            </comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>aitcheckout/system_config_source_CheckboxBehavior</source_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </checkbox_behavior>
+                        <default_shipping_method translate="label comment">
+                            <label><![CDATA[Set default shipping method]]></label>
+                            <comment>
+                                <![CDATA[
+                                    
+                                ]]>
+                            </comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>aitcheckout/system_config_source_DefaultShipping</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </default_shipping_method>
+                    </fields>
+                </aitcheckout>
+            </groups>
+        </checkout>
+    </sections>
+</config>
+<!--
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+-->

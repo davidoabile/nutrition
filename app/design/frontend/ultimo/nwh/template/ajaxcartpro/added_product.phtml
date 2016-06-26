@@ -1,0 +1,54 @@
+<?php
+if (!is_null(Mage::registry('awacp_added_product_id'))){
+$productId = Mage::registry('awacp_added_product_id');
+$_product=Mage::getModel('catalog/product')->load($productId);
+$small_image=$_product->getSmallImage();
+$parent=null;
+if($_product->getTypeId() == "simple")
+if(empty($small_image) || $small_image =="no_selection"){
+$parentIds = Mage::getModel('catalog/product_type_grouped')->getParentIdsByChild($_product->getId()); // check for grouped product
+    if(!$parentIds)
+        $parentIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($_product->getId()); //check for config product
+	
+	if(!empty($parentIds[0])){
+		$parent=Mage::getModel('catalog/product')->load($parentIds[0]);
+	}	
+	;
+};
+
+
+$_helper = $this->helper('catalog/output');
+$theme = $this->helper('ultimo');
+$helpLabels = $this->helper('ultimo/labels');
+$helpTemplate = $this->helper('ultimo/template');
+$helpImg = $this->helper('infortis/image');
+$gc = $theme->getCfgGroup('category_grid');
+//Default image size
+$imgWidth = 295;
+$imgHeight = 295;
+
+?>
+
+<div class="added-success">
+    <div class="product-image-wrapper" style="max-width:<?php echo $imgWidth; ?>px;">
+
+        <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true); ?>" class="product-image">
+            <img src="<?php if(!empty($parent)) echo $helpImg->getImg($parent, $imgWidth, $imgHeight, 'small_image'); else echo $helpImg->getImg($_product, $imgWidth, $imgHeight, 'small_image'); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true); ?>" />
+
+            <?php if ($theme->getCfg('category/alt_image')): ?>
+                <?php echo $theme->getAltImgHtml($_product, $imgWidth, $imgHeight); ?>
+            <?php endif; ?>
+
+            <?php echo $helpLabels->getLabels($_product); //Product labels ?>
+        </a>
+
+    </div> <!-- end: product-image-wrapper -->
+    <?php echo $this->getPriceHtml($_product, true); ?>
+    <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></a></h2>
+
+    <div class="brand-name"><?php echo $_product->getAttributeText('brand');?></div>
+<?php if ($_product->getRatingSummary()): ?>
+        <?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+<?php endif; ?>
+</div>
+<?php } ?>

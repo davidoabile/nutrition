@@ -1,0 +1,106 @@
+<?php
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+if ($this->isCustomerLoggedIn()) return; ?>
+<div class='login-link'><a href="" onclick="return false" id="login-show"><?php echo $this->__('Already a registered customer? Please click here to login.'); ?></a></div>
+<div id="aitcheckout-login" class="popup-agreement" style="width: 360px; margin-left: -205px;">
+    <form id="aitcheckout_login" action="">
+    <div class="col-2 registered-users">
+        <div class="content" id='login-main'>
+            <h2><?php echo Mage::helper('customer')->__('Registered Customers'); ?></h2>
+            <span id="login-noticeLogin"><?php echo $this->__('Please enter your email and password below to log in.'); ?></span>
+            <span id="login-noticeForgot" style="display: none;"><?php echo $this->__('Please enter your email below and we will send you a new password.'); ?></span>
+            <div style="display:none;" id="login-notice" class="error-msg"></div>
+            <div id="login-list">
+            <ul class="form-list">
+                <li>
+                    <label for="email" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('Email Address'); ?></label>
+                    <div class="input-box">
+                        <input type="text" tabindex="0" name="login[username]" value="" id="email" class="input-text required-entry validate-email" title="<?php echo Mage::helper('checkout')->__('Email Address'); ?>" />
+                    </div>
+                </li>
+                <li>
+                    <label for="pass" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('Password'); ?></label>
+                    <div class="input-box">
+                        <input type="password" tabindex="0" name="login[password]" value="" class="input-text required-entry validate-password" id="pass" title="<?php echo Mage::helper('checkout')->__('Password'); ?>" />
+                    </div>
+                </li>
+                <?php if($this->helper('aitcheckout/captcha')->checkIfCaptchaEnabled()): ?>
+                <?php echo $this->getChildHtml('aitchekout.login.info'); ?>
+                <?php endif; ?>
+            </ul>
+            <p class="required">* <?php echo $this->__('Required Fields'); ?></p>
+            </div>
+            <div id="login-forgot" style="display: none;">
+            <ul class="form-list">
+                <li>
+                    <label for="email" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('Email Address'); ?></label>
+                    <div class="input-box">
+                        <input type="text" tabindex="0" name="login[username]" value="" id="forgot_email" class="input-text required-entry validate-email" title="<?php echo Mage::helper('checkout')->__('Email Address'); ?>" />
+                    </div>
+                </li>
+                <?php if($this->helper('aitcheckout/captcha')->checkIfCaptchaEnabled()): ?>
+                    <?php echo $this->getChildHtml('aitchekout.login.forgot_password'); ?>
+                <?php endif; ?>
+            </ul>
+            <p class="required">* <?php echo $this->__('Required Fields'); ?></p>
+            </div>
+            <div id="login-forgotsuccess" style="display: none;">
+            <ul class="form-list">
+            </ul>
+            </div>
+        </div>
+        <div class="buttons-set login-compact">
+            <a href="" class="f-left" onclick="return false" id='login-forgotpassword'><?php echo Mage::helper('customer')->__('Forgot Your Password?'); ?></a>
+            <a href="" class="f-left" onclick="return false" id='login-backtologin' style="display: none;"><?php echo $this->__('« Back to Login'); ?></a>
+        </div>
+        <div class="buttons-set login-compact">
+            <a href="" class="f-left" onclick="return false" id='login-backtocheckout'><?php echo $this->__('« Back to Checkout'); ?></a>
+            <button type="button" class="button" title="<?php echo Mage::helper('checkout')->__('Login'); ?>" name="send" id="login-send"><span><span><?php echo Mage::helper('checkout')->__('Login'); ?></span></span></button>
+            <button type="button" class="button" title="<?php echo Mage::helper('customer')->__('Submit'); ?>" name="send" id="login-submit" style="display: none;"><span><span><?php echo Mage::helper('customer')->__('Submit'); ?></span></span></button>
+        </div>
+        <div id="login-waiting" class="aitcheckout-wait" style="display:none"><img src="<?php echo Mage::getDesign()->getSkinUrl('images/opc-ajax-loader.gif'); ?>" /></div>
+    </div>
+    <div style="display:none">
+    <?php if($this->helper('aitcheckout/captcha')->checkIfCaptchaEnabled()): ?>
+        <ul id="captcha_code">
+        <li id="captcha-input-box-captcha_id">
+            <label for="captcha_captcha_id" class="required"><em>*</em><?php echo Mage::helper('captcha')->__('Please type the letters below'); ?></label>
+            <div class="input-box captcha">
+                <input name="captcha[captcha_id]" type="text" class="input-text required-entry" id="captcha_captcha_id" />
+            </div>
+        </li>
+        <li>
+            <div class="captcha-image" id="captcha-image-box-captcha_id">
+                <img id="captcha-reload" class="captcha-reload" src="<?php echo $this->getSkinUrl('images/reload.png') ?>" alt="<?php echo Mage::helper('captcha')->__('Reload captcha'); ?>" onclick="$('captcha_id').captcha.refresh(this)">
+                <img id="captcha_id" class="captcha-img" height="50" src=""/>
+            </div>
+        </li>
+        </ul>
+    <?php endif; ?>
+    </div>
+    </form>
+</div>
+<script type="text/javascript">
+    //<![CDATA[
+    var aitLoginPopup = new AitPopup('aitcheckout-login');
+
+    var aitLogin = new AitLogin('login', 'aitcheckout-login', aitLoginPopup, {
+        ajaxLoginUrl : '<?php echo $this->getUrl('aitcheckout/customer_account/loginAjax',array('_secure'=>true)) ?>',
+        ajaxForgotUrl : '<?php echo $this->getUrl('aitcheckout/customer_account/forgotPasswordAjax',array('_secure'=>true)) ?>',
+        captchaReloadUrl: '<?php echo $this->getCaptchaReloadUrl(); ?>'
+    }, {0:['list','noticeLogin','send'], 1:['forgot','noticeForgot','submit'],2:['forgotsuccess']}, ['send','submit']);
+
+    $('login-show').observe('click', function(event) {
+        aitLoginPopup.show();
+    });
+
+    //]]>
+</script>

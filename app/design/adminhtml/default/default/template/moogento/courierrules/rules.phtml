@@ -1,0 +1,561 @@
+<?php /** @var $this Moogento_CourierRules_Block_Adminhtml_Configuration_Rules */ ?>
+<?php
+    $attribute = Mage::helper('moogento_courierrules')->getAttribute("product_attribute");
+    $inputType = $attribute ? $attribute->getFrontend()->getInputType() : '';
+    $attribute2 = Mage::helper('moogento_courierrules')->getAttribute("product_attribute2");
+    $inputType2 = $attribute2 ? $attribute2->getFrontend()->getInputType() : '';
+?>
+<?php 
+    $modules = Mage::getConfig()->getNode('modules')->children();
+    $modulesArray = (array)$modules;
+    if(isset($modulesArray['Moogento_Pickpack'])) {
+?>
+<div id="rules-list" class="grid">
+
+    <?php echo $this->getLayout()->createBlock('moogento_courierrules/adminhtml_system_config_fieldset_hint')->toHtml() ?>
+    <div data-bind="with: settings">
+        <div data-bind="if: productAttribute.isDirty">
+            <ul class="messages">
+                <li class="notice-msg">
+                    <ul>
+                        <li><?php echo $this->__('Please note that when you change product attribute the product attribute data in rules will be erased!') ?></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="content-header setting-header" data-bind="click: toggleCollapsed">
+            <h4>
+                <span class="icon-up-big" data-bind="css: {'icon-down-big': collapsed}"></span>
+                <?php echo $this->__('Settings') ?>
+            </h4>
+        </div>
+        <table class="noborder" cellspacing="0" data-bind="css: {hidden: collapsed}">
+            <tr>
+                <td>
+                    <label><strong><?php echo $this->__('Server Name') ?>:</strong></label>
+                </td>
+                <td>
+                    <input type="text" value="<?php echo Mage::getModel('moogento_courierrules/adminhtml_system_config_backend_import_name')->getValue() ?>" disabled="disabled" />
+                </td>
+                <td>
+                    <label><strong><?php echo $this->__('License Key') ?>:</strong></label>
+                </td>
+                <td>
+                    <input name="groups[moodetails][fields][license][value]" type="text" value="<?php echo Mage::getStoreConfig('courierrules_rules/moodetails/license') ?>" />
+                    <?php echo $this->getLayout()->createBlock('moogento_courierrules/adminhtml_system_config_fieldset_key')->toHtml() ?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label><strong><?php echo $this->__('Show Courier Rules Method on') ?>:</strong></label>
+                </td>
+                <td>
+                    <select name="settings[display][]" class="chosen" multiple="true" data-bind="selectedOptions: display, chosen: {width: '300px'}">
+                        <option value="order_grid"><?php echo $this->__('Sales > Order') ?></option>
+                        <option value="shipping_grid"><?php echo $this->__('Sales > Shipment') ?></option>
+                    </select>
+                </td>
+                <td>
+                    <label><strong><?php echo $this->__('Show Original Shipping Method on') ?>:</strong></label>
+                </td>
+                <td>
+                    <select name="settings[display_original][]" class="chosen" multiple="true" data-bind="selectedOptions: displayOriginal, chosen: {width: '300px'}">
+                        <option value="order_grid_original"><?php echo $this->__('Sales > Order') ?></option>
+                        <option value="shipping_grid_original"><?php echo $this->__('Sales > Shipment') ?></option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="form-list">
+                    <label><strong><?php echo $this->__('Auto-process new orders with cron') ?>?</strong></label>
+                    <p class="note"><?php echo $this->__('Needs Magento cron to be setup and running') ?></p>
+                    <div data-bind="if: enableCron">
+                        <br/>
+                        <label><strong><?php echo $this->__('Auto-process new orders every (mins)') ?>:</strong></label><br/>
+                        <label><strong><?php echo $this->__('Process max orders in one run') ?>:</strong></label><br/>
+                        <label><strong><?php echo $this->__('Log processed orders?') ?>:</strong></label>
+                        <p class="note"><?php echo $this->__('File used for logging is ') . Moogento_CourierRules_Helper_Data::LOG_FILE ?></p>
+                    </div>
+                    <div data-bind="visible: cronLog() == <?php echo Moogento_CourierRules_Model_Observer::CRON_LOG_EMPTY ?>">
+                        <br/>
+                        <label data-bind="if: enableCron"><strong><?php echo $this->__('Email these missing orders?') ?>:</strong></label>
+                    </div>
+                </td>
+                <td>
+                    <input type="checkbox" name="settings[enable_cron]" value="1" data-bind="checked: enableCron" /><br/>
+                    <div data-bind="visible: enableCron">
+                        <br/>
+                        <br/>
+                        <input type="text" class="input-text" name="settings[cron_period]" data-bind="value: cronPeriod" /><br/>
+                        <br/>
+                        <input type="text" class="input-text" name="settings[cron_limit]" data-bind="value: cronLimit" /><br/>
+                        <br/>
+                        <select name="settings[cron_log]" data-bind="value: cronLog, chosen: {width: '300px'}">
+                            <option value="<?php echo Moogento_CourierRules_Model_Observer::CRON_NO_LOG ?>"><?php echo $this->__('No') ?></option>
+                            <option value="<?php echo Moogento_CourierRules_Model_Observer::CRON_LOG_EMPTY ?>"><?php echo $this->__('Yes, unmatched orders only') ?></option>
+                            <option value="<?php echo Moogento_CourierRules_Model_Observer::CRON_LOG_ALL ?>"><?php echo $this->__('Yes, all') ?></option>
+                        </select><br/>
+                        <div data-bind="visible: cronLog() == <?php echo Moogento_CourierRules_Model_Observer::CRON_LOG_EMPTY ?>">
+                            <input type="checkbox" name="settings[cron_email]" value="1" data-bind="checked: cronEmail" />
+                            <input type="text" class="input-text" name="settings[cron_email_to]" data-bind="value: cronEmailTo, visible: cronEmail" /><br/>
+                        </div>
+                        <br/>
+                        <button onclick="setLocation('<?php echo $this->getUrl('*/courierrules_rule/reprocess') ?>')" class="" type="button"><span><span><span><?php echo $this->__('Reprocess orders with no rule assigned') ?></span></span></span></button>
+                        <button onclick="setLocation('<?php echo $this->getUrl('*/courierrules_rule/reprocessAll') ?>')" class="" type="button"><span><span><span><?php echo $this->__('Reprocess all orders') ?></span></span></span></button>
+                    </div>
+                </td>
+                <td>
+                    <label><strong><?php echo $this->__('Add custom product attribute to filter grid') ?>?</strong></label><br/>
+                    <div data-bind="if: useProductAttribute">
+                        <br/>
+                        <label><strong>-- <?php echo $this->__('Attribute to add to the filter grid') ?>:</strong></label>
+                    </div>
+                </td>
+                <td>
+                    <input type="checkbox" name="settings[use_product_attribute]" value="1" data-bind="checked: useProductAttribute" /><br/>
+                    <br/>
+                    <div data-bind="if: useProductAttribute">
+                        <select name="settings[product_attribute]" data-bind="value: productAttribute, chosen: {width: '300px'}" data-placeholder="<?php echo $this->__('Select an attribute...') ?>">
+                            <?php foreach ($this->_getProductAttributes() as $code => $label): ?>
+                                <option value="<?php echo $code ?>"><?php echo $label ?> (<?php echo $code ?>)</option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>
+                    <div data-bind="if: useProductAttribute">
+                        <label><strong>-- <?php echo $this->__('Range-attribute') ?>:</strong></label>
+                    </div>
+                </td>
+                <td>
+                    <div data-bind="if: useProductAttribute">
+                        <input type="checkbox" name="settings[use_product_attribute_range]" value="1" data-bind="checked: useProductAttributeRange" /><br/>
+                    </div>
+                 </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>
+                    <div data-bind="if: useProductAttribute">
+                        <label><strong>-- <?php echo $this->__('Check product attribute sum') ?>:</strong></label>
+                    </div>
+                </td>
+                <td>
+                    <div data-bind="if: useProductAttribute">
+                        <input type="checkbox" name="settings[use_product_attribute_sum]" value="1" data-bind="checked: useProductAttributeSum" /><br/>
+                    </div>
+                 </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>
+                    <label><strong><?php echo $this->__('Add custom product attribute 2 to filter grid') ?>?</strong></label><br/>
+                    <div data-bind="if: useProductAttribute2">
+                        <br/>
+                        <label><strong>-- <?php echo $this->__('Attribute to add to the filter grid') ?>:</strong></label>
+                    </div>
+                </td>
+                <td>
+                    <input type="checkbox" name="settings[use_product_attribute2]" value="1" data-bind="checked: useProductAttribute2" /><br/>
+                    <br/>
+                    <div data-bind="if: useProductAttribute2">
+                        <select name="settings[product_attribute2]" data-bind="value: productAttribute2, chosen: {width: '300px'}" data-placeholder="<?php echo $this->__('Select an attribute...') ?>">
+                            <?php foreach ($this->_getProductAttributes() as $code => $label): ?>
+                                <option value="<?php echo $code ?>"><?php echo $label ?> (<?php echo $code ?>)</option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>
+                    <div data-bind="if: useProductAttribute2">
+                        <label><strong>-- <?php echo $this->__('Range-attribute') ?>:</strong></label>
+                    </div>
+                </td>
+                <td>
+                    <div data-bind="if: useProductAttribute2">
+                        <input type="checkbox" name="settings[use_product_attribute_range2]" value="1" data-bind="checked: useProductAttributeRange2" /><br/>
+                    </div>
+                 </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>
+                    <div data-bind="if: useProductAttribute2">
+                        <label><strong>-- <?php echo $this->__('Check product attribute sum') ?>:</strong></label>
+                    </div>
+                </td>
+                <td>
+                    <div data-bind="if: useProductAttribute2">
+                        <input type="checkbox" name="settings[use_product_attribute_sum2]" value="1" data-bind="checked: useProductAttributeSum2" /><br/>
+                    </div>
+                 </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>
+                    <label><strong><?php echo $this->__('Add custom product attribute 3 to filter grid') ?>?</strong></label><br/>
+                    <div data-bind="if: useProductAttribute3">
+                        <br/>
+                        <label><strong>-- <?php echo $this->__('Attribute to add to the filter grid') ?>:</strong></label>
+                    </div>
+                </td>
+                <td>
+                    <input type="checkbox" name="settings[use_product_attribute3]" value="1" data-bind="checked: useProductAttribute3" /><br/>
+                    <br/>
+                    <div data-bind="if: useProductAttribute3">
+                        <select name="settings[product_attribute3]" data-bind="value: productAttribute3, chosen: {width: '300px'}" data-placeholder="<?php echo $this->__('Select an attribute...') ?>">
+                            <?php foreach ($this->_getProductAttributes() as $code => $label): ?>
+                                <option value="<?php echo $code ?>"><?php echo $label ?> (<?php echo $code ?>)</option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>
+                    <div data-bind="if: useProductAttribute3">
+                        <label><strong>-- <?php echo $this->__('Range-attribute') ?>:</strong></label>
+                    </div>
+                </td>
+                <td>
+                    <div data-bind="if: useProductAttribute3">
+                        <input type="checkbox" name="settings[use_product_attribute_range3]" value="1" data-bind="checked: useProductAttributeRange3" /><br/>
+                    </div>
+                 </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>
+                    <div data-bind="if: useProductAttribute3">
+                        <label><strong>-- <?php echo $this->__('Check product attribute sum') ?>:</strong></label>
+                    </div>
+                </td>
+                <td>
+                    <div data-bind="if: useProductAttribute3">
+                        <input type="checkbox" name="settings[use_product_attribute_sum3]" value="1" data-bind="checked: useProductAttributeSum3" /><br/>
+                    </div>
+                 </td>
+            </tr>
+            <tr>
+                <td><label><strong><?php echo $this->__('Require exact match shipping methods?') ?>:</strong></label></td>
+                <td><input type="checkbox" name="settings[exact_match]" value="1" data-bind="checked: exactMatch" /></td>
+                <td>
+                    <?php if ($inputType == 'select' || $inputType == 'multiselect'): ?>
+                        <label data-bind="if: useProductAttribute"><strong><?php echo $this->__('Auto-create missing imported rule attributes') ?>:</strong></label>
+                    <?php endif;?>
+                </td>
+                <td>
+                    <div data-bind="if: useProductAttribute">
+                        <?php if ($inputType == 'select' || $inputType == 'multiselect'): ?>
+                            <input type="checkbox" name="settings[create_missing_options]" value="1" data-bind="checked: createMissingOptions" />
+                        <?php endif; ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><label><strong><?php echo $this->__('Return courierRule method as order shipping method?') ?>:</strong></label></td>
+                <td><input type="checkbox" name="settings[replace_shipment]" value="1" data-bind="checked: replaceShipment" /></td>
+                <td>                    
+                    <label><strong><?php echo $this->__('Add quantity of All Items') ?>:</strong></label>
+                </td>
+                <td>
+                    <input type="checkbox" name="settings[quantity_all_items]" value="1" data-bind="checked: quantityAllItems" />
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>                    
+                    <label><strong><?php echo $this->__('Add cost filter') ?>:</strong></label>
+                </td>
+                <td>
+                    <input type="checkbox" name="settings[cost_filter]" value="1" data-bind="checked: costFilter" />
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>                    
+                    <label><strong><?php echo $this->__('Add quantity of Free/Discount Items') ?>:</strong></label>
+                </td>
+                <td>
+                    <input type="checkbox" name="settings[quantity_free_discount_items]" value="1" data-bind="checked: quantityFreeDiscountItems" />
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>                    
+                    <label><strong><?php echo $this->__('Add shipping paid') ?>:</strong></label>
+                </td>
+                <td>
+                    <input type="checkbox" name="settings[shipping_cost_filter]" value="1" data-bind="checked: shippingCostFilter" />
+                </td>
+            </tr>           
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>                    
+                    <label><strong><?php echo $this->__('Wipe Current Rules When Importing') ?>:</strong></label>
+                </td>
+                <td>
+                    <input type="checkbox" name="settings[wipe_current_rules_when_importing]" value="1" data-bind="checked: wipeCurrentRulesWhenImporting" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <strong>Predefined CourierRules options</strong>
+                    <div data-bind="foreach: predefinedOptions">
+                        <input type="text" class="input-text" name="settings[predefined_options][]" data-bind="value: $data" />
+                        <button data-bind="click: $parent.removeOption" class="scalable delete empty" type="button"><span><span><span></span></span></span></button>
+                        <br/>
+                    </div>
+                    <input type="text" class="input-text" data-bind="value: new_option" />
+                    <button data-bind="click: addOption" class="scalable add" type="button"><span><span><span><?php echo $this->__('Add') ?></span></span></span></button>
+                    <br/>
+                </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+    <br/>
+    <div class="content-header">
+        <h4><?php echo $this->__('Rules') ?></h4>
+    </div>
+    <div data-bind="if: dirty">
+        <ul class="messages">
+            <li class="notice-msg">
+                <ul>
+                    <li><?php echo $this->__('You have unsaved changes.') ?></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="left">
+        <button data-bind="click: addRule" class="add blue-button" type="button"><span><span><span><?php echo $this->__('Add rule') ?></span></span></span></button>
+    </div>
+    <div class="right">
+        <span id="import" class="import-hide"><strong><?php echo $this->__('Import') ?></strong>: <input type="file" name="shipping_zones_file" /><span class="note" style="color: grey; "><?php echo $this->__('Please note that comma should be used for column separation') ?></span></span>
+        <button onclick="$('import').removeClassName('import-hide'); this.hide();" class="add import-button" type="button"><span><span><span><?php echo $this->__('Import') ?></span></span></span></button>
+        | <button onclick="setLocation('<?php echo $this->getUrl('*/courierrules_rule/exportCsv') ?>')" class="add export-button" type="button"><span><span><span><?php echo $this->__('Export') ?></span></span></span></button>
+    </div>
+
+    <br/><br/>
+    <table class="data" cellspacing="0">
+        <thead>
+            <tr class="headings">
+                <th style="width: 85px;">&nbsp;</th>
+                <th><?php echo $this->__('Rule name') ?></th>
+                <th style="width: 100px;"><?php echo $this->__('Scope') ?></th>
+                <th style="width: 150px;"><?php echo $this->__('Shipping Method') ?></th>
+                <th style="width: 120px;"><?php echo $this->__('Shipping Zone') ?></th>
+                <?php if (Mage::getStoreConfigFlag('courierrules/settings/use_product_attribute')): ?>
+                    <th style="width: 150px;"><?php echo Mage::helper('moogento_courierrules')->getAttribute("product_attribute") ? Mage::helper('moogento_courierrules')->getAttribute("product_attribute")->getFrontendLabel() : $this->__('Product Attribute') ?></th>
+                <?php endif; ?>
+                <?php if (Mage::getStoreConfigFlag('courierrules/settings/use_product_attribute2')): ?>
+                    <th style="width: 150px;"><?php echo Mage::helper('moogento_courierrules')->getAttribute("product_attribute2") ? Mage::helper('moogento_courierrules')->getAttribute("product_attribute2")->getFrontendLabel() : $this->__('Product Attribute') ?></th>
+                <?php endif; ?>
+                <?php if (Mage::getStoreConfigFlag('courierrules/settings/use_product_attribute3')): ?>
+                    <th style="width: 150px;"><?php echo Mage::helper('moogento_courierrules')->getAttribute("product_attribute2") ? Mage::helper('moogento_courierrules')->getAttribute("product_attribute2")->getFrontendLabel() : $this->__('Product Attribute') ?></th>
+                <?php endif; ?>
+                <th style="width: 120px;"><?php echo $this->__('Order Weight') ?></th>
+                <th style="width: 120px;"><?php echo $this->__('Order Amount') ?></th>
+                <?php if (Mage::getStoreConfigFlag('courierrules/settings/quantity_all_items')): ?>
+                    <th style="width: 100px;"><?php echo $this->__('Qty: All Items') ?></th>
+                <?php endif; ?>
+                <?php if (Mage::getStoreConfigFlag('courierrules/settings/quantity_free_discount_items')): ?>
+                    <th style="width: 100px;"><?php echo $this->__('Qty: Free/Discount Items') ?></th>
+                <?php endif; ?>          
+                <?php if (Mage::getStoreConfigFlag('courierrules/settings/shipping_cost_filter')): ?>
+                    <th style="width: 100px;"><?php echo 'Shipping' ?></th>
+                <?php endif; ?>          
+                <?php if (Mage::getStoreConfigFlag('courierrules/settings/cost_filter')): ?>
+                    <th style="width: 120px;"><?php echo $this->__('Cost') ?></th>
+                <?php endif; ?>          
+                <th style="width: 150px;"><?php echo $this->__('courierRules') ?></th>
+                <th style="width: 150px;"><?php echo $this->__('Assign tracking') ?></th>
+                <th style="width: 25px;">&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody class="toggle-light" data-bind="sortable: {data: rules, afterMove: updateSort, options: sortableOptions}">
+            <tr data-bind="css: {notvalid: isNotValid}">
+                <td>
+                    <span class="icon-drag"></span>
+                    <span style="display: inline-block">
+                        <input type="checkbox" value="1" data-bind="attr: {name: buildName('active')}, checked: active, switch: active" />
+                    </span>
+                    <input style="width: 25px" type="text" class="input-text" data-bind="value: sort, attr: {name: buildName('sort')}" />
+                </td>
+                <td>
+                    <input type="text" class="input-text" data-bind="value: name, attr: {name: buildName('name')}" />
+                </td>
+                <td>
+                    <select data-bind="value: scope, chosen:{width: '150px', allow_single_deselect: true}, attr: {name: buildName('scope')}" data-placeholder="<?php echo $this->__('All stores') ?>">
+                        <option value=""></option>
+                        <?php foreach ($this->_getStoreSelectOptions() as $_value => $_option): ?>
+                        <?php if (isset($_option['is_group'])): ?>
+                        <?php if ($_option['is_close']): ?>
+                            </optgroup>
+                        <?php else: ?>
+                        <optgroup label="<?php echo $this->escapeHtml($_option['label']) ?>" style="<?php echo $_option['style'] ?>">
+                            <?php endif; ?>
+                            <?php continue ?>
+                            <?php endif; ?>
+                            <option value="<?php echo $this->escapeHtml($_value) ?>" style="<?php echo $_option['style'] ?>">
+                                <?php echo $this->escapeHtml($_option['label']) ?>
+                            </option>
+                            <?php endforeach ?>
+                    </select>
+                </td>
+                <td>
+                    <select data-bind="value: shipping_method, chosen:{width: '190px', allow_single_deselect: true}, attr: {name: buildName('shipping_method')}" data-placeholder="<?php echo $this->__('Any Shipping method') ?>">
+                        <option value=""></option>
+                        <option value="<?php echo Moogento_CourierRules_Model_Rule::CUSTOM_METHOD ?>"><?php echo $this->__('Custom') ?></option>
+                        <?php foreach ($this->_getAllShippingMethods() as $methodGroup): ?>
+                            <?php if (is_array($methodGroup['value'])): ?>
+                            <optgroup label="<?php echo $this->escapeHtml($methodGroup['label']) ?>">
+                                <?php foreach ($methodGroup['value'] as $method): ?>
+                                    <option value="<?php echo $method['value'] ?>"><?php echo $method['label'] ?></option>
+                                <?php endforeach; ?>
+                            </optgroup>
+                            <?php else: ?>
+                                <option value="<?php echo $methodGroup['value'] ?>"><?php echo $methodGroup['label'] ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <div style="margin-top: 5px;" data-bind="if: shipping_method() == '<?php echo Moogento_CourierRules_Model_Rule::CUSTOM_METHOD ?>'">
+                        <input type="text" class="input-text" data-bind="value: custom_shipping_method, attr: {name: buildName('custom_shipping_method')}" />
+                    </div>
+                </td>
+                <td>
+                    <select data-bind="value: shipping_zone, chosen:{width: '190px', allow_single_deselect: true}, attr: {name: buildName('shipping_zone')}" data-placeholder="<?php echo $this->__('Select a zone...') ?>">
+                        <option value=""></option>
+                        <?php foreach ($this->_getZones() as $zone): ?>
+                            <option value="<?php echo $zone['value'] ?>"><?php echo $zone['label'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+                <?php if (Mage::getStoreConfigFlag('courierrules/settings/use_product_attribute')): ?>
+                    <td>
+                        <?php if (Mage::getStoreConfigFlag('courierrules/settings/use_product_attribute_range')): ?>
+                            <input style="width: 40%" type="text" class="input-text" placeholder="min" data-bind="value: min_product_attribute, attr: {name: buildName('min_product_attribute')}" /> -
+                            <input style="width: 40%" type="text" class="input-text" placeholder="max" data-bind="value: max_product_attribute, attr: {name: buildName('max_product_attribute')}" />
+                        <?php else: ?>
+                            <?php echo $this->_renderProductAttribute("product_attribute") ?>
+                        <?php endif; ?>
+                    </td>
+                <?php endif; ?>
+                <?php if (Mage::getStoreConfigFlag('courierrules/settings/use_product_attribute2')): ?>
+                    <td>
+                        <?php if (Mage::getStoreConfigFlag('courierrules/settings/use_product_attribute_range2')): ?>
+                            <input style="width: 40%" type="text" class="input-text" placeholder="min" data-bind="value: min_product_attribute2, attr: {name: buildName('min_product_attribute2')}" /> -
+                            <input style="width: 40%" type="text" class="input-text" placeholder="max" data-bind="value: max_product_attribute2, attr: {name: buildName('max_product_attribute2')}" />
+                        <?php else: ?>
+                            <?php echo $this->_renderProductAttribute("product_attribute2") ?>
+                        <?php endif; ?>
+                    </td>
+                <?php endif; ?>
+                <?php if (Mage::getStoreConfigFlag('courierrules/settings/use_product_attribute3')): ?>
+                    <td>
+                        <?php if (Mage::getStoreConfigFlag('courierrules/settings/use_product_attribute_range3')): ?>
+                            <input style="width: 40%" type="text" class="input-text" placeholder="min" data-bind="value: min_product_attribute2, attr: {name: buildName('min_product_attribute3')}" /> -
+                            <input style="width: 40%" type="text" class="input-text" placeholder="max" data-bind="value: max_product_attribute2, attr: {name: buildName('max_product_attribute3')}" />
+                        <?php else: ?>
+                            <?php echo $this->_renderProductAttribute("product_attribute3") ?>
+                        <?php endif; ?>
+                    </td>
+                <?php endif; ?>
+                <td>
+                    <input style="width: 40%" type="text" class="input-text" placeholder="min" data-bind="value: min_weight, attr: {name: buildName('min_weight')}" /> -
+                    <input style="width: 40%" type="text" class="input-text" placeholder="max" data-bind="value: max_weight, attr: {name: buildName('max_weight')}" />
+                </td>
+                <td>
+                    <input style="width: 40%" type="text" class="input-text" placeholder="min" data-bind="value: min_amount, attr: {name: buildName('min_amount')}" /> -
+                    <input style="width: 40%" type="text" class="input-text" placeholder="max" data-bind="value: max_amount, attr: {name: buildName('max_amount')}" />
+                </td>
+                <?php if (Mage::getStoreConfigFlag('courierrules/settings/quantity_all_items')): ?>
+                    <td>
+                        <input type="text" class="input-text" data-bind="value: quantity_all_items, attr: {name: buildName('quantity_all_items')}" />
+                    </td>
+                <?php endif; ?>
+                <?php if (Mage::getStoreConfigFlag('courierrules/settings/quantity_free_discount_items')): ?>
+                    <td>
+                        <input type="text" class="input-text" data-bind="value: quantity_free_discount_items, attr: {name: buildName('quantity_free_discount_items')}" />
+                    </td>
+                <?php endif; ?>
+                <?php if (Mage::getStoreConfigFlag('courierrules/settings/shipping_cost_filter')): ?>
+                    <td>
+                        <input style="width: 38%" type="text" class="input-text" placeholder="min" data-bind="value: shipping_cost_filter_min, attr: {name: buildName('shipping_cost_filter_min')}" /> -
+                        <input style="width: 38%" type="text" class="input-text" placeholder="max" data-bind="value: shipping_cost_filter_max, attr: {name: buildName('shipping_cost_filter_max')}" />
+                    </td>
+                <?php endif; ?>
+                <?php if (Mage::getStoreConfigFlag('courierrules/settings/cost_filter')): ?>
+                    <td>
+                        <input style="width: 38%" type="text" class="input-text" placeholder="min" data-bind="value: cost_filter_min, attr: {name: buildName('cost_filter_min')}" /> -
+                        <input style="width: 38%" type="text" class="input-text" placeholder="max" data-bind="value: cost_filter_max, attr: {name: buildName('cost_filter_max')}" />
+                    </td>
+                <?php endif; ?>
+                <td>
+                    <select data-bind="value: courierrules_method, chosen:{width: '150px'}, attr: {name: buildName('courierrules_method')}">
+                        <option value="<?php echo Moogento_CourierRules_Model_Rule::CUSTOM_METHOD ?>"><?php echo $this->__('Custom') ?></option>
+                        <option value="<?php echo Moogento_CourierRules_Model_Rule::CONNECTOR_METHOD ?>"><?php echo $this->__('Connector suggestion') ?></option>
+                        <?php foreach ($this->_getCourierRulesMethods() as $methodGroup): ?>
+                            <?php if (is_array($methodGroup['value'])): ?>
+                                <optgroup label="<?php echo $this->escapeHtml($methodGroup['label']) ?>">
+                                    <?php foreach ($methodGroup['value'] as $method): ?>
+                                        <option value="<?php echo $method['value'] ?>"><?php echo $method['label'] ?></option>
+                                    <?php endforeach; ?>
+                                </optgroup>
+                            <?php else: ?>
+                                <option value="<?php echo $methodGroup['value'] ?>"><?php echo $methodGroup['label'] ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <div style="margin-top: 5px;" data-bind="if: courierrules_method() == '<?php echo Moogento_CourierRules_Model_Rule::CUSTOM_METHOD ?>'">
+                        <input type="text" class="input-text" data-bind="value: target_custom, attr: {name: buildName('target_custom')}" />
+                    </div>
+                </td>
+                <td>
+                    <select data-bind="value: tracking_id, chosen:{width: '120px', allow_single_deselect: true}, attr: {name: buildName('tracking_id')}" data-placeholder="<?php echo $this->__('Select...') ?>">
+                        <option value=""></option>
+                        <?php foreach ($this->_getTracking() as $tracking): ?>
+                            <option value="<?php echo $tracking['value'] ?>"><?php echo $tracking['label'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+                <td>
+                    <button data-bind="click: $parent.removeRule" class="scalable delete empty" type="button"><span><span><span></span></span></span></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    var multipleProductAttribyute = <?php echo Mage::getStoreConfigFlag('courierrules/settings/use_product_attribute') && Mage::helper('moogento_courierrules')->isProductAttributeMultiple("product_attribute") ? 'true' : 'false'; ?>;
+    var multipleProductAttribyute2 = <?php echo Mage::getStoreConfigFlag('courierrules/settings/use_product_attribute2') && Mage::helper('moogento_courierrules')->isProductAttributeMultiple("product_attribute2") ? 'true' : 'false'; ?>;
+    var multipleProductAttribyute3 = <?php echo Mage::getStoreConfigFlag('courierrules/settings/use_product_attribute3') && Mage::helper('moogento_courierrules')->isProductAttributeMultiple("product_attribute3") ? 'true' : 'false'; ?>;
+    ko.applyBindings(new ShippingRules(<?php echo $this->_getRulesJson() ?>, <?php echo $this->_getConfig() ?>), document.getElementById('rules-list'));
+</script>
+<?php 
+    } else {
+?>
+<h1>To make the module work you should have <a href="https://moogento.com/magento-pickpack-picklist">Moogento Pickpack</a> module installed.</h1>
+<?php } ?>

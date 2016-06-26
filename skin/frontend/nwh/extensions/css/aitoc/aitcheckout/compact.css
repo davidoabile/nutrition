@@ -1,0 +1,429 @@
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     n/a
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+#checkoutSteps{
+    overflow:hidden;
+    clear:both;
+width:974px;
+}
+    
+#checkoutSteps p {
+    margin:0px;
+}    
+#checkoutSteps li{
+    display:block;
+    overflow:hidden;
+    width:32%;
+    float:left;
+    margin-right:10px;
+}
+
+#checkoutSteps li#right_collumn {
+    margin-right:0px;
+    width:33%;
+}
+    
+#checkoutSteps li ol li{
+    width:auto;
+    float:none;
+    margin-right:0;}
+    
+#right_collumn ol{
+    /*border-bottom:1px solid #BBAFA0;*/
+}
+
+
+#checkoutSteps .form-list .field,
+#checkoutSteps .form-list li.wide .input-box {    
+    float:none;
+    width:auto;}
+    
+#checkoutSteps .form-list li.wide input.input-text,
+#checkoutSteps .form-list input.input-text,
+#checkoutSteps .form-list select,
+#checkoutSteps .form-list textarea {
+    float: left;
+    width: 238px;
+}
+
+#checkoutSteps .form-list .compact, #checkoutSteps .form-list .name-firstname,
+#checkoutSteps .form-list .name-lastname {
+    width:255px;
+    float:left;
+    margin-left:0px;
+    display:inline;
+}
+
+#checkoutSteps .form-list .validation-advice {
+    font-size:9px;
+    padding-left: 12px;
+    width: 240px;
+}
+
+#checkoutSteps .form-list .compact_container{
+    width:auto;
+    float:left;
+}
+
+#checkoutSteps .form-list .compact .input-box, #checkoutSteps .form-list .name-firstname .input-box, #checkoutSteps .form-list .name-lastname .input-box {
+    width:95px;
+}
+
+#checkoutSteps .form-list .compact .input-box input, #checkoutSteps .form-list .name-firstname .input-box input, #checkoutSteps .form-list .name-lastname .input-box input,
+#checkoutSteps .form-list .compact .input-box select{
+    background-color: #fff;
+    border: 1px solid #cbc9c9;
+    border-radius: 2px;
+    color: #8d8c8c;
+    float: left;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 14px;
+    margin-bottom: 8px;
+    margin-top: 8px;
+    padding: 10px 5px;
+    width: 248px;
+}
+
+#checkoutSteps .form-list .customer-name-prefix .name-firstname, #checkoutSteps .form-list .customer-name-prefix .name-lastname,
+#checkoutSteps .form-list .customer-name-middlename .name-firstname, #checkoutSteps .form-list .customer-name-middlename .name-lastname,
+#checkoutSteps .form-list .customer-name-suffix .name-firstname, #checkoutSteps .form-list .customer-name-suffix .name-lastname {
+    width:85px;
+}
+
+#checkoutSteps .form-list .customer-name-prefix .name-firstname .input-box,
+#checkoutSteps .form-list .customer-name-prefix .name-firstname .input-box input,
+#checkoutSteps .form-list .customer-name-prefix .name-lastname .input-box,
+#checkoutSteps .form-list .customer-name-prefix .name-lastname .input-box input,
+#checkoutSteps .form-list .customer-name-middlename .name-firstname .input-box,
+#checkoutSteps .form-list .customer-name-middlename .name-firstname .input-box input,
+#checkoutSteps .form-list .customer-name-middlename .name-lastname .input-box,
+#checkoutSteps .form-list .customer-name-middlename .name-lastname .input-box input,
+#checkoutSteps .form-list .customer-name-suffix .name-firstname .input-box,
+#checkoutSteps .form-list .customer-name-suffix .name-firstname .input-box input,
+#checkoutSteps .form-list .customer-name-suffix .name-lastname .input-box,
+#checkoutSteps .form-list .customer-name-suffix .name-lastname .input-box input
+{
+    width:70px;
+}
+
+#checkoutSteps .form-list .name-prefix,
+#checkoutSteps .form-list .name-middlename, 
+#checkoutSteps .form-list .name-suffix {
+    float:left;
+    width:45px;
+}
+
+#checkoutSteps .form-list .name-prefix input.input-text, #checkoutSteps .form-list .name-prefix select,
+#checkoutSteps .form-list .name-middlename input.input-text, 
+#checkoutSteps .form-list .name-suffix input.input-text, #checkoutSteps .form-list .name-suffix select {
+    width:30px;
+}
+
+#checkoutSteps .form-list .customer-name-prefix-suffix .name-prefix,
+#checkoutSteps .form-list .customer-name-prefix-suffix .name-middlename, 
+#checkoutSteps .form-list .customer-name-prefix-suffix .name-suffix,
+#checkoutSteps .form-list .customer-name-prefix-middlename .name-prefix,
+#checkoutSteps .form-list .customer-name-prefix-middlename .name-middlename, 
+#checkoutSteps .form-list .customer-name-prefix-middlename .name-suffix,
+#checkoutSteps .form-list .customer-name-middlename-suffix .name-prefix,
+#checkoutSteps .form-list .customer-name-middlename-suffix .name-middlename, 
+#checkoutSteps .form-list .customer-name-middlename-suffix .name-suffix,
+#checkoutSteps .form-list .customer-name-prefix-middlename-suffix .name-suffix {
+    float:left;
+    width:70px;
+}
+
+#checkoutSteps .form-list .customer-name-prefix-suffix .name-prefix input.input-text,
+#checkoutSteps .form-list .customer-name-prefix-suffix .name-prefix select,
+#checkoutSteps .form-list .customer-name-prefix-suffix .name-middlename input.input-text, 
+#checkoutSteps .form-list .customer-name-prefix-suffix .name-suffix input.input-text,
+#checkoutSteps .form-list .customer-name-prefix-suffix .name-suffix select,
+#checkoutSteps .form-list .customer-name-prefix-middlename .name-prefix input.input-text,
+#checkoutSteps .form-list .customer-name-prefix-middlename .name-prefix select,
+#checkoutSteps .form-list .customer-name-prefix-middlename .name-middlename input.input-text, 
+#checkoutSteps .form-list .customer-name-prefix-middlename .name-suffix input.input-text,
+#checkoutSteps .form-list .customer-name-prefix-middlename .name-suffix select,
+#checkoutSteps .form-list .customer-name-middlename-suffix .name-prefix input.input-text,
+#checkoutSteps .form-list .customer-name-middlename-suffix .name-prefix select,
+#checkoutSteps .form-list .customer-name-middlename-suffix .name-middlename input.input-text, 
+#checkoutSteps .form-list .customer-name-middlename-suffix .name-suffix input.input-text,
+#checkoutSteps .form-list .customer-name-middlename-suffix .name-suffix select,
+#checkoutSteps .form-list .customer-name-prefix-middlename-suffix .name-suffix input.input-text,
+#checkoutSteps .form-list .customer-name-prefix-middlename-suffix .name-suffix select
+ {
+    width:60px;
+}
+
+#checkoutSteps .form-list .customer-name-prefix-suffix .name-firstname, #checkoutSteps .form-list .customer-name-prefix-suffix .name-lastname,
+#checkoutSteps .form-list .customer-name-prefix-middlename .name-firstname, #checkoutSteps .form-list .customer-name-prefix-middlename .name-lastname,
+#checkoutSteps .form-list .customer-name-middlename-suffix .name-firstname, #checkoutSteps .form-list .customer-name-middlename-suffix .name-lastname,
+#checkoutSteps .form-list .customer-name-prefix-middlename-suffix .name-lastname {
+    width:140px;
+}
+
+#checkoutSteps .form-list .customer-name-prefix-suffix .name-firstname .input-box, 
+#checkoutSteps .form-list .customer-name-prefix-suffix .name-firstname .input-box input,
+#checkoutSteps .form-list .customer-name-prefix-suffix .name-lastname .input-box, 
+#checkoutSteps .form-list .customer-name-prefix-suffix .name-lastname .input-box input,
+#checkoutSteps .form-list .customer-name-prefix-middlename .name-firstname .input-box, 
+#checkoutSteps .form-list .customer-name-prefix-middlename .name-firstname .input-box input,
+#checkoutSteps .form-list .customer-name-prefix-middlename .name-lastname .input-box, 
+#checkoutSteps .form-list .customer-name-prefix-middlename .name-lastname .input-box input,
+#checkoutSteps .form-list .customer-name-middlename-suffix .name-firstname .input-box, 
+#checkoutSteps .form-list .customer-name-middlename-suffix .name-firstname .input-box input,
+#checkoutSteps .form-list .customer-name-middlename-suffix .name-lastname .input-box, 
+#checkoutSteps .form-list .customer-name-middlename-suffix .name-lastname .input-box input,
+#checkoutSteps .form-list .customer-name-prefix-middlename-suffix .name-lastname .input-box, 
+#checkoutSteps .form-list .customer-name-prefix-middlename-suffix .name-lastname .input-box input
+{
+    width:130px;
+}
+
+#checkoutSteps .form-list .customer-name-prefix-middlename-suffix .name-firstname {
+    width:110px;
+}
+
+
+#checkoutSteps .form-list .customer-name-prefix-middlename-suffix .name-firstname .input-box, 
+#checkoutSteps .form-list .customer-name-prefix-middlename-suffix .name-firstname .input-box input
+{
+    width:100px;
+}
+
+#checkoutSteps .form-list .customer-name-prefix-middlename-suffix .name-prefix,
+#checkoutSteps .form-list .customer-name-prefix-middlename-suffix .name-middlename {
+    float:left;
+    width:50px;
+}
+
+#checkoutSteps .form-list .customer-name-prefix-middlename-suffix .name-prefix input.input-text,
+#checkoutSteps .form-list .customer-name-prefix-middlename-suffix .name-prefix select,
+#checkoutSteps .form-list .customer-name-prefix-middlename-suffix .name-middlename input.input-text {
+    width:40px;
+}
+
+
+
+/* ie6 fixes */    
+*html #checkoutSteps li ol,
+*html #checkoutSteps li ol li,
+*html .opc .step,
+*html .form-list .field,
+*html .form-list label{
+    overflow:hidden;
+    clear:both;
+    position:static;}
+    
+/* cart fixes */
+.compact-cart thead th {
+   padding: 2px 5px;
+}
+
+.compact-cart td {
+   padding: 5px;
+} 
+.compact-cart td .edit{
+   font-size:11px;
+   background:none;
+   display:inline;
+   text-indent:0px;
+} 
+.compact-cart tfoot td {
+   padding: 5px;
+}
+.compact-cart tfoot strong {
+   font-size:14px;
+}
+
+/* new design */
+
+#checkoutSteps{
+    overflow:hidden;
+    /*padding:10px;*/
+    /*background-color:#FBFAF6;*/
+    /*border:1px solid #BCAF9E;*/
+    background-position:10px -5px;
+    background-repeat:no-repeat;
+    float: left;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+    
+#co-checkout-form .opc .step,
+#co-checkout-form .opc .active .step-title{
+    border:none;
+}
+
+#co-checkout-form .opc .active .step-title{
+    background:transparent;}
+    
+#co-checkout-form .opc .step{
+    background-color: #f0f0f0;
+    border-radius: 2px;
+    float: left;
+    padding: 16px 16px 16px 20px;
+    width:89%;
+}
+
+#co-checkout-form .opc .checkout-agreements {
+    padding-top:0px;
+}
+
+#co-checkout-form #checkout-subscribe-newsletter {
+    padding-left:15px;
+    padding-top:0px;
+    padding-bottom:5px;    
+    border:none;
+    background:none;
+}
+
+#co-checkout-form #checkoutSteps li.section{
+    border-bottom:none;
+}
+    
+#checkoutSteps li#left_collumn,
+#checkoutSteps li#center_column{
+    width:31%;
+}
+    
+#checkoutSteps li#right_collumn{
+    width:34%;
+}
+    
+#checkoutSteps .error-msg{
+    width:95%;}
+    
+#co-checkout-form #coupon-apply-button, #co-checkout-form #coupon-cancel-button  {
+    margin: 18px 0px 0px 5px;
+}
+
+#co-checkout-form li#opc-coupon .form-list li {
+    margin-bottom:0px;
+}
+
+#co-checkout-form li#opc-coupon .form-list li .input-box{
+    width:165px;    
+}
+#co-checkout-form li#opc-coupon .form-list li .input-box input{
+    width:155px;
+}
+#co-checkout-form li#opc-coupon .form-list .button {
+    margin:18px 5px 0px 0px;
+}
+
+.opc .gift-messages-form {
+    padding: 0px 10px 0px 20px;
+    margin: 5px -30px 0px -20px;
+}
+
+#checkoutSteps .form-list li.wide textarea {
+    width: 280px;
+}
+
+.gift-messages-form #allow-gift-messages-for-items-container .f-fix {
+    float:none;
+}
+
+.gift-messages-form .item .details {
+    margin:0px;
+}
+
+#checkoutSteps .form-list .customer-dob .dob-day, #checkoutSteps .form-list .customer-dob .dob-month  {
+    width:50px;
+}
+
+#checkoutSteps .form-list .customer-dob .dob-day input.input-text, #checkoutSteps .form-list .customer-dob .dob-month input.input-text {
+    width:50px;
+}
+
+#checkoutSteps .form-list .customer-dob .dob-year {
+    width:110px;
+}
+
+#checkoutSteps .form-list .customer-dob .dob-year input.input-text {
+    width:110px;
+}
+
+#checkoutSteps .error-msg {
+    background-image:none;
+    padding-left:8px !important;
+}
+
+#co-checkout-form #checkoutSteps li.compact-newsletter {
+    /*color: #8E8D8B;*/
+    display:inline;
+}
+/*#co-checkout-form #checkoutSteps li.compact-newsletter input {
+    margin-right:6px;
+}*/
+
+.sp-methods .form-list {
+    padding-left:0px;
+}
+
+.sp-methods dt {
+    text-align: left !important;
+    /*white-space: nowrap;fix for #0028349 bug*/
+}
+
+.cart-compact .crosssell li {
+    float:left;
+    display: block;
+    height:auto;
+}
+
+#co-checkout-form #customreview-aitcheckoutfields-top, #co-checkout-form #customreview-aitcheckoutfields-bottom {
+    border-left: 1px solid #BBAFA0;
+    border-right: 1px solid #BBAFA0;
+    padding-left: 10px;    
+}
+
+#co-checkout-form #customreview-aitcheckoutfields-top {
+    border-top: 1px solid #BBAFA0;    
+}
+
+#co-checkout-form #customreview-aitcheckoutfields-bottom {
+    border-bottom: 1px solid #BBAFA0;    
+}
+
+#checkout-step-review .buttons-set {
+    border-left: 0 !important;
+    border-right: 0 !important;
+    margin: 0;
+}
+
+.captcha-image {
+    width:204px;
+}
+
+.registered-users .captcha-image {
+    width:260px;
+}
+
+.co-checkout-insteadform-div{
+   /* background-color: #FBFAF6;
+    border: 1px solid #D9DDE3;
+    padding: 10px;*/
+}
+.page-title.title-buttons{
+    clear: both;
+}
+.cart-table {
+    width: 100% !important;
+}
+.cart-totals-wrapper .cart-totals{
+    background: none;
+    border: none;
+}
+#co-billing-form .form-list {
+   float:left;
+   margin-top:10px;
+}
+
+#co-payment-form fieldset dt{ padding-top:5px;padding-bottom:18px}

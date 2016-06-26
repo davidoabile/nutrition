@@ -1,0 +1,154 @@
+diff U3B D:/__AITOC__/projects/2013/BYJ-361-82014__cfm_bugfix/patch/orig/review.phtml D:/__AITOC__/projects/2013/BYJ-361-82014__cfm_bugfix/patch/modif/review.phtml
+--- D:/__AITOC__/projects/2013/BYJ-361-82014__cfm_bugfix/patch/orig/review.phtml	Thu Sep 26 11:33:18 2013
++++ D:/__AITOC__/projects/2013/BYJ-361-82014__cfm_bugfix/patch/modif/review.phtml	Thu Dec 12 09:25:27 2013
+@@ -25,11 +25,15 @@
+  */
+ /** @var $this Mage_Paypal_Block_Express_Review */
+ ?>
++<?php $cfmHelper = Mage::helper('aitcheckoutfields'); ?>
+ <div class="page-title">
+     <h1><?php echo $this->__('Review Order') ?></h1>
+ </div>
+ <?php echo $this->getMessagesBlock()->toHtml() ?>
+ 
++
++
++<form method="post" id="order_review_form" action="<?php echo $this->getPlaceOrderUrl() ?>">
+ <?php if ($this->getShippingAddress()): ?>
+ <div class="info-set col2-set">
+     <h2 class="legend"><?php echo $this->__('Shipping Information') ?></h2>
+@@ -39,7 +43,18 @@
+                 <h3><?php echo $this->__('Shipping Address') ?><span class="separator"><?php if ($this->getCanEditShippingAddress()):?> | </span><a href="<?php echo $this->getEditUrl() ?>"><?php echo $this->__('Change Shipping Address') ?></a><?php endif;?></h3>
+             </div>
+             <div class="box-content">
++            	<?php /* START AITOC COMMENTING
+                 <address><?php echo $this->renderAddress($this->getShippingAddress())?></address>
++				FINISH AITOC COMMENTING */ ?>
++                <address>
++                	
++                	<?php echo $cfmHelper->getStepFieldsCode('shippinfo', 1, 'onepage', 'aitpaypalexpress'); ?>	
++                	
++                	<?php echo $this->renderAddress($this->getShippingAddress())?>
++                	
++                	<?php echo $cfmHelper->getStepFieldsCode('shippinfo', 2, 'onepage', 'aitpaypalexpress'); ?>
++                	
++                </address>
+             </div>
+         </div>
+     </div>
+@@ -49,7 +64,12 @@
+                 <h3><?php echo $this->__('Shipping Method') ?></h3>
+             </div>
+             <div class="box-content">
++                
++            	<?php /* START AITOC COMMENTING
+                 <form method="post" id="shipping_method_form" action="<?php echo $this->escapeHtml($this->getShippingMethodSubmitUrl()) ?>">
++				FINISH AITOC COMMENTING */ ?>
++            	<?php echo $cfmHelper->getStepFieldsCode('shippmethod', 1, 'onepage', 'aitpaypalexpress'); ?>
++            
+                 <?php if ($this->getCanEditShippingMethod() || !$this->getCurrentShippingRate()):?>
+                     <?php if ($groups = $this->getShippingRateGroups()):?>
+                         <?php $currentRate = $this->getCurrentShippingRate(); ?>
+@@ -78,7 +98,11 @@
+                 <?php else: ?>
+                     <p><strong><?php echo $this->renderShippingRateOption($this->getCurrentShippingRate())?></strong></p>
+                 <?php endif; ?>
++                <?php /* START AITOC COMMENTING
+                 </form>
++                FINISH AITOC COMMENTING */ ?>
++                <?php echo $cfmHelper->getStepFieldsCode('shippmethod', 2, 'onepage', 'aitpaypalexpress'); ?>
++                
+             </div>
+         </div>
+     </div>
+@@ -106,8 +130,16 @@
+             </div>
+             <div class="box-content">
+                 <address>
++                
++                	<?php echo $cfmHelper->getStepFieldsCode('billing', 1, 'onepage', 'aitpaypalexpress'); ?>
++            		<?php echo $cfmHelper->getStepFieldsCode('payment', 1, 'onepage', 'aitpaypalexpress'); ?>
++                
+                     <?php echo $this->renderAddress($this->getBillingAddress()) ?><br />
+                     <?php echo $this->__('Payer Email: %s', $this->getBillingAddress()->getEmail()) ?>
++                    
++                    <?php echo $cfmHelper->getStepFieldsCode('billing', 2, 'onepage', 'aitpaypalexpress'); ?>
++        			<?php echo $cfmHelper->getStepFieldsCode('payment', 2, 'onepage', 'aitpaypalexpress'); ?>
++        
+                 </address>
+             </div>
+         </div>
+@@ -116,11 +148,19 @@
+ 
+ <div class="info-set">
+     <h2 class="legend"><?php echo $this->__('Items in Your Shopping Cart') ?><span class="separator"> | </span><a href="<?php echo $this->getUrl('checkout/cart') ?>"><?php echo $this->__('Edit Shopping Cart') ?></a></h2>
++    
++    <?php echo  $cfmHelper->getStepFieldsCode('review', 1, 'onepage', 'aitpaypalexpress'); ?>
++    
+     <div id="details-reload">
+         <?php echo $this->getChildHtml('details') ?>
+     </div>
++    
++    <?php echo  $cfmHelper->getStepFieldsCode('review', 2, 'onepage', 'aitpaypalexpress'); ?>
++    
+ </div>
++<?php /* START AITOC COMMENTING
+ <form method="post" id="order_review_form" action="<?php echo $this->getPlaceOrderUrl() ?>">
++FINISH AITOC COMMENTING */ ?>
+     <?php echo $this->getChildHtml('agreements'); ?>
+     <div class="buttons-set buttons-set-order" id="review-buttons-container">
+         <button type="button" id="review_button" value="<?php echo $this->__('Place Order') ?>" class="button btn-checkout"><span><span><?php echo $this->__('Place Order') ?></span></span></button>
+@@ -130,6 +170,9 @@
+         </span>
+     </div>
+ </form>
++<form method="post" id="shipping_method_form" action="<?php echo $this->escapeHtml($this->getShippingMethodSubmitUrl()) ?>">
++	<input type="hidden" id="shipping_method_hidden" name="shipping_method" value="">
++</form>
+ <script type="text/javascript">
+ //<![CDATA[
+ // submit buttons are not needed when submitting with ajax
+@@ -181,11 +224,43 @@
+             });
+         }
+     }
++<?php else: ?>
++
++OrderReviewController.addMethods({
++    _submitOrder : function()
++    {
++        if(!this.validate()) {
++            return false;
++        }
++        if (this._canSubmitOrder) {
++            this.form.submit();
++            this._updateOrderSubmit(true);
++            if (this._pleaseWait) {
++                this._pleaseWait.show();
++            }
++        }
++    }
++});
++    
+ <?php endif ?>
+ 
++OrderReviewController.addMethods({
++    validate: function()
++    {
++        if( typeof(this.validator) == 'undefined') {
++            this.validator = new Validation(this.form);
++        }
++        return this.validator.validate();   
++    }
++});
++
+ PayPalExpressAjax = new OrderReviewController($('order_review_form'), $('review_button'),
+     $('shipping_method'), $('shipping_method_form'), 'details-reload'
+ );
+ PayPalExpressAjax.addPleaseWait($('review-please-wait'));
+ //]]>
++
++$("shipping_method").observe('change', function() {
++    $("shipping_method_hidden").value = $("shipping_method").value;
++});
+ </script>

@@ -1,0 +1,218 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Customer onepage checkout login form template
+ *
+ * @see app/design/frontend/base/default/template/checkout/onepage/login.phtml
+ */
+/** @var $this Mage_Checkout_Block_Onepage_Login */
+echo $this->getLayout()
+    ->createBlock("core/messages")
+    ->toHtml();
+?>
+<div class="col2-set form_log_crt_main">
+    <?php echo $this->getChildHtml('login_before') ?>
+    <div class="form_login_main">
+        <div class="form_login_txtone">
+            <?php //echo $this->__('Login')  ?>
+            I AM ALREADY A <br><span class="form_login_txttwo">NWH CUSTOMER</span>
+        </div>
+
+        <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+        <form id="login-form" action="<?php echo $this->getPostAction() ?>" method="post">
+            <fieldset>
+                <?php echo $this->getBlockHtml('formkey'); ?>
+                <div class="form_login_txtthree">
+                    If so, simply enter your username and password<br> to complete your order. 
+                </div>
+        <!--<h4><?php //echo $this->__('Already registered?')          ?></h4>-->
+<!--                <p><?php //echo $this->__('Please log in below:')      ?></p>-->
+
+                <div class="form_login_box_main">
+                    <!--<div class="input-box">-->
+                    <input type="text" class="form_login_box input-text required-entry validate-email" id="login-email" name="login[username]" value="<?php echo $this->escapeHtml($this->getUsername()) ?>" placeholder="Username *" />
+                    <!--</div>-->
+                    <!--<div class="input-box">-->
+                    <input type="password" class="form_login_box input-text required-entry" id="login-password" name="login[password]" placeholder="password *" />
+                    <!--</div>-->
+                    <?php echo $this->getChildHtml('form.additional.info'); ?>
+                    <?php echo $this->getChildHtml('persistent.remember.me'); ?>
+                    <input name="context" type="hidden" value="checkout" />
+                </div>
+
+
+                <div class="form_login_box_dwn">
+                    <div class="form_login_box_dwn_one">* All fields mandatory</div>
+                    <div class="form_login_box_dwn_two">
+                        <a href="<?php echo $this->getUrl('customer/account/forgotpassword') ?>" class="f-left link12_gry2"><?php echo $this->__('Forgot your password?') ?></a>
+                    </div>
+                    <button type="submit" class="btn-recover button" onclick="onepageLogin(this)"><span><span><?php echo $this->__('Login') ?></span></span></button>
+                </div>
+
+                <!--                <div class="col-2">
+                                    <div class="buttons-set">
+                                        <p class="required"><?php //echo $this->__('* Required Fields')    ?></p>
+                                        
+                                       
+                                    </div>
+                                </div>-->
+            </fieldset>
+        </form>
+
+
+    </div>
+
+    <div class="form_create_main">
+        <div class="form_create_txtone">
+            I AM  A <br><span class="form_create_txttwo">NEW CUSTOMER</span>
+        </div>
+        <div class="form_create_txtthree">
+            Create a new account, its easy to do and saves you time next time<br>
+            you order or simply checkout as a guest.
+        </div>
+        <div class="form_create_txtfour">Bennefits fo creating an account</div>
+        <div class="form_create_txtfive">
+            • Fast convenient checkout process<br>
+            • View order tracking &amp; history<br>
+            • Get sent all the latest deals first<br><br>
+            To continue please select below option
+        </div>
+<!--<h3><?php //if ($this->getQuote()->isAllowedGuestCheckout()):    ?><?php //echo $this->__('Checkout as a Guest or Register')    ?><?php //else:    ?><?php //echo $this->__('Register to Create an Account')    ?><?php //endif;    ?></h3>-->
+        <?php //if ($this->getQuote()->isAllowedGuestCheckout()): ?>
+<!--<p><?php // echo $this->__('Register with us for future convenience:')    ?></p>-->
+        <?php // else: ?>
+<!--<p><strong><?php // echo $this->__('Register and save time!')    ?></strong><br /></p>-->
+        <?php //echo $this->__('Register with us for future convenience:') ?>
+    
+        <!--            <ul>
+                        <li><?php //echo $this->__('Fast and easy check out')    ?></li>
+                        <li><?php //echo $this->__('Easy access to your order history and status')    ?></li>
+                    </ul>-->
+        <?php //endif; ?>
+
+        <?php if ($this->getQuote()->isAllowedGuestCheckout() && Mage::app()->getFrontController()->getRequest()->getRouteName() == "aitcheckout"): ?>
+            <form name="userselection" >    
+             <ul class="form-list" style="margin-top: 7px;">
+                    <?php if ($this->getQuote()->isAllowedGuestCheckout()): ?>
+                    <li class="control">
+                            <input type="radio" onclick="usertype(this.value);" name="checkout_method" id="login:guest" value="guest"<?php //if ($this->getQuote()->getCheckoutMethod() == Mage_Checkout_Model_Type_Onepage::METHOD_GUEST):   ?> checked="checked"<?php //endif;   ?> class="radio css-radiobox noUniform" /><label for="login:guest" class="css-label3"><span><?php echo $this->__('Checkout as Guest') ?></span></label>
+                    </li>
+                <?php endif; ?>
+                <li class="control">
+                        <input type="radio" onclick="usertype(this.value);" name="checkout_method" id="login:register" value="register"<?php //if ($this->getQuote()->getCheckoutMethod() == Mage_Checkout_Model_Type_Onepage::METHOD_REGISTER || !$this->getQuote()->isAllowedGuestCheckout()):   ?> checked="checked"<?php //endif   ?> class="radio css-radiobox noUniform" /><label for="login:register" class="css-label3"><span><?php echo $this->__('Register') ?></span></label>
+                </li>
+            </ul>
+            </form>
+    <!--            <h4><?php //echo $this->__('Register and save time!')    ?></h4>
+            <p><?php //echo $this->__('Register with us for future convenience:')    ?></p>
+            <ul class="ul">
+                <li><?php //echo $this->__('Fast and easy check out') ?></li>
+                <li><?php //echo $this->__('Easy access to your order history and status') ?></li>
+            </ul>-->
+        <?php else: ?>
+            <input type="hidden" name="checkout_method" id="login:register" value="register" checked="checked" />
+        <?php endif; ?>
+
+<!--        <div class="col-1">
+            <div class="buttons-set">-->
+                <!--<p class="required">&nbsp;</p>-->
+        <?php //if (!$this->getQuote()->isAllowedGuestCheckout() && Mage::app()->getFrontController()->getRequest()->getRouteName() == "aitcheckout"):  ?>
+                            <!--<button id="onepage-guest-register-button" type="button" class="form_login_box_dwn_three" onclick="checkout.setMethod();"><span><span><?php echo $this->__('Continue') ?></span></span></button>-->
+        <button id="onepage-guest-register-button" type="button" class="btn-recover button" onclick="checkout_continue();"><span><span><?php echo $this->__('Continue') ?></span></span></button>
+                    <?php //elseif ($this->helper('checkout')->isCustomerMustBeLogged()): ?>
+        <!--<button id="onepage-guest-register-button" type="button" class="form_login_box_dwn_three" onclick="window.location = '<?php //echo $this->helper('checkout/url')->getRegistrationUrl();    ?>'"><span><span><?php echo $this->__('Register') ?></span></span></button>-->
+        <?php //else: ?>
+<!--                    <form action="<?php //echo $this->getUrl('persistent/index/saveMethod');   ?>">
+                        <button id="onepage-guest-register-button" type="submit" class="form_login_box_dwn_three"><span><span><?php echo $this->__('Register') ?></span></span></button>
+        </form>-->
+        <?php // endif; ?>
+<!--            </div>
+        </div>-->
+    </div>
+
+</div>
+<script type="text/javascript">
+//<![CDATA[
+    var loginForm = new VarienForm('login-form', true);
+    $('login-email').observe('keypress', bindLoginPost);
+    $('login-password').observe('keypress', bindLoginPost);
+    function bindLoginPost(evt) {
+        if (evt.keyCode == Event.KEY_RETURN) {
+            loginForm.submit();
+        }
+    }
+    function onepageLogin(button)
+    {
+        if (loginForm.validator && loginForm.validator.validate()) {
+            button.disabled = true;
+            loginForm.submit();
+        }
+    }
+
+
+    var utype = "";
+    var len = document.userselection.checkout_method.length;
+
+    for (i = 0; i < len; i++) {
+        if (document.userselection.checkout_method[i].checked) {
+            utype = document.userselection.checkout_method[i].value;
+            break;
+        }
+    }
+    
+    function usertype(type) {
+        utype = type;
+    }
+
+    function checkout_continue() {
+
+        if(utype == "register") {
+            window.location = "<?php echo Mage::getUrl('aitcheckout/checkout') . '?usertype=register'; ?>";
+            // window.location = "<?php echo $this->helper('checkout/url')->getRegistrationUrl() . '?type=register'; ?>";
+        }else if(utype = "guest") {
+	
+            window.location = "<?php echo Mage::getUrl('aitcheckout/checkout') . '?usertype=guest'; ?>";
+        }
+    }
+//]]>
+</script>
+<?php
+$registerParam = $this->getRequest()->getParam('register');
+if ($registerParam || $registerParam === ''):
+    ?>
+    <script type="text/javascript">
+    //<![CDATA[
+        document.observe("dom:loaded", function() {
+            if ($('login:register')) {
+                $('login:register').checked = true;
+                checkout.setMethod();
+            }
+        });
+    //]]>
+    </script>
+<?php endif; ?>

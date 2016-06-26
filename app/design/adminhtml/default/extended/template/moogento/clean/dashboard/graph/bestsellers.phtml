@@ -1,0 +1,45 @@
+<div style="margin:20px 0;">
+        	<div class="moo_chart_title">
+            	<h4>Bestsellers</h4>
+			</div>
+			<div class="clean_donut">
+                <?php foreach ($this->_getPeriods() as $period): ?>
+				<div class="moo_chart_body">
+					<em><?php echo $period ?></em>
+					<canvas id="bestSellersChart_<?php echo $period ?>" legend="true" width="160" height="160"></canvas>
+					<div id="legendDiv_<?php echo $period ?>" class="donut_legend"></div>
+				</div>
+				<?php endforeach; ?>
+                <?php if ($this->_hasDirtyData()): ?>
+                <span class="value-hint"><?php echo $this->__('Sync pending : may not be 100% accurate') ?></span>
+                <?php endif; ?>
+                <div class="clearfix"></div>
+			</div>
+</div>
+<script>
+
+    jQuery(function() {
+        var best_sellers_options = {
+            segmentShowStroke : false,
+            segmentStrokeColor : "#555",
+            segmentStrokeWidth : 1,
+            percentageInnerCutout : 60,
+            animationSteps : 30,
+            animationEasing : "easeOutBounce",
+            animateRotate : true,
+            animateScale : false,
+        };
+        var bestSellersPieChart;
+        <?php $diagrammData = $this->getDiagrammData(); ?>
+        varienGlobalEvents.attachEventHandler('showTab', function(tab_data){
+            if (jQuery(tab_data.tab).attr('id') == 'diagram_tab_bestsellers' && !bestSellersPieChart) {
+                <?php foreach ($this->_getPeriods() as $period): ?>
+                var ctx = jQuery("#bestSellersChart_<?php echo $period ?>").get(0).getContext("2d");
+                bestSellersPieChart = new Chart(ctx).Pie(<?php echo json_encode($diagrammData[$period]) ?>, best_sellers_options);
+           	 	jQuery("#legendDiv_<?php echo $period ?>").html(bestSellersPieChart.generateLegend());
+                <?php endforeach ?>
+		    }
+        });
+         
+    });
+</script>

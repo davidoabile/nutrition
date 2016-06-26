@@ -1,0 +1,251 @@
+<?php
+/**
+* Braintree Payments Extension
+*
+* This source file is subject to the Braintree Payment System Agreement (https://www.braintreepayments.com/legal)
+*
+* DISCLAIMER
+* This file will not be supported if it is modified.
+*
+* @copyright   Copyright (c) 2015 Braintree. (https://www.braintreepayments.com/)
+*/
+?>
+<?php $helper = Mage::helper('braintree_payments'); ?>
+<?php $ccEnabled = $helper->isBraintreeCreditCardEnabled(); ?>
+<?php $paypalEnabled = $helper->isBraintreePayPalEnabled(); ?>
+<?php if ($ccEnabled || $paypalEnabled): ?>
+    <?php $_paypalCode = Braintree_Payments_Model_Paypal::PAYMENT_METHOD_CODE; ?>
+    <?php $_ccCode = Braintree_Payments_Model_Creditcard::PAYMENT_METHOD_CODE ; ?>
+    <script type="text/javascript">
+        var formId = '<?php echo $this->getFormId()?>';
+        var nonceInputId = '<?php echo $helper->getNonceInputId() ?>';
+        var paypalDivId = 'braintree-paypal-container';
+        var ccButtonId = 'braintree-container';
+        var nativeButtonId = 'onestepcheckout-place-order';
+        var ccSetUp = false;
+
+        // Set up PayPal if method is enabled
+        <?php if ($paypalEnabled): ?>
+            var braintreePaypalUtils = new BraintreeUtils();
+            braintreePaypalUtils.createHiddenInput( {name: "payment[nonce]", id: nonceInputId}, formId);
+        <?php endif;?>
+
+        // Set up Credit Cards if method is enabled
+        <?php if ($ccEnabled): ?>
+            var braintreeUtils = new BraintreeUtils();
+            if (!$(nonceInputId)) {
+                braintreeUtils.createHiddenInput( {name: "payment[nonce]", id: nonceInputId}, formId);
+            }
+            if ($('container_payment_method_<?php echo $_ccCode; ?>')) {
+                braintreeUtils.setup("<?php echo $helper->getToken() ?>", formId);
+                ccSetUp = true;
+            }
+        <?php endif;?>
+
+        // Click extension "place order" button
+        var processNativeExtensionOrder = function(){
+            <?php if (Mage::helper('braintree_payments')->isAdvancedFraudProtectionEnabled()): ?>
+                if ($('device_data')) {
+                    $('device_data').disabled = false;
+                }
+            <?php endif;?>
+            $(nativeButtonId).click();
+        };
+
+        // Displays buttonToShow and hides other
+        var displayPlaceOrderButtons = function(hideAll) {
+            var buttonToShow = '';
+            if (!hideAll) {
+                if (payment.currentMethod == '<?php echo $_ccCode ?>') {
+                    buttonToShow = ccButtonId;
+                } else if (payment.currentMethod == '<?php echo $_paypalCode ?>') {
+                    buttonToShow = paypalDivId;
+                } else {
+                    buttonToShow = nativeButtonId;
+                }
+            }
+            var buttons = [nativeButtonId, ccButtonId, paypalDivId];
+            buttons.each(function(elem){
+                if ($(elem)) {
+                    if (elem == buttonToShow) {
+                        $(elem).show();
+                        if (buttonToShow == ccButtonId) {
+                            enableCustomButton();
+                        }
+                    } else {
+                        $(elem).hide();
+                    }
+                }
+            });
+        };
+
+        // Set up Braintree PayPal payment method
+        var setupBraintreePayPal = function(){
+            <?php if ($paypalEnabled): ?>
+                if ($(paypalDivId)) {
+                    $(paypalDivId).remove();
+                }
+                $(nativeButtonId).insert({before: '<div id="'+ paypalDivId + '" style="float:right"></div>'});
+
+                braintreePaypalUtils.setupPayPal(
+                    '<?php echo $helper->getToken() ?>',
+                    paypalDivId,
+                    '<?php echo $helper->getOrderAmount() ?>',
+                    '<?php echo $this->getCurrencyCode() ?>',
+                    '<?php echo $helper->getPayPalTitle() ?>',
+                    nonceInputId,
+                    false,
+                    false,
+                    '<?php echo $this->getLocale()?>',
+                    processNativeExtensionOrder,
+                    false,
+                    '<?php echo $helper->__('Please try again') ?>'
+                );
+            <?php endif;?>
+        };
+
+        // Set up Braintree Credit Card payment method
+        var setupBraintreeCC = function(){
+            <?php if ($ccEnabled): ?>
+                var fakeButton = $(nativeButtonId).clone(true);
+                fakeButton.setAttribute('onclick', 'placeBraintreeCcOrder()');
+                fakeButton.setAttribute('id', ccButtonId);
+                $(nativeButtonId).insert({before: fakeButton});
+            <?php endif;?>
+        };
+
+        // Place order when payment mnethod is braintree credit card
+        var placeBraintreeCcOrder = function() {
+            var form = new VarienForm('onestepcheckout-form');
+            if (!form.validator.validate())  {
+                return;
+            }
+            disableCustomButton();
+            var token = $('<?php echo $_ccCode; ?>_cc_token');
+            var storedCard = token && (token.value != '');
+            var threeDSecure = Boolean($('<?php echo $_ccCode; ?>_3dsecure_available'));
+            if (threeDSecure && storedCard) {
+                // Checkout using stored card, 3D Secure is enabled
+                new Ajax.Request('<?php echo Mage::getUrl('braintree/checkout/onestepcheckout3dsecure') ?>', {
+                    method: 'post',
+                    parameters: {token: token.value, requestAmount: true, 'doNotMakeAjaxCallback' : true},
+                    onSuccess: function(transport)  {
+                        if (transport.status == 200) {
+                            var result = transport.responseText.evalJSON();
+                            if (result.error == true) {
+                                alert(result.text);
+                            } else {
+                                processBraintree3DSecure(result.nonce, result.amount);
+                            }
+                        }
+                    }
+                });
+            } else if (threeDSecure && !storedCard) {
+                // Checkout using new card, 3D Secure is enabled
+                new Ajax.Request('<?php echo Mage::getUrl('braintree/checkout/onestepcheckout3dsecure') ?>', {
+                    method: 'post',
+                    parameters: {token: '', requestAmount: true, 'doNotMakeAjaxCallback' : true},
+                    onSuccess: function(transport)  {
+                        if (transport.status == 200) {
+                            var result = transport.responseText.evalJSON();
+                            if (result.error == true) {
+                                alert(result.text);
+                            } else {
+                                var card = {
+                                    number: $('<?php echo $_ccCode ?>_cc_number').value,
+                                    expirationMonth: $('<?php echo $_ccCode ?>_expiration').value,
+                                    expirationYear: $('<?php echo $_ccCode ?>_expiration_yr').value,
+                                    cardholderName : '<?php echo $helper->getCardholderName() ?>'
+                                };
+                                if ($('<?php echo $_ccCode ?>_cc_cid')) {
+                                    card['cvv'] = $('<?php echo $_ccCode ?>_cc_cid').value;
+                                }
+                                processBraintree3DSecure(card, result.amount);
+                            }
+                        }
+                    }
+                });
+            } else if (!threeDSecure && storedCard) {
+                // Checkout using stored card, 3D Secure is disabled
+                processNativeExtensionOrder();
+            } else {
+                // Checkout using new card, 3D Secure is disabled
+                braintreeUtils.createHiddenInput({name: "payment[nonce]", id: nonceInputId}, formId);
+                braintreeUtils.getPaymentNonce(
+                    '<?php echo $_ccCode ?>',
+                    '<?php echo $helper->getCardholderName() ?>',
+                    processNativeExtensionOrder,
+                    "<?php echo $helper->getToken(); ?>"
+                );
+            }
+        };
+
+        // Process 3D Secure
+        var processBraintree3DSecure = function(card, amount) {
+            braintreeUtils.createHiddenInput({name: "payment[nonce]", id: nonceInputId}, formId);
+            var onUserClose = function(){
+                enableCustomButton();
+            };
+            braintreeUtils.place3DSecureOrder(
+                card,
+                amount,
+                Boolean(<?php echo $helper->canContinueOn3DSecureFail()?>),
+                on3DSecureError,
+                processNativeExtensionOrder,
+                '<?php echo $helper->__('Please try another form of payment') ?>',
+                formId,
+                '<?php echo $_ccCode ?>_cc_token',
+                "<?php echo $helper->getToken(); ?>",
+                onUserClose,
+                false
+            );
+        };
+
+        // Aler error message on 3D Secure fail
+        var on3DSecureError = function(message){
+            alert(message);
+            enableCustomButton();
+        };
+
+        // Enable custom place order button
+        var enableCustomButton = function() {
+            $(ccButtonId).removeClassName('grey').addClassName('orange');
+            $(ccButtonId).disabled = false;
+        };
+
+        // Disable custom place order button
+        var disableCustomButton = function() {
+            $(ccButtonId).removeClassName('orange').addClassName('grey');
+            $(ccButtonId).disabled = true;
+        };
+
+        // Initial set up ans observe AJAX calls to make appropriate buttons set up
+        Event.observe(window, 'load', function() {
+            setupBraintreeCC();
+            setupBraintreePayPal();
+            displayPlaceOrderButtons();
+            Ajax.Responders.register({
+                onCreate: function() {
+                    <?php if ($paypalEnabled): ?>
+                        if ($(paypalDivId)) {
+                            $(paypalDivId).remove();
+                        }
+                    <?php endif; ?>
+                }
+            });
+            Ajax.Responders.register({
+                onComplete: function(request, transport) {
+                    // Avoid AJAX callback for internal AJAX request
+                    if (typeof request.parameters.doNotMakeAjaxCallback == 'undefined') {
+                        if ($('container_payment_method_<?php echo $_ccCode; ?>') && ccSetUp == false) {
+                            braintreeUtils.setup("<?php echo $helper->getToken() ?>", formId);
+                            ccSetUp = true;
+                        }
+                        setupBraintreePayPal();
+                        displayPlaceOrderButtons();
+                    }
+                }
+            });
+        });
+    </script>
+<?php endif; ?>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <local translate="label" module="local">
+            <label>Local Store Settings</label>
+            <sort_order>0</sort_order>
+        </local>
+    </tabs>
+
+    <sections>
+        <local translate="label">
+            <label>Local Settings</label>
+            <tab>local</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <settings translate="label">
+                    <label>Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                    </fields>
+                </settings>
+            </groups>
+        </local>
+    </sections>
+</config>

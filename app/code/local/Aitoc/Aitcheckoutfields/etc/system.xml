@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <sections>
+        <aitsys>
+            <groups>
+                <modules>
+                    <fields>
+                        <Aitoc_Aitcheckoutfields translate="label comment">
+                            <label>Checkout Fields</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>aitsys/system_config_source_stores</source_model>
+                            <backend_model>aitsys/system_config_backend_stores</backend_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <can_be_empty>1</can_be_empty>
+                        </Aitoc_Aitcheckoutfields>
+                    </fields>
+                </modules>
+            </groups>
+        </aitsys>
+        <aitcheckoutfields translate="label" module="aitcheckoutfields">
+            <class></class>
+               <label>Checkout Fields Manager</label>
+            <tab>aitoc</tab>
+               <frontend_type>text</frontend_type>
+               <sort_order>20</sort_order>
+               <show_in_default>1</show_in_default>
+               <show_in_website>1</show_in_website>
+               <show_in_store>1</show_in_store>
+            <groups>
+                <settings translate="label">
+                    <label>Registration Page Labels</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <aitcheckoutfields_reg_label_top translate="label comment">
+                            <label>Top Block Label</label>
+                            <comment>default: Additional info</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </aitcheckoutfields_reg_label_top>
+                        <aitcheckoutfields_reg_label_bottom translate="label comment">
+                            <label>Bottom Block Label</label>
+                            <comment>default: Additional info</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </aitcheckoutfields_reg_label_bottom>
+                    </fields>
+                </settings>
+                <email_settings translate="label">
+                    <label>Email Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>2</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <aitcheckoutfields_email_TheadTrThStyle translate="label comment">
+                            <label>Header(TheadTrThStyle)</label>
+                            <comment><![CDATA[default:<br>background: #eaeaea; font-size:13px; padding:5px 9px 6px 9px; line-height:1em;]]></comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </aitcheckoutfields_email_TheadTrThStyle>
+                        <aitcheckoutfields_email_TbodyTrTdStyle translate="label comment">
+                            <label>Content(TbodyTrTdStyle)</label>
+                            <comment><![CDATA[default:<br>font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #eaeaea; border-bottom:1px solid #eaeaea; border-right:1px solid #eaeaea;]]></comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </aitcheckoutfields_email_TbodyTrTdStyle>
+                        <aitcheckoutfields_email_label translate="label comment">
+                            <label>Block Label</label>
+                            <comment>default: Additional info</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </aitcheckoutfields_email_label>
+                    </fields>
+                </email_settings>
+                <common_settings translate="label">
+                <label>Common Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>3</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                           <aitcheckoutfields_additionalblock_label translate="label comment">
+                            <label>Block Label</label>
+                            <comment>default: Additional info</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </aitcheckoutfields_additionalblock_label>
+                    </fields>
+                </common_settings>
+            </groups>
+        </aitcheckoutfields>
+    </sections>
+</config>
+<!--
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (CFM Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckoutfields
+ * @version      1.0.9 - 2.9.8
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+-->

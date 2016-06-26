@@ -1,0 +1,34 @@
+<?php 
+/** 
+* Moogento
+* 
+* SOFTWARE LICENSE
+* 
+* This source file is covered by the Moogento End User License Agreement
+* that is bundled with this extension in the file License.html
+* It is also available online here:
+* http://www.moogento.com/License.html
+* 
+* NOTICE
+* 
+* If you customize this file please remember that it will be overwrtitten
+* with any future upgrade installs. 
+* If you'd like to add a feature which is not in this software, get in touch
+* at www.moogento.com for a quote.
+* 
+* ID          pe+sMEDTrtCzNq3pehW9DJ0lnYtgqva4i4Z=
+* File        contact.phtml
+* @category   Moogento
+* @package    pickPack
+* @copyright  Copyright (c) 2014 Moogento <info@moogento.com> / All rights reserved.
+* @license    http://www.moogento.com/License.html
+*/ 
+ if ($this->_allowComment()):?>
+<a href="<?php echo $this->_getCommentUrl()?>" onclick="addOrderComment(this); return false;" order_id="<?php echo $this->getOrder()->getIncrementId()?>" title="<?php echo Mage::helper('moogento_shipeasy')->__('Comment Order')?>"><img src="<?php echo $this->getSkinUrl('moogento/shipeasy/images/szy-message.png')?>" width="24" height="16" /></a>&nbsp;
+<?php endif;?>
+<?php if ($this->_allowEmail()):?>
+<a href="mailto:<?php echo $this->_getMailToUrl();?>" title="<?php echo Mage::helper('moogento_shipeasy')->__('Email To Customer')?>"><img src="<?php echo $this->getSkinUrl('moogento/shipeasy/images/szy-email.png')?>" width="24" height="16" /></a>
+<?php endif;?>
+<?php if ($this->_allowGmail()):?>
+<a href="<?php echo $this->_getGmailLink()?>" title="Gmail to Customer" target="_blank"><img src="<?php echo $this->getSkinUrl('moogento/shipeasy/images/szy-gmail.png')?>" width="24" height="16" /></a>
+<?php endif;?>

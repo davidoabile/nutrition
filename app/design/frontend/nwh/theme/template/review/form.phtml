@@ -1,0 +1,164 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<div class="form-add">
+	<?php if ($this->getAllowWriteReviewFlag()): ?>
+	<form action="<?php echo $this->getAction() ?>" method="post" id="review-form">
+		<?php echo $this->getBlockHtml('formkey'); ?>
+		
+			<?php echo $this->getChildHtml('form_fields_before')?>
+			<?php if( $this->getRatings() && $this->getRatings()->getSize()): ?>
+				<span id="input-message-box"></span>
+				<table class="" id="product-review-table">
+					<col />
+					<col width="1" />
+					<col width="1" />
+					<col width="1" />
+					<col width="1" />
+					<col width="1" />
+
+				</table>
+				<input type="hidden" name="validate_rating" class="validate-rating" value="" />
+				<script type="text/javascript">decorateTable('product-review-table')</script>
+			<?php endif; ?>
+			<div id="tab2_detl">
+				<div class="tab2_detl_bg">
+					<div class="coll_1">
+
+						<div class="rate_form">
+							<ul>
+								<li>
+									<input type="text" name="nickname" id="nickname_field" class="rate_field required-entry" value="<?php echo $this->escapeHtml($data->getNickname()) ?>" placeholder="<?php echo $this->__('Name') ?>" />
+								</li>
+								
+									<input type="hidden" name="title" id="summary_field" class="rate_field" placeholder="Summary of Your Review" value="<?php //echo $this->escapeHtml($data->getTitle()) ?>"/>
+								
+								<li>
+									<input type="text" name="email" id="email_field" class="rate_field required-entry" placeholder="Email" value="<?php echo $this->escapeHtml($data->getEmail()) ?>"/>
+								</li>
+								<li>
+									<div class="dropdown5">
+									  <select name="gender">
+										<option>Select Gender</option>
+										<option>Male</option>
+										<option>Female</option>
+										<option>Other</option>
+									  </select>
+								  </div>
+								</li>
+								<li>
+									<div class="dropdown5">
+									  <select name="goal">
+										<option value="">Select Goal</option>
+										<option value="Build Endurance">Build Endurance</option>
+										<option value="Gain Muscle">Gain Muscle</option>
+										<option value="Health and Wellbeing">Health &amp; Wellbeing</option>
+										<option value="Increase Energy">Increase Energy</option>
+										<option value="Lose Weight">Lose Weight</option>
+										<option value="Womens Health">Womens Health</option>
+									  </select>
+								  </div>
+								</li>
+							</ul>
+
+						</div>
+
+					</div>
+					<div class="coll_2">
+
+						<div class="rate_form">
+							<ul>
+								<li>
+									<div class="dropdown5">
+
+											<?php foreach ($this->getRatings() as $_rating): ?>
+												<select name="ratings[<?php echo $_rating->getId() ?>]">
+													<option value=""><?php echo $this->escapeHtml($_rating->getRatingCode()) ?></option>
+												<?php foreach ($_rating->getOptions() as $_option): ?>
+													<option value="<?php echo $_option->getId() ?>" ><?php echo $_option->getValue() ?></option>
+												<?php endforeach; ?>
+												</select>
+											<?php endforeach; ?>
+
+									</div>
+								</li>
+								<li>
+									<textarea  name="detail" id="review_field" cols="" rows="" class="rate_txtarea required-entry" placeholder="Review"><?php echo $this->escapeHtml($data->getDetail()) ?></textarea>
+								</li>
+								<li>
+									<input name="" type="submit" value="SUBMIT" class="red_btn" style="float:left;" />
+								</li>
+
+							</ul>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+
+
+	</form>
+	<script type="text/javascript">
+	//<![CDATA[
+		var dataForm = new VarienForm('review-form');
+		Validation.addAllThese(
+		[
+			   ['validate-rating', '<?php echo $this->__('Please select one of each of the ratings above') ?>', function(v) {
+					var trs = $('product-review-table').select('tr');
+					var inputs;
+					var error = 1;
+
+					for( var j=0; j < trs.length; j++ ) {
+						var tr = trs[j];
+						if( j > 0 ) {
+							inputs = tr.select('input');
+
+							for( i in inputs ) {
+								if( inputs[i].checked == true ) {
+									error = 0;
+								}
+							}
+
+							if( error == 1 ) {
+								return false;
+							} else {
+								error = 1;
+							}
+						}
+					}
+					return true;
+				}]
+		]
+		);
+	//]]>
+	</script>
+	<?php else: ?>
+	<p class="review-nologged" id="review-form">
+		<?php echo $this->__('Only registered users can write reviews. Please, <a href="%s">log in</a> or <a href="%s">register</a>', $this->getLoginLink(), Mage::helper('customer')->getRegisterUrl()) ?>
+	</p>
+	<?php endif ?>
+</div>

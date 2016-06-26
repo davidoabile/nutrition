@@ -1,0 +1,182 @@
+<div id="connectors-list" class="grid">
+    <div data-bind="foreach: connectors">
+        <div class="connector-header">
+            <span style="display: inline-block; float: left">
+                <input type="hidden" value="0" data-bind="attr: {name: buildName('enabled')}" />
+                <input type="checkbox" value="1" data-bind="attr: {name: buildName('enabled')}, checked: enabled, switch: enabled" />
+            </span>
+            <h3 style="display: inline-block" data-bind="text: name"></h3>
+            <div class="clear"></div>
+        </div>
+        <div data-bind="visible: enabled">
+            <h4><?php echo $this->__('Settings') ?></h4>
+            <div data-bind="foreach: config">
+                <div data-bind="template: {name: tpl, data: $data}"></div>
+            </div>
+            <h4><?php echo $this->__('Carriers') ?></h4>
+            <div data-bind="foreach: carriers">
+                <div class="carrier-header">
+                    <span style="display: inline-block" data-bind="visible: can_disable">
+                        <input type="hidden" value="0" data-bind="attr: {name: buildName('enabled')}" />
+                        <input type="checkbox" value="1" data-bind="attr: {name: buildName('enabled')}, checked: enabled, switch: enabled" />
+                    </span>
+                    <h5 style="display: inline-block" data-bind="text: label"></h5>
+                </div>
+                <div data-bind="visible: enabled">
+                    <div data-bind="visible: service_avaliable().length > 0">
+                        <select class="chosen" data-bind="chosen: {width: '200px'}, value: selected_service, options: service_avaliable, optionsText: 'label', optionsValue: 'value'">
+                        </select>
+                        <a href="#" data-bind="click: addService"><span class="fa fa-add"></span> Add Service</a>
+                    </div>
+                    <table class="data">
+                        <thead>
+                            <tr class="headings">
+                                <th style="width: 50px;"></th>
+                                <th><?php echo $this->__('Code') ?></th>
+                                <th><?php echo $this->__('Label') ?></th>
+                                <!-- ko if: package_required -->
+                                <th><?php echo $this->__('Package') ?></th>
+                                <!-- /ko -->
+                                <!-- ko foreach: additional_fields -->
+                                <td data-bind="text: label"></td>
+                                <!-- /ko -->
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: services_used">
+                            <tr>
+                                <td>
+                                    <div data-bind="visible: can_disable">
+                                        <a href="#" data-bind="click: $parent.removeService"><span class="fa fa-times" style="color: red"></span></a>
+                                        <input type="hidden" data-bind="attr: {name: buildName('code')}, value:code " />
+                                        <span style="display: inline-block">
+                                            <input type="hidden" value="0" data-bind="attr: {name: buildName('enabled')}" />
+                                            <input type="checkbox" value="1" data-bind="attr: {name: buildName('enabled')}, checked: enabled, switch: enabled" />
+                                        </span>
+                                    </div>
+                                    <div data-bind="visible: !can_disable()">
+                                        <span class="hint" data-bind="text: used_in"></span>
+                                    </div>
+                                </td>
+                                <td data-bind="text: code"></td>
+                                <td data-bind="text: label"></td>
+                                <!-- ko if: $parent.package_required -->
+                                <td>
+                                    <select class="chosen" data-bind="chosen: {width: '200px'}, value: package, options: $parent.packages, optionsText: 'label', optionsValue: 'value', attr: {name: buildName('package')}">
+                                    </select>
+                                </td>
+                                <!-- /ko -->
+                                <!-- ko foreach: additional_fields -->
+                                <td>
+                                    <div data-bind="template: {name: tpl, data: $data}"></div>
+                                </td>
+                                <!-- /ko -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="display: none">
+    <div id="connector-field-template-checkbox">
+        <label data-bind="visible: showLabel">
+            <span data-bind="html: label"></span>
+            <span data-bind="visible: comment()" class="helper-info">
+                <i>?</i>
+                <div class="content" data-bind="html: comment"></div>
+            </span>
+        </label>
+        <input type="hidden" value="0" data-bind="attr: {name: $parents[1].buildName($data.key())}" />
+        <input type="checkbox" value="1" data-bind="attr: {name: $parents[1].buildName($data.key())}, checked: checked, switch: checked" />
+    </div>
+    <div id="connector-field-template-text">
+        <label data-bind="visible: showLabel">
+            <span data-bind="html: label"></span>
+            <span data-bind="visible: comment()" class="helper-info">
+                <i>?</i>
+                <div class="content" data-bind="html: comment"></div>
+            </span>
+        </label>
+        <input type="text" class="input-text" data-bind="value: value, attr: {name: $parents[1].buildName($data.key())}" />
+    </div>
+    <div id="connector-field-template-password">
+        <label data-bind="visible: showLabel">
+            <span data-bind="html: label"></span>
+            <span data-bind="visible: comment()" class="helper-info">
+                <i>?</i>
+                <div class="content" data-bind="html: comment"></div>
+            </span>
+        </label>
+        <input type="password" class="input-text" data-bind="value: value, attr: {name: $parents[1].buildName($data.key())}" />
+    </div>
+    <div id="connector-field-template-select">
+        <label data-bind="visible: showLabel">
+            <span data-bind="html: label"></span>
+            <span data-bind="visible: comment()" class="helper-info">
+                <i>?</i>
+                <div class="content" data-bind="html: comment"></div>
+            </span>
+        </label>
+        <select class="chosen" data-bind="chosen: {width: '200px'}, value: value, attr: {name: $parents[1].buildName($data.key())}, options: options, optionsText: 'label', optionsValue: 'value'">
+        </select>
+    </div>
+    <div id="connector-field-template-textarea">
+        <label data-bind="visible: showLabel">
+            <span data-bind="html: label"></span>
+            <span data-bind="visible: comment()" class="helper-info">
+                <i>?</i>
+                <div class="content" data-bind="html: comment"></div>
+            </span>
+        </label>
+        <textarea rows="3" cols="30" data-bind="value: value, attr: {name: $parents[1].buildName($data.key())}"></textarea>
+    </div>
+    <div id="connector-field-template-multiselect">
+        <label data-bind="visible: showLabel">
+            <span data-bind="html: label"></span>
+            <span data-bind="visible: comment()" class="helper-info">
+                <i>?</i>
+                <div class="content" data-bind="html: comment"></div>
+            </span>
+        </label>
+        <select class="chosen" multiple="true" data-bind="chosen: {width: '200px'}, selectedOptions: value, attr: {name: $parents[1].buildName($data.key(), true)}, options: options, optionsText: 'label', optionsValue: 'value'">
+        </select>
+    </div>
+</div>
+<script>
+    ko.applyBindings(new ConnectorsModule.Connectors(<?php echo $this->_getConnectorsJson() ?>), document.getElementById('connectors-list'));
+</script>
+<style>
+    .connector-header {
+        border-bottom: 4px solid #dfdfdf;
+        margin-bottom: 18px;
+        padding-bottom: 0.25em;
+    }
+    .connector-header h3 {
+        float: left;
+        font-size: 1.7em !important;
+        font-weight: 100;
+        line-height: 0.9em;
+        padding: 0 4px 0 7px !important;
+        text-transform: uppercase !important;
+        margin: 0;
+    }
+
+    .carrier-header {
+        border-bottom: 2px solid #dfdfdf;
+        margin-bottom: 18px;
+        padding-bottom: 0.25em;
+    }
+    .hint {
+        color: grey;
+        font-style: italic;
+    }
+    #connectors-list label {
+        min-width: 100px;
+        display: inline-block;
+    }
+    #connectors-list input {
+        min-width: 180px;
+        display: inline-block;
+    }
+</style>

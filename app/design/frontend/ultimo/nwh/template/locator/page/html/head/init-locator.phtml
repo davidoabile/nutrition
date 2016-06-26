@@ -1,0 +1,22 @@
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=<?php echo Mage::getStoreConfig('locator_settings/google_maps/api_key'); ?>&sensor=false&libraries=places"></script>
+
+<script>
+document.observe("dom:loaded", function() {
+    Locator.defaultSearchSettings.baseUrl = '<?php echo Mage::getBaseUrl(); ?>';
+});
+</script>
+<script type="text/javascript">
+    document.observe("dom:loaded", function() {
+
+        Locator.Map.addMethods({
+            getMarkerImage: function(l){
+                return new google.maps.MarkerImage(
+                    '<?php echo $this->getSkinUrl('locator/images/map-pin.png')?>',
+                    new google.maps.Size(40, 50),
+                    new google.maps.Point(0, 0),
+                    new google.maps.Point(20, 50)
+                );
+            }
+        });
+    });
+</script>

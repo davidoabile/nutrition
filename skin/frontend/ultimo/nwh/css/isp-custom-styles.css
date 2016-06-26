@@ -1,0 +1,6 @@
+@charset "utf-8";
+/* CSS Document */
+
+div.isp_center_container ul#isp_search_results_container li.isp_grid_product { border: none; }
+div.isp_center_container ul#isp_search_results_container li.isp_grid_product:hover { border: none; }
+

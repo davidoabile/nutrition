@@ -1,0 +1,607 @@
+<?php
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (CFM Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckoutfields
+ * @version      1.0.9 - 2.9.8
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+/**
+ * Attribute otions control
+ *
+ * @see Mage_Adminhtml_Block_Catalog_Product_Attribute_Edit_Tab_Options
+ */
+?>
+<div>
+<ul class="messages">
+    <li class="notice-msg">
+        <ul>
+            <li><?php echo Mage::helper('catalog')->__('If you do not specify an option value for a store then the default value will be used.') ?></li>
+        </ul>
+    </li>
+</ul>
+</div>
+
+<div class="entity-edit">
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('catalog')->__('Manage Titles (Size, Color, etc.)') ?></h4>
+    </div>
+    <div class="box">
+		    <div class="hor-scroll">
+	        <table class="dynamic-grid" cellspacing="0" id="attribute-labels-table">
+	            <tr>
+	            <?php $bFirst = true; ?>
+	            <?php foreach ($this->getStores() as $_store): ?>
+	                <th><?php echo $_store->getName() ?> 
+	                <?php if ($bFirst) {$bFirst = false; echo '<span class="required">*</span>';} ?></th>
+	            <?php endforeach; ?>
+	            </tr>
+	            <tr>
+	                <?php $_labels = $this->getLabelValues() ?>
+	                <?php foreach ($this->getStores() as $_store): ?>
+	                <td>
+	                    <input class="input-text<?php if($_store->getId()==0): ?> required-option<?php endif; ?>" type="text" name="frontend_label[<?php echo $_store->getId() ?>]" value="<?php echo $this->htmlEscape($_labels[$_store->getId()]) ?>" />
+	                </td>
+	                <?php endforeach; ?>
+	            </tr>
+	        </table>
+		    </div>
+    </div>
+</div>
+
+<div class="entity-edit">
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('catalog')->__('Manage Description') ?></h4>
+    </div>
+    <div class="box">
+		    <div class="hor-scroll">
+	        <table class="dynamic-grid" cellspacing="0" id="attribute-labels-table">
+	            <tr>
+	            <?php $bFirst = true; ?>
+	            <?php foreach ($this->getStores() as $_store): ?>
+	                <?php if ($_store->getId()): ?>
+	                <th><?php echo $_store->getName() ?> 
+	                </th>
+	                <?php endif; ?>
+	            <?php endforeach; ?>
+	            </tr>
+	            <tr>
+	                <?php $_descs = $this->getDescValues() ?>
+	                <?php foreach ($this->getStores() as $_store): ?>
+	                <?php if ($_store->getId()): ?>
+	                <td>
+	                    <textarea class="input-text" name="frontend_desc[<?php echo $_store->getId() ?>]" /><?php echo $this->htmlEscape($_descs[$_store->getId()]) ?></textarea>
+	                </td>
+	                <?php endif; ?>
+	                <?php endforeach; ?>
+	            </tr>
+	        </table>
+		    </div>
+    </div>
+</div>
+
+<div class="entity-edit" id="matage-needsel-panel">
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('catalog')->__('Manage Default non-selectable Option Title (i.e. "please select")') ?></h4>
+    </div>
+    <div class="box">
+		    <div class="hor-scroll">
+	        <table class="dynamic-grid" cellspacing="0" id="attribute-labels-table">
+	            <tr>
+	            <?php $bFirst = true; ?>
+	            <?php foreach ($this->getStores() as $_store): ?>
+	                <?php if ($_store->getId()): ?>
+	                <th><?php echo $_store->getName() ?> 
+	                <?php if ($bFirst) {$bFirst = false; echo '<span class="required">*</span>';} ?>
+	                </th>
+	                <?php endif; ?>
+	            <?php endforeach; ?>
+	            </tr>
+	            <tr>
+                <?php $_needSelect = $this->getNeedSelectValues() ?>
+	            <?php $bFirst = true; ?>
+                <?php foreach ($this->getStores() as $_store): ?>
+	                <?php if ($_store->getId()): ?>
+	                <td>
+	                    <input class="input-text<?php if($bFirst): ?> required-option<?php endif; ?>" type="text" id="frontend_need_sel_<?php echo $_store->getId() ?>" name="frontend_need_sel[<?php echo $_store->getId() ?>]" value="<?php echo $this->htmlEscape($_needSelect[$_store->getId()]) ?>" />
+                    <?php if ($bFirst) {echo '<input type="hidden" id="frontend_need_sel_req_id" name="frontend_need_sel_req_id" value="' . $_store->getId() . '" />'; $bFirst = false;} ?>
+	                </td>
+	                <?php endif; ?>
+                <?php endforeach; ?>
+	                
+	            </tr>
+	        </table>
+		    </div>
+    </div>
+</div>
+
+
+<br/>
+<div class="entity-edit" id="matage-options-panel">
+    <div class="entry-edit-head">
+    <h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('catalog')->__('Manage Options (values of your attribute)') ?></h4>
+    </div>
+    <div class="box">
+		<div class="hor-scroll">
+	        <table class="dynamic-grid" cellspacing="0"  cellpadding="0">
+	            <tr id="attribute-options-table">
+		            <?php foreach ($this->getStores() as $_store): ?>
+		                <th><?php echo $_store->getName() ?></th>
+		            <?php endforeach; ?>
+		                <th><?php echo Mage::helper('catalog')->__('Position') ?></th>
+		                <th class="nobr a-center"><?php echo Mage::helper('catalog')->__('Is Default') ?></th>
+		                <th><?php echo $this->getAddNewButtonHtml() ?></th>
+		            </tr>
+		    	    <tr class="no-display template" id="row-template">
+		                <?php foreach ($this->getStores() as $_store): ?>
+		                <td><input name="option[value][{{id}}][<?php echo $_store->getId() ?>]" value="{{store<?php echo $_store->getId() ?>}}" class="input-text<?php if($_store->getId()==0): ?> required-option<?php endif; ?>" type="text" /></td>
+		                <?php endforeach; ?>
+		                <td class="a-center"><input class="input-text" type="text" name="option[order][{{id}}]" value="{{sort_order}}" /></td>
+		                <td><input class="input-radio" type="radio" name="default[]" value="{{id}}" /></td>
+		                <td class="a-left">
+		                    <input type="hidden" class="delete-flag" name="option[delete][{{id}}]" value="" />
+		                    <?php echo $this->getDeleteButtonHtml() ?>
+		                </td>
+		            </tr>
+	        </table>
+		</div>
+		<input type="hidden" id="option-count-check" value="" />
+    </div>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+var optionDefaultInputType = '<?php echo $this->getDefaultInputType() ?>';
+
+// IE removes quotes from element.innerHTML whenever it thinks they're not needed, which breaks html.
+var templateText =
+        '<tr class="option-row">'+
+<?php foreach ($this->getStores() as $_store): ?>
+            '<td><input name="option[value][{{id}}][<?php echo $_store->getId() ?>]" value="{{store<?php echo $_store->getId() ?>}}" class="input-text<?php if($_store->getId()==0): ?> required-option<?php endif; ?>" type="text" /><\/td>'+
+<?php endforeach; ?>
+            '<td><input class="input-text" type="text" name="option[order][{{id}}]" value="{{sort_order}}"><\/td>'+
+            '<td class="a-center"><input class="input-{{intype}}" type="{{intype}}" name="default[]" value="{{id}}" {{checked}} /><\/td>'+
+            '<td class="a-left">'+
+                '<input type="hidden" class="delete-flag" name="option[delete][{{id}}]" value="" />'+
+                '<?php echo $this->getDeleteButtonHtml() ?>'+
+            '<\/td>'+
+        '<\/tr>';
+
+var attributeOption = {
+    table : $('attribute-options-table'),
+    templateSyntax : /(^|.|\r|\n)({{(\w+)}})/,
+    templateText : templateText,
+    itemCount : 0,
+    totalItems : 0,
+    add : function(data) {
+        this.template = new Template(this.templateText, this.templateSyntax);
+        if(!data.id){
+    		data = {};
+    		data.id  = 'option_'+this.itemCount;
+        }
+        if (!data.intype)
+            data.intype = optionDefaultInputType;
+
+        Element.insert(this.table, {after: this.template.evaluate(data)});
+        this.bindRemoveButtons();
+        this.itemCount++;
+        this.totalItems++;
+        this.updateItemsCountField();
+    },
+    remove : function(event){
+        var element = $(Event.findElement(event, 'tr')); // !!! Button already
+                                                               // have table parent in safari
+        // Safari workaround
+        element.ancestors().each(function(parentItem){
+           if (parentItem.hasClassName('option-row')) {
+               element = parentItem;
+               throw $break;
+           } else if (parentItem.hasClassName('box')) {
+               throw $break;
+           }
+        });
+
+
+        if(element){
+            var elementFlags = element.getElementsByClassName('delete-flag');
+            if(elementFlags[0]){
+                elementFlags[0].value=1;
+            }
+
+            element.addClassName('no-display');
+            element.addClassName('template');
+            element.hide();
+            this.totalItems--;
+            this.updateItemsCountField();
+        }
+    },
+    updateItemsCountField: function() {
+        if (this.totalItems > 0) {
+            $('option-count-check').value = '1';
+        } else {
+            $('option-count-check').value = '';
+        }
+    },
+    bindRemoveButtons : function(){
+        var buttons = $$('.delete-option');
+        for(var i=0;i<buttons.length;i++){
+            if(!$(buttons[i]).binded){
+                $(buttons[i]).binded = true;
+                Event.observe(buttons[i], 'click', this.remove.bind(this));
+            }
+        }
+    }
+
+}
+if($('row-template')){
+    $('row-template').remove();
+}
+attributeOption.bindRemoveButtons();
+
+if($('add_new_option_button')){
+    Event.observe('add_new_option_button', 'click', attributeOption.add.bind(attributeOption));
+}
+Validation.addAllThese([
+    ['required-option', '<?php echo Mage::helper('catalog')->__('Failed') ?>', function(v) {
+        return !Validation.get('IsEmpty').test(v);
+}]]);
+Validation.addAllThese([
+    ['required-options-count', '<?php echo Mage::helper('catalog')->__('Options is required') ?>', function(v) {
+        return !Validation.get('IsEmpty').test(v);
+}]]);
+<?php foreach ($this->getOptionValues() as $_value): ?>
+    attributeOption.add(<?php echo $_value->toJson() ?>);
+<?php endforeach; ?>
+//]]>
+</script>
+
+
+
+<script type="text/javascript">
+function saveAndContinueEdit(){
+    editForm.submit($('edit_form').action+'back/edit/tab/' + product_attribute_tabsJsTabs.activeTab.id);
+}
+
+
+function toggleApplyVisibility(select) {
+    if ($(select).value == 1) {
+        $(select).next('select').removeClassName('no-display');
+        $(select).next('select').removeClassName('ignore-validate');
+
+    } else {
+        $(select).next('select').addClassName('no-display');
+        $(select).next('select').addClassName('ignore-validate');
+        var options = $(select).next('select').options;
+        for( var i=0; i < options.length; i++) {
+            options[i].selected = false;
+        }
+    }
+}
+
+function checkOptionsPanelVisibility(){
+    if($('matage-options-panel')){
+        var panel = $('matage-options-panel');
+        if($('frontend_input') && ($('frontend_input').value=='select' || $('frontend_input').value=='multiselect' || $('frontend_input').value=='checkbox' || $('frontend_input').value=='radio')){
+            panel.show();
+        }
+        else {
+            panel.hide();
+        }
+    }
+}
+
+
+function checkNeedSelPanelVisibility(){
+    if($('matage-needsel-panel')){
+        
+        var panel = $('matage-needsel-panel');
+
+        var req_id = $('frontend_need_sel_req_id');
+         
+        var req_input_id = 'frontend_need_sel_' + req_id.value;
+        
+        if($('frontend_input') && $('used_in_product_listing').value == '1' && $('frontend_input').value=='select'){
+            panel.show();
+            
+            if ($(req_input_id))
+            {
+                $(req_input_id).removeClassName('ignore-validate');
+            }
+        }
+        else {
+            panel.hide();
+            
+            if ($(req_input_id))
+            {
+                $(req_input_id).addClassName('ignore-validate');
+            }
+        }
+    }
+}
+
+function bindAttributeInputType()
+{
+    checkOptionsPanelVisibility();
+    checkNeedSelPanelVisibility(); // new
+    switchDefaultValueField();
+    checkIsConfigurableVisibility();
+    if($('frontend_input') && ($('frontend_input').value=='select' || $('frontend_input').value=='multiselect' || $('frontend_input').value=='price')){
+        if($('nooot_filterable')){
+            $('nooot_filterable').disabled = false;
+        }
+        if($('nooot_filterable_in_search')){
+            $('nooot_filterable_in_search').disabled = false;
+        }
+        if($('backend_type') && $('backend_type').options){
+            for(var i=0;i<$('backend_type').options.length;i++){
+                if($('backend_type').options[i].value=='int') $('backend_type').selectedIndex = i;
+            }
+        }
+    }
+    else {
+        if($('nooot_filterable')){
+            $('nooot_filterable').selectedIndex=0;
+            $('nooot_filterable').disabled = true;
+        }
+        if($('nooot_filterable_in_search')){
+            $('nooot_filterable_in_search').disabled = true;
+        }
+    }
+
+    if ($('frontend_input') && ($('frontend_input').value=='text' || $('frontend_input').value=='textarea')) {
+        if($('is_html_allowed_on_front')){
+            $('is_html_allowed_on_front').disabled = false;
+        }
+    }
+    else {
+        if($('is_html_allowed_on_front')){
+            $('is_html_allowed_on_front').selectedIndex=0;
+            $('is_html_allowed_on_front').disabled = true;
+        }
+    }
+
+    switchIsFilterable();
+}
+
+function switchIsFilterable()
+{
+    if ($('nooot_filterable')) {
+        if ($('nooot_filterable').selectedIndex == 0) {
+            $('position').disabled = true;
+        } else {
+            $('position').disabled = false;
+        }
+    }
+}
+
+function ___disableApplyToValue(value)
+{
+    var applyToSelect = $('apply_to');
+    for (i=0;i<applyToSelect.options.length;i++) {
+        if (value == applyToSelect.options[i].value) {
+            applyToSelect.options[i].disabled = true;
+            applyToSelect.options[i].selected = false;
+        }
+    }
+}
+
+function switchDefaultValueField()
+{
+    if (!$('frontend_input')) {
+        return;
+    }
+
+    var currentValue = $('frontend_input').value;
+
+    var defaultValueTextVisibility = false;
+    var defaultValueTextareaVisibility = false;
+    var defaultValueDateVisibility = false;
+    var defaultValueStaticVisibility = false;
+    var defaultValueYesnoVisibility = false;
+    var useInInvoice = true;
+    var useInExcel = true;
+    var scopeVisibility = true;
+    var gridFilter = true;
+
+    var needSelectValueVisibility = false; // new
+    switch (currentValue) {
+        case 'select':
+            needSelectValueVisibility = true; // new
+        case 'radio':
+            optionDefaultInputType = 'radio';
+            break;
+
+        case 'multiselect':
+        case 'checkbox':
+//            needSelectValueVisibility = true; // new
+            optionDefaultInputType = 'checkbox';
+            break;
+
+        case 'date':
+            gridFilter = false;
+            $('ait_filterable').value = 0;
+            defaultValueDateVisibility = true;
+            break;
+
+        case 'boolean':
+//            needSelectValueVisibility = true; // new
+            defaultValueYesnoVisibility = true;
+            break;
+
+        case 'textarea':
+            defaultValueTextareaVisibility = true;
+            break;
+        case 'static':
+            gridFilter = false;
+            $('ait_filterable').value = 0;
+        	defaultValueStaticVisibility = true;
+            useInInvoice = false;
+            useInExcel = false;
+            break;
+
+        case 'media_image':
+            defaultValueTextVisibility = false;
+            break;
+        case 'price':
+            scopeVisibility = false;
+        default:
+            defaultValueTextVisibility = true;
+            break;
+    }
+
+//    var applyToSelect = $('apply_to');
+    switch (currentValue) {
+        <?php foreach (Mage::helper('catalog')->getAttributeDisabledTypes() as $type=>$disabled): ?>
+            case '<?php echo $type; ?>':
+            <?php foreach ($disabled as $one): ?>
+                disableApplyToValue('<?php echo $one; ?>');
+            <?php endforeach; ?>
+            break;
+        <?php endforeach; ?>
+        default:
+//        for (i=0;i<applyToSelect.options.length;i++) {
+//            applyToSelect.options[i].disabled = false;
+//        }
+        break;
+    }
+    
+    switch (currentValue) {
+        case 'media_image':
+//            $('front_fieldset').previous().hide();
+//            $('front_fieldset').hide();
+
+            setRowVisibility('is_required', false);
+            setRowVisibility('is_unique', false);
+            setRowVisibility('frontend_class', false);
+        break;
+        case 'static':
+            setRowVisibility('is_required', false);
+            setRowVisibility('is_unique', false);
+            setRowVisibility('frontend_class', false);
+            setRowVisibility('is_used_for_price_rules', false);
+            setRowVisibility('is_filterable_in_search', false); 
+   		break;
+
+        <?php foreach (Mage::helper('catalog')->getAttributeHiddenFields() as $type=>$fields): ?>
+            case '<?php echo $type; ?>':
+                <?php foreach ($fields as $one): ?>
+                    <?php if ($one == '_front_fieldset'): ?>
+                        $('front_fieldset').previous().hide();
+                        $('front_fieldset').hide();
+                    <?php elseif ($one == '_default_value'): ?>
+                        defaultValueTextVisibility =
+                        defaultValueTextareaVisibility =
+                        defaultValueDateVisibility =
+                        defaultValueStaticVisibility =
+                        defaultValueYesnoVisibility = false;
+                    <?php elseif ($one == '_scope'): ?>
+                        scopeVisibility = false;
+                    <?php else: ?>
+                        setRowVisibility('<?php echo $one; ?>', false);
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            break;
+        <?php endforeach; ?>
+
+        default:
+//            $('front_fieldset').previous().show();
+//            $('front_fieldset').show();
+            setRowVisibility('is_required', true);
+            setRowVisibility('is_unique', true);
+            setRowVisibility('frontend_class', true);
+            setRowVisibility('is_configurable', true);
+        break;
+    }
+
+    setRowVisibility('is_display_in_invoice', useInInvoice);
+    setRowVisibility('ait_in_excel', useInExcel);
+    setRowVisibility('default_value_text', defaultValueTextVisibility);
+    setRowVisibility('default_value_textarea', defaultValueTextareaVisibility);
+    setRowVisibility('default_value_date', defaultValueDateVisibility);
+    setRowVisibility('default_value_yesno', defaultValueYesnoVisibility);
+    setRowVisibility('default_value_static', defaultValueStaticVisibility);
+    setRowVisibility('is_global', scopeVisibility);
+    setRowVisibility('ait_filterable', gridFilter);
+
+    setRowVisibility('used_in_product_listing', needSelectValueVisibility); // new
+    
+    var elems = document.getElementsByName('default[]');
+    for (var i = 0; i < elems.length; i++) {
+        elems[i].type = optionDefaultInputType;
+    }
+}
+
+function setRowVisibility(id, isVisible)
+{
+    if ($(id)) {
+        var td = $(id).parentNode;
+        var tr = $(td.parentNode);
+        if (isVisible) {
+            tr.show();
+        } else {
+            tr.blur();
+            tr.hide();
+        }
+    }
+}
+function updateRegistrationOptions()
+{
+    if($('ait_registration_page').value=='1')
+    {
+        visibility = true;
+    }else{
+    	visibility = false;
+    }
+    setRowVisibility('ait_registration_place', visibility);
+    setRowVisibility('ait_registration_position', visibility);
+}
+
+function checkIsConfigurableVisibility()
+{
+    if (!$('is_configurable') || !$('is_global') || !$('frontend_input')) return;
+    if ($F('is_global')==1 && $F('frontend_input')=='select') {
+        setRowVisibility('is_configurable', true);
+    } else {
+        setRowVisibility('is_configurable', false);
+    }
+}
+
+function updateRequriedOptions()
+{
+//    if (($F('frontend_input')=='select' || $F('frontend_input')=='multiselect' || $F('frontend_input')=='radio' || $F('frontend_input')=='checkbox') && $F('is_required')==1) {
+    if (($F('frontend_input')=='select' || $F('frontend_input')=='multiselect' || $F('frontend_input')=='radio' || $F('frontend_input')=='checkbox')) {
+        $('option-count-check').addClassName('required-options-count');
+    } else {
+        $('option-count-check').removeClassName('required-options-count');
+    }
+}
+
+if($('frontend_input')){
+    Event.observe($('frontend_input'), 'change', updateRequriedOptions);
+    Event.observe($('frontend_input'), 'change', bindAttributeInputType);
+    Event.observe($('used_in_product_listing'), 'change', checkNeedSelPanelVisibility); // new
+//    Event.observe($('is_global'), 'change', checkIsConfigurableVisibility);
+}
+
+if($('ait_registration_page')){
+    Event.observe($('ait_registration_page'), 'change', updateRegistrationOptions);
+}
+
+if($('used_in_product_listing')){
+    Event.observe($('used_in_product_listing'), 'change', checkNeedSelPanelVisibility); // new
+}
+
+//if ($('nooot_filterable')) {
+//    Event.observe($('nooot_filterable'), 'change', switchIsFilterable);
+//}
+
+if ($('is_required')) {
+    Event.observe($('is_required'), 'change', updateRequriedOptions);
+}
+bindAttributeInputType();
+
+updateRequriedOptions();
+
+updateRegistrationOptions();
+</script>

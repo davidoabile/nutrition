@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Promo
+ */
+-->
+
+<layout version="0.1.0">
+    <ampromo_items>
+        <reference name="head">
+            <action method="addJs"><script>varien/product.js</script></action>
+
+            <!-- Fix for script load order -->
+            <action method="removeItem"><type>js</type><name>varien/configurable.js</name></action>
+            <action method="addJs"><script>varien/configurable.js</script></action>
+
+            <action method="addJs"><script>calendar/calendar.js</script></action>
+            <action method="addJs"><script>amasty/ampromo/carousel-min.js</script></action>
+            <action method="addItem"><type>skin_js</type><name>js/bundle.js</name></action>
+            <block type="core/text" name="head.viewport">
+                <action method="setText"><text><![CDATA[<meta name="viewport" content="initial-scale=1.0, width=device-width" />]]>&#10;</text></action>
+            </block>
+        </reference>
+    </ampromo_items>
+
+    <checkout_cart_index>
+        <!--<update handle="ampromo_items" />-->
+        <reference name="checkout.cart.form.before">
+            <!--<block type="ampromo/add" name="ampromo.add" template="amasty/ampromo/add.phtml" />-->
+            <block type="ampromo/items" name="ampromo.items" template="amasty/ampromo/items.phtml" />
+        </reference>
+        <remove name="ampromo_notification" />
+    </checkout_cart_index>
+
+    <checkout_onepage_index>
+        <update handle="ampromo_items" />
+        <reference name="checkout.onepage">
+            <block type="page/html_wrapper" name="ampromo.onepage.review.before" as="review_before">
+                <block type="ampromo/add" name="ampromo.add" template="amasty/ampromo/add.phtml" />
+            </block>
+            <block type="page/html_wrapper" name="ampromo.onepage.order.before" as="order_before">
+                <block type="ampromo/items" name="ampromo.items" template="amasty/ampromo/items.phtml" />
+            </block>
+        </reference>
+    </checkout_onepage_index>
+
+    <!-- popup on default checkout page
+
+    <checkout_onepage_index>
+        <update handle="ampromo_items" />
+        <reference name="content">
+            <block type="page/html_wrapper" name="ampromo.onepage.review.before" as="review_before" before="-">
+                <block type="ampromo/add" name="ampromo.add" template="amasty/ampromo/add.phtml" />
+            </block>
+            <block type="page/html_wrapper" name="ampromo.onepage.order.before" as="order_before" before="-">
+                <block type="ampromo/items" name="ampromo.items" template="amasty/ampromo/items.phtml" />
+            </block>
+        </reference>
+    </checkout_onepage_index>
+    -->
+    <ampromo_cart_freegift translate="label">
+    <label>Freegift</label>
+    <remove name="right"/>
+    <remove name="left"/>
+    <!-- Mage_Checkout -->
+    <reference name="root">
+        <action method="setTemplate"><template>page/1column.phtml</template></action>
+    </reference>
+    <reference name="content">
+            <block type="page/html_wrapper" name="ampromo.onepage.order.before" as="order_before" before="-">
+                <block type="ampromo/items" name="ampromo.items" template="amasty/ampromo/itemslanding.phtml">
+                    <action method="setData"><name>landingpage</name><value>freegift</value></action>
+                </block>
+            </block>
+    </reference>
+    </ampromo_cart_freegift>
+    <ampromo_cart_freegiftcheckout translate="label">
+        <label>Freegift</label>
+        <remove name="right"/>
+        <remove name="left"/>
+        <!-- Mage_Checkout -->
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="page/html_wrapper" name="ampromo.onepage.order.before" as="order_before" before="-">
+                <block type="ampromo/items" name="ampromo.items" template="amasty/ampromo/itemslanding.phtml">
+                    <action method="setData"><name>landingpage</name><value>freegift</value></action>
+                </block>
+            </block>
+        </reference>
+    </ampromo_cart_freegiftcheckout>
+    
+     <ampromo_cart_offers translate="label">
+        <label>Our Offers</label>
+        <remove name="right"/>
+        <remove name="left"/>
+        <!-- Mage_Checkout -->
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="page/html_wrapper" name="ampromo.onepage.order.before" as="order_before" before="-">
+                <block type="ampromo/items" name="ampromo.items" template="amasty/ampromo/offers.phtml">
+                    <action method="setData"><name>offerspage</name><value>offers</value></action>
+                </block>
+            </block>
+        </reference>
+    </ampromo_cart_offers>
+    
+    <ampromo_cart_bonus translate="label">
+        <label>Bonus Items</label>
+        <remove name="right"/>
+        <remove name="left"/>
+        <!-- Mage_Checkout -->
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="page/html_wrapper" name="ampromo.onepage.order.before" as="order_before" before="-">
+                <block type="ampromo/items" landingpage="bonus" name="ampromo.items" template="amasty/ampromo/itemslandingcheckout.phtml">
+                    <action method="setData"><name>landingpage</name><value>bonus</value></action>
+                </block>
+            </block>
+        </reference>
+    </ampromo_cart_bonus>
+    <ampromo_cart_bonuscheckout translate="label">
+        <label>Bonus Items</label>
+        <remove name="right"/>
+        <remove name="left"/>
+        <!-- Mage_Checkout -->
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="page/html_wrapper" name="ampromo.onepage.order.before" as="order_before" before="-">
+                <block type="ampromo/items" landingpage="bonus" name="ampromo.items" template="amasty/ampromo/itemslandingcheckout.phtml">
+                    <action method="setData"><name>landingpage</name><value>bonus</value></action>
+                </block>
+            </block>
+        </reference>
+    </ampromo_cart_bonuscheckout>
+
+    <default>
+        <reference name="head">
+            <action method="addCss"><name>css/amasty/ampromo/styles.css</name></action>
+            <action method="addJs"><script>amasty/ampromo/items.js</script></action>
+        </reference>
+        <update handle="ampromo_items" />
+        <block name="ampromo_notification" type="ampromo/notification" template="amasty/ampromo/notification.phtml" before="-" />
+
+        <!-- RWD theme:
+        to move this block to cart popup replace "content" with
+        "cart_sidebar.extra_actions" or "cart_sidebar.cart_promotion" -->
+        <reference name="content">
+            <action ifconfig="ampromo/general/display_notification" method="append"><block>ampromo_notification</block></action>
+        </reference>
+    </default>
+</layout>

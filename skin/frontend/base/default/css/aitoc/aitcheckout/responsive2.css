@@ -1,0 +1,54 @@
+
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     n/a
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+#checkoutSteps{
+    min-width: 400px;
+}
+#checkoutSteps li#right_collumn{
+    min-width: 380px;
+}
+#checkoutSteps > li{
+    min-width: 280px;
+}
+#checkout-review-table thead > tr > th {
+    display: table-cell !important;
+}
+#right_collumn_top > li{
+    min-width: 250px;
+}
+@media only screen and (max-width: 1100px) and (min-width: 790px){
+
+    #checkoutSteps li#right_collumn {
+        width: calc(95% - 300px);
+    }
+}
+@media only screen and (max-width: 790px) {
+    #co-checkout-form #checkoutSteps li#left_collumn, #checkoutSteps li#center_column, #checkoutSteps li#right_collumn  {
+        width: 100%;
+    }
+    #co-checkout-form #checkoutSteps li{
+        width: 100%;
+    }
+    #checkoutSteps .form-list li.wide input.input-text, #checkoutSteps .form-list input.input-text, #checkoutSteps .form-list select, #checkoutSteps .form-list textarea {
+       width: 85% !important;
+    }
+    #checkoutSteps .form-list .compact .input-box input, #checkoutSteps .form-list .name-firstname .input-box input, #checkoutSteps .form-list .name-lastname .input-box input, #checkoutSteps .form-list .compact .input-box select {
+        width: 90% !important;
+    }
+    #checkoutSteps .form-list .compact .input-box, #checkoutSteps .form-list .name-firstname .input-box, #checkoutSteps .form-list .name-lastname .input-box {
+        width: 100% !important;
+    }
+    #checkoutSteps .form-list .compact, #checkoutSteps .form-list .name-firstname, #checkoutSteps .form-list .name-lastname {
+        width: 45% !important;
+    }
+    #co-checkout-form #checkoutSteps .form-list li.wide .input-box, #co-checkout-form #checkoutSteps .form-list .input-box {
+        width: 100%;
+    }
+}

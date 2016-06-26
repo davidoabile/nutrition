@@ -1,0 +1,54 @@
+<?php $splashPages = $this->getCollection() ?>
+<?php if ($splashPages->count()): ?>
+    <div class="main_part mrgn_b20 shop-by-goal">
+        <div class="block-red">
+            <div class="block-title">
+                <h1 class="pc"><?php echo $this->__('SHOP BY RESULT') ?></h1>
+                <h1 class="mb"><?php echo $this->__('SHOP BY GOAL') ?></h1>
+                
+            </div>
+        </div>
+        <div class="banner6_area">
+            <div class="comman">
+                <?php
+                    $i       = 0;
+                    $columns = 3;
+                    $c       = $splashPages->count();
+                ?>
+                <?php foreach ($splashPages AS $splashPage): ?>
+                    <?php if ($splashPage->getHomePage()): ?>
+                        <?php
+                            $i++;
+                            $name   = trim($this->escapeHtml($splashPage->getName()));
+                            $names  = explode('(', $name);
+
+                            $first  = trim($names[0]);
+                            $second = trim($names[1], ' )');
+                            $items  = explode(' ', $first);
+                            if (count($items) > 1) {
+                                $red  = $items[0];
+                                unset($items[0]);
+                                $gray = implode(' ', $items);
+                            } else {
+                                $red  = $first;
+                                $gray = '';
+                            }
+                        ?>
+                        <a href="<?php echo $splashPage->getUrl() ?>" class="banner6<?php echo ($i % $columns) ? ' item-cat' : '' ?>">
+                            <!--<div class="part_txt2 font12_blk">
+                                <span class="font18_b_red"><?php /*echo $red */?></span><br>
+                                <span class="font18_m_blk"><?php /*echo $gray */?></span><br>
+                                <?php /*echo $second */?>
+                            </div>-->
+                            <img src="<?php echo $this->helper('attributeSplash/image')->init($splashPage, 'thumbnail')->keepFrame(false)->constrainOnly(true)->resize(284) ?>">
+                        </a>
+                        <?php if (!($i % $columns) && ($i < $c)): ?>
+            </div>
+                            <div class="comman">
+                        <?php endif ?>
+                    <?php endif ?>
+                <?php endforeach ?>
+            </div>
+        </div>
+    </div>
+<?php endif ?>

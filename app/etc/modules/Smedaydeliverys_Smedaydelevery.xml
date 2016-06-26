@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Smedaydeliverys_Smedaydelevery>
+      <active>true</active>
+      <codePool>local</codePool>
+      <version>0.1.0</version>
+    </Smedaydeliverys_Smedaydelevery>
+  </modules>
+</config>

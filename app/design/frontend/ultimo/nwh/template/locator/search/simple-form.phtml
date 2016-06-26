@@ -1,0 +1,65 @@
+<div class="loc-srch">
+    <div class="box-loc-srch clearfix">
+        <form class="loc-srch-form" action="<?php echo Mage::getURL('locator/search/') ?>" id="locator-search">
+            <h4><?php echo $this->__('Enter a Postcode or Suburb') ?></h4>
+
+            <?php
+            //@todo get from config
+            $countries = array(
+                'Australia' => 'Australia',
+                'New Zealand' => 'New Zealand',
+                'Other' => ''
+            );
+            $param = $this->getRequest()->getParam('country');
+
+            if (isset($param)) {
+                $selected = $this->getRequest()->getParam('country');
+            } else {
+                //if no parameters are passed from the url, see if we can get them from config
+                $defaultsearch = Mage::helper('ak_locator/search')->parseQueryString(Mage::getStoreConfig('locator_settings/search/default_search_params'));
+                if (isset($defaultsearch['country'])) {
+                    $selected = $defaultsearch['country'];
+                }
+            }
+            ?>
+            <div class="locator-field">
+                <input type="hidden" name="country" value="Australia"/>
+
+                <input id='locator-autocomplete' name="s" type="text" class="loc-srch-s input-text required-entry" placeholder="<?php /*validate-au-postcode*/ echo $this->__('Enter a postcode or suburb') ?>" value="<?php echo $this->getRequest()->getParam('s'); ?>" />
+
+                <span class="loc-loader loader loader-med"></span>
+            </div>
+            <div class="locator-btn">
+                <span>within</span><input name="distance" type="text" value="<?php echo $this->getCurrentDistance($this->getRequest()); ?>" class="loc-srch-dis" /><span>km</span>
+
+                <button type="submit" class="btn" id="locator_button_search">search</button>
+            </div>
+        </form>
+
+
+        <span class="or">OR</span>
+
+        <?php
+        // This is just an example of how the theme level can be used to link to different types of searches
+        ?>
+        <span class="search-areas">
+        <a class="loc-trigger" href="<?php echo Mage::getURL('', array('_secure'=>true)) ?>locator/search/?a=QLD">QLD</a><span class="verticalline">|</span>
+        <a class="loc-trigger" href="<?php echo Mage::getURL('', array('_secure'=>true)) ?>locator/search/?a=VIC">VIC</a><span class="verticalline">|</span>
+        <a class="loc-trigger" href="<?php echo Mage::getURL('', array('_secure'=>true)) ?>locator/search/?a=NSW">NSW</a><span class="verticalline">|</span>
+        <a class="loc-trigger" href="<?php echo Mage::getURL('', array('_secure'=>true)) ?>locator/search/?a=WA">WA</a><span class="verticalline special">|</span>
+        <a class="loc-trigger" href="<?php echo Mage::getURL('', array('_secure'=>true)) ?>locator/search/?a=NT">NT</a><span class="verticalline">|</span>
+        <a class="loc-trigger" href="<?php echo Mage::getURL('', array('_secure'=>true)) ?>locator/search/?a=SA">SA</a><span class="verticalline">|</span>
+        <a class="loc-trigger" href="<?php echo Mage::getURL('', array('_secure'=>true)) ?>locator/search/?a=TAS">TAS</a><span class="verticalline special">|</span>
+        <a class="loc-trigger" href="<?php echo Mage::getURL('', array('_secure'=>true)) ?>locator/search/?country=australia">All Australia</a>
+        </span>
+
+    </div>
+
+
+</div>
+<div id="loc-title-locator">
+    <?php if($this->getRequest()->getParam("s")):?>
+        <h2 class="loc-title" id="loc-title-locator-detail" >Listing Stores closest to <span>'<?php echo $this->getRequest()->getParam("s")?>'</span></h2>
+    <?php endif;?>
+</div>
+

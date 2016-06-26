@@ -1,0 +1,138 @@
+<?php
+/**
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * Instantly Get $5 Off This Order!
+ * Tick The Box To Sign Up To Our Newsletter
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2011-2012 Sergey Storchay <r8@r8.com.ua>
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<form action="" id="checkout-agreements" onsubmit="return false;">
+    <?php if (Mage::getSingleton('checkout/session')->getQuote()->getHideNewsletterSubscription() !== 'Y') : ?>
+        <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('sign-up-for-newsletter')->toHtml() ?>
+    <?php endif; ?>
+    <div class="buttons-set">
+        <ul class="form-list">
+            <li>
+                <fieldset>
+                    <ul>
+                        <li class="wide">
+                            <label for="ordercomment-comment"><?php echo Mage::helper('ordercomment')->__('Leave notes') ?></label>
+                            <div class="input-box">
+                                <textarea id="ordercomment-comment" class="input-text validation-passed" name="ordercomment[comment]" title="<?php echo $this->__('Order Comment') ?>" rows="5" cols="10"></textarea>
+                            </div>
+                        </li>
+                    </ul>
+                </fieldset>
+            </li>
+
+
+        </ul>
+    </div>
+
+    <?php if ($this->getAgreements()): ?>
+        <ol class="checkout-agreements">
+            <?php foreach ($this->getAgreements() as $_a): ?>
+                <li>
+                    <div class="agreement-content"<?php echo ($_a->getContentHeight() ? ' style="height:' . $_a->getContentHeight() . '"' : '') ?>>
+                        <?php if ($_a->getIsHtml()): ?>
+                            <?php echo $_a->getContent() ?>
+                        <?php else: ?>
+                            <?php echo nl2br($this->htmlEscape($_a->getContent())) ?>
+                        <?php endif; ?>
+                    </div>
+                    <p class="agree">
+                        <input type="checkbox" id="agreement-<?php echo $_a->getId() ?>" name="agreement[<?php echo $_a->getId() ?>]" value="1" title="<?php echo $this->htmlEscape($_a->getCheckboxText()) ?>" class="checkbox" /><label for="agreement-<?php echo $_a->getId() ?>"><?php echo $_a->getIsHtml() ? $_a->getCheckboxText() : $this->htmlEscape($_a->getCheckboxText()) ?></label>
+                    </p>
+                </li>
+            <?php endforeach ?>
+        </ol>
+    <?php endif; ?>
+</form>
+
+<script>
+    jQuery(function ($) {
+        if ($('#p_method_paypal_express').is(':checked')) {
+            $('#newsletter-subscription-panel').hide();
+        }
+
+        if ($('#billing\\:email').length > 0) {
+            $('#billing\\:street1').on('blur', function () {
+                $.get('/stocklevels/index/checkemail', {email: $('#billing\\:email').val()},
+                function (response) {
+                    if (response.success === true) {
+                        $('#newsletter-subscription-panel').hide();
+                    } else {
+                        $('#newsletter-subscription-panel').show();
+                    }
+                });
+            });
+        }
+        if (!$('#newsletter-subscribe').is(':checked')) {
+            serverDiscount({newsletter: 'N', local: 'Y'});
+        }
+        if ($('#newsletter-subscribe').length > 0) {
+            $('#newsletter-subscribe').on('click', function () {
+                var formData = {};
+                if ($('#newsletter-subscribe').is(':checked')) {
+                    formData.newsletter = 'Y';
+                } else {
+                    formData.newsletter = 'N';
+                    $('#newsletter-blurb').hide();
+                    $('#newsletter-loading').show();
+                    $('#applied-msg').hide();
+                }
+                serverDiscount(formData);
+            });
+
+        }
+        function serverDiscount(formData) {
+            if (formData.newsletter === 'Y') {
+                $('#newsletter-blurb').hide();
+                $('#newsletter-loading').show();
+            }
+            $.get('/stocklevels/index/newsletter', formData,
+                    function (response) {
+                        $('#newsletter-loading').hide();
+                        if (response.success === true) {
+                            if (response.reason !== 'exists') {
+                                if (formData.newsletter === 'Y') {
+                                    $('#applied-msg').show();
+                                } else {
+                                    $('#applied-msg').hide();
+                                    $('#newsletter-blurb').show();
+                                }
+                                $('#co-payment-form input:checked').trigger('click');
+
+                            } else {
+                                $('#newsletter-subscription-panel').hide();
+                                alert('You are already subscribed to our newsletter');
+                            }
+                        } else {
+                            alert('Cannot apply discount');
+                        }
+                    });
+        }
+
+
+    });
+    function hideCoupon(name) {
+        var j = jQuery;
+        if (name === 'paypal_express') {
+            if (j('#p_method_paypal_express').is(':checked')) {
+                j('#newsletter-subscription-panel').hide();
+            } else {
+                j('#newsletter-subscription-panel').show();
+            }
+        } else {
+            j('#newsletter-subscription-panel').show();
+        }
+
+    }
+</script>
+

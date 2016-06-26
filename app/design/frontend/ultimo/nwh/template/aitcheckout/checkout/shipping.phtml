@@ -1,0 +1,247 @@
+<?php
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+$cfmHelper = Mage::helper('aitcheckout/aitcheckoutfields');
+$ccHelper = Mage::helper('aitcheckout/aitconfcheckout');
+if($this->helper('aitcheckout')->isCompactDesign()) {
+    $compact = ' compact';
+    $name_block = 'aitcheckout/customer_widget_name';
+} else {
+    $compact = '';
+    $name_block = 'customer/widget_name';
+}
+?>
+<div id="co-shipping-form">
+    <div style="display:none;" id="shipping-notice" class="error-msg"></div>
+    <!--     START AITOC CHECKOUT ATTRIBUTES     -->
+    <?php if ($aFieldList = $cfmHelper->getCustomFieldList('shippinfo', 1)): ?>
+    <ul class="form-list">
+        <li id="shipping-aitcheckoutfields-top">
+            <fieldset>
+                <ul class="form-list">
+                <?php foreach ($aFieldList as $aField): ?>
+                    <?php echo $cfmHelper->getFieldHtml('shipping', $aField); ?>
+                <?php endforeach; ?>
+                </ul>                
+            </fieldset>
+        </li>
+    </ul>
+    <?php endif; ?>
+    <!--     FINISH AITOC CHECKOUT ATTRIBUTES     -->
+    <div id="checkout-step-shipping-child">
+    <ul class="form-list"> 
+    <?php if ($this->customerHasAddresses()): ?>
+       <li class="wide">
+           <label for="shipping-address-select"><?php echo Mage::helper('checkout')->__('Select a shipping address from your address book or enter a new address.') ?></label>
+           <div class="input-box">
+               <?php echo $this->getAddressesHtmlSelect('shipping') ?>
+           </div>
+       </li>
+    <?php endif ?>
+        <li id="shipping-new-address-form"<?php if ($this->customerHasAddresses()): ?> style="display:none;"<?php endif ?>>
+            <fieldset>
+                <input type="hidden" name="shipping[address_id]" value="<?php echo $this->getAddress()->getId() ?>" id="shipping:address_id" />
+                <ul>
+                    <li class="fields"><?php echo $this->getLayout()->createBlock($name_block)->setObject($this->getAddress())->setFieldIdFormat('shipping:%s')->setFieldNameFormat('shipping[%s]')->toHtml() ?></li>
+                    
+                <?php if ($ccHelper->checkFieldShow('shipping', 'company')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                    <li class="fields">
+                        <div class="fields">
+                            <label for="shipping:company"><?php echo Mage::helper('checkout')->__('Company') ?></label>
+                            <div class="input-box">
+                                <input type="text" id="shipping:company" name="shipping[company]" value="<?php echo $this->htmlEscape($this->getAddress()->getCompany()) ?>" title="<?php echo Mage::helper('checkout')->__('Company') ?>" class="input-text" onchange="" />
+                            </div>
+                        </div>
+                    <?php if(false): ?>
+                        <div class="fields">
+                            <label for="shipping:email" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('Email Address') ?></label>
+                            <div class="input-box">
+                                <input type="text" name="shipping[email]" id="shipping:email" value="<?php echo $this->htmlEscape($this->getAddress()->getEmail()) ?>" title="<?php echo Mage::helper('checkout')->__('Email Address') ?>" class="input-text validate-email required-entry" />
+                            </div>
+                        </div>
+                    <?php endif ?>
+                    </li>
+                <?php endif                                     // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                    
+                <?php if ($ccHelper->checkFieldShow('shipping', 'address')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                    <li class="wide">
+                        <label for="shipping:street1" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('Address') ?></label>
+                        <div class="input-box">
+                            <input type="text" title="<?php echo Mage::helper('checkout')->__('Street Address') ?>" name="shipping[street][]" id="shipping:street1" value="<?php echo $this->htmlEscape($this->getAddress()->getStreet(1)) ?>" class="input-text required-entry" onchange="" />
+                        </div>
+                    </li>
+                    <?php for ($_i=2, $_n=$this->helper('customer/address')->getStreetLines(); $_i<=$_n; $_i++): ?>
+                        <li class="wide">
+                            <div class="input-box">
+                                <input type="text" title="<?php echo $this->__('Street Address %s', $_i) ?>" name="shipping[street][]" id="shipping:street<?php echo $_i?>" value="<?php echo $this->htmlEscape($this->getAddress()->getStreet($_i)) ?>" class="input-text" onchange="" />
+                            </div>
+                        </li>
+                    <?php endfor ?>
+                <?php endif                                     // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                <div id="checkout-step-shippinglocation">
+                
+                <?php if ($ccHelper->checkFieldShow('shipping', 'city') || $ccHelper->checkFieldShow('shipping', 'postcode')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                    <li class="fields">
+                    
+                    <?php if ($ccHelper->checkFieldShow('shipping', 'city')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                        <div class="field<?php echo $compact ?>">
+                            <label for="shipping:city" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('City') ?></label>
+                            <div class="input-box">
+                                <input type="text" title="<?php echo Mage::helper('checkout')->__('City') ?>" name="shipping[city]" value="<?php echo $this->htmlEscape($this->getAddress()->getCity()) ?>" class="input-text required-entry" id="shipping:city" onchange="" />
+                            </div>
+                        </div>
+                    <?php endif                                     // AITOC CONFIGURABLE CHECKOUT CODE ?>
+
+                        <?php if ($ccHelper->checkFieldShow('shipping', 'postcode')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                        <div class="field<?php echo $compact ?>">
+                            <label for="shipping:postcode" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('Zip/Postal Code') ?></label>
+                            <div class="input-box">
+                                <input type="text" title="<?php echo Mage::helper('checkout')->__('Zip/Postal Code') ?>" name="shipping[postcode]" id="shipping:postcode" value="<?php echo $this->htmlEscape($this->getAddress()->getPostcode()) ?>" class="input-text validate-zip-international required-entry" onchange="" />
+                            </div>
+                        </div>
+                        <?php endif                                     // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                        
+                    </li>
+                <?php endif                                     // AITOC CONFIGURABLE CHECKOUT CODE ?>    
+                    
+                <?php if ($ccHelper->checkFieldShow('shipping', 'region') || $ccHelper->checkFieldShow('shipping', 'country')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                    <li class="fields">
+
+                        <?php if ($ccHelper->checkFieldShow('shipping', 'region')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                        <div class="field">
+                            <label for="shipping:region" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('State/Province') ?></label>
+                            <div class="input-box">
+                                <select id="shipping:region_id" name="shipping[region_id]" title="<?php echo Mage::helper('checkout')->__('State/Province') ?>" class="validate-select" style="display:none;">
+                                    <option value=""><?php echo Mage::helper('checkout')->__('Please select region, state or province') ?></option>
+                                </select>
+                                <script type="text/javascript">
+                                    //<![CDATA[
+                                    $('shipping:region_id').setAttribute('defaultValue',  "<?php echo $this->getAddress()->getRegionId() ?>");
+                                    //]]>
+                                </script>
+                                <input type="text" id="shipping:region" name="shipping[region]" value="<?php echo $this->htmlEscape($this->getAddress()->getRegion()) ?>" title="<?php echo Mage::helper('checkout')->__('State/Province') ?>" class="input-text" style="display:none;" />
+                            </div>
+                        </div>
+                        <?php endif                                     // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                        
+                    <?php if ($ccHelper->checkFieldShow('shipping', 'country')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                        <div class="field">
+                            <label for="shipping:country_id" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('Country') ?></label>
+                            <div class="input-box">
+                                <select title="Country" class="validate-select" id="shipping:country_id" name="shipping[country_id]"><option selected="selected" value="AU">Australia</option></select>
+
+                                <?php //echo $this->getCountryHtmlSelect('shipping') ?>
+                            </div>
+                        </div>
+                    <?php endif                                     // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                    
+                    </li>
+                <?php endif                                     // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                </div>
+                <?php if (!$ccHelper->checkFieldShow('shipping', 'country')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                    <li style="display:none;">
+                        <input type="hidden" name="shipping[country_id]" id="shipping:country_id" value="<?php echo $ccHelper->getDefaultCountryId() ?>" />
+                    </li>
+                <?php endif                                     // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                
+                <?php if ($ccHelper->checkFieldShow('shipping', 'telephone') || $ccHelper->checkFieldShow('shipping', 'fax')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                    <li class="fields">
+                    
+                    <?php if ($ccHelper->checkFieldShow('shipping', 'telephone')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                        <div class="field<?php echo $compact ?>">
+                            <label for="shipping:telephone" class="required"><em>*</em><?php echo Mage::helper('checkout')->__('Telephone') ?></label>
+                            <div class="input-box">
+                                <input type="text" name="shipping[telephone]" value="<?php echo $this->htmlEscape($this->getAddress()->getTelephone()) ?>" title="<?php echo Mage::helper('checkout')->__('Telephone') ?>" class="input-text required-entry validate-digits" id="shipping:telephone" onchange="" />
+                            </div>
+                        </div>
+                    <?php endif                                     // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                        
+                    <?php if ($ccHelper->checkFieldShow('shipping', 'fax')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                        <div class="field<?php echo $compact ?>">
+                            <label for="shipping:fax"><?php echo Mage::helper('checkout')->__('Fax') ?></label>
+                            <div class="input-box">
+                                <input type="text" name="shipping[fax]" value="<?php echo $this->htmlEscape($this->getAddress()->getFax()) ?>" title="<?php echo Mage::helper('checkout')->__('Fax') ?>" class="input-text" id="shipping:fax" onchange="" />
+                            </div>
+                        </div>
+                    <?php endif                                     // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                        
+                    </li>
+                <?php endif                                     // AITOC CONFIGURABLE CHECKOUT CODE ?>
+                    
+                <?php if ($this->isCustomerLoggedIn() && $this->customerHasAddresses()):?>
+                    <li class="control">
+                        <input type="checkbox" name="shipping[save_in_address_book]" value="1" title="<?php echo Mage::helper('checkout')->__('Save in address book') ?>" id="shipping:save_in_address_book" onchange=""<?php if ($this->getAddress()->getSaveInAddressBook()):?> checked="checked"<?php endif;?> class="checkbox" /><label for="shipping:save_in_address_book"><?php echo Mage::helper('checkout')->__('Save in address book') ?></label></li>
+                <?php else:?>
+                    <li class="no-display"><input type="hidden" name="shipping[save_in_address_book]" value="1" /></li>
+                <?php endif;?>
+                </ul>
+            </fieldset>
+        </li>
+    </ul>
+    </div>
+    <!--     START AITOC CHECKOUT ATTRIBUTES     -->
+    <?php if ($aFieldList = $cfmHelper->getCustomFieldList('shippinfo', 2)): ?>
+    <ul class="form-list">
+        <li id="shipping-aitcheckoutfields-bottom">
+            <fieldset>
+                <ul class="form-list">
+                <?php foreach ($aFieldList as $aField): ?>
+                    <?php echo $cfmHelper->getFieldHtml('shipping', $aField); ?>
+                <?php endforeach; ?>
+                </ul>                
+            </fieldset>
+        </li>
+    </ul>
+    <?php endif; ?>
+    <!--     FINISH AITOC CHECKOUT ATTRIBUTES     -->
+</div>
+<div id="shipping-waiting" class="aitcheckout-wait" style="display:none"><img src="<?php echo Mage::getDesign()->getSkinUrl('images/opc-ajax-loader.gif'); ?>" /></div>    
+<script type="text/javascript">
+//<![CDATA[
+    <?php if ($ccHelper->checkFieldShow('shipping', 'region')) :        // AITOC CONFIGURABLE CHECKOUT CODE ?>
+        var shippingRegionUpdater = new RegionUpdater('shipping:country_id', 'shipping:region', 'shipping:region_id', countryRegions, undefined, 'shipping:postcode');
+    <?php else:                                     // AITOC CONFIGURABLE CHECKOUT CODE ?>
+
+    var EmulateUpdater = Class.create();
+    EmulateUpdater.prototype = {
+        initialize: function(){
+        },
+
+        update: function(){
+        }
+    }
+
+    var shippingRegionUpdater = new EmulateUpdater();
+
+//]]>
+</script>
+
+<div id="shipping:region_id" style="display:none;"></div>
+<div id="shipping:region" style="display:none;"></div>
+
+<script type="text/javascript">
+//<![CDATA[
+<?php endif                                     // AITOC CONFIGURABLE CHECKOUT CODE ?>
+
+    aitCheckout.createStep('shipping',{}, {
+                doCheckErrors : false,
+                isLoadWaiting : false,
+                isUpdateOnReload : false,
+                container: 'checkout-step-shipping',
+                ids: {
+                    useForShipping : 'billing:use_for_shipping',
+                    addressSelect  : 'shipping-address-select',
+                    addressForm    : 'shipping-new-address-form'
+                }
+            }
+    );
+
+//]]>
+</script>

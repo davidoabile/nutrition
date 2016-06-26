@@ -1,0 +1,147 @@
+diff -aurBb /home/httpd/htdocs/users/martinkevich/mag1700/var/ait_patch_orig/compare24513357673394f9e312b6f4c6 /home/httpd/htdocs/users/martinkevich/mag1700/var/ait_patch_modif/compare24513357673394f9e312b6f4c6
+--- /home/httpd/htdocs/users/martinkevich/mag1700/var/ait_patch_orig/compare24513357673394f9e312b6f4c6	2012-04-30 09:28:59 +0300
++++ /home/httpd/htdocs/users/martinkevich/mag1700/var/ait_patch_modif/compare24513357673394f9e312b6f4c6	2012-04-30 09:28:59 +0300
+@@ -26,5 +26,6 @@
+ /** @var $this Mage_Paypal_Block_Express_Review */
++$cfmHelper = Mage::helper('aitcheckoutfields');
+ ?>
+ <div class="page-title">
+     <h1><?php echo $this->__('Review Order') ?></h1>
+@@ -33,16 +34,25 @@
+     <div class="info-set col2-set">
+         <h2 class="legend"><?php echo $this->__('Shipping Information') ?></h2>
+         <div class="col-1">
+             <div class="box">
+                 <div class="box-title">
+                     <h3><?php echo $this->__('Shipping Address') ?><span class="separator"><?php if ($this->getCanEditShippingAddress()):?> | </span><a href="<?php echo $this->getEditUrl() ?>"><?php echo $this->__('Edit') ?></a><?php endif;?></h3>
+                 </div>
+                 <div class="box-content">
++
++                <?php echo $cfmHelper->getStepFieldsCode('shippinfo', 1, 'onepage', 'aitpaypalexpress'); ?>
++
+                     <address><?php echo $this->renderAddress($this->getShippingAddress())?></address>
++
++                <?php echo $cfmHelper->getStepFieldsCode('shippinfo', 2, 'onepage', 'aitpaypalexpress'); ?>
++
+                 </div>
+             </div>
+         </div>
+         <div class="col-2">
++
++        <?php echo $cfmHelper->getStepFieldsCode('shippmethod', 1, 'onepage', 'aitpaypalexpress'); ?>
++
+             <div class="box">
+                 <div class="box-title">
+                     <h3><?php echo $this->__('Shipping Method') ?></h3>
+@@ -78,34 +88,51 @@
+                             <p><strong><?php echo $this->renderShippingRateOption($this->getCurrentShippingRate())?></strong></p>
+                         <?php endif; ?>
+                     </form>
+                 </div>
+             </div>
++
++        <?php echo $cfmHelper->getStepFieldsCode('shippmethod', 2, 'onepage', 'aitpaypalexpress'); ?>
++
+         </div>
+     </div>
+ <?php endif; ?>
+ 
+ <div class="info-set col2-set">
+     <h2 class="legend"><?php echo $this->__('Billing Information') ?></h2>
+     <div class="col-1">
+         <div class="box">
+             <div class="box-title">
+                 <h3><?php echo $this->__('Payment Method') ?> <span class="separator">|</span>
+                     <?php if($this->getEditUrl()):?><a href="<?php echo $this->getEditUrl() ?>"><?php echo $this->__('Edit Payment Information') ?></a> <?php endif ?>
+                 </h3>
+             </div>
+             <div class="box-content">
++
++                <?php echo $cfmHelper->getStepFieldsCode('billing', 1, 'onepage', 'aitpaypalexpress'); ?>
++                <?php echo $cfmHelper->getStepFieldsCode('payment', 1, 'onepage', 'aitpaypalexpress'); ?>
++
+                 <?php echo $this->escapeHtml($this->getPaymentMethodTitle()) ?>
++
++                <?php echo $cfmHelper->getStepFieldsCode('billing', 2, 'onepage', 'aitpaypalexpress'); ?>
++                <?php echo $cfmHelper->getStepFieldsCode('payment', 2, 'onepage', 'aitpaypalexpress'); ?>
++
+             </div>
+         </div>
+     </div>
+ </div>
+ 
+ <div class="info-set">
+     <h2 class="legend"><?php echo $this->__('Items in Your Shopping Cart') ?><span class="separator"> | </span><a href="<?php echo $this->getUrl('checkout/cart') ?>"><?php echo $this->__('Edit Shopping Cart') ?></a></h2>
++
++    <?php echo  $cfmHelper->getStepFieldsCode('review', 1, 'onepage', 'aitpaypalexpress'); ?>
++
+     <div id="details-reload">
+         <?php echo $this->getChildHtml('details') ?>
+     </div>
++
++    <?php echo  $cfmHelper->getStepFieldsCode('review', 2, 'onepage', 'aitpaypalexpress'); ?>
++
+ </div>
+ <form method="post" id="order_review_form" action="<?php echo $this->getPlaceOrderUrl() ?>">
+     <?php echo $this->getChildHtml('agreements'); ?>
+     <div class="buttons-set buttons-set-order" id="review-buttons-container">
+@@ -127,11 +154,20 @@
+     <?php if ($this->getUseAjax()):?>
+     OrderReviewController.prototype._submitOrder = function() {
++
++        if(!this.validate()) {
++            return false;
++        }
++
+         if (this._canSubmitOrder) {
+             if (this._pleaseWait) {
+                 this._pleaseWait.show();
+             }
+             new Ajax.Request(this.form.action, {
++                <?php /* AITCFM_COMMENT_START
+                 parameters: {isAjax: 1, method: 'POST'},
++                AITCFM_COMMENT_END */ ?>
++                mathod: 'post',
++                parameters: 'isAjax=1' + ((serializedCfmForm = $('order_review_form').serialize()) ? ('&' + serializedCfmForm) : '' ),
+                 onSuccess: function(transport) {
+                     try{
+                         response = eval('(' + transport.responseText + ')');
+@@ -167,8 +203,38 @@
+             });
+         }
+     }
++
++<?php else: ?>
++
++OrderReviewController.addMethods({
++    _submitOrder : function()
++    {
++        if(!this.validate()) {
++            return false;
++        }
++        if (this._canSubmitOrder) {
++            this.form.submit();
++            this._updateOrderSubmit(true);
++            if (this._pleaseWait) {
++                this._pleaseWait.show();
++            }
++        }
++    }
++});
++
+     <?php endif ?>
+ 
++
++OrderReviewController.addMethods({
++    validate: function()
++    {
++        if( typeof(this.validator) == 'undefined') {
++            this.validator = new Validation(this.form);
++        }
++        return this.validator.validate();
++    }
++});
++
+     PayPalExpressAjax = new OrderReviewController($('order_review_form'), $('review_button'),
+         $('shipping_method'), $('shipping_method_form'), 'details-reload'
+     );

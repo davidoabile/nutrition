@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <NwhCategoryAttribute_NwhCategoryAttribute>
+      <active>true</active>
+      <codePool>local</codePool>
+      <version>0.1.0</version>
+    </NwhCategoryAttribute_NwhCategoryAttribute>
+  </modules>
+</config>

@@ -1,0 +1,135 @@
+<?php $this->_prepareData(); ?>
+<?php $period = $this->_getPeriod() ?>
+<div style="margin:20px 0;" id="">
+    <div class="moo_chart_title">
+        <h4>Orders &amp; Amounts</h4>
+    </div>
+
+    <div class="moo_chart_body">
+        <select name="period" id="order_<?php echo $this->getHtmlId() ?>_period" onchange="changeDiagramsPeriod(this);">
+            <?php foreach ($this->helper('moogento_clean/dashboard')->getDatePeriods() as $_value=>$_label): ?>
+                <?php if(in_array($_value, array('custom'))) continue; ?>
+                <option value="<?php echo $_value ?>" <?php if($period==$_value): ?> selected="selected"<?php endif; ?>><?php echo $_label ?></option>
+            <?php endforeach; ?>
+        </select></p><br/>
+        <canvas id="ordersAmountsChart" style="width:80%; height: 380px;"></canvas>
+        <div id="ordersAmountsChartLegend" class="donut_legend_line"></div>
+        <?php if ($this->_hasDirtyData()): ?>
+        <span class="value-hint"><?php echo $this->__('Sync pending : may not be 100% accurate') ?></span>
+        <?php endif; ?>
+        <?php if (Mage::getStoreConfig('moogento_clean/dashboard/show_prices')): ?>
+            <?php echo $this->getTotalsHtml() ?>
+        <?php endif; ?>
+    </div>
+</div>
+<script>
+    var orders_amounts_options,
+        orders_amounts_data,
+        ordersAmountsChart,
+        ctx_sum;
+
+    jQuery(function () {
+        orders_amounts_options = {
+            drawScale: [0,1],
+            drawScaleStroke: [0,1],
+            // scaleGridLineColor : "rgba(255,255,255,.08)",
+            // scaleLineColor: "rgba(255,255,255,.2)",
+            scaleFontColor: '#fff',
+            customTooltips: function(tooltip) {
+                if (!tooltip) return;
+
+                var labels = [];
+                Chart.helpers.each(tooltip.labels,function(label,index) {
+                    if (index == 0) {
+                        labels[index] = '# ' + label;
+                    } else {
+                        labels[index] = '<?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol() ?> ' + parseFloat(label).toFixed(2);
+                    }
+                });
+
+                var titleWidth = tooltip.ctx.measureText(tooltip.title).width,
+                    labelWidth = Chart.helpers.longestText(tooltip.ctx,tooltip.font,labels) + tooltip.fontSize + 13,
+                    longestTextWidth = (Chart.helpers.max([labelWidth,titleWidth])*1.15);
+
+                Chart.helpers.drawRoundedRectangle(tooltip.ctx,tooltip.x,tooltip.y - tooltip.height/2,longestTextWidth,tooltip.height,tooltip.cornerRadius);
+                var ctx = tooltip.ctx;
+                ctx.fillStyle = tooltip.fillColor;
+                ctx.fill();
+                ctx.closePath();
+
+                ctx.textAlign = "left";
+                ctx.textBaseline = "middle";
+                ctx.fillStyle = tooltip.titleTextColor;
+                ctx.font = tooltip.titleFont;
+
+                ctx.fillText(tooltip.title,tooltip.x + tooltip.xPadding, tooltip.getLineHeight(0));
+
+                ctx.font = tooltip.font;
+                Chart.helpers.each(labels,function(label,index){
+                    ctx.fillStyle = this.textColor;
+                    ctx.fillText(label,this.x + this.xPadding + this.fontSize + 3, this.getLineHeight(index + 1));
+
+                    ctx.fillStyle = this.legendColorBackground;
+                    ctx.fillRect(this.x + this.xPadding, this.getLineHeight(index + 1) - this.fontSize/2, this.fontSize, this.fontSize);
+
+                    ctx.fillStyle = this.legendColors[index].fill;
+                    ctx.fillRect(this.x + this.xPadding, this.getLineHeight(index + 1) - this.fontSize/2, this.fontSize, this.fontSize);
+
+
+                },tooltip);
+            }
+        };
+        orders_amounts_data = {
+            labels: <?php echo $this->getLabelsData(); ?>,
+            datasets: [
+                {
+                    axis: 0,
+                    label: "# Orders",
+                    fillColor: "rgba(220,220,220,0.2)",
+                    strokeColor: "rgba(220,220,220,1)",
+                    pointColor: "rgba(220,220,220,1)",
+                    pointStrokeColor: "#ccc",
+                    pointHighlightFill: "#ddd",
+                    pointHighlightStroke: "rgba(220,220,220,1)",
+                    data: <?php echo $this->getQtysData(); ?>
+                },
+                {
+                    axis: 1,
+                    label: "$ Sales",
+                    fillColor: "rgba(220,100,255,0.2)",
+                    strokeColor: "rgba(220,100,255,1)",
+                    pointColor: "rgba(220,100,255,1)",
+                    pointStrokeColor: "#ccc",
+                    pointHighlightFill: "#ddd",
+                    pointHighlightStroke: "rgba(220,100,255,1)",
+                    data: <?php echo $this->getSumsData(); ?>
+                }
+            ]
+        };
+
+        ctx_sum = jQuery("#ordersAmountsChart").get(0).getContext("2d");
+        function updateOrdersAmountsChart() {
+            ordersAmountsChart = new Chart(ctx_sum).MultiAxisLine(orders_amounts_data, orders_amounts_options);
+            jQuery("#ordersAmountsChartLegend").html(ordersAmountsChart.generateLegend());
+        }
+        varienGlobalEvents.attachEventHandler('showTab', function(tab_data){
+           if (jQuery(tab_data.tab).attr('id') == 'diagram_tab_ordersamounts') {
+               updateOrdersAmountsChart();
+           }
+        });
+        <?php if (Mage::app()->getRequest()->isAjax()): ?>
+        window.setTimeout(updateOrdersAmountsChart, 1000);
+        <?php endif; ?>
+		// auto-redraw on resize:
+		/*
+			function respondCanvas() {
+			    ctx.attr('width', jQuery("#ordersAmountsChart").width());
+			    ctx.attr('height', jQuery("#ordersAmountsChart").height());
+
+			    myNewChart = new Chart(ct).Bar(data, options);
+			}
+			$(window).resize(respondCanvas);
+		*/
+		
+    });
+</script>

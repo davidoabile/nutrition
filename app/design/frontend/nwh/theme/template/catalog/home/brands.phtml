@@ -1,0 +1,36 @@
+
+<?php $splashPages = $this->getCollection() ?>
+<?php if ($splashPages->count()): ?>
+    <div id="brands">
+        <div class="hadd_pink"><?php echo $this->__('BRANDS') ?></div>
+        <div class="brand_link">
+            <ul>
+                <?php
+                    $i    = 0;
+                    $rows = 10;
+                    $c    = $splashPages->count();
+                ?>
+                <?php foreach ($splashPages AS $splashPage): ?>
+                    <?php if ($splashPage->getHomePage()): ?>
+                        <li>
+                            <?php
+                                $i++;
+                                $thumbnail      = $splashPage->getThumbnail();
+                                $thumbnailHover = $splashPage->getThumbnailHover();
+                            ?>
+                            <?php if ($thumbnail): ?>
+                                <a href="<?php echo $splashPage->getUrl() ?>" title="<?php echo $this->escapeHtml($splashPage->getName()) ?>" class="product-image">
+                                    <img class="<?php echo ($thumbnailHover) ? 'grayimg' : '' ?>" src="<?php echo $this->helper('attributeSplash/image')->init($splashPage, 'thumbnail')->keepFrame(false)->constrainOnly(true)->resize(110) ?>" alt="<?php echo $this->escapeHtml($splashPage->getName()) ?>" />
+                                    <?php if ($thumbnailHover): ?>
+                                        <img src="<?php echo $this->helper('attributeSplash/image')->init($splashPage, 'thumbnail_hover')->keepFrame(false)->constrainOnly(true)->resize(110) ?>" alt="<?php echo $this->escapeHtml($splashPage->getName()) ?>" />
+                                    <?php endif ?>
+                                </a>
+                            <?php endif ?>
+                        </li>
+                    <?php endif ?>
+                <?php endforeach ?>
+            </ul>
+        </div>
+        <a class="view_btn" href="<?php echo $this->getBrandsGroup()->getUrl() ?>"><?php echo $this->__('VIEW ALL') ?></a>
+    </div>
+<?php endif ?>

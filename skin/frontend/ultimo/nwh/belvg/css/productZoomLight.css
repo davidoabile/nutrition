@@ -1,0 +1,13 @@
+.product-view .product-img-box .product-image {
+    width: 100%;
+    height: auto;
+}
+    .product-img-box .product-image img {
+        width: 100%;
+        height: auto;
+        max-height: none !important;
+    }
+
+    .page-header-container {
+        z-index: 5;
+    }

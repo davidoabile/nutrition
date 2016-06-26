@@ -1,0 +1,8 @@
+<config>
+    <modules>
+        <Moogento_CourierRules>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Moogento_CourierRules>
+    </modules>
+</config>

@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <SideAds_SideAds>
+      <version>0.1.0</version>
+    </SideAds_SideAds>
+  </modules>
+  <global>
+    <helpers>
+      <sideads>
+        <class>SideAds_SideAds_Helper</class>
+      </sideads>
+    </helpers>
+	<blocks>
+	  <sideads>
+		<class>SideAds_SideAds_Block</class>
+	  </sideads>
+	</blocks>
+	<models>
+	  <sideads>
+		<class>SideAds_SideAds_Model</class>
+		<resourceModel>sideads_mysql4</resourceModel>
+	  </sideads>
+	  <sideads_mysql4>
+		<class>SideAds_SideAds_Model_Mysql4</class>
+		<entities>		  
+			  <sideads>
+				<table>side_ads</table>
+			  </sideads>
+		</entities>
+	  </sideads_mysql4>
+	</models>
+	<resources>
+	  <sideads_setup>
+		<setup>
+		  <module>SideAds_SideAds</module>
+		</setup>
+		<connection>
+		  <use>core_setup</use>
+		</connection>
+	  </sideads_setup>
+	  <sideads_write>
+		<connection>
+		  <use>core_write</use>
+		</connection>
+	  </sideads_write>
+	  <sideads_read>
+		<connection>
+		  <use>core_read</use>
+		</connection>
+	  </sideads_read>
+	</resources>
+  </global>
+  <admin>
+	<routers>
+	  <adminhtml>
+				<args>
+					<modules>
+						<sideads before="Mage_Adminhtml">SideAds_SideAds_Adminhtml</sideads>
+					</modules>
+				</args>
+			</adminhtml>
+	</routers>
+  </admin>
+  <adminhtml>
+	<menu>
+	  <sideads module="sideads">
+		<title>Side Ads</title>
+		<sort_order>100</sort_order>
+		<children>
+		  <sideads module="sideads">
+		    <title>Manage Side Ads</title>
+			<sort_order>0</sort_order>
+			<action>adminhtml/sideads_sideads</action>
+		  </sideads>
+		</children>
+	  </sideads>
+	</menu>
+	<acl>
+	  <resources>
+		<all>
+		  <title>Allow Everything</title>
+		</all>
+		<admin>
+		  <children>
+			<sideads translate="title" module="sideads">
+			  <title>Side Ads</title>
+			  <sort_order>1000</sort_order>
+			  <children>
+		  <sideads translate="title">
+			<title>Manage Side Ads</title>
+			<sort_order>0</sort_order>
+		  </sideads>
+			  </children>
+			</sideads>
+		  </children>
+		</admin>
+	  </resources>
+	</acl>
+	<layout>
+	  <updates>
+		<sideads>
+		  <file>sideads.xml</file>
+		</sideads>
+	  </updates>
+	</layout>
+  </adminhtml>
+</config> 

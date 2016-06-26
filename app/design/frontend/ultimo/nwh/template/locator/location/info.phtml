@@ -1,0 +1,193 @@
+<?php
+/**
+ * Location extension for Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @copyright   Copyright (c) 2013 Andrew Kett. (http://www.andrewkett.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+?>
+
+<?php
+$loc = $this->getLocations()->getFirstItem();
+?>
+
+<!--<h2 itemprop="name" class="loc-title"><?php //echo $loc->title; ?></h2> -->
+
+<div class="address-info">
+    <h2><?php echo $this->__('Address') ?></h2>
+    <?php if ($loc->getStorePic()): ?>
+        <?php
+        $srcImage = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'ak_locator_location' . $loc->getStorePic();
+        if (strpos($loc->getStorePic(), 'franchisee/files/') !== false):
+            $srcImage = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $loc->getStorePic();
+        endif;?>
+        <img src="<?php echo $srcImage; ?>" class="loc-img"/>
+    <?php endif; ?>
+
+    <?php //@todo: this is wrong, do like next example ?>
+    <address itemprop="address"><?php echo $loc->address; ?></address>
+    <?php /**
+    <address itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+    <span itemprop="streetAddress">1901 Lemur Ave</span>
+    <span itemprop="addressLocality"><?php echo $loc->locality; ?></span>,
+    <span itemprop="addressRegion"><?php echo $loc->administrative_area; ?></span> <span itemprop="postalCode"><?php echo $loc->postal_code; ?></span>
+    </address>
+     **/
+    ?>
+
+    <?php if ($loc->phone): ?>
+        <p class="loc-data-phone" itemprop="telephone">Ph: <?php echo $loc->phone; ?></p>
+    <?php endif; ?>
+    <?php if ($loc->fax): ?>
+        <p class="loc-data-fax">Fax: <?php echo $loc->fax; ?></p>
+    <?php endif; ?>
+    <?php if ($loc->email): ?>
+        <p class="loc-data-email">Email: <a href="mailto:<?php echo $loc->email; ?>"
+                                            itemprop="email"><?php echo $loc->email; ?></a></p>
+    <?php endif; ?>
+    <?php if ($loc->website): ?>
+        <p class="loc-data-website">Website: <a itemprop="url" href="<?php echo $loc->website; ?>"
+                                                itemprop="url"><?php echo $loc->website; ?></a></p>
+    <?php endif; ?>
+    <?php if ($loc->getClearanceCentre()): ?>
+        <p><b><?php echo $this->__('Clearance Centre'); ?></b></p>
+    <?php endif; ?>
+    <?php if ($loc->getCookingSpecialist()): ?>
+        <p><b><?php echo $this->__('Cooking Specialist'); ?></b></p>
+    <?php endif; ?>
+    <?php if ($loc->getFurnitureInStore()): ?>
+        <p><b><?php echo $this->__('Furniture in store'); ?></b></p>
+    <?php endif; ?>
+
+
+    <div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
+        <meta itemprop="latitude" content="<?php echo $loc->getLatitude(); ?>"/>
+        <meta itemprop="longitude" content="<?php echo $loc->getLongitude(); ?>"/>
+    </div>
+    <?php $locAddress = $loc->address;
+    $postalCode = "";
+    $addressRegion = "";
+    $addressLocality = "";
+    $streetAddress = "";
+    if ($locAddress) {
+        $locAddressArray = explode(",", $locAddress);
+        if (count($locAddressArray) && count($locAddressArray) >= 2) {
+            $postcodeArray = explode(" ", $locAddressArray[count($locAddressArray) - 1]);
+            if (count($postcodeArray) >= 3) {
+                $postalCode = $postcodeArray[count($postcodeArray) - 1];
+                $addressRegion = $postcodeArray[count($postcodeArray) - 2];
+                for ($j = 0; $j < count($postcodeArray) - 2; $j++) {
+                    $addressLocality .= $postcodeArray[$j];
+                }
+            }
+        }
+        for ($i = 0; $i < count($locAddressArray) - 1; $i++) {
+            $streetAddress .= $locAddressArray[$i];
+            if ($i == count($locAddressArray) - 2) {
+                continue;
+            } else if ((count($locAddressArray) - 1) > 1) {
+                $streetAddress .= ", ";
+            }
+        }
+
+    }
+    ?>
+    <!--<div class="locator-address-seo">
+        <p itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+            <span itemprop="streetAddress">
+              <?php /*echo $streetAddress */?>
+            </span><br/>
+            <span itemprop="addressLocality"><?php /*echo $addressLocality; */?></span>
+            <span itemprop="addressRegion"><?php /*echo $addressRegion; */?></span>
+            <span itemprop="postalCode"><?php /*echo $postalCode; */?></span>
+        </p>
+    </div>-->
+
+    <script type="text/javascript">
+        var link_setstore = "<?php echo  Mage::getUrl('belocator/index/setstore');?>";
+    </script>
+    <!-- onclick="setMyStore('<?php //echo $loc->getId();?>',link_setstore) -->
+    <div class="locator_mystore_btn"><a href="<?php echo $loc->getDirectionsLink(); ?>">Get Directions</a></div>
+</div>
+<div class="open-hour">
+    <?php if ($loc->getHoursMon() || $loc->getHoursTue() || $loc->getHoursWed() || $loc->getHoursThue() || $loc->getHoursFri() || $loc->getHoursSat() || $loc->getHoursSun()): ?>
+        <div class="view_trading" itemscope itemtype="http://schema.org/Store">
+            <h2 itemprop="name"><?php echo $this->__('Opening hours') ?></h2>
+            <table border="0" width="100%">
+                <tr itemprop="openingHoursSpecification" itemscope
+                    itemtype="http://schema.org/OpeningHoursSpecification">
+                    <td width="40%" itemprop="opens">
+                        Monday:
+                    </td>
+                    <td width="60%" itemprop="opens"><?php echo $loc->getHoursMon() ?></td>
+                </tr>
+                <tr itemprop="openingHoursSpecification" itemscope
+                    itemtype="http://schema.org/OpeningHoursSpecification">
+                    <td width="40%" itemprop="opens">
+                        Tuesday:
+                    </td>
+                    <td width="60%" itemprop="opens"
+                        content="<?php echo $loc->getHoursTue() ?>"><?php echo $loc->getHoursTue() ?></td>
+                </tr>
+                <tr itemprop="openingHoursSpecification" itemscope
+                    itemtype="http://schema.org/OpeningHoursSpecification">
+                    <td width="40%" itemprop="opens">
+                        Wednesday:
+                    </td>
+                    <td width="60%" itemprop="opens"><?php echo $loc->getHoursWed() ?></td>
+                </tr>
+                <tr itemprop="openingHoursSpecification" itemscope
+                    itemtype="http://schema.org/OpeningHoursSpecification">
+                    <td width="40%" itemprop="opens">
+                        Thursday:
+                    </td>
+                    <td width="60%" itemprop="opens"><?php echo $loc->getHoursThu() ?></td>
+                </tr>
+                <tr itemprop="openingHoursSpecification" itemscope
+                    itemtype="http://schema.org/OpeningHoursSpecification">
+                    <td width="40%" itemprop="opens">
+                        Friday:
+                    </td>
+                    <td width="60%" itemprop="opens"><?php echo $loc->getHoursFri() ?></td>
+                </tr>
+                <tr itemprop="openingHoursSpecification" itemscope
+                    itemtype="http://schema.org/OpeningHoursSpecification">
+                    <td width="40%" itemprop="opens">
+                        Saturday:
+                    </td>
+                    <td width="60%" itemprop="opens"><?php echo $loc->getHoursSat() ?></td>
+                </tr>
+                <tr itemprop="openingHoursSpecification" itemscope
+                    itemtype="http://schema.org/OpeningHoursSpecification">
+                    <td width="40%" itemprop="opens">
+                        Sunday:
+                    </td>
+                    <td width="60%" itemprop="opens"><?php echo $loc->getHoursSun() ?></td>
+                </tr>
+            </table>
+        </div>
+    <?php endif; ?>
+</div>
+
+<?php if ($loc->getStoreNotes()): ?>
+    <div style="clear: both"></div>
+    <div class="view_cooking_specialist">
+        <h2><?php echo $this->__('Store Notes'); ?></h2>
+
+        <div>
+            <p> <?php echo $loc->getStoreNotes() ?></p>
+        </div>
+    </div>
+<?php endif; ?>
+
+
+
+
+

@@ -1,0 +1,24 @@
+<div class="header-container header-regular header-checkout" id="top">
+    <div class="header-primary header container<?php if ($classes['primary']) echo " " . $classes['primary']; ?>">
+        <div class="inner-container">
+            <div class="hp-block clearfix">
+
+<!--                <div class="back-link-checkout">-->
+<!--                    <a href="--><?php //echo Mage::getBaseUrl();?><!--">Continue Shopping</a>-->
+<!--                </div>-->
+
+                <div class="logo-wrapper logo-wrapper--regular">
+                        <a class="logo logo--regular" href="<?php echo $this->getUrl('') ?>"title="<?php echo $this->getLogoAlt() ?>"><strong><?php echo $this->getLogoAlt() ?></strong>
+                            <img src="<?php echo $this->getSkinUrl('images/logo-checkout.png') ?>" alt="<?php echo $this->getLogoAlt() ?>"/>
+                        </a>
+                </div>
+
+                <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('need-help-checkout')->toHtml(); ?>
+
+            </div>
+        </div>
+        <!-- end: inner-container -->
+    </div>
+    <!-- end: header-primary -->
+
+</div> <!-- end: header-container -->

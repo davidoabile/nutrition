@@ -1,0 +1,88 @@
+
+<?php $splashPages = $this->getCollection() ?>
+<?php if ($splashPages->count()): ?>
+    <div id="brands">
+        <div class="hadd_pink pc"><?php echo $this->__('OUR BRANDS') ?></div>
+        <div class="hadd_pink mb"><?php echo $this->__('SHOP BY BRAND') ?></div>
+        <div class="brand_link">
+            <ul id="list-brands">
+                <?php
+                $i = 0;
+                $rows = 10;
+                $limit = 10;
+                $c = $splashPages->count();
+                ?>
+                <?php foreach ($splashPages AS $key => $splashPage): ?>
+                <?php if($splashPage->getHomePage()):?>
+                    <?php
+                    $i++;
+                    $thumbnail = $splashPage->getThumbnail();
+                    $thumbnailHover = 0; //$splashPage->getThumbnailHover(); /*disabled thumbnailHover*/
+                    
+                    ?>
+                        <?php if ($thumbnail): ?>
+                        <li class="show">
+                            <a href="<?php echo $splashPage->getUrl() ?>" title="<?php echo $this->escapeHtml($splashPage->getName()) ?>" class="product-image">
+                                <img class="<?php echo ($thumbnailHover) ? 'grayimg' : '' ?>" src="<?php echo $this->helper('attributeSplash/image')->init($splashPage, 'thumbnail')->keepFrame(false)->constrainOnly(true)->resize(206) ?>" alt="<?php echo $this->escapeHtml($splashPage->getName()) ?>" />
+                                <?php if ($thumbnailHover): ?>
+                                    <img src="<?php echo $this->helper('attributeSplash/image')->init($splashPage, 'thumbnail_hover')->keepFrame(false)->constrainOnly(true)->resize(206) ?>" alt="<?php echo $this->escapeHtml($splashPage->getName()) ?>" />
+                                <?php endif ?>
+                            </a>
+
+                        </li>
+                        <?php endif ?>
+                    <?php endif ?>
+                <?php endforeach ?>
+                <?php if (0): ?>
+                    <?php foreach ($splashPages AS $key => $splashPage): ?>
+                        <?php if(!$splashPage->getHomePage()):?>
+                        <?php
+                            $i++;
+                            $thumbnail = $splashPage->getThumbnail();
+                            $thumbnailHover = 0; //$splashPage->getThumbnailHover(); /*disabled thumbnailHover*/
+                        ?>
+                            <?php if ($thumbnail): ?>
+                            <li class="hide">
+                                <a href="<?php echo $splashPage->getUrl() ?>" title="<?php echo $this->escapeHtml($splashPage->getName()) ?>" class="product-image">
+                                    <img class="<?php echo ($thumbnailHover) ? 'grayimg' : '' ?>" src="<?php echo $this->helper('attributeSplash/image')->init($splashPage, 'thumbnail')->keepFrame(false)->constrainOnly(true)->resize(206) ?>" alt="<?php echo $this->escapeHtml($splashPage->getName()) ?>" />
+                                    <?php if ($thumbnailHover): ?>
+                                        <img src="<?php echo $this->helper('attributeSplash/image')->init($splashPage, 'thumbnail_hover')->keepFrame(false)->constrainOnly(true)->resize(206) ?>" alt="<?php echo $this->escapeHtml($splashPage->getName()) ?>" />
+                                    <?php endif ?>
+                                </a>
+
+                            </li>
+                            <?php endif ?>
+                        <?php endif ?>
+                    <?php endforeach ?>   
+                <?php endif ?>
+                 
+            </ul>
+            <?php //echo $this->getBrandsGroup()->getUrl() ?>
+            <a class="view_btn" href="<?php echo $this->getBrandsGroup()->getUrl() ?>" data-show="disable"><?php echo $this->__('View all Brands') ?></a>
+        </div>
+    </div>
+    <?php
+ endif ?>
+<script type="text/javascript">
+function showAll(obj){
+    var status = jQuery(obj).attr("data-show");
+    if(status=="disable"){
+        jQuery("#list-brands").find("li").removeClass("hide");
+        jQuery(".brand_link").slideDown('slow');
+        jQuery(obj).attr("data-show","enable");
+        jQuery(obj).html("<?php echo $this->__("Less Brands")?>");
+    }else{
+         var li = jQuery("#list-brands").find("li");
+         li.each(function(){
+             if(!jQuery(this).hasClass("show")){
+                jQuery(this).addClass("hide");
+            }
+         });
+         jQuery("html, body").animate({scrollTop: jQuery("#brands").offset().top},2000,"easeOutCubic");
+         jQuery(obj).html("<?php echo $this->__("View all Brands")?>");
+         jQuery(obj).attr("data-show","disable");
+         
+    }
+    
+}
+</script>

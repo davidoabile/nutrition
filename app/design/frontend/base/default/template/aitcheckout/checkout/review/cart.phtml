@@ -1,0 +1,113 @@
+<?php
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+?>
+<div id="checkout-review-table-wrapper">
+
+    <table id="shopping-cart-table" class="data-table cart-table">
+        <col width="1" />
+        <col />
+    <?php if ($this->helper('aitcheckout')->canEditCartItems()) : ?>
+        <col width="1" />
+    <?php endif ?>
+    <?php if ($this->helper('wishlist')->isAllowInCart()) : ?>
+        <col width="1" />
+    <?php endif ?>
+    <?php if ($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+        <col width="1" />
+    <?php endif; ?>
+    <?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+        <col width="1" />
+    <?php endif; ?>
+        <col width="1" />
+    <?php if ($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+        <col width="1" />
+    <?php endif; ?>
+    <?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+        <col width="1" />
+    <?php endif; ?>
+        <col width="1" />
+
+    <?php $mergedCells = ($this->helper('tax')->displayCartBothPrices() ? 2 : 1); ?>
+        <thead>
+            <tr>
+                <th rowspan="<?php echo $mergedCells; ?>">&nbsp;</th>
+                <th rowspan="<?php echo $mergedCells; ?>"><span class="nobr"><?php echo Mage::helper('checkout')->__('Product Name') ?></span></th>
+                <?php if ($this->helper('aitcheckout')->canEditCartItems()) : ?>
+                <th rowspan="<?php echo $mergedCells; ?>"></th>
+                <?php endif ?>
+                <?php if ($this->helper('wishlist')->isAllowInCart()) : ?>
+                <th rowspan="<?php echo $mergedCells; ?>"></th>
+                <?php endif ?>
+                <th class="a-center" colspan="<?php echo $mergedCells; ?>"><span class="nobr"><?php echo Mage::helper('checkout')->__('Unit Price') ?></span></th>
+                <th rowspan="<?php echo $mergedCells; ?>" class="a-center"><?php echo Mage::helper('checkout')->__('Qty') ?></th>
+                <th class="a-center" colspan="<?php echo $mergedCells; ?>"><?php echo Mage::helper('checkout')->__('Subtotal') ?></th>
+                <th rowspan="<?php echo $mergedCells; ?>" class="a-center">&nbsp;</th>
+            </tr>
+            <?php if ($this->helper('tax')->displayCartBothPrices()): ?>
+            <tr>
+                <th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>
+                <th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+                <th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>
+                <th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+            </tr>
+            <?php endif; ?>
+        </thead>
+        <tbody>
+        <?php foreach($this->getItems() as $_item): ?>
+            <?php echo $this->getItemHtml($_item) ?>
+        <?php endforeach ?>
+        </tbody>
+        <?php echo $this->getChildHtml('totals'); ?>
+    </table>
+
+</div>
+<script type="text/javascript">
+//<![CDATA[
+    decorateTable('checkout-review-table');
+    truncateOptions();
+//]]>
+</script>
+    
+<script type="text/javascript">
+//<![CDATA[
+
+    aitCheckout.createStep('review',{
+        updateOptionsUrl :  '<?php echo $this->getUrl('aitcheckout/cart/updateItemOptions', array('_secure'=>true)) ?>',
+        updatePostUrl :     '<?php echo $this->getUrl('aitcheckout/cart/updatePost', array('_secure'=>true)) ?>',
+        deleteUrl :         '<?php echo $this->getUrl('aitcheckout/cart/delete', array('_secure'=>true)) ?>'
+    }, {
+        doCheckErrors : false,
+        isLoadWaiting : true,
+        isUpdateOnReload : false,
+        doNotInitAfter : false,
+        container: 'checkout-step-review',
+        ids: {
+            productOptions: '.product-options',
+            itemQuantity:   '.aititemqty',
+            buttonIncrease: '.btn-increase',
+            buttonDecrease: '.btn-decrease',
+            buttonRemove:   '.btn-remove2',
+            buttonWishlist: '.btn-move-to-wishlist'
+        }
+    });
+
+    <?php $count = Mage::helper('checkout/cart')->getSummaryCount();
+    $text = Mage::helper('checkout')->__('Checkout');
+    if( $count > 0 ) {
+        $text .= " ($count ".$this->__(($count==1)?'item':'items').')';
+    }
+    ?>
+    if ($$('a.top-link-checkout').first()){
+        $$('a.top-link-checkout').first().innerHTML = '<?php echo $text; ?>';
+    }
+
+//]]>
+</script>

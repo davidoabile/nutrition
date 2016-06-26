@@ -1,0 +1,216 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Shopping cart template
+ *
+ * @see Mage_Checkout_Block_Cart
+ */
+/**
+ * - Removed top "checkout" button
+ * - Added table wrapper (to show background image)
+ * - Changed "continue shopping" button and "update cart" button
+ * - Added class 'last' in table header last cells
+ * - Rearranged layout of 'cart-collaterals'
+ */
+?>
+<?php
+$session = Mage::getSingleton('checkout/session');
+$quote = $session->getQuote();
+$address = $quote->getShippingAddress();
+$country = null;
+
+$customerSession = Mage::getSingleton("customer/session");
+if ($customerSession->isLoggedIn()) {
+    $customerAddress = $customerSession->getCustomer()->getDefaultShippingAddress();
+    if ($customerAddress != null) {
+        if ($customerAddress->getId()) {
+            $country = $customerAddress->getCountryId();
+        }
+    }
+}
+
+if ($country == null) {
+    $country = 'AU';
+}
+
+$address->setCountryId($country)->setCollectShippingRates(true)->collectShippingRates();
+$method = $quote->getShippingMethod();
+$quote->save();
+$session->resetCheckout();
+?>
+
+
+<div class="form_main cart">
+    <div class="page-title">
+        <h1><?php echo $this->__('Shopping Cart') ?></h1>
+        <div class="form_heading_right">
+            <?php echo $this->__('Need help?') . ' ' . Mage::getStoreConfig('general/store_information/phone') ?>
+            <div class="form_heading_right_text">
+                <a class="link14_gry" href="<?php echo $this->getContinueShoppingUrl() ?>"><?php echo $this->__('Continue shopping') ?></a>
+            </div>
+        </div>
+    </div>
+    <div class="sc_area mrgn_t20">
+        <div class="sc_left">
+            <div class="cartaera">
+                <div class="cart_hadd">
+                    <?php echo $this->__('Your order') ?>
+                </div>
+                <div class="item_detl mrgn_t20">
+                    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+                    <?php echo $this->getChildHtml('form_before') ?>
+                    <form action="<?php echo $this->getUrl('checkout/cart/updatePost') ?>" method="post">
+                        <?php echo $this->getBlockHtml('formkey') ?>
+                        <table id="shopping-cart-table" width="100%" class="data-table cart-table">
+                            <col width="20%" />
+                            <col width="30%" />
+                            <col width="7%" />
+                            <?php if ($this->helper('wishlist')->isAllowInCart()) : ?>
+                                <col width="10%" />
+                            <?php endif ?>
+                            <?php if ($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                                <col width="10%" />
+                            <?php endif ?>
+                            <?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                                <col width="10%" />
+                            <?php endif ?>
+                            <col width="13%" />
+                            <?php if ($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                                <col width="10%" />
+                            <?php endif ?>
+                            <?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                                <col width="10%" />
+                            <?php endif ?>
+                            <col width="10%" />
+
+                            <?php $mergedCells = ($this->helper('tax')->displayCartBothPrices() ? 2 : 1) ?>
+                            <thead>
+                                <tr>
+                                    <th rowspan="<?php echo $mergedCells ?>">&nbsp;</th>
+                                    <th rowspan="<?php echo $mergedCells ?>"><span class="nobr"><?php echo $this->__('Product Name') ?></span></th>
+                                    <?php if ($this->helper('wishlist')->isAllowInCart()): ?>
+                                        <th rowspan="<?php echo $mergedCells ?>" class="a-center"><span class="nobr"><?php echo $this->__('Move to Wishlist') ?></span></th>
+                                    <?php endif ?>
+                                    <th class="a-center" rowspan="<?php echo $mergedCells ?>"></th>
+                                    <th class="a-right" colspan="<?php echo $mergedCells ?>"><span class="nobr"><?php echo $this->__('Price') ?></span></th>
+                                    <th rowspan="<?php echo $mergedCells ?>" class="a-center"><?php echo $this->__('Qty') ?></th>
+                                    <th class="a-center" rowspan="<?php echo $mergedCells ?>"><?php echo $this->__('Status') ?></th>
+                                    <th class="a-right last" colspan="<?php echo $mergedCells ?>"><?php echo $this->__('Total') ?></th>
+                                </tr>
+                                <?php if ($this->helper('tax')->displayCartBothPrices()): ?>
+                                    <tr>
+                                        <th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>
+                                        <th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+                                        <th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>
+                                        <th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+                                    </tr>
+                                <?php endif ?>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($this->getItems() as $_item): ?>
+                                    <?php echo $this->getItemHtml($_item) ?>
+                                <?php endforeach ?>
+                            </tbody>
+                        </table>
+                        <script type="text/javascript">decorateTable('shopping-cart-table')</script>
+                    </form>
+                </div>
+                <?php
+                /* $cart = Mage::getModel('checkout/session')->getQuote();
+                  $shippingMethod = $cart->getShippingAddress();
+                  $shipping = false;
+                  if ($shippingMethod['shipping_amount'] != 0.00) {
+                  $shipping = true;
+                  } */
+                ?>
+
+                <?php //echo ($this->getIsVirtual()) ? '' : $this->getChildHtml('shipping') ?>
+            </div>
+            <div class="cart-collaterals">
+                <div class="col2-set">
+                    <div class="col-1">
+                        <?php //echo $this->getChildHtml('crosssell') ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shipping_part">
+                <?php //echo $this->getChildHtml("coupon_giftcard") ?>
+                <?php //echo $this->getLayout()->createBlock("Mage_Core_Block_Template")->setTemplate("checkout/cart/coupon_ajax_cart.phtml")->toHtml() ?>
+            </div>
+            <div class="shipping_part">
+                <?php //echo $this->getChildHtml('checkout.cart.extra') ?>
+                <?php  echo Mage::app()->getLayout()->createBlock('zblocks/block')->setPosition('shopping-cart-cross-sell')->toHtml(); ?>
+               
+
+            </div>
+        </div>
+        <div class="sc_right" id="order_summary_sidebar">
+            <div class="order_summary_content">
+                <div class="order_summary_hadd"><?php echo $this->__('ORDER SUMMARY') ?></div>
+                <?php echo $this->getChildHtml('totals') ?>
+                <?php if (!$this->hasError()): ?>
+                    <ul class="checkout-types">
+                        <?php foreach ($this->getMethods('methods') as $method): ?>
+                            <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
+                                <li class="comman comman-methods" style="text-align: center;"><?php echo $methodHtml ?></li>
+                            <?php endif ?>
+                        <?php endforeach ?>
+                        <!--                        <li class="comman comman-continue" style="text-align: center;">-->
+                        <!--                            <a title="--><?php //echo $this->__('Continue Shopping')    ?><!--" class="link14_gry" href="--><?php //echo $this->getContinueShoppingUrl()    ?><!--">--><?php //echo $this->__('Continue Shopping')    ?><!--</a>-->
+                        <!--                        </li>-->
+                    </ul>
+                <?php endif ?>
+            </div>
+            <div class="order_summary_footer">
+                <div id="confidance">
+                    <img src="<?php echo $this->getSkinUrl('images/cart_confidence.png') ?>"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="url_ajax_checkout" value="<?php echo $this->getUrl() ?>">
+<script>
+                            jQuery("input[type='text'],input[type='radio'],input[type='checkbox'],select").uniform({selectAutoWidth: false});
+                            jQuery(document).ready(function ($) {
+                                if ($('.btn-proceed-checkout').hasClass('no-checkout')) {
+                                    $('.notice-msg p').remove();
+                                    $('#no-checkout-txt').show().text($('.notice-msg').text());
+                                }
+                            });
+</script>
+<script>
+
+    jQuery(function ($) {
+        setTimeout(function () {
+            $('.isp_related_title').addClass('cart_hadd rob');
+            $('.rob').removeClass('isp_related_title').css({'margin-left': '-30px', 'margin-right': '-30px'});
+        }, 2000);
+    });
+</script>

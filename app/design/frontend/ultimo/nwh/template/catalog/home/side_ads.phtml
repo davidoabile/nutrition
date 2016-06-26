@@ -1,0 +1,14 @@
+<?php $connection = Mage::getSingleton('core/resource')->getConnection('distributor_read'); 
+$results = $connection->fetchAll("SELECT * FROM side_ads");
+?>
+<div class="ad_banner mrgn_t10">
+    <ul id="AdsBanner" class="jcarousel-skin-tango">
+           <?php foreach ($results as $image) {  ?>
+                 <li>
+                     <img height="409" width="190" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$image['banner_image'] ?>">
+                </li>
+            
+            <?php  } ?>
+                
+</ul>
+</div>

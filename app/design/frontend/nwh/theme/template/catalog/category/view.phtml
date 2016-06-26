@@ -1,0 +1,196 @@
+<?php
+    $_helper   = $this->helper('catalog/output');
+    $_category = $this->getCurrentCategory();
+    $length    = $this->htmlEscape(strip_tags($_helper->categoryAttribute($_category, $_category->getName(), 'name')));
+
+    $_imgHtml  = '';
+    if ($_imgUrl  = $_category->getImageUrl()) {
+        $_imgHtml = '<img width="710" height="221" src="' . $_imgUrl . '" alt="' . $this->escapeHtml($_category->getName()) . '" title="' . $this->escapeHtml($_category->getName()) . '" />';
+        $_imgHtml = $_helper->categoryAttribute($_category, $_imgHtml, 'image');
+    }
+    
+?>
+
+<div class="hadd_pink2 page-title category-title title-category-pate" style="float:none">
+    <?php if ($_imgUrl): ?>
+        <div class="splash-image">
+            <div class="page-title category-title splash-title">
+                <?php if ($this->IsRssCatalogEnable() && $this->IsTopCategory()): ?>
+                    <a href="<?php echo $this->getRssLink() ?>" class="link-rss"><?php echo $this->__('Subscribe to RSS Feed') ?></a>
+                <?php endif ?>
+                <h1><?php echo $length ?></h1>
+            </div>
+            <?php echo $_imgHtml ?>
+        </div>
+    <?php else: ?>
+        <?php if ($this->IsRssCatalogEnable() && $this->IsTopCategory()): ?>
+            <a href="<?php echo $this->getRssLink() ?>" class="link-rss"><?php echo $this->__('Subscribe to RSS Feed') ?></a>
+        <?php endif ?>
+        <h1>
+            <?php
+                /*if (strlen($length) > 20) {
+                    echo substr($length, 0, 20) . '...'; 
+                } else {*/
+                    echo substr($length, 0, 20);
+                //} 
+            ?>
+        </h1>
+    <?php endif ?>
+</div>
+<?php
+$shortDescription = trim($_category->getData('short_description'));
+$video            = trim($_category->getData('youtubelink'));
+?>
+<?php if ($shortDescription || $video): ?>
+    <div class="comman">
+        <ul class="tabs">
+            <?php if ($shortDescription): ?>
+                <li id="splash-description" class="first active"><a href="javascript:void(0)"><?php echo $this->__('Overview') ?></a></li>
+            <?php endif ?>
+            <?php if ($video): ?>
+                <li id="splash-video" class=""><a href="javascript:void(0)"><?php echo $this->__('Video') ?></a></li>
+            <?php endif ?>
+        </ul>
+        <div class="padder">
+            <div id="splash-description_contents">
+                <?php if ($shortDescription): ?>
+                    <div class="splash-description std"><?php echo $shortDescription ?></div>
+                <?php endif ?>
+            </div>
+            <div id="splash-video_contents" style="display: none;">
+                <?php if ($video): ?>
+                    <div class="splash-video std"><iframe width="560" height="315" frameborder="0" allowfullscreen="" src="<?php echo $video ?>"></iframe></div>
+                <?php endif ?>
+            </div>
+        </div>
+        <script>
+            var EasyTabs = Class.create();
+            EasyTabs.prototype = {
+                initialize: function(selector) {
+                    $$(selector).each(this.initTab.bind(this));
+                },
+
+                initTab: function(el) {
+                    el.href = 'javascript:void(0)';
+                    if ($(el).up('li').hasClassName('active')) {
+                        this.showContent(el);
+                    }
+                    el.observe('click', this.showContent.bind(this, el));
+                },
+
+                showContent: function(a) {
+                    var li = $(a).up('li'),
+                        ul = $(li).up('ul');
+
+                    ul.select('li'/*, 'ol'*/).each(function(el) {
+                        var contents = $(el.id + '_contents');
+                        if (el.id == li.id) {
+                            el.addClassName('active');
+                            contents.show();
+                        } else {
+                            el.removeClassName('active');
+                            contents.hide();
+                        }
+                    });
+                }
+            }
+            new EasyTabs('.tabs a');
+        </script>
+    </div>
+<?php endif ?>
+<?php if ($_category->getPromobanner()): ?>
+    <div class="comman">
+        <div class="splash-promo-block std">
+            <?php $_bannerUrl = Mage::getBaseUrl('media') . 'catalog/category/' . $_category->getPromobanner() ?>
+            <img src="<?php echo $_bannerUrl ?>" />
+        </div>
+    </div>
+<?php endif ?>
+<?php $children = $_category->getChildren(); ?>
+<?php if($children): ?>
+    <?php foreach(explode(',',$children) as $subCatid): ?>
+        <?php $categoryChildren = Mage::getModel('catalog/category')->load($subCatid); ?>
+        <?php $productCollection = $categoryChildren->getProductCollection(); ?>
+        <?php if(count($productCollection)>0):?>
+            <?php $quickViewId = 'quickview' . str_replace(' ', '', $categoryChildren->getName()) ?>
+            <div style="float:none" class="hadd_pink2 page-title category-title categorychild">
+                <h1><?php echo $categoryChildren->getName()?></h1>
+                <div class="triangle-bottomleft"></div>
+                <a href="<?php echo Mage::getBaseUrl().$categoryChildren->getUrlPath();?>" class="link14_gry right"><?php echo $this->__('VIEW ALL')?></a>
+            </div>
+            <div class="prod_slider fp_area_main">
+                <ul id="" class="category_jcarousel jcarousel-skin-tango">
+                    <?php foreach ($productCollection as $product) : ?>
+                        <li>
+                            <div class="ps_part">
+                                <ul id="<?php echo strtolower(str_replace(' ', '_', $categoryChildren->getName())) ?>">
+                                    <li>
+                                        <div class="ps_img_cntr">
+                                            <div class="ps_img">
+                                                <a data-link="<?php echo $quickViewId ?>" id="pb_item_<?php echo $product->getId() ?>" class="EnableQuickView" href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>" >
+                                                    <img height="115" width="115"  src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(115,115) ?>" alt="<?php echo $this->htmlEscape($product->getName()) ?>" />
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="quickview">&nbsp;</div>
+                                    </li>
+                                    <li class="font14_blk"><a class="font14_blk" href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>)">
+                                        <?php
+                                        $Lengthname = $this->htmlEscape($product->getName());
+                                        if(strlen($Lengthname) > 16)
+                                            echo substr($Lengthname,0,16).'...'; 
+                                        else 
+                                            echo substr($Lengthname,0,16);
+                                        ?>
+                                    </li>
+                                    <li class="font12_gry">
+                                        <?php
+                                        $length = $this->htmlEscape(strip_tags($product->getShortDescription()));
+                                        if(strlen($length) > 18)
+                                            echo substr($length,0,18).'...'; 
+                                        else 
+                                            echo substr($length,0,18);
+                                        ?>
+                                    </li>
+                                    <li class="mrgn_t5">
+                                        <span class="font16_red"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php  echo number_format($product->getPrice(), '2', '.', ','); ?>
+                                        </span>
+                                        <?php if($product->getSpecialPrice()){  ?>
+                                        <span class="font16_gry"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($product->getSpecialPrice(), '2', '.', ','); ?></span>
+                                        <?php } ?>
+                                    </li>
+                                    <?php $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($product) ?>
+                                    <li class="mrgn_t5"><a class="link12_red" href="<?php echo $_compareUrl ?>">+ Add to compare</a></li>
+                                    <li class="mrgn_t5"><?php echo ($product->isSaleable()) ? '' : $this->__('Out of stock') ?></li>
+                                </ul>
+                            </div>
+                        </li>
+                    <?php endforeach;?>
+                </ul>
+            </div>
+            <div id="<?php echo $quickViewId ?>" class="slidmain" style="float: left; display: none;"></div>
+        <?php endif;?>
+    <?php endforeach; ?>
+<?php else: ?>
+    <?php 
+    if (!$this->isContentMode() || $this->isMixedMode()) {
+        echo $this->getChildHtml('feature_single_product');
+    }
+    echo $this->getMessagesBlock()->getGroupedHtml();
+    ?>
+    <?php if ($this->isContentMode()): ?>
+        <?php echo $this->getCmsBlockHtml() ?>
+
+    <?php elseif ($this->isMixedMode()): ?>
+        <?php echo $this->getCmsBlockHtml() ?>
+        <?php echo $this->getProductListHtml() ?>
+
+    <?php else: ?>
+        <?php echo $this->getProductListHtml() ?>
+    <?php endif ?>
+<?php endif;?>
+<?php if ($_description = $this->getCurrentCategory()->getDescription()): ?>
+    <div class="category-description std font12_gry">
+        <?php echo $_helper->categoryAttribute($_category, $_description, 'description') ?>
+    </div>
+<?php endif ?>

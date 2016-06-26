@@ -1,0 +1,74 @@
+/********Css For Category Sidebar Navigation ************/
+.block-category-nav{border:0 none;}
+.block-category-nav .block-title{
+/*    background:#f7931d; border:0 none;padding: 5px 10px;border-radius: 5px 5px 0 0;*/
+}
+.block-category-nav .block-title strong{
+/*    color: #FFFFFF; display: block; padding:0; font: bold 13px/16px Arial,Helvetica,sans-serif; min-height: 16px;text-transform: capitalize;*/
+
+background-color: #E11E2F;
+    border-radius: 2px 2px 2px 2px;
+    color: #FFFFFF;
+    float: left;
+    font-family: 'exodemibold';
+    font-size: 18px;
+    line-height: 18px;
+    padding: 10px;
+    width: 170px;
+font-weight: normal;
+}
+.block-category-nav .block-content{
+    background:#FFFFFF; border-bottom:1px solid #DDDDDD; border-top:0 none; padding:0;
+}
+#sidenav{}
+#sidenav li{border-bottom:1px solid #DDDDDD;  padding: 3px 0 3px 10px;
+
+}
+#sidenav li.last{border:0 none;}
+/* #sidenav li:hover{background:#d9ecf2} */
+#sidenav li a{
+    font-size:12px; font-weight:normal; color:#848383; text-decoration:none;
+/* padding-left:10px; */
+font-family: Arial,Helvetica,sans-serif;
+    
+}
+
+#sidenav li a.show-cat{background:url(images/arrow.png) center center no-repeat; padding-right:10px;}
+#sidenav li a.active{background:url(images/arrow_active.png) center center no-repeat; padding-right:10px;}
+#sidenav li a:hover{color:#E11E2F;/*  text-decoration:underline; */}
+/* Level 0 */
+#sidenav li.level-top{
+float: left;
+width: 94%;
+line-height:25px;
+
+}
+#sidenav li.level-top a.level-top{ 
+/*    font-weight:bold;*/
+float: left;
+    width: 155px;
+}
+#sidenav li ul.level0{
+/*    padding:0 10px; */
+    display:none;
+    float:left;
+    width:100%;
+    
+}
+#sidenav li ul.level0 li.level1{
+    padding-left:10px;
+    
+}
+#sidenav li ul.level0 li{
+border-bottom:1px dotted #cacaca;
+float:left;
+    width:95%;
+
+}
+#sidenav li ul.level0 li.last{border:0 none;}
+/* Level 1 */
+#sidenav li ul li ul{ display:none;padding:0 10px;}
+#sidenav li ul li ul li a{
+    color:#848383;
+    float:left;
+}

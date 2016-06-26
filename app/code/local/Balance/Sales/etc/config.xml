@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Balance_Sales>
+      <version>0.0.1</version>
+    </Balance_Sales>
+  </modules>
+  <global>
+    <blocks>
+      <balance_sales>
+        <class>Balance_Sales_Block</class>
+      </balance_sales>
+    </blocks>
+    <resources>
+      <balance_sales_setup>
+        <setup>
+          <module>Balance_Sales</module>
+          <class>Mage_Eav_Model_Entity_Setup</class>
+        </setup>
+        <connection>
+            <use>default_setup</use>
+        </connection>
+      </balance_sales_setup>
+    </resources>
+    <models>
+        <sales>
+            <rewrite>
+                <quote_address_total_shipping>Balance_Sales_Model_Quote_Address_Total_Shipping</quote_address_total_shipping>
+            </rewrite>
+        </sales>
+     </models>
+  </global>
+</config>

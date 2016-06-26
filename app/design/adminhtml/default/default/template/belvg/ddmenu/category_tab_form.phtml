@@ -1,0 +1,215 @@
+<?php
+/**
+ * BelVG LLC.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ *
+/**********************************************
+ *        MAGENTO EDITION USAGE NOTICE        *
+ **********************************************/
+/* This package designed for Magento COMMUNITY edition
+ * BelVG does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * BelVG does not provide extension support in case of
+ * incorrect edition usage.
+/**********************************************
+ *        DISCLAIMER                          *
+ **********************************************/
+/* Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future.
+ **********************************************
+ * @category   Belvg
+ * @package    Belvg_DropDownMenu
+ * @copyright  Copyright (c) 2010 - 2012 BelVG LLC. (http://www.belvg.com)
+ * @license    http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ */
+
+    $categoryId     = (int)$this->getRequest()->getParam('id');
+    function getCategoryFriends($category, $categories_list, $padding = ' &nbsp; &nbsp; &nbsp; &nbsp;')
+    {
+        $cats       = $category->getChildrenCategories();
+        $countCats  = is_array($cats)?count($cats):$cats->count();
+        $html       = '';
+        if ($countCats) {
+            foreach ($cats as $cat) {
+                $id     = $cat->getId();
+                $cat    = Mage::getModel('catalog/category')->load($id);
+                if ($cat->getIsActive() && $cat->getIncludeInMenu()) {
+                    $html   .= '<option ' . ((strpos($categories_list, ",$id,"))?' selected="selected"':'') . ' value="' . $id . '">' . $padding . $cat->getName() . '</option>';
+                    $html   .= getCategoryFriends($cat, $categories_list, $padding . ' &nbsp; &nbsp; &nbsp; &nbsp;');
+                }
+            }
+        }
+
+        return $html;
+    }
+
+    $category       = Mage::getModel('catalog/category')->load($categoryId);
+    $store_view     = $this->getRequest()->getParam('store');
+    $data           = Mage::getModel('ddmenu/ddmenu')->loadDdmenu($categoryId, $store_view);
+    $staticBlocks   = Mage::getResourceModel('cms/block_collection')->load()->toOptionArray();
+    if (!$data->getId()) {
+        $data->setBlocksLoc('b1,b2,b3,b4,b5');
+        if ($store_view) {
+            $data->setUseDefaultStoreView(1);
+        } else {
+            $data->setUseDefaultStoreView(0);
+        }
+    }
+
+    $blockIds       = explode(',', $data->getBlocksLoc());
+    if (count($blockIds)!=5) {
+        $data->setBlocksLoc('b1,b2,b3,b4,b5');
+        $blockIds   = explode(',', $data->getBlocksLoc());
+    }
+?>
+<div class="entry-edit">
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Category Top Navigation Settings') ?></h4>
+    </div>
+    <div id="group_fields4" class="fieldset fieldset-wide">
+        <div class="hor-scroll">
+            <?php if ($category->getLevel()==2): ?>
+                <table class="form-list" cellspacing="0">
+                    <tr><td><?php echo $this->__('Configure the settings and drag blocks') ?></td>
+                        <?php if ($store_view): ?>
+                            <td class="scope-label">
+                                <span class="nobr"><?php echo $this->__('[STORE VIEW]') ?></span>
+                            </td>
+                            <td class="value use-default">
+                                <input id="use_default_store_view" type="checkbox" value="1" <?php echo ($data->getUseDefaultStoreView())?'checked="checked"':'' ?> name="use_default_store_view">
+                                <label class="normal" for="use_default_store_view"><?php echo $this->__('Use Default Value') ?></label>
+                            </td>
+                        <?php endif ?>
+                    </tr>
+                </table>
+                <input type="hidden" name="category_blocks_loc" id="category_blocks_loc" value="<?php echo $data->getBlocksLoc() ?>">
+                <ul id="sortable"<?php echo ($data->getUseDefaultStoreView())?' style="display:none"':'' ?>>
+                    <?php foreach ($blockIds as $blockId): ?>
+                        <?php if ($blockId=='b1'): ?>
+                            <li id="b1"<?php echo ($data->getRows())?'':' style="display:none"' ?>>
+                                <p>1 block</p>
+                                <img src="<?php echo $this->getSkinUrl("belvg/images/ddmenu/01.png") ?>">
+                            </li>
+                        <?php endif?>
+                        <?php if ($blockId=='b2'): ?>
+                            <li id="b2"<?php echo ($data->getCategoriesList())?'':' style="display:none"' ?>>
+                                <p>2 block</p>
+                                <img src="<?php echo $this->getSkinUrl("belvg/images/ddmenu/02.png") ?>">
+                            </li>
+                        <?php endif?>
+                        <?php if ($blockId=='b3'): ?>
+                            <li id="b3"<?php echo ($data->getLastProduct())?'':' style="display:none"' ?>>
+                                <p>3 block</p>
+                                <img src="<?php echo $this->getSkinUrl("belvg/images/ddmenu/03.png") ?>">
+                            </li>
+                        <?php endif?>
+                        <?php if ($blockId=='b4'): ?>
+                            <li id="b4"<?php echo ($data->getStaticBlockId())?'':' style="display:none"' ?>>
+                                <p>4 block</p>
+                                <img src="<?php echo $this->getSkinUrl("belvg/images/ddmenu/04.png") ?>">
+                            </li>
+                        <?php endif ?>
+                        <?php if ($blockId=='b5'): ?>
+                            <li id="b5"<?php echo ($data->getTemplate())?'':' style="display:none"' ?>>
+                                <p>5 block</p>
+                                <img src="<?php echo $this->getSkinUrl("belvg/images/ddmenu/05.png") ?>">
+                            </li>
+                        <?php endif ?>
+                    <?php endforeach ?>
+                </ul>
+                <script type="text/javascript">
+                    jQblvg(document).ready(function() {
+                        jQblvg( "#sortable" ).sortable({
+                            placeholder: "block-holder",
+                            update: function(event, ui) {
+                                var locArray    = jQblvg(this).sortable('toArray');
+                                jQblvg('#category_blocks_loc').val(locArray.join(','));
+                            }
+                            
+                        });
+                        jQblvg( "#sortable" ).disableSelection();
+                    });
+                </script>
+                <table class="form-list" id="category_ddmenu_settings" cellspacing="0">
+                    <tbody>
+                        <tr><td class="label">
+                                <label for="category_rows"><b>1 block.</b> <?php echo $this->__('Select the number of categories per column') ?></label>
+                            </td>
+                            <td class="value">
+                                <select name="category_rows" id="category_rows"<?php echo ($data->getUseDefaultStoreView())?' disabled="disabled"':'' ?>>
+                                    <option value="0"><?php echo $this->__('Disable') ?></option>
+                                    <?php for($i=4; $i<81; $i++): ?>
+                                        <option <?php echo ($data->getRows()==$i)?'selected="selected" ':''?>value="<?php echo $i ?>"><?php echo $i ?></option>
+                                    <?php endfor ?>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr><td class="label">
+                                <label for="categories_list"><b>2 block.</b> <?php echo $this->__('Related categories') ?></label>
+                            </td>
+                            <td class="value">
+                                <select name="categories_list[]" id="categories_list" class="select" multiple size="10"<?php echo ($data->getUseDefaultStoreView())?' disabled="disabled"':'' ?>>
+                                    <option <?php echo (strpos($data->getCategoriesList(), "0,")===0 || $data->getCategoriesList()==0)?'selected="selected "':''?>value="0"><?php echo $this->__('Disable')?></option>
+                                    <?php
+                                        $stores          = $category->getStoreIds();
+                                        $defaultCategory = Mage::getModel('catalog/category')->load(Mage::app()->getStore($stores[1])->getRootCategoryId());
+                                        echo getCategoryFriends($defaultCategory, ' ,' . $data->getCategoriesList() . ',');
+                                    ?>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr><td class="label">
+                                <label for="category_last_product"><b>3 block.</b> <?php echo $this->__('Make the last product visible')?></label>
+                            </td>
+                            <td class="value">
+                                <select name="category_last_product" id="category_last_product" class="select"<?php echo ($data->getUseDefaultStoreView())?' disabled="disabled"':'' ?>>
+                                    <option value="1">Yes</option>
+                                    <option value="0"<?php echo ($data->getLastProduct())?'':' selected="selected"' ?>>No</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr><td class="label">
+                                <label for="category_static_block_id"><b>4 block.</b> <?php echo $this->__('Add Static Block') ?></label>
+                            </td>
+                            <td class="value">
+                                <select name="category_static_block_id" id="category_static_block_id" class="select"<?php echo ($data->getUseDefaultStoreView())?' disabled="disabled"':'' ?>>
+                                    <option value="0"><?php echo $this->__('Disable') ?></option>
+                                    <?php foreach($staticBlocks as $staticBlock): ?>
+                                        <?php $block    = Mage::getModel('cms/block')->load($staticBlock['value']) ?>
+                                        <?php if($block->getIsActive()/* && (in_array(0, $block->getStoreId()) || in_array($this->getRequest()->getParam('store'), $block->getStoreId()))*/): ?>
+                                            <option <?php echo ($data->getStaticBlockId()==$staticBlock['value'])?'selected="selected" ':'' ?>value="<?php echo $staticBlock['value'] ?>"><?php echo $staticBlock['label'] ?></option>
+                                        <?php endif ?>
+                                    <?php endforeach ?>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr><td class="label">
+                                <label for="category_template"><b>5 block.</b> <?php echo $this->__('Template File') ?></label>
+                            </td>
+                            <td class="value">
+                                <input name="category_template" id="category_template" value="<?php echo $data->getTemplate() ?>" class="input-text"<?php echo ($data->getUseDefaultStoreView())?' disabled="disabled"':'' ?>>
+                            </td>
+                        </tr>
+                        <tr><td class="label">
+                                <label for="category_rewrite"><b><?php echo $this->__('URL Rewrite') ?></b></label>
+                                <div style="text-align: right"><?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) ?></div>
+                            </td>
+                            <td class="value">
+                                &nbsp;<br>
+                                <input name="category_rewrite" id="category_rewrite" value="<?php echo $data->getRewrite() ?>" class="input-text"<?php echo ($data->getUseDefaultStoreView())?' disabled="disabled"':'' ?>>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p>Please, select the root subcategory</p>
+            <?php endif ?>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+<?php
+    $_pageHelper  = Mage::helper('local/page');
+    $_localHelper = Mage::helper('local');
+?>
+
+<header>
+    <?php echo $this->getChildHtml('header_top_content') ?>
+    <div class="header comman mrgn_t10">
+        <?php if ($this->getIsHomePage()): ?>
+            <h1 class="logo"><strong><?php echo $this->getLogoAlt() ?></strong><a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>" class="logo"><img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a></h1>
+        <?php else: ?>
+            <a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>" class="logo"><strong><?php echo $this->getLogoAlt() ?></strong><img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a>
+        <?php endif?>
+
+        <?php if ($_pageHelper->onlyContent()): ?>
+            <?php echo $_localHelper->getStaticBlockHtml('free_shipping') ?>
+        <?php else: ?>
+            <div class="quick-access">
+                <div class="top_srch">
+                    <?php echo $this->getChildHtml('topSearch') ?>
+                    <script>
+                        searchForm.initAutocomplete('<?php echo $this->getUrl('collection/ajax/suggest/') ?>', 'search_autocomplete');
+                    </script>
+                </div>
+                <p class="welcome-msg"><?php echo $this->getChildHtml('welcome') ?> <?php echo $this->getAdditionalHtml() ?></p>
+                <div class="userlink right">
+                    <?php echo $this->getChildHtml('topLinks') ?>
+                    <?php echo $this->getChildHtml('header_mini_cart') ?>
+                </div>
+                <?php echo $this->getChildHtml('store_language') ?>
+            </div>
+        <?php endif ?>
+        <?php echo $this->getChildHtml('topContainer') ?>
+    </div>
+</header>
+<?php echo $this->getChildHtml('topMenu') ?>
+<?php echo $this->getChildHtml('underMenu') ?>
+

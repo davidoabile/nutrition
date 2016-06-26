@@ -1,0 +1,95 @@
+<?php
+
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+
+/**
+ * Category view template
+ *
+ * @see Mage_Catalog_Block_Category_View
+ */
+?>
+<?php
+
+$_helper = $this->helper('catalog/output');
+$_category = $this->getCurrentCategory();
+$_imgHtml = '';
+if ($_imgUrl = $_category->getImageUrl()) {
+    $_imgHtml = '<p class="category-image"><img src="' . $_imgUrl . '" alt="' . $this->escapeHtml($_category->getName()) . '" title="' . $this->escapeHtml($_category->getName()) . '" width="873px" height="348px" /></p>';
+    $_imgHtml = $_helper->categoryAttribute($_category, $_imgHtml, 'image');
+}
+$balanceHelper = Mage::helper('category');
+?>
+<?php
+
+echo $this->getMessagesBlock()->getGroupedHtml();
+?>
+
+<?php if ($_imgUrl): ?>
+    <?php //echo $_imgHtml ?>
+<?php endif; ?>
+<?php
+
+echo $this->getChildHtml('category_infor');
+?>
+<?php
+
+echo $this->getLayout()->createBlock("balance_category/shopcategory")->setTemplate("catalog/navigation/subcategory_listing.phtml")->toHtml();
+?>
+<?php echo Mage::app()->getLayout()->createBlock('zblocks/block')->setPosition('after_subcategory_listing')->toHtml(); ?>
+<?php
+echo $this->getChildHtml('feature_single_product');
+?>
+
+<?php if ($this->isContentMode()): ?>
+    <?php echo $this->getCmsBlockHtml() ?>
+
+<?php elseif ($this->isMixedMode()): ?>
+    <?php echo $this->getCmsBlockHtml() ?>
+    <?php if ($_category->getLevel() > 3 || $balanceHelper->is_child_of_goal_category($_category) || $balanceHelper->isClearance($_category) === true) :
+        ?>
+        <?php echo $this->getProductListHtml() ?>
+    <?php endif ?>
+<?php else: ?>
+    <?php if ($_category->getLevel() > 3 || $balanceHelper->is_child_of_goal_category($_category) || $balanceHelper->isClearance($_category) === true) :
+        ?>
+
+        <?php echo $this->getProductListHtml() ?>
+    <?php endif ?>
+<?php endif; ?>
+<?php
+
+if ($_category->getLevel() <= 3) {
+    $this->getChild('product_list')->setCategoryId($_category->getEntityId());
+    $_productCollection = $this->getChild('product_list')->getLoadedProductCollection();
+    $id_arr = array();
+    foreach ($_productCollection as $_prd) {
+        $id_arr[] = $_prd->getEntityId();
+    }
+    Mage::register('filter_products', $id_arr);
+}
+?>

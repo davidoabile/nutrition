@@ -1,0 +1,99 @@
+<?php
+/**
+ * @category    Fishpig
+ * @package     Fishpig_AttributeSplash
+ * @license     http://fishpig.co.uk/license.txt
+ * @author      Ben Tideswell <help@fishpig.co.uk>
+ */
+?>
+<?php if ($splashGroup = $this->getSplashGroup()): ?>
+    <?php $splashPages = $this->getSplashPages() ?>
+    <?php if ($splashGroup->getImage()): ?>
+        <div class="splash-image">
+            <div class="page-title category-title splash-title">
+                <h1><?php echo $this->__('Shop by<br>%s', $this->escapeHtml($splashGroup->getName())) ?></h1>
+            </div>
+            <img src="<?php echo $splashGroup->getImage() ?>">
+        </div>
+    <?php endif ?>
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+    <?php if ($splashGroup->getShortDescription()): ?>
+        <div class="category-description std"><?php echo $splashGroup->getShortDescription() ?></div>
+    <?php endif ?>
+    <?php if ($this->isContentMode()): ?>
+        <?php echo $this->getCmsBlockHtml() ?>
+    <?php elseif ($this->isMixedMode()): ?>
+        <?php echo $this->getCmsBlockHtml() ?>
+    <?php endif ?>
+    <?php if ($this->isProductMode() || $this->isMixedMode()): ?>
+        <?php
+            $_columnCount    = 3;
+            $_collectionSize = $splashPages->count();
+            $i = 0;
+        ?>
+        <?php
+            $isTop = FALSE;
+            foreach ($splashPages as $splashPage) {
+                if ($splashPage->getIsFeatured()) {
+                    $isTop = TRUE;
+                }
+            }
+        ?>
+        <?php if ($isTop): ?>
+            <div class="main_part">
+                <div class="hadd_pink2 page-title category-title" style="float:none">
+                    <h1><?php echo $this->__('Shop by %s', $this->escapeHtml($splashGroup->getName())) ?></h1>
+                    <div class="triangle-bottomleft"></div>
+                </div>
+            </div>
+            <div class="splash-groups brand_link">
+                <?php foreach ($splashPages as $splashPage): ?>
+                    <?php if ($splashPage->getIsTop()): ?>
+                        <?php if ($i++%$_columnCount == 0): ?>
+                            <ul class="splash-group-grid splash-group-grid-<?php echo $this->getColumnCount() ?>">
+                        <?php endif ?>
+                            <li class="item<?php if (($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif ?>">
+                                <div class="inner">
+                                    <?php
+                                        $thumbnail      = $splashPage->getThumbnail();
+                                        $thumbnailHover = $splashPage->getThumbnailHover();
+                                        $pageName       = explode('(', $this->escapeHtml($splashPage->getName()));
+                                        $pageName       = $pageName[0];
+                                    ?>
+                                    <?php if ($thumbnail): ?>
+                                    <a href="<?php echo $splashPage->getUrl() ?>" title="<?php echo $this->escapeHtml($splashPage->getName()) ?>" class="product-image">
+                                        <img class="<?php echo ($thumbnailHover) ? 'grayimg' : '' ?>" src="<?php echo $this->helper('attributeSplash/image')->init($splashPage, 'thumbnail')/*->keepFrame(false)->constrainOnly(true)*/->resize(290, 150) ?>" alt="<?php echo $this->escapeHtml($splashPage->getName()) ?>" />
+                                        <?php if ($thumbnailHover): ?>
+                                            <img src="<?php echo $this->helper('attributeSplash/image')->init($splashPage, 'thumbnail_hover')/*->keepFrame(false)->constrainOnly(true)*/->resize(290, 150) ?>" alt="<?php echo $this->escapeHtml($splashPage->getName()) ?>" />
+                                        <?php endif ?>
+                                    </a>
+                                    <?php endif ?>
+                                    <h2 class="product-name">
+                                        <a href="<?php echo $splashPage->getUrl() ?>" title="<?php echo $pageName ?>">
+                                            <?php echo $pageName ?>
+                                        </a>
+                                    </h2>
+                                    <p class="item-short-description"><?php echo strip_tags($splashPage->getShortDescription()) ?></p>
+                                    <a href="<?php echo $splashPage->getUrl() ?>"><?php echo $this->__('Shop Products >>') ?></a>
+                                </div>
+                            </li>
+                        <?php if ($i%$_columnCount == 0 || $i == $_collectionSize): ?>
+                            </ul>
+                        <?php endif ?>
+                    <?php endif ?>
+                <?php endforeach ?>
+            </div>
+        <?php endif ?>
+        <?php if ($splashGroup->getPromoBlock()): ?>
+            <div class="splash-view-promo-banner">
+                <?php echo $splashGroup->getPromoBlock() ?>
+            </div>
+        <?php endif ?>
+        <div class="splash-pages">
+            <?php foreach ($splashPages as $splashPage): ?>
+            <?php endforeach ?>
+        </div>
+    <?php endif ?>
+<?php endif ?>
+
+

@@ -1,0 +1,21 @@
+
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (CFM Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckoutfields
+ * @version      1.0.9 - 2.9.8
+ * @license:     n/a
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+.aitcfm_review_1 {
+    margin-top: -7px;
+}
+
+.aitcfm_review_2 {
+	margin: 8px 0px -13px;
+}
+
+#shipping_method_ait {
+    width: 260px;
+}

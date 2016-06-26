@@ -1,0 +1,68 @@
+<?php $collection = $this->getCollection() ?>
+
+<div class="main_part mrgn_b20">
+    <div class="hadd_pink2">
+        <h1><?php echo $this->__('Weekly Specials') ?></h1>
+        <div class="triangle-bottomleft"></div>
+    </div>
+    <div class="prod_slider fp_area_main">
+        <?php if (!$collection->count()): ?>
+            <p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+        <?php else: ?> 
+            <ul id="weekly_special" class="jcarousel-skin-tango">
+                <?php foreach ($collection as $product): ?>
+                    <li>
+                        <div class="ps_part">
+                            <ul>
+                                <li>
+                                    <div class="ps_img_cntr">
+                                        <div class="ps_img">
+                                            <a data-link="weeklySpecial" id="pb_item_<?php echo $product->getId() ?>" class="EnableQuickView" href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>" >
+                                                <img height="115" width="115" src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(115,115) ?>" alt="<?php echo $this->htmlEscape($product->getName()) ?>" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="quickview">&nbsp;</div>
+                                </li>
+                                <li class="font14_blk">
+                                    <a class="font14_blk" href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>)">
+                                        <?php 
+                                            $Lengthname = $this->htmlEscape($product->getName());
+                                            if (strlen($Lengthname) > 16) {
+                                                echo substr($Lengthname, 0, 16) . '...'; 
+                                            } else {
+                                                echo substr($Lengthname, 0, 16);
+                                            }
+                                        ?>
+                                    </a>
+                                </li>
+                                <li class="font12_gry">
+                                    <?php
+                                        $length = $this->htmlEscape(strip_tags($product->getShortDescription()));
+                                        if (strlen($length) > 18) {
+                                            echo substr($length, 0, 18) . '...'; 
+                                        } else {
+                                            echo substr($length, 0, 18);
+                                        }
+                                    ?>
+                                </li>
+                                <li aa class="mrgn_t5">
+                                    <span class="font16_red">
+                                        <?php echo $this->getPriceHtml($product, true) ?>
+                                    </span>
+                                </li>
+                                <li class="mrgn_t5">
+                                    <?php $_compareUrl = $this->helper('catalog/product_compare')->getAddUrl($product) ?>
+                                    <a class="link12_red" href="<?php echo $_compareUrl ?>">+ Add to compare</a>
+                                </li> 
+                                <li class="mrgn_t5"><?php echo ($product->isSaleable()) ? '' : $this->__('Out of stock') ?></li>
+                            </ul>
+                        </div>
+                        <?php //echo $this->getReviewsSummaryHtml($product, 'short') ?>
+                    </li>
+                <?php endforeach ?>
+            </ul>
+            <div id="weeklySpecial" class="slidmain" style="float: left; display: none;"></div>
+        <?php endif ?>
+    </div>
+</div>

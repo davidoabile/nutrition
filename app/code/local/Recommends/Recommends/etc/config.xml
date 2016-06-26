@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Recommends_Recommends>
+      <version>0.0.9</version>
+    </Recommends_Recommends>
+  </modules>
+  <frontend>
+    <routers>
+      <recommends>
+        <use>standard</use>
+          <args>
+            <module>Recommends_Recommends</module>
+            <frontName>recommends</frontName>
+          </args>
+      </recommends>
+    </routers>
+		<layout>
+		  <updates>
+			<recommends>
+			  <file>recommends.xml</file>
+			</recommends>
+		  </updates>
+		</layout>
+  </frontend>
+  <global>
+    <helpers>
+      <recommends>
+        <class>Recommends_Recommends_Helper</class>
+      </recommends>
+    </helpers>
+	<blocks>
+	  <recommends>
+		<class>Recommends_Recommends_Block</class>
+	  </recommends>
+	</blocks>
+	
+  </global>
+</config> 

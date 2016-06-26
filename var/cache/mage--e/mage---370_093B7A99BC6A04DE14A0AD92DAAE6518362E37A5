@@ -1,0 +1,21 @@
+<form id="search_mini_form" action="//127.0.0.1/nut/index.php/catalogsearch/result/" method="get">
+    <div class="form-search ">
+        <label for="search">Search:</label>
+                <input id="search" type="text" name="q" class="input-text" />
+                <select id="cat" name="cat">
+            <option value="">All Categories</option>
+                            <option value="2647">Categories</option>
+                                                            <option value="2643">- Sports Nutrition</option>
+                                            <option value="2645">- Health & Vitamins</option>
+                                            <option value="2644">- Protein</option>
+                                            <option value="2646">- Weight Loss</option>
+                                            <option value="2485">- More Categories</option>
+                                                                <option value="2648">Specials</option>
+                                                                                <option value="2649">New Arrivals</option>
+                                                                                <option value="2658">Clearance</option>
+                                                                        </select>
+                <button type="submit" title="Search" class="button"><i class="icon-search"></i></button>
+        <div id="search_autocomplete" class="search-autocomplete"></div>
+        <div class="clearer"></div>
+    </div>
+</form>

@@ -1,0 +1,15 @@
+<div class="banner_area">
+    <div class="slider_area">
+        <?php echo $this->getChildHtml('slider') ?>
+    </div>
+    <div class="banner_right right">
+        <?php echo Mage::helper('local')->getStaticBlockHtml('banner_right') ?>
+    </div>
+    <div class="home_signuparea">
+        <?php echo $this->getChildHtml('content_newsletter') ?>
+        <div class="social">
+            <?php echo Mage::helper('local')->getStaticBlockHtml('home_subscribe_form_social') ?>
+        </div>
+    </div>
+</div>  
+                                                                             

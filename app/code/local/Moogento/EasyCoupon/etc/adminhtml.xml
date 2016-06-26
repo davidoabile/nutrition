@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<config>
+    <menu>
+        <promo>
+            <children>
+                <shortlink translate="title" module="moogento_easycoupon">
+                    <title>easyCoupon Shortlink</title>
+                    <action>adminhtml/easycoupon_shortlink/</action>
+                </shortlink>
+            </children>
+        </promo>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <promo>
+                        <children>
+                            <easycoupon_shortlink translate="title" module="moogento_easycoupon">
+                                <title>easyCoupon Shortlink</title>
+                            </easycoupon_shortlink>
+                        </children>
+                    </promo>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <moogento_easycoupon translate="title" module="moogento_easycoupon">
+                                        <title>Moogento EasyCoupon</title>
+                                    </moogento_easycoupon>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

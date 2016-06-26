@@ -1,0 +1,36 @@
+<?php
+$brandCollections = $this->getCollectionBrands();
+
+?>
+<?php if(count($brandCollections)): ?>
+	<span class="opener"></span>
+<div class="nav-panel--dropdown nav-panel full-width">
+	<div class="nav-panel-inner">
+		<div class="nav-block--center grid12-10">
+			<ul class="level0 nav-submenu nav-submenu--mega dd-itemgrid dd-itemgrid-4col nav-ul-left">
+				<?php foreach ($brandCollections as $key_parent => $item): ?>
+					<li class="nav-item level1 nav-1-1 first parent">
+						<a href="javascript:void(0)"><span><?php echo $key_parent?></span></a>
+						<?php if (count($item)): ?>
+							<span class="opener"></span>
+							<ul class="level1 nav-submenu nav-panel" style="" data-show="0">
+								<?php foreach ($item as $key => $value): 
+								?>
+								<li class="nav-item level2 nav-1-1-1 first classic">
+									<a href="<?php echo $this->getUrlSplash($key, $value); ?>"><span><?php echo $value['display_name']?></span></a>
+								</li>
+								<?php endforeach ?>
+							</ul>
+						<?php endif ?>
+						
+				</li>
+				<?php endforeach ?>
+				
+			</ul>
+		</div>
+		<div class="nav-block nav-block--right std grid12-2">
+		<?php echo Mage::app()->getLayout()->createBlock("cms/block")->setBlockId('block-sub-brand')->toHtml()?>
+		</div>
+	</div>
+</div>	
+<?php endif ?>

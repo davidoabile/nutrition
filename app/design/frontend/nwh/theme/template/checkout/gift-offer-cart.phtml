@@ -1,0 +1,80 @@
+<?php /*<div style="position:relative;width:100%;top:0;">*/ ?>
+<div class="popup_main offer_popup" style="display:none;">
+	<div class="del_updt_pop_heading_clsimg close_gift">
+        <a href="javascript:;" class="close_gift_img"><img src="<?php echo $this->getSkinUrl("images/close_img.png") ?>"></a>
+    </div>
+    <div class="popup_heading">
+        <div class="popup_heading_txt">AVAILABLE GIFTS</div>
+	</div>
+    <div class="popup_middle gift_middle">
+        <div class="popup_mid_wrap">
+            <div class="comman mrgn_t20">
+                <div class="popup_left">
+                    <div class="popup_left_txt1">CONGRATULATIONS!<br />YOU'RE ELIGABLE
+                        <br />FOR A <span class="popup_left_txt2">FREE GIFT</span>
+                        <div class="popup_left_txt3">
+                            Spend over $100 with Nutritionwarehouse.com.au<br />and we will reward you with a free gift. 
+                            <br><br>
+                            <a href="javascript:;" class="chk_offer_close link14_gry2">NO THANKS</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="popup_right">
+                    <img src="<?php echo $this->getSkinUrl("images/popup_img.png") ?>" />
+                </div>
+            </div>
+            <?php $products = Mage::helper('bonusoffers/gifts')->getProducts() ?>
+            <div class="comman mrgn_t20">
+                <div class="pop_pro">
+                	<?php foreach ($products as $product): ?>
+                    <div class="pop_pro_bx mrgn_r10">
+                        <div class="pop_pro_bxtop gift_box">
+                            <img src='<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(173, 173) ?>' width='173' height='173'/>
+                        </div>
+                        <div class="pop_pro_bxbotm">
+                            <div class="pop_pro_bxbotm_txt1"><?php echo $product->getName() ?></div>
+                            <div class="pop_pro_bxbotm_txt2"><?php echo substr($product->getData("short_description"), 0, 25) ?></div>
+                            <div class="pop_pro_bxbotm_txt3 mrgn_t10">
+                                <span style="color: #379EC0;">FREE</span>
+                                <span class="pop_pro_bxbotm_txt4"> <?php echo Mage::helper('core')->currency($product->getPrice(), true, false) ?></span>
+                            </div>
+		                    <input name="<?php echo $product->getId() ?>" type="button" value="Select Gift" class="pop_pro_bxbotm_btn mrgn_t10"/>
+                        </div>
+                    </div>
+                    <?php endforeach ?> 
+                </div>
+                <div class="pop_endtxt close_text"><a href="javascript:;" class="chk_offer_close link14_gry2">CLOSE</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php /*</div>*/ ?>
+<div class="offer_popup_gray"></div>
+<?php if (!in_array("aitcheckout", $url)): ?>
+    <script type="text/javascript">
+        jQblvg(document).ready(function() {
+            jQblvg('.view_gift').on("click", function() {
+                jQblvg(".offer_popup").css('display', 'block');
+                jQblvg(".offer_popup_gray").css('display', 'block');
+            });
+            jQblvg(".chk_offer_close").click(function() { // close the popup        
+                jQblvg(".offer_popup").css('display', 'none');
+                jQblvg(".offer_popup_gray").css('display', 'none');
+            });
+    		jQblvg(".close_gift_img").click(function() { // close the popup        
+                jQblvg(".offer_popup").css('display', 'none');
+                jQblvg(".offer_popup_gray").css('display', 'none');
+            });
+            jQblvg(".pop_pro_bxbotm_btn").click(function() {
+                jQblvg(".offer_popup").css('display', 'none');
+                jQblvg(".offer_popup_gray").css('display', 'none');
+                window.location.href="<?php echo $this->getBaseUrl() ?>aitcheckout/cart/addGift/id/" + jQblvg(this).attr("name");
+            });
+            <?php
+            $total= Mage::helper('checkout/cart')->getQuote()->getSubtotal();
+            if ($total > 150): ?>
+    		    jQblvg('.view_gift').click();
+    		<?php endif ?>
+        });
+    </script>
+<?php endif ?>

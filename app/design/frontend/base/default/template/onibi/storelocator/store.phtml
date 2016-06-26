@@ -1,0 +1,122 @@
+<?php $store = $this->getStore();?>
+<div class="" style="float: left; width: 100%;">
+<div class="left"><a href="<?php echo $_SERVER['HTTP_REFERER']; ?>" class="link_back">&lt; BACK</a></div>
+<div class="bread_crumbs_txt font14_blk">
+    <span class="font14_red">YOU ARE HERE:</span><a href="<?php echo $this->getUrl('onibi_storelocator'); ?>"> Locations</a> / <?php echo $this->__($store->getName());?>
+</div>
+</div>
+<div id="store_locater">
+    
+    <div class="comman">
+                    <div class="left font30_red">
+                    	<span class="font30_gry2">NUTRITION WAREHOUSE</span><br><?php echo $this->__($store->getName());?>
+                	</div>
+                <div class="right mrgn_t5"><a class="link14_gry" href="<?php echo $this->getUrl("onibi_storelocator/index/index"); ?>"><br> BACK TO STORE LOCATOR</a></div>
+              </div>
+<hr>
+<div class="sp_left mrgn_t10">
+		<ul>
+                	<li>
+                        <div class="location_title font18_blk"><img src="<?php echo $this->getSkinUrl('images/location_iconred.png'); ?>"> ADDRESS</div>
+        
+                        
+                        <div class="location_adrs font12_gry mrgn_t5"><?php echo $store->getAddress();?></div>
+                        
+	<div class="location_ph font12_red mrgn_t10">Ph: <?php echo $store->getPhone();?></div>
+	
+        <div class="location_email mrgn_t10"><a href="javascript:;" onclick="window.location.href = 'mailto:<?php echo $store->getData("email");?>';"><img  src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA); ?>storelocator/mess.png"></a></div>
+        
+       </li>
+                    <hr> 
+       <li>
+                    	<div class="location_title font18_blk"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA); ?>storelocator/openingh.png"> OPENING HOURS</div>
+	
+	<div class="hours_detl font12_gry mrgn_t10"><?php echo $store->getData("description");?></div>
+	
+	<!--<img onclick="window.location.href = 'https://maps.google.com.au/maps?daddr=<?php echo $store->getAddress();?>'" class="shop-get-directions" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA); ?>storelocator/getDirections.png">-->
+	
+	
+	
+       </li>
+       <li style="margin:0;">
+       <img onclick="window.open('https://maps.google.com.au/maps?daddr=<?php echo $store->getAddress();?>', '_blank');" class="shop-get-directions" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA); ?>storelocator/getDirections.png">
+       </li>
+                </ul>
+    </div>
+<div class="middle_right mrgn_t10">
+	<img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA). $store->getData('image'); ?>"/>
+	
+</div>
+</div>
+
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+<div class="staff_bio">
+    <div class="containar">
+<div class="comman">
+	
+		<div class="bio_pic">
+                    <div class="bio_pic_bodr"><img src="<?php echo $store->getData("manager_image");?>"></div>
+		</div>
+		<div class="bio_detl font12_gry">
+			<span class="font18_gry" style="line-height: 13px;">STORE MANAGER</span>
+			<br>
+			<span class="font30_red" style="text-transform: uppercase;"><?php echo $store->getData("manager_name");?></span>
+			<br>
+			<br>
+			<?php echo $store->getData("manager_desc");?>
+		</div>
+
+	
+
+</div>
+</div>
+</div>
+
+
+<style>
+.leftSide{float:left;width:25%;font-family: exomedium;}
+.rightSide{float:right;width:74%;font-family: exomedium;}
+.address-icon{height: 22px;width: 19px;}
+.store-address{color: grey;}
+.shop-header{color:red;margin-top: 37px;float:left;width:500px;}
+.store-phone{color:red;}
+.shop-div-line{width:100%;height:1px; background-color:rgb(206, 206, 206);margin:15px 0px 15px 0px;}
+.shop-description{color: grey;margin-top:15px;}
+.shop-get-directions{height: 50px;width: 212px;cursor:pointer;}
+.store-manager{width:100%;min-height:150px;margin-top:40px;background-color: rgb(241, 241, 241);}
+.rightSide img{height:auto; width:100%;}
+.manager-div{width:auto;height:auto;margin:50px auto 0px auto;width: 620px;padding: 65px;}
+.manager-left{float:left;}
+.manager-right{float:right;width: 378px;}
+.manager-image{height: 200px;
+width: 200px;margin-top: 50px;}
+.manager-right h4{color: rgb(155, 155, 155);}
+.manager-right h3{font-size:25px;color: red;}
+.manager-right p {color: rgb(155, 155, 155);}
+.back-to-link{float:right;margin-top: 54px;color: rgb(155, 155, 155);}
+.store-email{cursor:pointer;}
+.location_bg {
+    background:none !important;
+}
+#middle {
+margin-bottom:0px;
+}
+.storelocator .home_signuparea {
+margin:0;
+}
+.location_title { margin-bottom: 9px;}
+.location_adrs { line-height: 20px;}
+.font18_gry {
+    color: #b8b6b6;
+    font-family: exobold;
+    font-size: 18px;
+    text-transform: uppercase;
+}
+</style>

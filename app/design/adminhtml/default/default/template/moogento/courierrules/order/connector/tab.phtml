@@ -1,0 +1,93 @@
+<?php $connectors = $this->_getConnectorsCollection() ?>
+<?php if (!count($connectors)) :?>
+    <div class="entry-edit">
+        <div class="entry-edit-head">
+        </div>
+        <fieldset>
+        <?php if (strpos($this->getOrder()->getCourierrulesDescription(), 'suggestion') !== false): ?>
+            <?php echo $this->__('Connector suggestion is not yet used') ?>
+        <?php else: ?>
+            <?php if (!count($this->getOrder()->getShipmentsCollection())): ?>
+                <?php echo $this->__('A shipment should be created to obtain connector labels') ?>
+            <?php else: ?>
+                <?php echo $this->__('Order is pending sync with shipping provider') ?>
+            <?php endif; ?>
+        <?php endif; ?>
+        </fieldset>
+    </div>
+<?php endif; ?>
+<div id="labelsWrapper">
+<?php foreach ($connectors as $connector): ?>
+    <?php $connectorInfo = Mage::helper('moogento_courierrules/connector')->parseConnectorMethod($connector->getConnectorData());  ?>
+    <?php if (!$connectorInfo): ?>
+        <?php echo $this->__('Cannot load connector information') ?>
+        <?php return; ?>
+    <?php endif; ?>
+    <?php $labelUris = $connector->getLabelDataUri() ?>
+    <div class="entry-edit">
+        <div class="entry-edit-head">
+            <h4><?php echo $this->__('Shipment') ?> #<?php echo $connector->getIncrementId() ?> - <?php echo $connectorInfo['carrier']->getLabel() ?> - <?php echo $connectorInfo['service']->getLabel() ?></h4>
+            <?php if ($labelUris): ?>
+                <div class="right">
+                    <button class="scalable delete tooltipster" title="<?php echo $this->__('By peforming this action you permanently cancel the shipping label of the chosen  shipping service') ?>" onclick="removeLabel(<?php echo $connector->getId() ?>)"><span><span><span><?php echo $this->__('Cancel Label at ') . $connectorInfo['connector']->getName() ?></span></span></span></button>
+                </div>
+            <?php endif; ?>
+        </div>
+        <fieldset>
+            <?php echo $this->__('Status') ?>: <?php echo $connector->getStatus() ?>
+            <?php if ($connector->getStatusMessage()): ?>
+                (<?php echo $connector->getStatusMessage() ?>)
+            <?php endif; ?>
+            <br/>
+            <?php if ($labelUris): ?>
+                <?php foreach ($labelUris as $i => $uri): ?>
+                    <div>
+                        <button class="scalable pdf_packingsheet_button" onclick="printLabel('label-<?php echo $connector->getId() ?>-<?php echo $i ?>')" class="button print"><span><span><span><?php echo $this->__('Print') ?></span></span></span></button>
+                        &nbsp;
+                        <button class="scalable " onclick="openLabel('label-<?php echo $connector->getId() ?>-<?php echo $i ?>')"><span><span><span><?php echo $this->__('Download') ?></span></span></span></button>
+                    </div>
+                    <img id="label-<?php echo $connector->getId() ?>-<?php echo $i ?>" src="<?php echo $uri ?>" />
+                <?php endforeach; ?>
+            <?php endif; ?>
+
+            <div class="log-grid">
+                <h5><?php echo $this->__('Processing Log') ?></h5>
+                <?php $block = $this->getLayout()->createBlock('moogento_courierrules/adminhtml_sales_order_connector_log_grid');
+                $block->setConnectorId($connector->getId());
+                echo $block->toHtml();
+                ?>
+            </div>
+        </fieldset>
+    </div>
+<?php endforeach; ?>
+<iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
+<script>
+    function printLabel(id) {
+        window.frames["print_frame"].document.body.innerHTML = $(id).clone().outerHTML;
+        window.frames["print_frame"].window.focus();
+        window.frames["print_frame"].window.print();
+    }
+
+    function openLabel(id) {
+        window.open($(id).src)
+    }
+
+    function removeLabel(id) {
+        new Ajax.Request('<?php echo $this->getUrl('*/sales_processing/deleteLabel') ?>',{
+            parameters: {
+                id: id,
+                form_key: FORM_KEY
+            },
+            onSuccess: function(transport) {
+                var json = transport.responseText.evalJSON(true);
+                if (json.success) {
+                    $('labelsWrapper').innerHTML = json.html;
+                } else {
+                    alert(json.message);
+                }
+            },
+            onFailure: function() { alert('Something went wrong...'); }
+        })
+    }
+</script>
+</div>

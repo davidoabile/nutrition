@@ -1,0 +1,73 @@
+<?php
+    $groups      = Mage::getResourceModel('attributeSplash/group_collection')
+        ->addFieldToFilter('attribute_id', Belvg_Local_Helper_Data::ATTRIBUTE_BRAND_ID);
+    $splashGroup = $groups->getFirstItem();
+    $splashPages = $splashGroup
+        ->getSplashPages()
+        ->addFieldToFilter('dd_menu', 1)
+        ->addOrderBySortOrder();
+?>
+<ul class="level0-sub">
+    <li class="level1 first parent">
+        <h4>
+            <a class="level1 has-children" href="<?php echo $splashGroup->getUrl() ?>">
+                <span><?php echo $splashGroup->getName() ?></span>
+            </a>
+        </h4>
+        <ul class="level1">
+            <?php $i = 0 ?>
+            <?php $columnCount = $splashPages->count() / 2 ?>
+            <?php foreach ($splashPages as $splashPage): ?>
+                <?php
+                    if ($i > $columnCount) {
+                        echo '</ul></li></ul></dd><dd><ul class="level0-sub"><li class="level1 first parent"><h4>&nbsp;</h4><ul class="level1">';
+                        $i = 1;
+                    } else {
+                        $i++;
+                    }
+
+                    $name = explode('(', trim($this->escapeHtml($splashPage->getName())));
+                ?>
+                <li class="level2<?php echo ($i == 1) ? ' first' : '' ?>">
+                    <a class="level2" href="<?php echo $splashPage->getUrl() ?>">
+                        <span><?php echo $name[0] ?></span>
+                    </a>
+                </li>
+            <?php endforeach ?>
+        </ul>
+    </li>
+</ul>
+<?php
+    $splashPages = $splashGroup
+        ->getSplashPages()
+        ->addFieldToFilter('is_featured', 1)
+        ->addOrderBySortOrder();
+?>
+<?php if ($splashPages->count()): ?>
+    </dd><dd>
+    <ul class="level0-sub">
+        <li class="level1 first parent">
+            <h4>
+                <span><?php echo $this->__('Featured Brands') ?></span>
+            </h4>
+            <ul class="level1 brand_link">
+                <?php foreach ($splashPages as $splashPage): ?>
+                    <?php
+                        $i++;
+                        $thumbnail      = $splashPage->getThumbnail();
+                        $thumbnailHover = $splashPage->getThumbnailHover();
+                    ?>
+                    <?php if ($thumbnail): ?>
+                        <a href="<?php echo $splashPage->getUrl() ?>" title="<?php echo $this->escapeHtml($splashPage->getName()) ?>" class="product-image">
+                            <?php if ($thumbnailHover): ?>
+                                <img class="<?php echo ($thumbnailHover) ? 'grayimg' : '' ?>" src="<?php echo $this->helper('attributeSplash/image')->init($splashPage, 'thumbnail')->keepFrame(false)->constrainOnly(true)->resize(190) ?>" alt="<?php echo $this->escapeHtml($splashPage->getName()) ?>" />
+                            <?php else: ?>
+                                <img src="<?php echo $this->helper('attributeSplash/image')->init($splashPage, 'thumbnail_hover')->keepFrame(false)->constrainOnly(true)->resize(190) ?>" alt="<?php echo $this->escapeHtml($splashPage->getName()) ?>" />
+                            <?php endif ?>
+                        </a>
+                    <?php endif ?>
+                <?php endforeach ?>
+            </ul>
+        </li>
+    </ul>
+<?php endif ?>

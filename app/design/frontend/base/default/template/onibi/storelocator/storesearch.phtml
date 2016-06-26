@@ -1,0 +1,90 @@
+<style>
+.location_bg{background-image:none;}
+</style>
+<div class="left"><a href="<?php echo $this->getUrl(''); ?>" class="link_back">&lt; BACK</a></div>
+<div class="bread_crumbs_txt font14_blk">
+    <span class="font14_red">YOU ARE HERE:</span> Locations
+</div>
+<div class="store-search-header" style="margin-top: 30px;">
+	<span class="search-results-span">SEARCH RESULTS:</span>
+	<span class="search-value-span" style="text-transform: uppercase;"><?php echo $this->getSearchValue(); ?></span>
+	<a class="new-search" href="<?php echo $this->getUrl("*/*/index");?>">NEW SEARCH</a>
+</div>
+<div class="store-list-search">
+	<table class="store-row">
+		
+		
+    <?php foreach($this->getStores() as $store) :?>
+	<tr>
+	<td>
+		<!--<img class="store-image" src="<?php echo  $store->getData('image'); ?>"/>-->
+		<img class="store-image" style="width:auto;height:auto;" src="<?php echo  $this->getSkinUrl('images/store_logo.png') ?>"/>
+	</td>
+		<td>
+            <table id="store-table" class="store-table">
+                <tbody>
+
+
+                    <tr>
+                        <td>
+                        	<img class="market-icon" style="display:inline-block;" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA); ?>storelocator/marker_crop.png"/>
+                            <div class='store-name font18_blk' style="display:inline-block;" id="store<?php echo $store->getId(); ?>"><?php echo $store->getName()?></div><br>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-address">
+                            <span class="font12_gry"><?php echo $store->getAddress()?></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-address">
+                            <span class="font12_gry"><?php echo $store->getZipcode()." , ".$store->getCity() ." , ".$store->getState()?></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-address">
+                            <span class="font12_gry"><?php echo $store->getCountryId(); ?></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <?php if(!is_null($store->getStoreUrl()) && $store->getStoreUrl() != ''):?>
+                                <span class="font12_gry"><?php echo $this->__('Website : %s', "<a href='".$store->getStoreUrl()."' target='_blank'>");?><?php echo $this->__('%s', $store->getStoreUrl());?></a></span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="col-phone">
+                        <br>
+                            <?php if(!is_null($store->getPhone())&& $store->getPhone()!= ''):?>
+ <span class="font12_red"><?php echo $this->__('Ph : %s', $store->getPhone()); ?></span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                         <?php if(!is_null($store->getFax()) && $store->getFax() != ''):?>
+                               <span class="font12_gry"><?php echo $this->__('Fax : %s', $store->getFax());?></span>
+                        <?php endif; ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+           
+            <td>
+            <a class="plus-sign" href="<?php echo $this->getUrl() . "onibi_storelocator/index/shop/id/" . $store->getId();?>"></a>
+            	
+            </td>
+           </tr>
+           
+    <?php endforeach;?>
+    </table>
+    <?php if(count($this->getStores()) == 0):?>
+    	No Stores Found
+    <?php endif;?>
+</div>
+
+
+<div id="panel"></div>

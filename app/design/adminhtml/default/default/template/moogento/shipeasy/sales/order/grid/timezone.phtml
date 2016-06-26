@@ -1,0 +1,48 @@
+<?php 
+/** 
+* Moogento
+* 
+* SOFTWARE LICENSE
+* 
+* This source file is covered by the Moogento End User License Agreement
+* that is bundled with this extension in the file License.html
+* It is also available online here:
+* http://www.moogento.com/License.html
+* 
+* NOTICE
+* 
+* If you customize this file please remember that it will be overwrtitten
+* with any future upgrade installs. 
+* If you'd like to add a feature which is not in this software, get in touch
+* at www.moogento.com for a quote.
+* 
+* ID          pe+sMEDTrtCzNq3pehW9DJ0lnYtgqva4i4Z=
+* File        backorders.phtml
+* @category   Moogento
+* @package    pickPack
+* @copyright  Copyright (c) 2014 Moogento <info@moogento.com> / All rights reserved.
+* @license    http://www.moogento.com/License.html
+*/ 
+?>
+<?php 
+    $order = $this->getOrder();
+    echo '<div class="'.$this->getPhoneClass($order).'" title="">';
+        if(Mage::getStoreConfigFlag('moogento_shipeasy/grid/timezone_show_phone_number')){
+            echo '<div class="timezone_number">'.$order->getPhone().'</div>';
+        }
+        if(Mage::getStoreConfigFlag('moogento_shipeasy/grid/timezone_time')){
+            echo $this->getRemoteTime($order);
+        }
+        if( Mage::getStoreConfig('moogento_shipeasy/grid/timezone_type_call')){
+            echo '<div class="timezone_call">';
+                echo '<a class="phone tooltipster" href="tel:'.$order->getPhone().'" title="Call '.$order->getPhone().'"><span>';
+                    echo "Phone";
+                echo "</span></a>";
+                echo "</a>";
+                echo '<a class="skype tooltipster" href="skype:'.$order->getPhone().'?call" title="Skype '.$order->getPhone().'"><span>';
+                    echo "Skype";
+                echo "</span></a>";
+            echo "</div>";
+        }
+    echo "</div>";
+?>

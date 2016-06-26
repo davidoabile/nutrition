@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * David
+ */
+-->
+<config>
+    <modules>
+        <NWH_Cache>
+            <version>0.1.1</version>
+        </NWH_Cache>
+    </modules>
+
+    <global>
+        <helpers>
+            <nwhcache>
+                <class>NWH_Cache_Helper</class>
+            </nwhcache>
+        </helpers>
+    </global>
+    
+</config>

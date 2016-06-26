@@ -1,0 +1,382 @@
+<config>
+    <tabs>
+        <moogento translate="label" module="moogento_pickscan">
+            <label><![CDATA[<img src="//moogento.com/logo/moogento_tinylogo.ls.png" alt="Moogento" width="20" style="vertical-align:bottom;margin-left:-1px;"/> MOOGENTO Extensions]]></label>
+            <sort_order>200</sort_order>
+        </moogento>
+    </tabs>
+    <sections>
+        <moogento_retailexpress translate="label" module="moogento_retailexpress">
+            <label><![CDATA[Retail Express]]></label>
+            <tab>moogento</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>5275</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>0</show_in_website>
+            <show_in_store>0</show_in_store>
+            <groups>
+                <general>
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enable translate="label comment" module="moogento_retailexpress">
+                            <label><![CDATA[Enabled?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+							<comment><![CDATA[If <b>Yes</b> : <br />Orders are processed with cron <b>or</b> via individual order detail page, depending on the setting of 'Debug?' below<br />If <b>No</b> : <br />No order is processed.]]></comment>
+                        </enable>
+                        <debug translate="label comment" module="moogento_retailexpress">
+                            <label><![CDATA[Debug mode?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <comment><![CDATA[If <b>Yes</b> : <br />Orders are not processed with cron, but can be sent to retailExpress via button in Order Detail page<br />If <b>No</b> : <br />Orders are immediately processed with cron and sent to retailExpress]]></comment>
+                        </debug>
+                        <hint translate="label comment" module="moogento_retailexpress">
+                            <label></label>
+                            <frontend_model>moogento_retailexpress/adminhtml_system_config_hint</frontend_model>
+                            <sort_order>18</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <depends><debug>0</debug></depends>
+                        </hint>
+                        <mode translate="label comment" module="moogento_retailexpress">
+                            <label><![CDATA[Mode]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_retailexpress/adminhtml_system_config_source_mode</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+							<comment><![CDATA[The selection here determines which account the cron (or single order if 'Debug?' set to 'Yes') is sent to.]]></comment>
+                        </mode>
+                        <live_url>
+                            <label><![CDATA[URL]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <depends><mode>1</mode></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment><![CDATA[This will look something like this:<br /><b>http://{your_account_name}.retailexpress.com.au/dotnet/admin/webservices/webstore/ServiceV2.asmx?WSDL</b>]]></comment>
+                        </live_url>
+                        <live_client_id>
+                            <label><![CDATA[Client ID]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <depends><mode>1</mode></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </live_client_id>
+                        <live_user>
+                            <label><![CDATA[User]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <depends><mode>1</mode></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </live_user>
+                        <live_passwd>
+                            <label><![CDATA[Password]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <depends><mode>1</mode></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </live_passwd>
+                        <test_url>
+                            <label><![CDATA[URL]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <depends><mode>0</mode></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </test_url>
+                        <test_client_id>
+                            <label><![CDATA[Client ID]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <depends><mode>0</mode></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </test_client_id>
+                        <test_user>
+                            <label><![CDATA[User]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <depends><mode>0</mode></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </test_user>
+                        <test_passwd>
+                            <label><![CDATA[Password]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <depends><mode>0</mode></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </test_passwd>
+                        <channel_id>
+                            <label><![CDATA[Channel ID]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </channel_id>
+                        <!--<test_connection translate="label comment">-->
+                            <!--<label></label>-->
+                            <!--<frontend_type>button</frontend_type>-->
+                            <!--<frontend_model>moogento_retailexpress/adminhtml_system_config_button_test</frontend_model>-->
+                            <!--<sort_order>100</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>1</show_in_store>-->
+                            <!--<comment>You need to save changes so that they take effect</comment>-->
+                        <!--</test_connection>-->
+                    </fields>
+                </general>
+
+                <customer>
+                    <label>Customer processing</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <same_data translate="label comment" module="moogento_retailexpress">
+                            <label><![CDATA[Send same customer data for all products?]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </same_data>
+                        <customer_id>
+                            <label><![CDATA[Customer ID]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <depends><same_data>1</same_data></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </customer_id>
+                        <firstname>
+                            <label><![CDATA[First name]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <depends><same_data>1</same_data></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </firstname>
+
+                        <lastname>
+                            <label><![CDATA[Last name]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <depends><same_data>1</same_data></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </lastname>
+
+                        <address>
+                            <label><![CDATA[Address line 1]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <depends><same_data>1</same_data></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </address>
+
+                        <address2>
+                            <label><![CDATA[Address line 2]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <depends><same_data>1</same_data></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </address2>
+
+                        <company>
+                            <label><![CDATA[Company]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <depends><same_data>1</same_data></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </company>
+
+                        <phone>
+                            <label><![CDATA[Phone]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <depends><same_data>1</same_data></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </phone>
+
+                        <postcode>
+                            <label><![CDATA[Postcode]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <depends><same_data>1</same_data></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </postcode>
+
+                        <state>
+                            <label><![CDATA[State]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>80</sort_order>
+                            <depends><same_data>1</same_data></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </state>
+
+                        <city>
+                            <label><![CDATA[City]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>90</sort_order>
+                            <depends><same_data>1</same_data></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </city>
+
+                        <country>
+                            <label><![CDATA[Country]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <depends><same_data>1</same_data></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </country>
+
+                        <email>
+                            <label><![CDATA[Email]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>110</sort_order>
+                            <depends><same_data>1</same_data></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </email>
+                    </fields>
+                </customer>
+
+                <product>
+                    <label>Products</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <mode translate="label comment" module="moogento_retailexpress">
+                            <label><![CDATA[Import Mode]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_retailexpress/adminhtml_system_config_source_product_mode</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment><![CDATA[&bull;<b>Products already in store</b> - choose this if rEx products were added to Magento before module instalation<br />
+							&bull;<b>Import products from retailExpress</b> - choose this if you want to import products from rEx to Magento (ie. if they haven't been added before)]]></comment>
+                        </mode>
+                        <retail_express_id translate="label comment" module="moogento_retailexpress">
+                            <label><![CDATA[Retail Express product id attribute]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_retailexpress/adminhtml_system_config_source_product_attribute</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><mode>1</mode></depends>
+                        </retail_express_id>
+                    </fields>
+                </product>
+
+                <order>
+                    <label>Order </label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <statuses translate="label comment" module="moogento_retailexpress">
+                            <label><![CDATA[Order statuses for auto processing]]></label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>moogento_retailexpress/adminhtml_system_config_source_order_status</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </statuses>
+                        <payment_method translate="label comment" module="moogento_retailexpress">
+                            <label><![CDATA[Payment method]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>moogento_retailexpress/adminhtml_system_config_source_payment</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment><![CDATA[If this is blank, you need to import Payment Methods from retailExpress first:<br />Go to: <b>Sales / Retail Express / Retail Express Payment Methods</b> and click <b>Import Retail Express Payment Methods</b>.<br />Once that's done come back here and this will be populated.]]></comment>
+                        </payment_method>
+                        <free_products>
+                            <label><![CDATA[Free products for every order]]></label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[Newline separated list of retailExpress ids. Qty by default is 1. If you want to change qty add it to ID with "|" symbol inbetween]]></comment>
+                        </free_products>
+
+                        <force_tax_rate translate="label comment" module="moogento_retailexpress">
+                            <label><![CDATA[Tax rate to be sent to rEx(%)]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[If not defined tax rates will be taken from magento settings.]]></comment>
+                        </force_tax_rate>
+
+                        <exclude_products>
+                            <label><![CDATA[Exclude products from order]]></label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[Newline separated list of SKUs to be excluded from order when sent to rEx]]></comment>
+                        </exclude_products>
+                    </fields>
+                </order>
+            </groups>
+        </moogento_retailexpress>
+    </sections>
+</config>

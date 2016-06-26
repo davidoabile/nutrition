@@ -1,0 +1,106 @@
+
+<?php
+    $_product     = Mage::helper('bonusoffers')->getProducts()->getFirstItem();
+    $_cartProduct = $_product->getPrizeProduct();
+    $helper = Mage::helper('bonusoffers');
+?>
+<?php /*<div style="position:fixed;width:100%;top:110px;z-index: 999999;">*/ ?>
+<div class="del_updt_pop_main bonus_popup" style="display:none;">
+    <form class="bonusform" action="<?php echo Mage::helper('checkout/cart')->getAddUrl($_product) ?>" method="post" id="product_addtocart_form"<?php if ($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif ?>>
+        <input type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"  name="form_key">
+        <div class="del_updt_pop_heading">
+            <div class="del_updt_pop_heading_clsimg">
+                <a href="javascript:;" class="close_bonus_img">
+                    <img src="<?php echo $this->getSkinUrl("images/close_img.png");?>">
+                </a>
+            </div>
+            <div class="popup_heading_txt">BONUS OFFER!</div>
+        </div>
+        <div class="del_updt_pop_mid">
+            <div class="left">
+                <div class="fwimg">
+                    <span>
+                        <img width="135" height="135" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(135) ?>" alt="<?php echo $_product->getName() ?>" />
+                    </span>
+                </div>
+                <div class="fwimg_detl mrgn_t10">
+                    <div class="font30_dgry comman">
+                        BUY 1 GET 1 <span class="font30_sky">FREE</span><br>
+                        ON <?php echo $_cartProduct->getName() ?>
+                    </div>
+                    <div class="comman font14_red">
+                        <?php echo $_product->getPrice() ?>
+                        <span class="font14_blk">
+                            <?php
+                                $length = $this->htmlEscape(strip_tags($_product->getShortDescription()));
+                                if (strlen($length) > 10) {
+                                    echo substr($length,0,10) . '...'; 
+                                } else {
+                                    echo substr($length,0,10);
+                                }
+                            ?>
+                        </span>
+                    </div>
+                    <?php if ($_product->isSaleable()): ?>
+                        <?php $cProduct = Mage::getModel('catalog/product')->load($_product->getId()) ?>
+                        <?php if ($cProduct->getData('type_id') == "configurable"): ?>
+                            <?php $config = $cProduct->getTypeInstance(true) ?>
+                            <?php foreach ($config->getConfigurableAttributesAsArray($cProduct) as $attributes): ?>
+                                <div style="float: left; width: 100%;">
+                                    <div class="dropdown5 mrgn_t10">
+                                        <select style="" name="super_attribute[<?php echo $attributes['attribute_id'] ?>]" id="attribute<?php echo $attributes['attribute_id'] ?>" class="changeprice required-entry super-attribute-select">
+                                            <option price='0' value="0"><?php echo $this->__('Choose an Option...') ?></option>
+                                            <?php foreach ($attributes["values"] as $values): ?>
+                                                <?php
+                                                    $price1 = number_format($values['pricing_value'], '2', '.', ',');
+                                                    $pricelable1 = ($price1 !='0.00')? ' +'.Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol().$price1 :'';
+                                                ?>
+                                                <option value="<?php echo $values['value_index'] ?>" price="<?php echo number_format($values['pricing_value'], '2', '.', ',') ?>" ><?php echo $values['label'] ?><?php echo $pricelable1 ?></option>
+                                            <?php endforeach ?>
+                                        </select>
+                                    </div>  
+                                </div>
+                            <?php endforeach ?>
+                        <?php endif ?>
+                        <?php
+                            $attVal = $_product->getOptions();
+                            $optStr = "";
+                            if (count($attVal) > 0) {
+                                foreach ($attVal as $optionKey => $optionVal) {
+                                    $optStr .= '<div style="float: left; width: 100%;"><div class="font18_gry" style="float: left;margin-bottom: 12px;">' . $optionVal->getTitle() . ':</div>';
+                                    $optStr .= "<div class='dropdownqty' style='margin:0'>
+                                                <select class='changeprice' name='options[".$optionVal->getId()."]'>";
+                                    $optStr .= "<option value='0'  price='0'>--Please select--</option>";
+                                    foreach ($optionVal->getValues() as $valuesKey => $valuesVal) {
+                                        $price = number_format($valuesVal->getPrice(), '2', '.', ',');
+                                        $pricelable = ($price !='0.0000')? ' +'.Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol().$price :'';
+                                        $optStr .= "<option price='".$valuesVal->getPrice()."' value='".$valuesVal->getId()."'>".$valuesVal->getTitle().$pricelable."</option>";
+                                    }
+
+                                    $optStr .= "</select></div></div>";
+                                }
+
+                                echo($optStr);
+                            }
+                        ?>                  
+                        <input type="hidden" class="input-text qty" title="Qty" value="1" maxlength="12" id="qty_<?php echo $productid ?>" name="qty">
+                    <?php endif ?>
+                    <div class="comman mrgn_t20">
+                        <input type="submit" class="btn_sky mrgn_r10 addbonusProd" value="ADD TO CART" name="">
+                        <a class="link14_gry close_bonus_img" href="javascript:;">NO THANKS</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+   </form>
+</div>
+<?php /*</div>*/ ?>
+<div class="bonus_popup_gray"></div>
+<?php if (!in_array("aitcheckout", $url)): ?>
+    <div class="bonus_offer mrgn_t20">
+        <a class="btn_offer view_bunusoffer" href="javascript:;">CLAIM BONUS OFFER!</a>
+        <div class="right font14_blk">
+            PURCHASE A 30 SERVE AMINO ENERGY<br>BY ON &amp; RECEIVE A FREE GIFT 
+        </div>
+    </div>
+<?php endif ?>

@@ -1,0 +1,77 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Promo
+ */
+?>
+<?php
+$products = Mage::helper('ampromo')->getNewItems();
+$autoOpen = Mage::getStoreConfig('ampromo/general/auto_open_popup');
+$bonus = ''; //Mage::helper('ampromo/bonus')->getBonusSku();
+$free = Mage::helper('ampromo/bonus')->getFreeSku();
+$bonus_item = 0;
+foreach ($products as $k => $product) {
+    if (in_array($product->getSku(), $bonus)) {
+        $bonus_item = 1;
+        break;
+    }
+}
+if ($bonus_item > 0) {
+    $bonus = Mage::helper('ampromo/bonus')->getBonusSku();
+}
+?>
+
+<?php if (sizeof($products) > 0): ?>
+    <hr/><div id="ampromo-items-add" <?php if (empty($free)) echo "style='display:none;' "; ?>><?php echo Mage::helper("ampromo/bonus")->miniMessage() . " "; ?><a href="<?php echo Mage::getUrl('ampromo/cart/freegiftcheckout') ?>" id="view-freebies"><?php echo $this->__('View gifts'); ?></a></div>
+    <div id="ampromo-bonus-add" <?php if (empty($bonus)) echo "style='display:none;' "; ?>>You've earned a bonus! <a href="#"><?php echo $this->__('View Bonus'); ?></a></div>
+    <script type="text/javascript">
+        if (screen.width > 767) {
+            var button = $('ampromo-items-add').down('a');
+            var freesku = '<?php echo $free; ?>';
+            var freesku = freesku.split(",");
+            var bonussku = '<?php echo $bonus; ?>';
+            var bonussku = bonussku.split(",");
+
+            button.observe('click', ampromo_show_gift);
+            var button_bonus = $('ampromo-bonus-add').down('a');
+            button_bonus.observe('click', ampromo_show_bonus);
+            if (window.location.hash == '#choose-gift' || <?php echo $autoOpen ? 'true' : 'false' ?>) {
+    <?php if (!empty($free) || !empty($bonus)): ?>
+        <?php if (!empty($bonus)): ?>
+                        hide_freegift_sku();
+                        $('bonus-wellcome').show();
+        <?php elseif (!empty($free)): ?>
+                        $('bonus-wellcome').hide();
+                        $('gift-wellcome').show();
+        <?php endif; ?>
+                    ampromo_popup();
+                    ampromo_init();
+    <?php endif; ?>
+            }
+
+        } else {
+         //   $('ampromo-items-add').down('a').setAttribute('href', '<?php //echo Mage::helper('ampromo/bonus')->FreegiftLandingPage(); ?>');
+          //  $('ampromo-bonus-add').down('a').setAttribute('href', '<?php //echo Mage::helper('ampromo/bonus')->BonusLandingPage(); ?>');
+            /*redirect to bonus or gift landding page before process checkout*/
+            Event.observe(window, 'load', function(){
+              $$('.btn-proceed-checkout.btn-checkout')[0].setAttribute('onclick',"window.location='<?php echo Mage::getUrl('ampromo/cart/freegiftcheckout');  ?>';");
+             });
+             
+    <?php
+    $showgift = Mage::registry('showgift');
+    if (empty($showgift)):
+        ?>
+                window.location.href = "<?php echo Mage::getUrl('ampromo/cart/freegiftcheckout'); ?>";
+    <?php endif; ?>
+        }
+        
+         Event.observe(window, 'load', function(){
+            $$('.btn-proceed-checkout.btn-checkout')[0].setAttribute('onclick',"window.location='<?php echo Mage::getUrl('ampromo/cart/freegiftcheckout');  ?>';");
+            // $$('.btn-proceed-checkout.btn-checkout')[0].innerHTML = 'Claim a free Gift';
+         });
+             
+    </script>
+    <?php
+
+ endif ?>

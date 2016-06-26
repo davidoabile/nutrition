@@ -1,0 +1,92 @@
+<?php
+/**
+* Braintree Payments Extension
+*
+* This source file is subject to the Braintree Payment System Agreement (https://www.braintreepayments.com/legal)
+*
+* DISCLAIMER
+* This file will not be supported if it is modified.
+*
+* @copyright   Copyright (c) 2015 Braintree. (https://www.braintreepayments.com/)
+*/
+?>
+<?php if ($this->isApplicable()): ?>
+    <?php $shortcutType = $this->getShortcutType()?>
+    <?php $formId = 'paypal-container_' . $shortcutType ?>
+    <form id="<?php echo $formId; ?>" method="post" action="<?php echo $this->getReviewUrl()?>"></form>
+    <script type="text/javascript">
+        var containerId = '<?php echo $formId; ?>';
+        if (typeof braintreePaypalUtils !== 'object') {
+            var braintreePaypalUtils = new BraintreeUtils();
+        }
+        var nonceInputId = '<?php echo Mage::helper('braintree_payments')->getNonceInputId() . '_' . $shortcutType ?>';
+        braintreePaypalUtils.createHiddenInput(
+            {name: "payment_method_nonce", id: nonceInputId},
+            containerId
+        );
+        var onSuccess = function(obj) {
+            if (typeof obj === 'object' && obj.hasOwnProperty('details')) {
+                var details = obj['details'];
+                var additionalStripTags = function(value) {
+                    var result = '';
+                    if (value && typeof value == 'string') {
+                        result = value.stripTags();
+                    }
+                    return result;
+                };
+                if (details.hasOwnProperty('shippingAddress')) {
+                    var shippingAddress = details['shippingAddress'];
+                    for (var key in shippingAddress) {
+                        if (shippingAddress.hasOwnProperty(key)) {
+                            braintreePaypalUtils.createHiddenInput(
+                                {name: "shipping[" + key + "]", id: 'shipping_' + key},
+                                containerId
+                            );
+                            $('shipping_' + key).value = additionalStripTags(shippingAddress[key]);
+                        }
+                    }
+                }
+                if (details.hasOwnProperty('billingAddress')) {
+                    var billingAddress = details['billingAddress'];
+                    for (var key in billingAddress) {
+                        if (billingAddress.hasOwnProperty(key)) {
+                            braintreePaypalUtils.createHiddenInput(
+                                {name: "billing[" + key + "]", id: 'billing_' + key},
+                                containerId
+                            );
+                            $('billing_' + key).value = additionalStripTags(billingAddress[key]);
+                        }
+                    }                        
+                }
+                var additionalBillingField = ["email", "firstName", "lastName", "phone"];
+                for (var ii = 0; ii < additionalBillingField.length; ii++) {
+                    var key = additionalBillingField[ii];
+                    if (details.hasOwnProperty(key)) {
+                        braintreePaypalUtils.createHiddenInput(
+                            {name: "billing[" + key + "]", id: 'billing_' + key},
+                            containerId
+                        );
+                        $('billing_' + key).value = additionalStripTags(details[key]);
+                    }
+                }
+            }
+
+            var dataForm = new VarienForm(containerId, true);
+            dataForm.submit();
+        };
+        braintreePaypalUtils.setupPayPal(
+            '<?php echo Mage::helper('braintree_payments')->getToken() ?>',
+            containerId,
+            '<?php echo Mage::helper('braintree_payments')->getOrderAmount() ?>',
+            '<?php echo $this->getCurrencyCode() ?>',
+            '<?php echo Mage::helper('braintree_payments')->getPayPalTitle() ?>',
+            nonceInputId,
+            <?php echo $this->isShippingAddressSelectionAllowed() ?>,
+            true,
+            '<?php echo $this->getLocale()?>',
+            onSuccess,
+            false,
+            '<?php echo Mage::helper('braintree_payments')->__('Unfortunately your browser is not supported. Please try another one.') ?>'
+        );
+    </script>
+<?php endif; ?>

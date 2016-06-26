@@ -1,0 +1,70 @@
+<?php
+$collection = $this->getCollection();
+$_productCollection=$this->getLoadedProductCollection();
+?>
+
+<div class="main_part mrgn_b20">
+    <div class="block-red">
+        <div class="block-title">
+            <h1><?php echo $this->__('Weekly Specials') ?></h1>
+            <a class="viewall right" href="<?php echo $this->getUrl('catalogextensions/index/weekly') ?>">
+                <?php echo $this->__('VIEW ALL') ?>
+            </a>
+        </div>
+    </div>
+    <div class="prod_slider fp_area_main">
+        <?php if (!$collection->count()): ?>
+            <p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+        <?php else: ?> 
+            <ul id="weekly_special" class="jcarousel-skin-tango">
+                <?php foreach ($collection as $product): ?>
+                    <li>
+                        <div class="ps_part">
+                            <ul>
+                                <li>
+                                    <div class="ps_img_cntr">
+                                        <div class="ps_img">
+                                            <a data-link="weeklySpecial" id="pb_item_<?php echo $product->getId() ?>" class="EnableQuickView" href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>" >
+                                                <img height="176" width="176" src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(176,176) ?>" alt="<?php echo $this->htmlEscape($product->getName()) ?>" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="mrgn_t5">
+                                    <span class="font16_red">
+                                        <?php echo $this->getPriceHtml($product, true) ?>
+                                    </span>
+                                </li>
+                                <li class="font14_blk product-name">
+                                    <a href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>)">
+                                        <?php echo $this->htmlEscape($product->getName());?>
+                                    </a>
+                                </li>
+                                <li class="font12_gry std">
+                                    <?php
+                                    echo $this->htmlEscape(strip_tags($product->getShortDescription()));
+
+                                    ?>
+                                </li>
+                                <?php 
+                                $enable_button_cart = Mage::getStoreConfig("catalog/frontend/enable_button_cart");
+                                ?>
+                                <?php if ($enable_button_cart): ?>
+                                <li class="mrgn_t5 actions">
+                                    <?php if ($product->isSaleable()): ?>
+                                        <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                                    <?php else: ?>
+                                        <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                                    <?php endif; ?>
+                                </li>
+                                <?php endif; ?>
+                            </ul>
+                        </div>
+                        <?php //echo $this->getReviewsSummaryHtml($product, 'short') ?>
+                    </li>
+                <?php endforeach ?>
+            </ul>
+            <div id="weeklySpecial" class="slidmain" style="float: left; display: none;"></div>
+        <?php endif ?>
+    </div>
+</div>

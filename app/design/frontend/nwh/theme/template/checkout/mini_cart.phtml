@@ -1,0 +1,302 @@
+<?php
+    //$count = $this->helper('checkout/cart')->getSummaryCount();  //get total items in cart
+    $total = $this->helper('checkout/cart')->getQuote()->getGrandTotal(); //get total price
+    $count = Mage::helper('checkout/cart')->getCart()->getItemsCount();
+?>  
+<div class="top_cart right clear_right mrgn_t10">
+    <script type="text/javascript">
+        (function($) {
+            var cartSpeedIn  = 100;
+            var cartSpeedOut = 50;
+            var cartEffect   = 'linear';
+
+            function cartHoverOver()
+            {
+                var cartMini = $('.cart_popup');
+                if (cartMini.length) {
+                    cartMini.stop();
+                    cartMini.attr('style', 'opacity: 0').show();
+                    cartMini.hide();
+                   
+                    cartMini.css({'opacity': 1});
+                    cartMini.slideDown(cartSpeedIn, cartEffect);
+                }
+
+                $(li).addClass('active');
+            }
+
+            function cartHoverOut()
+            {
+                var cartMini = $('.cart_popup');
+                if (cartMini.length) {
+                    cartMini.stop();
+
+                    cartMini.fadeTo(cartSpeedOut, 0, cartEffect, function() {
+                        $(this).hide();
+                    });
+                }
+            }
+
+            $(document).ready(function() {
+                $('#header-cart-mini').hover(
+                    function () {
+                        cartHoverOver();
+                    },
+                    function () {
+                        cartHoverOut();
+                    }
+                );
+            });
+        })(jQblvg);
+    </script>
+    <div class="cart_txt">
+        <div class="left"><img src="<?php echo $this->getSkinUrl('images/cart.png') ?>"></div>
+
+        <?php
+        if ($count == 0) {
+            echo $this->__('<div class="left checkouttotalfont">' . $this->__('%s', $this->helper('core')->formatPrice($total, false)) . ' (0)</div>', $count);
+        }
+        if ($count == 1) {
+            echo $this->__('<div class="left checkouttotalfont">' . $this->__('%s', $this->helper('core')->formatPrice($total, false)) . ' (1)</div>', $count);
+        }
+        if ($count > 1) {
+            echo $this->__('<div class="left checkouttotalfont">' . $this->__('%s', $this->helper('core')->formatPrice($total, false)) . ' (%s)</div>', $count);
+        }
+        ?>
+
+    </div>
+    <div id="header-cart-mini">
+        <input type="button" onclick="window.location.href='<?php echo $this->getUrl('') ?>checkout/cart'" value="CHECKOUT" class="checkout_btn header_checkout" name="">
+<!--        <input type="button" value="CHECKOUT" class="checkout_btn header_checkout" name="">-->
+        <div id="chk_popup" class="c_pop cart_popup" style="display: none;">
+         
+            <div class="c_pop_inner">
+
+                <?php $items = Mage::getSingleton('checkout/session')->getQuote()->getAllVisibleItems() ?>
+                <?php if (count($items) > 0) { ?>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td width="23%" height="33" align="left" valign="middle" class="cart_hadd_check_page" style="text-align:center;">
+                                <span class="text_big">YOUR CART</span>
+                            </td>
+                            <td width="38%" align="left" valign="middle" class="cart_hadd_check_page padding_5">
+                                <span class="text_small">ITEM</span>
+                            </td>
+                            <td width="14%" align="right" valign="middle" class="cart_hadd_check_page padding_5" style="text-align:center;">
+                                <span class="text_small">PRICE</span>
+                            </td>
+                            <td width="9%" align="left" valign="middle" class="cart_hadd_check_page padding_5" style="text-align:center;">
+                                <span class="text_small">QTY</span>
+                            </td>
+                            <td width="16%" align="center" valign="middle" class="cart_hadd_check_page padding_5" style="text-align:center;">
+                                <span class="text_small">TOTAL</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="comman" style="overflow-x:auto; height:auto; max-height:250px;">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <?php foreach ($items as $item ): ?>
+                                <?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                                    <?php
+                                        $_incl = $this->helper('checkout')->getPriceInclTax($item);  
+                                        $productprice = $this->helper('checkout')->formatPrice($_incl- $item->getWeeeTaxDisposition());
+                                    ?>
+                                <?php else: ?>
+                                    <?php $productprice = Mage::helper('core')->currency($item->getPrice()) ?>
+                                <?php endif ?>
+                                <tr>
+                                    <td width="23%" align="left" valign="middle" class="padding_5_headerpopup bodr_botm" style="text-align:center;">
+                                        <img src="<?php echo Mage::helper('catalog/image')->init($item->getProduct(), 'thumbnail')->resize(74,79); ?>" />
+                                    </td>
+                                    <td width="38%" class="padding_5_headerpopup bodr_botm">
+                                        <div class="lineheight_header_popup">
+                                            <span class="font14_blk">
+                                                <?php 
+                                                    $lengthName = $item->getName();
+                                                    if (strlen($lengthName) < 25) {
+                                                        echo $lengthName;
+                                                    } else {
+                                                        echo substr($lengthName, 0, 25).'...';
+                                                    }
+                                                ?>
+                                            </span>
+                                        </div>
+                                        <div class="lineheight_header_popup">
+                                            <?php 
+                                                $cProduct = Mage::getModel('catalog/product')->load($item->getProductId());
+                                                if ($cProduct->getData('type_id') == "configurable") {
+                                                    $config = $cProduct->getTypeInstance(true);
+                                                    foreach ($config->getConfigurableAttributesAsArray($cProduct) as $attributes) { 
+                                                        foreach ($attributes["values"] as $values) { ?>
+                                                            <span class="font12_gry"><?php echo $values['label'] ?></span><?php
+                                                        }                             
+                                                    }
+                                                }
+
+                                                $helper = Mage::helper('catalog/product_configuration');
+                                                $attVal = $helper->getCustomOptions($item);
+                                                if(count($attVal) > 0){
+                                                    foreach($attVal as $optionKey => $optionVal) { ?>
+                                                        <span class="font12_gry"><?php echo $optionVal['value'] ?></span><?php
+                                                    }
+                                                }             
+                                            ?>                                        
+                                        </div>      
+                                        <div class="lineheight_header_popup">
+                                            <a class="link12_red2" href="<?php echo Mage::getUrl( 'checkout/cart/delete', array( 'id' => $item->getId() ) ); ?>">
+                                                <img style="vertical-align:middle;" src="<?php echo $this->getSkinUrl('images/remove.png') ?>">&nbsp;Remove
+                                            </a>
+                                        </div>                 
+                                    </td>
+                                    <td width="14%" align="center" valign="middle" class="padding_5_headerpopup bodr_botm" style="text-align:center;">
+                                        <span class="font14_blk"><?php echo $productprice; ?></span><br>
+                                        <!-- old price style -->
+                                        <!--<span class="font12_gry2"></span>-->
+                                    </td>
+                                    <td width="8%" class="padding_5_headerpopup bodr_botm" style="text-align:center;"><?php echo $item->getQty(); ?></td>
+                                    <td width="17%" align="center" valign="middle" class="padding_5_headerpopup bodr_botm" style="text-align:center;">
+                                        <span class="font14_blk"><?php echo Mage::helper('core')->currency(number_format($item->getPrice() * $item->getQty(), 2)); ?></span><br>
+                                        <!-- old price style -->
+                                        <!--<span class="font12_gry2"></span>-->
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </table>
+                    </div>
+                    <div class="gift_bg">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td>
+                                    <?php if(Mage::getModel('checkout/cart')->getQuote()->getSubtotal() > 100): ?>
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td width="29%" align="center" valign="middle"><a href="javascript:;" class="view_gift1"><img src="<?php echo $this->getSkinUrl('images/gift_icon.png') ?>" /></a></td>
+                                            <td width="71%">
+                                                <div class="font14b_gry">YOU’VE ALMOST EARNT</div>
+                                                <div class="font23_wht">A FREE GIFT!</div>
+                                                <div class="font12_gry"><a href="javascript:;" class="view_gift1 font12_gry">See available gifts </a></div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <?php endif;?>
+                                </td>
+                                <td>
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <?php if(Mage::getModel('checkout/cart')->getQuote()->getSubtotal() < 150):
+                                                if (Mage::getStoreConfigFlag('carriers/flatrate/active')) : 
+                                                ?>
+                                            <td class="font14b_gry" style="float: right; width: auto;">
+                                                <div class="right"><span class="mrgn_r10" style="margin-right: 23px;">SHIPPING</span><?php echo Mage::helper('core')->currency(Mage::getStoreConfig('carriers/flatrate/price'));?></div>
+                                            </td>
+                                            
+                                            <?php endif;
+                                            endif; ?>
+                                        </tr>
+                                        <tr>
+                                            <td class="font23_gray">
+                                                <div class="right mrgn_t5"><span class="mrgn_r10">TOTAL</span><span class="font23_wht"><?php echo Mage::helper('core')->currency(Mage::getModel('checkout/cart')->getQuote()->getGrandTotal());?></span></div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="mrgn_t10 right"><a class="checkout_btn_big" href="<?php echo Mage::helper('checkout/cart')->getCartUrl(); ?>" >CHECKOUT</a></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            <?php } else { ?>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td class='cart_hadd_check_page'>&nbsp;</td></tr></table>
+                <div class="comman" style="overflow-x:auto; height:250px;">
+                    <span style="float:left;text-align: left;padding:10px; font-size: 18px;"> You have no items in your shopping cart. <br/> 
+                        Click <a href='<?php echo Mage::getBaseUrl(); ?>' style='color:gray'>here</a> to continue shopping.
+                    </span>
+                </div>
+                <div class="gift_bg"></div>
+            <?php } ?>
+        </div>
+    </div>
+</div>
+
+
+    <!-- This is code for freegift popup on page except checkout page and shopping cart page which do not show mini_cart block-->
+<?php $currentUrl = $this->helper('core/url')->getCurrentUrl();
+if(strpos($currentUrl, 'checkout') === false): ?>
+    <div class="popup_main offer_popup" style="display:none;">
+        <div class="del_updt_pop_heading_clsimg close_gift">
+            <a href="javascript:;" class="close_gift_img"><img src="<?php echo $this->getSkinUrl("images/close_img.png") ?>"></a>
+        </div>
+        <div class="popup_heading">
+            <div class="popup_heading_txt">AVAILABLE GIFTS</div>
+        </div>
+        <div class="popup_middle gift_middle">
+            <div class="popup_mid_wrap">
+                <div class="comman mrgn_t20">
+                    <div class="popup_left">
+                        <div class="popup_left_txt1">CONGRATULATIONS!<br />YOU'RE ELIGABLE
+                            <br />FOR A <span class="popup_left_txt2">FREE GIFT</span>
+                            <div class="popup_left_txt3">
+                                Spend over $100 with Nutritionwarehouse.com.au<br />and we will reward you with a free gift.
+                                <br><br>
+                                <a href="javascript:;" class="chk_offer_close link14_gry2">NO THANKS</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="popup_right">
+                        <img src="<?php echo $this->getSkinUrl("images/popup_img.png") ?>" />
+                    </div>
+                </div>
+                <?php $products = Mage::helper('bonusoffers/gifts')->getProducts() ?>
+                <div class="comman mrgn_t20">
+                    <div class="pop_pro">
+                        <?php foreach ($products as $product): ?>
+                            <div class="pop_pro_bx mrgn_r10">
+                                <div class="pop_pro_bxtop gift_box">
+                                    <img src='<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(173, 173) ?>' width='173' height='173'/>
+                                </div>
+                                <div class="pop_pro_bxbotm">
+                                    <div class="pop_pro_bxbotm_txt1"><?php echo $product->getName() ?></div>
+                                    <div class="pop_pro_bxbotm_txt2"><?php echo substr($product->getData("short_description"), 0, 25) ?></div>
+                                    <div class="pop_pro_bxbotm_txt3 mrgn_t10">
+                                        <span style="color: #379EC0;">FREE</span>
+                                        <span class="pop_pro_bxbotm_txt4"> <?php echo Mage::helper('core')->currency($product->getPrice(), true, false) ?></span>
+                                    </div>
+                                    <input name="<?php echo $product->getId() ?>" type="button" value="Select Gift" class="pop_pro_bxbotm_btn mrgn_t10"/>
+                                </div>
+                            </div>
+                        <?php endforeach ?>
+                    </div>
+                    <div class="pop_endtxt close_text"><a href="javascript:;" class="chk_offer_close link14_gry2">CLOSE</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php /*</div>*/ ?>
+    <div class="offer_popup_gray"></div>
+    <script type="text/javascript">
+        jQblvg(document).ready(function() {
+            jQblvg('.view_gift1').on("click", function() {
+                jQblvg(".offer_popup").css('display', 'block').css('z-index', '9999');
+                jQblvg(".offer_popup_gray").css('display', 'block');
+                jQblvg("#chk_popup").css('opacity',0);
+                jQblvg(".offer_popup").css('float', 'right');
+            });
+            jQblvg(".chk_offer_close").click(function() { // close the popup
+                jQblvg(".offer_popup").css('display', 'none');
+                jQblvg(".offer_popup_gray").css('display', 'none');
+            });
+            jQblvg(".close_gift_img").click(function() { // close the popup
+                jQblvg(".offer_popup").css('display', 'none');
+                jQblvg(".offer_popup_gray").css('display', 'none');
+            });
+            jQblvg(".pop_pro_bxbotm_btn").click(function() {
+                jQblvg(".offer_popup").css('display', 'none');
+                jQblvg(".offer_popup_gray").css('display', 'none');
+                window.location.href="<?php echo $this->getBaseUrl() ?>aitcheckout/cart/addGift/id/" + jQblvg(this).attr("name");
+            });
+        });
+    </script>
+
+<?php endif;?>

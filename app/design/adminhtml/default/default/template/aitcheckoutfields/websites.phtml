@@ -1,0 +1,206 @@
+<?php
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (CFM Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckoutfields
+ * @version      1.0.9 - 2.9.8
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+/**
+ * Attribute otions control
+ *
+ * @see Mage_Adminhtml_Block_Catalog_Product_Attribute_Edit_Tab_Options
+ */
+?>
+<div class="entity-edit">
+    <div class="entry-edit-head">
+    <h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('catalog')->__('Display of Attribute on Websites and Stores') ?></h4>
+    </div>
+    <div class="fieldset " id="rule_base_fieldset">
+    <div class="hor-scroll">
+    
+        <table cellspacing="0" class="form-list" border="0">
+            <tbody>
+                
+                <tr>
+                    <td width="1%">
+                    <input name="is_visible_in_advanced_search" value="1" class="checkbox website-checkbox" id="is_visible_in_advanced_search" type="checkbox" <?php if ($this->getIsGlobal()) echo 'checked'; ?> onclick="checkIsGlobal();"/>
+
+                        
+                    </td>
+                    
+                    <td width="1%">&nbsp;</td>
+                    
+                    <td>
+                    <label for="product_website_1"><b><?php echo Mage::helper('catalog')->__('Global') ?></b> <?php echo Mage::helper('catalog')->__('(if checked, the attribute will be displayed to all websites and store views)') ?></label>
+                    </td>
+                    
+                </tr>
+                
+            </tbody>
+        </table>
+    
+<script type="text/javascript">
+    var aWebsiteId = [];  
+    var iCounter = 0;  
+</script>
+
+<div id="data_div_custom">
+        <table cellspacing="0" class="form-list" style="width:520px;">
+            <tbody>
+                
+	            <?php if ($aFullDataList = $this->getFullDataList()): ?>
+    	            <?php foreach ($aFullDataList as $iKey => $aWebsite): ?>
+	            
+                    <tr>
+                        <td width="1%">
+                        </td>
+                        
+                        <td width="1%"><small>&nbsp;</small></td>
+                        
+                        <td width="50%">
+                        <b><?php echo $aWebsite['label']; ?></b>
+                        <br>
+                        <input name="assign_website[<?php echo $iKey; ?>]" value="1" class="checkbox website-checkbox" id="assign_website_<?php echo $iKey; ?>" type="checkbox" <?php if ($aWebsite['value']) echo 'checked'; ?> onclick="checkIsAny('<?php echo $iKey; ?>');" />&nbsp;
+                        <label for="assign_website_<?php echo $iKey; ?>"><?php echo Mage::helper('catalog')->__('All store views of the website') ?></label>
+                        
+                        
+                        </td>
+                        
+                        <td class="value" width="48%">
+                        <div id="select_div_<?php echo $iKey; ?>">
+	            <?php if ($aWebsite['stores']): ?>
+                        <select id="assign_store_<?php echo $iKey; ?>" name="assign_store[<?php echo $iKey; ?>][]" title="<?php echo Mage::helper('catalog')->__('Stores') ?>" size="5" class="select multiselect" multiple="multiple">
+    	            <?php foreach ($aWebsite['stores'] as $iStoreKey => $aStore): ?>
+    	            
+                        <option value="<?php echo $iStoreKey; ?>" <?php if ($aStore['value']) echo 'selected'; ?>><?php echo $aStore['label']; ?></option>
+    	            
+	               <?php endforeach; ?>
+                        </select>
+	            <?php else: ?>
+	                   <i><?php echo Mage::helper('catalog')->__('No store views') ?></i>
+	            <?php endif; ?>
+	                   </div>
+<script type="text/javascript">
+    aWebsiteId[iCounter] = '<?php echo $iKey; ?>'; 
+    iCounter++;   
+</script>
+                        
+                        </td>
+                        <td><small>&nbsp;</small></td>
+                    </tr>
+	            
+	               <?php endforeach; ?>
+	            <?php endif; ?>
+            
+            
+            </tbody>
+        </table>
+</div>
+</div>
+</div>
+</div>
+
+
+<script type="text/javascript">
+//<![CDATA[
+
+function checkIsGlobal()
+{
+    if (!$('is_visible_in_advanced_search')) return;
+
+    var sKey = '';
+    
+    if ($('is_visible_in_advanced_search').checked) // IS global 
+    {
+        for (var i=0; i < aWebsiteId.length; i++) 
+        {
+            sKey = 'assign_store_' + aWebsiteId[i]; 
+            
+            if ($(sKey))
+            {
+                setOptionsStatus(sKey, true);
+                $(sKey).disabled = true;
+            }
+            
+            sKey = 'assign_website_' + aWebsiteId[i]; 
+            
+            if ($(sKey))
+            {
+                $(sKey).checked = true;
+                checkIsAny(aWebsiteId[i]);
+            }
+        }
+        
+        $('data_div_custom').style.display = 'none';
+    }
+    else
+    {
+        for (var i=0; i < aWebsiteId.length; i++) // is NOT global
+        {
+            sKey = 'assign_store_' + aWebsiteId[i]; 
+            
+            if ($(sKey))
+            {
+                $(sKey).disabled = false;
+            }
+        }
+        $('data_div_custom').style.display = '';
+    }
+}
+
+function checkIsAny(sKeyId)
+{
+    var sKey = 'assign_website_' + sKeyId;
+    
+    if (!$(sKey)) return;
+    
+    if ($(sKey).checked) // IS global 
+    {
+        sKey = 'assign_store_' + sKeyId; 
+        setOptionsStatus(sKey, true);
+        
+        sKey = 'select_div_' + sKeyId; 
+        $(sKey).style.display = 'none';
+        
+    }
+    else
+    {
+        sKey = 'select_div_' + sKeyId; 
+        $(sKey).style.display = '';
+    }
+}
+
+function setOptionsStatus(sSelectId, bSelect)
+{
+    if (!sSelectId || !$(sSelectId)) return false;
+    
+    if ($(sSelectId).options)
+    {
+        for (var i=0; i < $(sSelectId).options.length; i++) 
+        {
+            if (bSelect)
+            {
+                $(sSelectId).options[i].selected = true; 
+            }
+            else
+            {
+                $(sSelectId).options[i].selected = false; 
+            }
+        }
+    }
+}
+
+checkIsGlobal();
+
+if (aWebsiteId.length)
+{
+    for (var i=0; i < aWebsiteId.length; i++) 
+    {
+        checkIsAny(aWebsiteId[i]);
+    }
+}
+
+</script>

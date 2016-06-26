@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_sales_order_view>
+        <reference name="order_tab_info">
+            <action method="setTemplate"><template>moogento/courierrules/order/tab/info.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_view>
+    <adminhtml_sales_order_index>
+        <reference name="head">
+            <action method="addJs"><script>moogento/general/jquery.min.js</script></action>
+            <action method="addJs"><script>moogento/general/jquery-ui.min.js</script></action>
+            <action method="addCss"><script>moogento/general/jqueryui/jquery-ui.min.css</script></action>
+            <action method="addJs"><script>moogento/general/jquery.cookie.js</script></action>
+            <action method="addJs"><script>moogento/general/chosen.jquery.js</script></action>
+            <action method="addCss"><script>moogento/general/chosen/chosen.css</script></action>   
+            <action method="addJs"><script>moogento/courierrules/orderGrid.js</script></action>
+            <action method="addCss"><script>moogento/general/spinner/spinner.css</script></action>   
+            <action method="addJs"><script>moogento/general/spinner.js</script></action>
+            <action method="addCss"><script>moogento/courierrules/grid.css</script></action>   
+        </reference>
+    </adminhtml_sales_order_index>
+
+    <adminhtml_sales_order_view>
+        <reference name="head">
+            <action method="addCss"><script>moogento/general/tooltipster/css/tooltipster.css</script></action>
+            <action method="addJs"><script>moogento/general/jquery.min.js</script></action>
+            <action method="addItem"><type>skin_js</type><script>moogento/general/tooltipster/js/jquery.tooltipster.min.js</script></action>
+        </reference>
+        <reference name="sales_order_tabs">
+            <action method="addTab"><name>courierrules_connector</name><block>moogento_courierrules/adminhtml_sales_order_connector_tab</block></action>
+            <!--<block type="adminhtml/adminhtml_sales_order_connector" name="courierrules_connector" template="sales/order/view/info.phtml"></block>-->
+        </reference>
+    </adminhtml_sales_order_view>
+
+    <adminhtml_sales_manifest_list>
+        <reference name="head">
+            <action method="addJs"><script>moogento/general/jquery.min.js</script></action>
+            <action method="addJs"><script>moogento/general/jquery-ui.min.js</script></action>
+            <action method="addCss"><script>moogento/general/jqueryui/jquery-ui.min.css</script></action>
+        </reference>
+        <reference name="content">
+            <block type="moogento_courierrules/adminhtml_sales_manifest_list" name="manifest_list" template="moogento/courierrules/manifest/list.phtml"/>
+        </reference>
+    </adminhtml_sales_manifest_list>
+
+    <adminhtml_courierrules_connector_suggestions>
+        <reference name="head">
+            <action method="addJs"><script>moogento/general/jquery.min.js</script></action>
+            <action method="addJs"><script>moogento/general/jquery-ui.min.js</script></action>
+            <action method="addCss"><script>moogento/general/jqueryui/jquery-ui.min.css</script></action>
+            <action method="addCss"><script>moogento/general/spinner/spinner.css</script></action>
+            <action method="addJs"><script>moogento/general/spinner.js</script></action>
+        </reference>
+        <reference name="content">
+            <block type="moogento_courierrules/adminhtml_connector_suggestion" name="suggestions" template="moogento/courierrules/connector/suggestions.phtml"/>
+        </reference>
+    </adminhtml_courierrules_connector_suggestions>
+</layout>

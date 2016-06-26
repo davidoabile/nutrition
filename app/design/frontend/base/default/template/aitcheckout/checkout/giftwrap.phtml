@@ -1,0 +1,26 @@
+<?php
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+?>
+<div id="aitgiftwrap-waiting" class="aitcheckout-wait" style="display:none"><img src="<?php echo Mage::getDesign()->getSkinUrl('images/opc-ajax-loader.gif'); ?>" /></div>
+<script type="text/javascript">
+//<![CDATA[
+
+    aitCheckout.createStep('giftwrap',{
+            }, {
+                doCheckErrors : false,
+                isLoadWaiting : true,
+                isUpdateOnReload : false,
+                isShowCartInCheckout : <?php echo $this->helper('aitcheckout')->isShowCartInCheckout()?'1':'0'?>,
+                container: 'checkout-step-aitgiftwrap'
+            }
+    );
+//]]>
+</script>

@@ -1,0 +1,22 @@
+<?php 
+    $store  = Mage::app()->getStore();
+    $code   = $store->getCode();
+    $enable = Mage::getStoreConfig('catalogextensions/config1/active', $code);
+?>
+<?php if ($enable == 1): ?>
+    <div class="main_part mrgn_b20">
+        <div class="block-red">
+            <div class="block-title">
+            <h1><?php echo Mage::getStoreConfig('catalogextensions/config1/title', $code) ?></h1>
+            <!--<div class="triangle-bottomleft"></div>-->
+            <a class="viewall right" href="<?php echo $this->getUrl('catalogextensions/index/bestsellers') ?>">
+                <?php echo $this->__('VIEW ALL') ?>
+            </a>
+            </div>
+        </div>
+        <div class="prod_slider fp_area_main">
+            <?php echo $this->getCollectionHtml() ?>
+        </div>
+    </div>
+    <?php //echo $this->getCollectionHtml() ?>
+<?php endif ?>

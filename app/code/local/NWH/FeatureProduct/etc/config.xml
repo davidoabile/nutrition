@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <NWH_FeatureProduct>
+      <version>0.1.0</version>
+    </NWH_FeatureProduct>
+  </modules>
+  <global>
+    <helpers>
+      <featureproduct>
+        <class>NWH_FeatureProduct_Helper</class>
+      </featureproduct>
+    </helpers>
+	<blocks>
+	  <featureproduct>
+		<class>NWH_FeatureProduct_Block</class>
+	  </featureproduct>
+	</blocks>
+	<models>
+	  <featureproduct>
+		<class>NWH_FeatureProduct_Model</class>
+		<resourceModel>featureproduct_mysql4</resourceModel>
+	  </featureproduct>
+	  <featureproduct_mysql4>
+		<class>NWH_FeatureProduct_Model_Mysql4</class>
+		<entities>		  
+			  <nwh>
+				<table>feature_product</table>
+			  </nwh>
+		</entities>
+	  </featureproduct_mysql4>
+	</models>
+	<resources>
+	  <featureproduct_setup>
+		<setup>
+		  <module>NWH_FeatureProduct</module>
+		</setup>
+		<connection>
+		  <use>core_setup</use>
+		</connection>
+	  </featureproduct_setup>
+	  <featureproduct_write>
+		<connection>
+		  <use>core_write</use>
+		</connection>
+	  </featureproduct_write>
+	  <featureproduct_read>
+		<connection>
+		  <use>core_read</use>
+		</connection>
+	  </featureproduct_read>
+	</resources>
+  </global>
+  <admin>
+	<routers>
+	  <adminhtml>
+				<args>
+					<modules>
+						<featureproduct before="Mage_Adminhtml">NWH_FeatureProduct_Adminhtml</featureproduct>
+					</modules>
+				</args>
+			</adminhtml>
+	</routers>
+  </admin>
+  <adminhtml>
+	<menu>
+	  <featureproduct module="featureproduct">
+		<title>FeatureProduct</title>
+		<sort_order>100</sort_order>
+		<children>
+		  <nwh module="featureproduct">
+		    <title>Add Product SKU</title>
+			<sort_order>0</sort_order>
+			<action>adminhtml/featureproduct_nwh</action>
+		  </nwh>
+		</children>
+	  </featureproduct>
+	</menu>
+	<acl>
+	  <resources>
+		<all>
+		  <title>Allow Everything</title>
+		</all>
+		<admin>
+		  <children>
+			<featureproduct translate="title" module="featureproduct">
+			  <title>Feature Product</title>
+			  <sort_order>1000</sort_order>
+			  <children>
+		  <nwh translate="title">
+			<title>Add Product SKU</title>
+			<sort_order>0</sort_order>
+		  </nwh>
+			  </children>
+			</featureproduct>
+		  </children>
+		</admin>
+	  </resources>
+	</acl>
+	<layout>
+	  <updates>
+		<featureproduct>
+		  <file>featureproduct.xml</file>
+		</featureproduct>
+	  </updates>
+	</layout>
+  </adminhtml>
+</config> 

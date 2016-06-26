@@ -1,0 +1,1168 @@
+<?php
+    $helper = Mage::helper('moogento_pickscan');
+    $user = Mage::getSingleton('admin/session')->getUser();
+    $email = $user->getEmail();
+    $userName = substr($email, 0 , strpos($email, '@'));
+?>
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Pick & Scan</title>
+
+    <!-- Bootstrap -->
+    <link href="<?php echo $this->getSkinUrl('moogento/general/bootstrap/css/bootstrap.min.css') ?>" rel="stylesheet">
+    <link href="<?php echo $this->getSkinUrl('moogento/general/bootstrap/css/bootstrap-switch.min.css') ?>" rel="stylesheet">
+    <link href="<?php echo $this->getSkinUrl('moogento/general/bootstrap/css/jquery.bootstrap-touchspin.min.css') ?>" rel="stylesheet">
+    <link href="<?php echo $this->getSkinUrl('moogento/general/bootstrap/css/jasny-bootstrap.min.css') ?>" rel="stylesheet">
+    <link href="<?php echo $this->getSkinUrl('moogento/pickscan/css/font-awesome.css') ?>" rel="stylesheet">
+    <link href="<?php echo $this->getSkinUrl('moogento/pickscan/countdown/jquery.countdown.css') ?>" rel="stylesheet">
+    <link href="<?php echo $this->getSkinUrl('moogento/general/tooltipster/css/tooltipster.css') ?>" rel="stylesheet">
+    <link href="<?php echo $this->getSkinUrl('moogento/pickscan/css/pickscan.css') ?>" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" data-bind="visible: showNav">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" data-bind="click: showHome">
+                <?php if (!Mage::getStoreConfig('moogento_pickscan/settings/logo')): ?>
+                    <?php echo $this->__('Pick & Scan') ?>
+                <?php endif; ?>
+            </a>
+            <span data-bind="if: currentOrder()" class="visible-xs-inline-block navbar-brand navbarOrderInfo">
+                <!-- ko if: settings().trolley -->
+                    <strong><?php echo $this->__('Box') ?>#<span data-bind="text: currentOrder().box"></span></strong> (<span class="order-id" data-bind="text: currentOrder().id"></span>)
+                <!-- /ko -->
+                <!-- ko ifnot: settings().trolley() -->
+                #<span class="order-id" data-bind="text: currentOrder().id"></span>
+                <!-- /ko -->
+            </span>
+            <?php if (Mage::getStoreConfigFlag('moogento_pickscan/settings/show_logout')): ?>
+            <span class="visible-xs-inline-block pull-right">
+                <a aria-expanded="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">
+                    <img class="gravatar" src="http://www.gravatar.com/avatar/<?php echo md5($user->getEmail()) ?>?s=25" alt="" style="vertical-align: middle"/>
+                    <span class="caret"></span>
+                </a>
+                    <ul role="menu" class="dropdown-menu">
+                        <li>
+                            <a href="#" class="logout-button">
+                                <span class="logout-icon"></span>
+                                <?php echo $this->__('Logout') ?>
+                            </a>
+                        </li>
+                    </ul>
+            </span>
+            <?php endif; ?>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav" data-bind="visible: showNav">
+                <li role="presentation" data-bind="visible: settings().trolley" class="trolley-button">
+                    <a href="#" data-toggle="collapse" data-target="#trolleyData" data-parent="body">
+                        <span class="fa fa-shopping-cart"></span>
+                        <?php echo $this->__('Trolley data') ?>
+                    </a>
+                </li>
+                <li role="presentation" data-bind="visible: currentOrder() && step() != 'picking_complete'" class="order-button">
+                    <a href="#" data-toggle="collapse" data-target="#currentOrderData" data-parent="body">
+                        <span class="fa fa-search"></span>
+                        <?php echo $this->__('Current order') ?>
+                    </a>
+                </li>
+                <li role="presentation" data-bind="visible: !singleOrderMode()" class="session-button">
+                    <a href="#" data-toggle="collapse" data-target="#ordersData" data-parent="body">
+                        <span class="fa fa-info"></span>
+                        <?php echo $this->__('Orders in session') ?>
+                    </a>
+                </li>
+                <li data-bind="visible: settings().enable_commenting() && currentOrder() && step() != 'picking_complete'" class="comment-button">
+                    <a href="#" data-toggle="collapse" data-target="#addComment" data-bind="click: addComment" data-parent="body">
+                        <span class="fa fa-pencil"></span>
+                        <?php echo $this->__('Add comment') ?>
+                    </a>
+                </li>
+            </ul>
+            <?php if (Mage::getStoreConfigFlag('moogento_pickscan/settings/show_logout')): ?>
+            <ul class="nav navbar-nav pull-right col-xs-pull-left">
+                <li class="dropdown hidden-xs">
+                    <a aria-expanded="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <img class="gravatar" src="http://www.gravatar.com/avatar/<?php echo md5($user->getEmail()) ?>?s=25" alt="" style="vertical-align: middle"/>
+                        <?php echo $userName ?>
+                        <span class="caret"></span>
+                    </a>
+                    <ul role="menu" class="dropdown-menu">
+                        <li>
+                            <a href="#" class="logout-button">
+                                <span class="logout-icon"></span>
+                                <?php echo $this->__('Logout') ?>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <?php endif; ?>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div class="container panel collapse-wrapper">
+<div id="trolleyData" class="panel-collapse collapse" data-toggle="false" data-parent="body" data-activation=".trolley-button">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h3><?php echo $this->__('Current batch') ?></h3>
+            <h4><?php echo $this->__('Trolley ID') ?>: <span data-bind="text: trolley_id"></span></h4>
+            <div class="progress" data-bind="visible: settings().trolley_progress">
+                <div class="progress-bar progress-bar-success" role="progressbar" data-bind="style: {width: totalProgressBatch}">
+                    <span data-bind="html: totalProcessProductsBatchText"></span>
+                </div>
+                <span class="remaining" data-bind="html: totalLeftBatch"></span>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <td><?php echo $this->__('Box #') ?></td>
+                        <td><?php echo $this->__('Order #') ?></td>
+                    </tr>
+                    </thead>
+                    <tbody data-bind="foreach: batch">
+                        <tr>
+                            <td data-bind="text: $index() + 1"></td>
+                            <td data-bind="text: $data.id"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="currentOrderData" class="panel-collapse collapse" data-bind="with: currentOrder" data-toggle="false" data-parent="body" data-activation=".order-button">
+    <div class="panel panel-default">
+        <div class="panel-heading panel-collapse-heading" data-bind="css: {picked: processed}">
+            <h4 class="panel-title">
+                <div class="row">
+                    <div class="col-md-3 panel-link">
+                        #<span data-bind="text: id"></span>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="progress" data-bind="visible: $root.settings().order_progress">
+                            <div class="progress-bar progress-bar-success" role="progressbar" data-bind="style: {width: totalProgress}">
+                                <span data-bind="html: totalProcessProductsText"></span>
+                            </div>
+                            <span class="remaining" data-bind="html: totalLeft"></span>
+                        </div>
+                    </div>
+                </div>
+            </h4>
+        </div>
+        <div class="panel-body">
+            <?php if (Mage::helper('moogento_core')->isInstalled('Moogento_Pickpack') && $helper->isAllowed('pdf_packingsheet')): ?>
+                <br/><a style="margin-left: 10px;" class="pdf_button" href="<?php echo $this->getUrl('*/pickpack_sales_order/mooordershipment') ?>" data-bind="click: print"><?php echo $this->__('Print order') ?></a><br/>
+            <?php endif; ?>
+            <div class="alert alert-info" data-bind="visible: newStatus">
+                [!]New order status: <span data-bind="text: newStatus"></span>
+            </div>
+            <div class="alert alert-info" data-bind="visible: newFlag">
+                [!]New order flag: <span data-bind="text: newFlag().flag_label"></span>: <span data-bind="text: newFlag().label"></span>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>#</td>
+                            <td>Sku</td>
+                            <td>Name</td>
+                            <td>Qty</td>
+                            <td>Qty scanned</td>
+                            <td>Status</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: products">
+                        <tr data-bind="css: {picked: picked}">
+                            <td data-bind="text: $index() + 1"></td>
+                            <td>
+                                <span data-bind="text: sku"></span> <span data-bind="html: $parent.getComment($data)"
+                            </td>
+                            <td data-bind="text: name"></td>
+                            <td data-bind="text: qty"></td>
+                            <td data-bind="html: qty_scanned_text"></td>
+                            <td>
+                                <span class="fa fa-check-circle-o" data-bind="visible: picked"></span>
+                                <span data-bind="text: status"></span>
+                            </td>
+                            <td>
+                                <a href="#" class="fa fa-times-circle-o" style="color: red" data-bind="visible: processed, click: unscan"></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="alert alert-warning" data-bind="visible: comments().length">
+                <ul class="list-unstyled" data-bind="foreach: comments">
+                    <li><span class="fa fa-comment-o"></span> <span data-bind="text: $index() + 1"></span>: <span data-bind="text: message"></span></li>
+                </ul>
+            </div>
+            <div class="alert alert-warning" data-bind="visible: admin_comments().length">
+                <span class="fa fa-comment-o pull-left"></span>
+                <ul data-bind="foreach: admin_comments" class="pull-left">
+                    <li data-bind="html: $data"></li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="alert alert-warning" data-bind="visible: customer_comments().length">
+                <span class="fa fa-comment-o"></span>
+                Customer comments
+                <ul data-bind="foreach: customer_comments">
+                    <li data-bind="html: $data"></li>
+                </ul>
+                <ul data-bind="foreach: products">
+                    <!-- ko if: customer_comments().length -->
+                    <li>
+                        Comment to <span data-bind="text: name"></span>
+                        <ul data-bind="foreach: customer_comments">
+                            <li data-bind="html: $data"></li>
+                        </ul>
+                    </li>
+                    <!-- /ko -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!------------------------------------ Orders in session --------------------------------->
+<div id="ordersData" class="panel-collapse collapse"  data-toggle="false" data-parent="body" data-activation=".session-button">
+    <div class="panel panel-default">
+        <div class="panel-body" id="accordion" data-bind="foreach: orders">
+            <div class="panel panel-default">
+                <div class="panel-heading panel-collapse-heading" data-bind="css: {picked: processed}">
+                    <h4 class="panel-title">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <a class="panel-link" class="pull-left" data-toggle="collapse" data-parent="#accordion" data-bind="attr: {href: '#order-' + id()}">
+                                    <span style="color: green" class="fa" data-bind="css: currentIcon"></span>
+                                    <span class="fa" data-bind="css: icon"></span>
+                                    #<span data-bind="text: id"></span>
+                                </a>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="progress" data-bind="visible: $root.settings().order_progress">
+                                    <div class="progress-bar progress-bar-success" role="progressbar" data-bind="style: {width: totalProgress}">
+                                        <span data-bind="html: totalProcessProductsText"></span>
+                                    </div>
+                                    <span class="remaining" data-bind="html: totalLeft"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </h4>
+                </div>
+                <div data-bind="attr: {id: 'order-' + id()}" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <?php if (Mage::helper('moogento_core')->isInstalled('Moogento_Pickpack') && $helper->isAllowed('pdf_packingsheet')): ?>
+                            <a style="margin-left: 10px;" class="pdf_button" href="<?php echo $this->getUrl('*/pickpack_sales_order/mooordershipment') ?>" data-bind="click: print"><?php echo $this->__('Print order') ?></a>
+                        <?php endif; ?>
+                        <div class="alert alert-info" data-bind="visible: newStatus">
+                            [!]New order status: <span data-bind="text: newStatus"></span>
+                        </div>
+                        <div class="alert alert-info" data-bind="visible: newFlag">
+                            [!]New order flag: <span data-bind="text: newFlag().flag_label"></span>: <span data-bind="text: newFlag().label"></span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <td>#</td>
+                                    <td>Sku</td>
+                                    <td>Name</td>
+                                    <td>Qty</td>
+                                    <td>Qty scanned</td>
+                                    <td>Status</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                </thead>
+                                <tbody data-bind="foreach: products">
+                                <tr data-bind="css: {picked: picked}">
+                                    <td data-bind="text: $index() + 1"></td>
+                                    <td data-bind="text: sku"></td>
+                                    <td data-bind="text: name"></td>
+                                    <td data-bind="text: qty"></td>
+                                    <td data-bind="html: qty_scanned_text"></td>
+                                    <td>
+                                        <span class="fa fa-check-circle-o" data-bind="visible: picked"></span>
+                                        <span data-bind="text: status"></span>
+                                    </td>
+                                    <td>
+                                        <a href="#" class="fa fa-times-circle-o" style="color: red" data-bind="visible: processed, click: unscan"></a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="alert alert-warning" data-bind="visible: comments().length">
+                            <span class="fa fa-comment-o"></span>
+                            New comments
+                            <ul data-bind="foreach: comments">
+                                <li>Comment for <span data-bind="text: sku"></span>: <span data-bind="text: message"></span></li>
+                            </ul>
+                        </div>
+                        <div class="alert alert-warning" data-bind="visible: admin_comments().length">
+                            <span class="fa fa-comment-o pull-left"></span>
+                            <ul data-bind="foreach: admin_comments" class="pull-left">
+                                <li data-bind="html: $data"></li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="alert alert-warning" data-bind="visible: customer_comments().length">
+                            <span class="fa fa-comment-o"></span>
+                            Customer comments
+                            <ul data-bind="foreach: customer_comments">
+                                <li data-bind="html: $data"></li>
+                            </ul>
+                            <ul data-bind="foreach: products">
+                                <!-- ko if: customer_comments().length -->
+                                <li>
+                                    Comment to <span data-bind="text: name"></span>
+                                    <ul data-bind="foreach: customer_comments">
+                                        <li data-bind="html: $data"></li>
+                                    </ul>
+                                </li>
+                                <!-- /ko -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!------------------------------------ /Orders in session --------------------------------->
+
+<div id="addComment" class="panel-collapse collapse" data-bind="with: currentComment" data-toggle="false" data-parent="body" data-activation=".comment-button">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <textarea data-bind="value: message" class="form-control" rows="3"></textarea>
+            <div class="row" style="margin-top: 5px; margin-bottom: 5px;">
+                <div class="col-sm-10">
+                    <?php echo $this->__('This comment is visible only for admin') ?>
+                </div>
+                <div class="col-sm-2 text-right">
+                    <button class="btn btn-success" data-bind="click: $root.doAddComment"><?php echo $this->__('Add Comment') ?></button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+<div class="container lead" data-bind="template: {name: step}">
+
+</div>
+<div id="init" style="display: none">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div data-bind="with: settings">
+                <div class="row" data-bind="visible: allowTrolley">
+                    <div class="col-sm-12 col-md-12 text-center">
+                        <h4><?php echo $this->__('Total Orders') ?>: <span data-bind="text: $parent.orders().length"></span></h4>
+                    </div>
+                    <div class="col-sm-12 col-md-12 text-center">
+                        <h4><?php echo $this->__('Total Products') ?>: <span data-bind="text: $parent.totalProducts"></span></h4>
+                    </div>
+                </div>
+                <div class="row" data-bind="visible: allowTrolley">
+                    <div class="col-sm-12 col-md-12 text-center">
+                        <label style="margin: 0"><?php echo $this->__('Trolley Box Picking') ?></label>
+                    </div>
+                    <div class="col-sm-12 col-md-12 text-center">
+                        <input type="checkbox" data-bind="switch: trolley" />
+                    </div>
+                </div>
+                <div class="row" data-bind="visible: allowTrolley && trolley">
+                    <div class="col-sm-12 col-md-12 text-center">
+                        <label><?php echo $this->__('Trolley ID') ?></label>
+                    </div>
+                    <div class="col-sm-12 col-md-12 text-center">
+                        <div class="alert alert-danger" role="alert" data-bind="visible: $root.hasError, text: $root.error"></div>
+                        <input class="tracking-input" type="text" data-bind="value: $root.trolley_id_scan" />
+                    </div>
+                </div>
+                <div class="row" data-bind="visible: allowTrolley && trolley">
+                    <div class="col-sm-12 col-md-12 text-center">
+                        <label><?php echo $this->__('Number of Boxes per Trolley') ?></label>
+                    </div>
+                    <div class="col-sm-12 col-md-12 text-center">
+                        <input class="" type="text" data-bind="spinTrolley: trolleyBoxes" />
+                    </div>
+                </div>
+                <?php if (Mage::helper('moogento_core')->isInstalled('Moogento_Pickpack') && ($helper->isAllowed('pdf_packingsheet') || $helper->isAllowed('pdf_combined') || $helper->isAllowed('pdf_separated'))): ?>
+                    <div class="row row-print-buttons">
+                        <?php if ($helper->isAllowed('pdf_packingsheet')): ?>
+                        <div class="col-xs-12 col-sm-4 col-md-4 text-left">
+                            <form action="<?php echo $this->getUrl('*/pickpack_sales_order/pack') ?>" method="post" target="_blank">
+                                <input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
+                                <!-- ko foreach: $root.orders -->
+                                <input type="hidden" name="order_ids[]" data-bind="value: inner_id" />
+                                <!-- /ko -->
+                                <span class="pdf_button_blue">
+                                    <a href="#" data-bind="click: $root.submitForm" class="pdf-packing">
+                                        <img src="<?php echo $this->getSkinUrl('moogento/pickscan/images/pdf-packing.png') ?>" /><br/>
+                                        <?php echo $this->__('Print') ?><span data-bind="visible: !$root.singleOrderMode()"> <?php echo $this->__('ALL') ?></span> <?php echo $this->__('Packing Sheets') ?>
+                                    </a>
+                                </span>
+                            </form>
+                        </div>
+                        <?php endif; ?>
+                        <?php if ($helper->isAllowed('pdf_combined')): ?>
+                        <div class="col-xs-12 col-sm-4 col-md-4 text-center">
+                            <form action="<?php echo $this->getUrl('*/pickpack_sales_order/enpick') ?>" method="post" target="_blank">
+                                <input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
+                                <!-- ko foreach: $root.orders -->
+                                <input type="hidden" name="order_ids[]" data-bind="value: inner_id" />
+                                <!-- /ko -->
+                                <span class="pdf_button_blue">
+                                    <a href="#" data-bind="click: $root.submitForm">
+                                        <img src="<?php echo $this->getSkinUrl('moogento/pickscan/images/pdf-combined.png') ?>" /><br/>
+                                        <?php echo $this->__('Print') ?><span data-bind="visible: !$root.singleOrderMode()"> <?php echo $this->__('ALL') ?></span> <?php echo $this->__('Order-Combo') ?>
+                                    </a>
+                                </span>
+                            </form>
+                        </div>
+                        <?php endif; ?>
+                        <?php if ($helper->isAllowed('pdf_separated')): ?>
+                        <div class="col-xs-12 col-sm-4 col-md-4 text-right">
+                            <form action="<?php echo $this->getUrl('*/pickpack_sales_order/pick') ?>" method="post" target="_blank">
+                                <input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
+                                <!-- ko foreach: $root.orders -->
+                                <input type="hidden" name="order_ids[]" data-bind="value: inner_id" />
+                                <!-- /ko -->
+                                <span class="pdf_button_blue">
+                                    <a href="#" data-bind="click: $root.submitForm">
+                                        <img src="<?php echo $this->getSkinUrl('moogento/pickscan/images/pdf-separated.png') ?>" /><br/>
+                                        <?php echo $this->__('Print') ?><span data-bind="visible: !$root.singleOrderMode()"> <?php echo $this->__('ALL') ?></span> <?php echo $this->__('ALL Order-Sep') ?>
+                                    </a>
+                                </span>
+                            </form>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="text-right">
+                <button class="btn btn-success btn-lg" data-bind="click: start"><?php echo $this->__('Start') ?></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="scan_order" style="display: none">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h1 class="text-center panel-title"><?php echo $this->__('Scan (or Type) an Order ID to Start Pick') ?></h1>
+        </div>
+        <div class="panel-body">
+            <div class="alert alert-danger" role="alert" data-bind="visible: hasError, text: error"></div>
+            <br/>
+            <input class="form-control scan-input" type="text" data-bind="hasFocus: scanOrderFocus, value: scanOrderId, valueUpdate: 'keyup', event: {keypress: loadOrder}, attr: {placeholder: $root.placeholderOrder}" />
+            <br/>
+            <div class="progress" data-bind="visible: loading">
+                <div class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="process_product" type="text/html">
+    <div class="row hidden-xs">
+        <div class="col-sm-6 col-md-6">
+             <span class="order-label"><?php echo $this->__('Order') ?>:</span> <span class="order-id" data-bind="text: $root.currentOrder().id"></span>
+        </div>
+        <div class="col-sm-6 col-md-6" data-bind="if: $root.settings().trolley">
+             <?php echo $this->__('Box') ?> #<span data-bind="text: $root.currentOrder().box"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <div class="shelf-data">
+                <span class="icon"></span>
+                <span data-bind="text: $root.currentProduct().custom_sort"></span>
+            </div>
+            <div class="qty-box">
+                <span class="product-qty" data-bind="css: {moreOne: $root.currentProduct().qty() > 1}">
+                    <span data-bind="text: $root.currentProduct().qty"></span>
+                    <span data-bind="text: $root.currentProduct().qty_scanned, visible: $root.currentProduct().qty() > 1" class="product-qty-scanned"></span>
+                </span>
+                <span data-bind="text: $root.currentProduct().titleText"></span>
+                <div data-bind="visible: $root.currentProduct().qty() > 1">
+                    <input class="qty-scanned" type="text" data-bind="spin: $root.currentProduct().qty_to_scann" />
+                </div>
+            </div>
+            <div class="alert alert-danger" role="alert" data-bind="visible: $root.hasError">
+                <span data-bind="text: $root.error"></span>
+                <div class="pull-right">
+                    <button class="btn btn-warning btn-lg" data-bind="visible: $root.settings().allowIgnore, click: $root.ignore, tooltip: '<?php echo $this->__('Ignore this item in this order') ?>'">
+                        <i class="fa fa-forward"></i> <?php echo $this->__('Skip') ?>
+                    </button>
+                    <button class="btn btn-warning btn-lg substitute" data-bind="visible: $root.settings().allowSubstitution && $root.wrongSku(), click: $root.substitute, tooltip: $root.substituteTooltip">
+                        <i class="i-substitute"></i> <?php echo $this->__('Substitute') ?>
+                    </button>
+                    <?php if (Mage::getStoreConfigFlag('moogento_pickscan/settings/barcode_update') && $helper->isAllowed('update_barcode')): ?>
+                        <button class="btn btn-warning btn-lg btn-update" data-bind="visible: $root.wrongSku(), click: $root.preUpdateBarcode, tooltip: $root.updateTooltip"><i class="wrench-icon"></i> <?php echo $this->__('Update') ?></button>
+                    <?php endif; ?>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="alert alert-warning" role="alert" data-bind="visible: $root.hasWarning">
+                <span data-bind="text: $root.error"></span>
+                <div class="pull-right">
+                    <button class="btn btn-warning btn-lg" data-bind="visible: $root.settings().allowIgnore, click: $root.ignore, tooltip: '<?php echo $this->__('Ignore this item in this order') ?>'"><i class="fa fa-forward"></i> <?php echo $this->__('Skip') ?></button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <input class="form-control scan-input" type="text" data-bind="hasFocus: $root.scanProductFocus, value: $root.scanProductBarcode, valueUpdate: 'keyup', event: {keypress: $root.skanProduct}, attr: {placeholder: $root.placeholder}"/>
+        </div>
+    </div>
+    <br/>
+    <div class="panel panel-default" data-bind="with: currentProduct">
+        <div class="panel-body">
+            <div class="row" style="position: relative">
+                <div class="col-md-12">
+                    <span class="image-expand-icon image-icon" data-bind="visible: canZoom, click: zoomImage" ></span>
+                    <img class="product-image" data-bind="attr: {src: imageSrc}, click: zoomImage" alt=""/>
+                </div>
+                <div class="details-box">
+                    <div class="row" data-bind="if: $root.settings().customFirstShow">
+                        <div class="col-sm-4 col-md-4">
+                            <span data-bind="text: $root.settings().customFirstName"></span>:
+                        </div>
+                        <div class="col-sm-8 col-md-8 value">
+                            <span data-bind="text: custom_1"></span>
+                        </div>
+                    </div>
+                    <div class="row" data-bind="if: $root.settings().customSecondShow">
+                        <div class="col-sm-4 col-md-4">
+                            <span data-bind="text: $root.settings().customSecondName"></span>:
+                        </div>
+                        <div class="col-sm-8 col-md-8 value">
+                            <span data-bind="text: custom_2"></span>
+                        </div>
+                    </div>
+                    <div class="row" data-bind="if: $root.settings().customThirdShow">
+                        <div class="col-sm-4 col-md-4">
+                            <span data-bind="text: $root.settings().customThirdName"></span>:
+                        </div>
+                        <div class="col-sm-8 col-md-8 value">
+                            <span data-bind="text: custom_3"></span>
+                        </div>
+                    </div>
+                    <div class="row" data-bind="if: $root.settings().customForthShow">
+                        <div class="col-sm-4 col-md-4">
+                            <span data-bind="text: $root.settings().customForthName"></span>:
+                        </div>
+                        <div class="col-sm-8 col-md-8 value">
+                            <span data-bind="text: custom_4"></span>
+                        </div>
+                    </div>
+                    <!-- ko if: $root.settings().showConfigurableOptions -->
+                    <div data-bind="foreach: attributes_info">
+                        <div class="row">
+                            <div class="col-sm-4 col-md-4">
+                                <span data-bind="text: label"></span>:
+                            </div>
+                            <div class="col-sm-8 col-md-8  value">
+                                <span data-bind="text: value"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                    <!-- ko if: $root.settings().allowance() && $root.settings().allowSubstitution() -->
+                    <div class="row">
+                        <div class="col-sm-4 col-md-4">
+                            <?php echo $this->__('Price') ?>:
+                        </div>
+                        <div class="col-sm-8 col-md-8  value">
+                            <span data-bind="text: price"></span> <span data-bind="text: $root.currentOrder().currency"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 col-md-4">
+                            <?php echo $this->__('Max-price for replacements') ?>:
+                        </div>
+                        <div class="col-sm-8 col-md-8 value">
+                            <span data-bind="text: allowance_price"></span> <span data-bind="text: $root.currentOrder().currency"></span>
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                    <span data-bind="visible: $root.settings().allowIgnore"><a href="#" class="btn btn-warning" data-bind="click: $root.ignore, tooltip: '<?php echo $this->__('Ignore this item in this order') ?>'"><i class="fa fa-forward"></i> Skip</a></span>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div data-bind="if: $root.currentOrder().admin_comments().length">
+                    <div>
+                        <span class="fa fa-comment-o"></span>
+                        Admin comments - <span data-bind="html: $root.currentOrder().admin_comments()[0]"></span> <span class="info" data-bind="visible: $root.currentOrder().admin_comments().length > 1">More in current order tab</span>
+                    </div>
+                </div>
+                <div data-bind="visible: customer_comments().length">
+                    <span class="fa fa-comment-o"></span>
+                    Customer comments
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer" data-bind="visible: processed, click: $root.process">
+            <div class="text-right">
+                <button class="btn btn-success btn-lg"><?php echo $this->__('Continue') ?></button>
+            </div>
+        </div>
+    </div>
+    <div class="progress" data-bind="visible: $root.settings().total_progress">
+        <div class="progress-bar progress-bar-success" role="progressbar" data-bind="style: {width: totalProgress}">
+            <span data-bind="html: totalProcessProductsText"></span>
+        </div>
+        <span class="remaining" data-bind="html: totalLeft"></span>
+    </div>
+</script>
+
+<div id="order_processed" style="display: none">
+    <div class="panel panel-default" data-bind="with: currentOrder">
+        <div class="panel-body">
+            <h1 class="text-success text-center"><?php echo $this->__('Order picking complete!') ?></h1>
+            <div data-bind="visible: $root.settings().assign_tracking" class="tracking-box tracking-box-single row">
+                <div class="col-sm-3">
+                    <img style="width: 175px; max-width: 100%;" src="<?php echo $this->getSkinUrl('moogento/pickscan/images/scan-tracking.png')?>" /><br/>
+                    <?php echo $this->__('Scan tracking number') ?>
+                </div>
+                <div class="col-sm-9">
+                    <?php if (Mage::getStoreConfig('moogento_shipeasy/grid/szy_tracking_number_show_carriers')): ?>
+                    <select class="tracking-input" data-bind="disabled: trackingSaved, value: carrier">
+                        <?php foreach (Mage::helper('moogento_core/carriers')->getCarriersConfig() as $one): ?>
+                            <?php if ($one['title']): ?>
+                            <option value="<?php echo $one['code'] ?>"><?php echo $one['title'] ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php endif; ?>
+                    <input type="text" class="tracking-input" data-bind="disabled: trackingSaved, value: tracking, hasFocus: trackingFocus, valueUpdate: 'keyup', event: {keypress: scanTracking}, css: {singleTracking: $root.singleOrderMode}" />
+                </div>
+            </div>
+            <?php if (Mage::helper('moogento_core')->isInstalled('Moogento_Pickpack') && $helper->isAllowed('pdf_packingsheet')): ?>
+            <div class="text-center">
+                <a class="pdf_button" href="<?php echo $this->getUrl('*/pickpack_sales_order/mooordershipment') ?>" data-bind="click: print"><?php echo $this->__('Print order') ?></a>
+            </div>
+            <?php endif; ?>
+            <div data-bind="html: results"></div>
+            <br/>
+            <br/>
+        </div>
+        <div class="panel-footer">
+            <div class="text-right">
+                <button class="btn btn-success btn-lg" data-bind="click: $root.restart"><?php echo $this->__('Next Order') ?></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="batch_processed" style="display: none"  type="text/html">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h1 class="text-success text-center"><?php echo $this->__('Finished! Next batch...') ?></h1>
+            <div data-bind="html: batchResults"></div>
+            <?php if (Mage::helper('moogento_core')->isInstalled('Moogento_Pickpack') && ($helper->isAllowed('pdf_packingsheet') || $helper->isAllowed('pdf_combined') || $helper->isAllowed('pdf_separated'))): ?>
+                <div class="row row-print-buttons">
+                    <?php if ($helper->isAllowed('pdf_packingsheet')):?>
+                    <div class="col-xs-12 col-sm-4 col-md-4 text-left">
+                        <form action="<?php echo $this->getUrl('*/pickpack_sales_order/pack') ?>" method="post" target="_blank">
+                            <input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
+                            <!-- ko foreach: $root.batch -->
+                            <input type="hidden" name="order_ids[]" data-bind="value: inner_id" />
+                            <!-- /ko -->
+                            <span class="pdf_button_blue">
+                                <a href="#" data-bind="click: $root.submitForm">
+                                    <img src="<?php echo $this->getSkinUrl('moogento/pickscan/images/pdf-packing.png') ?>" /><br/>
+                                    <?php echo $this->__('Print') ?><span data-bind="visible: !$root.singleOrderMode()"> <?php echo $this->__('ALL') ?></span> <?php echo $this->__('Packing Sheet') ?>
+                                </a>
+                                <!-- ko if: $root.batch().length > 1 -->
+                                    <!-- ko foreach: $root.batch -->
+                                        <a class="order-print" href="<?php echo $this->getUrl('*/*/printPacking') ?>" data-bind="click: print">
+                                            #<span data-bind="text: id"></span>
+                                        </a>
+                                    <!-- /ko -->
+                                <!-- /ko -->
+                            </span>
+                        </form>
+                    </div>
+                    <?php endif; ?>
+                    <?php if ($helper->isAllowed('pdf_combined')):?>
+                    <div class="col-xs-12 col-sm-4 col-md-4 text-center">
+                        <form action="<?php echo $this->getUrl('*/pickpack_sales_order/enpick') ?>" method="post" target="_blank">
+                            <input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
+                            <!-- ko foreach: $root.batch -->
+                            <input type="hidden" name="order_ids[]" data-bind="value: inner_id" />
+                            <!-- /ko -->
+                            <span class="pdf_button_blue">
+                                <a href="#" data-bind="click: $root.submitForm">
+                                    <img src="<?php echo $this->getSkinUrl('moogento/pickscan/images/pdf-combined.png') ?>" /><br/>
+                                    <?php echo $this->__('Print') ?><span data-bind="visible: !$root.singleOrderMode()"> <?php echo $this->__('ALL') ?></span> <?php echo $this->__('Order-Combo') ?>
+                                </a>
+                                <!-- ko if: $root.batch().length > 1 -->
+                                    <!-- ko foreach: $root.batch -->
+                                        <a class="order-print" href="<?php echo $this->getUrl('*/*/printCombined') ?>" data-bind="click: print">
+                                            #<span data-bind="text: id"></span>
+                                        </a>
+                                    <!-- /ko -->
+                                <!-- /ko -->
+                            </span>
+                        </form>
+                    </div>
+                    <?php endif; ?>
+                    <?php if ($helper->isAllowed('pdf_separated')):?>
+                    <div class="col-xs-12 col-sm-4 col-md-4 text-right">
+                        <form action="<?php echo $this->getUrl('*/pickpack_sales_order/pick') ?>" method="post" target="_blank">
+                            <input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
+                            <!-- ko foreach: $root.batch -->
+                            <input type="hidden" name="order_ids[]" data-bind="value: inner_id" />
+                            <!-- /ko -->
+                            <span class="pdf_button_blue">
+                                <a href="#" data-bind="click: $root.submitForm">
+                                    <img src="<?php echo $this->getSkinUrl('moogento/pickscan/images/pdf-separated.png') ?>" /><br/>
+                                    <?php echo $this->__('Print') ?><span data-bind="visible: !$root.singleOrderMode()"> <?php echo $this->__('ALL') ?></span> <?php echo $this->__('Order-Sep') ?>
+                                </a>
+                                <!-- ko if: $root.batch().length > 1 -->
+                                    <!-- ko foreach: $root.batch -->
+                                        <a class="order-print" href="<?php echo $this->getUrl('*/*/printSeparate') ?>" data-bind="click: print">
+                                            #<span data-bind="text: id"></span>
+                                        </a>
+                                    <!-- /ko -->
+                                <!-- /ko -->
+                            </span>
+                        </form>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+            <br/>
+            <br/>
+        </div>
+        <div class="panel-footer">
+            <div class="text-right">
+                <button class="btn btn-success btn-lg" data-bind="click: nextBatch"><?php echo $this->__('Continue') ?></button>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="picking_complete" style="display: none" type="text/html">
+    <br/>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <!-- ko ifnot: $root.singleOrderMode -->
+                <div class="ordersSaved" data-bind="visible: allSaved">
+                    <?php echo $this->__('Orders saved') ?>
+                </div>
+                <div class="ordersSavedNotTracking" data-bind="visible: saved() && !allSaved()">
+                    <?php echo $this->__('Orders Saved, but NOT yet tracking') ?>
+                </div>
+                <div class="ordersNotSaved" data-bind="visible: !saved()">
+                    <?php echo $this->__('Orders not YET saved') ?><span data-bind="visible: $root.settings().assign_tracking">: Add Tracking to all, or </span>
+                    <button class="btn btn-success" data-bind="click: saveResults"><?php echo $this->__('Save') ?></button>
+                </div>
+            <!-- /ko -->
+            <!-- ko if: $root.singleOrderMode -->
+                <div class="ordersSaved" data-bind="visible: currentOrder().saved() && (currentOrder().trackingSaved() || !$root.settings().assign_tracking())">
+                    <?php echo $this->__('Order saved') ?>
+                </div>
+                <div class="ordersSavedNotTracking" data-bind="visible: currentOrder().saved() && $root.settings().assign_tracking() && !currentOrder().trackingSaved()">
+                    <?php echo $this->__('Order Saved, but NOT yet tracking') ?>
+                </div>
+                <div class="ordersNotSaved" data-bind="visible: !currentOrder().saved()">
+                        <?php echo $this->__('Order not YET saved') ?><span data-bind="visible: $root.settings().assign_tracking">: Add Tracking or </span>
+                        <button class="btn btn-success" data-bind="click: saveResults"><?php echo $this->__('Save') ?></button>
+                </div>
+            <!-- /ko -->
+            <br/>
+            <div class="alert alert-danger" data-bind="visible: saveError, text: saveError"></div>
+            <h1 class="text-success text-center"><?php echo $this->__('Return to base! Picking Complete!') ?></h1>
+            <div data-bind="visible: settings().assign_tracking" class="tracking-box row">
+                <div class="col-sm-3">
+                    <img style="width: 175px; max-width: 100%;" src="<?php echo $this->getSkinUrl('moogento/pickscan/images/scan-tracking.png')?>" /><br/>
+                    <?php echo $this->__('Scan tracking number') ?>
+                </div>
+                <div class="col-sm-9 trackingInputWrapper">
+                    <!-- ko ifnot: $root.singleOrderMode -->
+                    <table class="table">
+                        <tbody data-bind="foreach: $root.orders">
+                        <tr>
+                            <td style="width: 30%">
+                                #<span data-bind="text: id"></span>
+                            </td>
+                            <td style="width: 70%">
+                                <?php if (Mage::getStoreConfig('moogento_shipeasy/grid/szy_tracking_number_show_carriers')): ?>
+                                    <select class="tracking-input" data-bind="value: carrier, disabled: trackingSaved">
+                                        <?php foreach (Mage::helper('moogento_core/carriers')->getCarriersConfig() as $one): ?>
+                                            <?php if ($one['title']): ?>
+                                                <option value="<?php echo $one['code'] ?>"><?php echo $one['title'] ?></option>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </select>
+                                <?php endif; ?>
+                                <input class="tracking-input" data-bind="value: tracking, hasFocus: trackingFocus, valueUpdate: 'keyup', event: {keypress: scanTracking}, disable: trackingSaved" />
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!-- /ko -->
+                    <!-- ko if: $root.singleOrderMode -->
+                    <?php if (Mage::getStoreConfig('moogento_shipeasy/grid/szy_tracking_number_show_carriers')): ?>
+                        <select class="tracking-input" data-bind="value: currentOrder().carrier, disabled: currentOrder().trackingSaved">
+                            <?php foreach (Mage::helper('moogento_core/carriers')->getCarriersConfig() as $one): ?>
+                                <?php if ($one['title']): ?>
+                                    <option value="<?php echo $one['code'] ?>"><?php echo $one['title'] ?></option>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </select>
+                    <?php endif; ?>
+                    <input class="tracking-input singleTracking" data-bind="value: currentOrder().tracking, hasFocus: currentOrder().trackingFocus, valueUpdate: 'keyup', event: {keypress: currentOrder().scanTracking}, disable: currentOrder().trackingSaved()" />
+                    <!-- /ko -->
+                </div>
+            </div>
+            <div class="row final-buttons">
+                <!-- ko ifnot: $root.singleOrderMode -->
+                <?php if (Mage::getSingleton('admin/session')->isAllowed('sales/order')): ?>
+                    <div class="col-xs-12 col-sm-4 col-md-4 text-left">
+                        <a class="btn btn-primary" href="<?php echo $this->getUrl('*/sales_order/')?>" data-bind="visible: saved"><?php echo $this->__('Back to orders grid') ?></a><br/><br/>
+                    </div>
+                <?php endif; ?>
+                <div class="col-xs-12 col-sm-4 col-md-4 text-center">
+                    <a class="btn btn-success" href="<?php echo $this->getUrl('*/sales_order_pickscan/index', array('quickpick' => 1))?>" data-bind="visible: saved"><?php echo $this->__('pickAssigned') . (Mage::app()->getRequest()->getParam('quickpick') ? ' '. $this->__('again') : '') ?></a><br/><br/>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4 text-right">
+                    <a class="btn btn-success" href="<?php echo $this->getUrl('*/sales_order_pickscan/index')?>"  data-bind="visible: saved"><?php echo $this->__('Scan a new order') ?></a><br/><br/>
+                </div>
+                <!-- /ko -->
+                <!-- ko if: $root.singleOrderMode -->
+                <?php if (Mage::getSingleton('admin/session')->isAllowed('sales/order')): ?>
+                <div class="col-xs-12 col-sm-4 col-md-4 text-left">
+                    <a class="btn btn-primary" href="<?php echo $this->getUrl('*/sales_order/')?>" data-bind="visible: currentOrder().saved()"><?php echo $this->__('Back to orders grid') ?></a><br/><br/>
+                </div>
+                <?php endif; ?>
+                <div class="col-xs-12 col-sm-4 col-md-4 text-center">
+                    <a class="btn btn-success" href="<?php echo $this->getUrl('*/sales_order_pickscan/index', array('quickpick' => 1))?>" data-bind="visible: currentOrder().saved()"><?php echo $this->__('pickAssigned') . (Mage::app()->getRequest()->getParam('quickpick') ? ' '. $this->__('again') : '') ?></a><br/><br/>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4 text-right">
+                    <a class="btn btn-success" href="<?php echo $this->getUrl('*/sales_order_pickscan/index')?>"  data-bind="visible: currentOrder().saved()"><?php echo $this->__('Scan a new order') ?></a><br/><br/>
+                </div>
+                <!-- /ko -->
+            </div>
+            <?php if (Mage::helper('moogento_core')->isInstalled('Moogento_Pickpack') && ($helper->isAllowed('pdf_packingsheet') || $helper->isAllowed('pdf_combined') || $helper->isAllowed('pdf_separated'))): ?>
+                <div class="row row-print-buttons">
+                    <?php if ($helper->isAllowed('pdf_packingsheet')): ?>
+                    <div class="col-xs-12 col-sm-4 col-md-4 text-left">
+                        <form action="<?php echo $this->getUrl('*/pickpack_sales_order/pack') ?>" method="post" target="_blank">
+                            <input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
+                            <div data-bind="foreach: $root.orders">
+                                <input type="hidden" name="order_ids[]" data-bind="value: inner_id" />
+                            </div>
+                            <span class="pdf_button_blue">
+                                <a href="#" data-bind="click: $root.submitForm">
+                                    <img src="<?php echo $this->getSkinUrl('moogento/pickscan/images/pdf-packing.png') ?>" /><br/>
+                                    <?php echo $this->__('Print') ?><span data-bind="visible: !$root.singleOrderMode()"> <?php echo $this->__('ALL') ?></span> <?php echo $this->__('Packing Sheet') ?>
+                                </a>
+                                <!-- ko if: $root.orders().length > 1 -->
+                                    <!-- ko foreach: $root.orders -->
+                                        <a class="order-print" class="order-print" href="<?php echo $this->getUrl('*/*/printPacking') ?>" data-bind="click: print">
+                                            #<span data-bind="text: id"></span>
+                                        </a>
+                                    <!-- /ko -->
+                                <!-- /ko -->
+                            </span>
+                        </form>
+                    </div>
+                    <?php endif; ?>
+                    <?php if ($helper->isAllowed('pdf_combined')): ?>
+                    <div class="col-xs-12 col-sm-4 col-md-4 text-center">
+                        <form action="<?php echo $this->getUrl('*/pickpack_sales_order/enpick') ?>" method="post" target="_blank">
+                            <input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
+                            <div data-bind="foreach: $root.orders">
+                                <input type="hidden" name="order_ids[]" data-bind="value: inner_id" />
+                            </div>
+                            <span class="pdf_button_blue">
+                                <a href="#" data-bind="click: $root.submitForm">
+                                    <img src="<?php echo $this->getSkinUrl('moogento/pickscan/images/pdf-combined.png') ?>" /><br/>
+                                    <?php echo $this->__('Print') ?><span data-bind="visible: !$root.singleOrderMode()"> <?php echo $this->__('ALL') ?></span> <?php echo $this->__('Order-Combo') ?>
+                                </a>
+                                <!-- ko if: $root.orders().length > 1 -->
+                                    <!-- ko foreach: $root.orders -->
+                                        <a class="order-print" href="<?php echo $this->getUrl('*/*/printCombined') ?>" data-bind="click: print">
+                                            #<span data-bind="text: id"></span>
+                                        </a>
+                                    <!-- /ko -->
+                                <!-- /ko -->
+                            </span>
+                        </form>
+                    </div>
+                    <?php endif; ?>
+                    <?php if ($helper->isAllowed('pdf_separated')): ?>
+                    <div class="col-xs-12 col-sm-4 col-md-4 text-right">
+                        <form action="<?php echo $this->getUrl('*/pickpack_sales_order/pick') ?>" method="post" target="_blank">
+                            <input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
+                            <div data-bind="foreach: $root.orders">
+                                <input type="hidden" name="order_ids[]" data-bind="value: inner_id" />
+                            </div>
+                            <span class="pdf_button_blue">
+                                <a href="#" data-bind="click: $root.submitForm">
+                                    <img src="<?php echo $this->getSkinUrl('moogento/pickscan/images/pdf-separated.png') ?>" /><br/>
+                                    <?php echo $this->__('Print') ?><span data-bind="visible: !$root.singleOrderMode()"> <?php echo $this->__('ALL') ?></span> <?php echo $this->__('Order-Sep') ?>
+                                </a>
+                                <!-- ko if: $root.orders().length > 1 -->
+                                    <!-- ko foreach: $root.orders -->
+                                        <a class="order-print" href="<?php echo $this->getUrl('*/*/printSeparate') ?>" data-bind="click: print">
+                                            #<span data-bind="text: id"></span>
+                                        </a>
+                                    <!-- /ko -->
+                                <!-- /ko -->
+                            </span>
+                        </form>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+            <div data-bind="html: totalResults"></div>
+            <br/>
+            <br/>
+        </div>
+    </div>
+</script>
+
+<div id="home_data" style="display: none">
+    <br/>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-8 col-sm-4 col-md-4">
+                    Items scanned:
+                </div>
+                <div class="col-xs-4 col-sm-8 col-md-8 value">
+                    <span data-bind="text: totalProcessProducts"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-8 col-sm-4 col-md-4">
+                    -- waiting to be sent:
+                </div>
+                <div class="col-xs-4 col-sm-8 col-md-8 value">
+                    <span data-bind="text: totalProcessProducts() - productsSaved()"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-8 col-sm-4 col-md-4">
+                    -- sent:
+                </div>
+                <div class="col-xs-4 col-sm-8 col-md-8 value">
+                    <span data-bind="text: productsSaved"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-8 col-sm-4 col-md-4">
+                    Orders scanned:
+                </div>
+                <div class="col-xs-4 col-sm-8 col-md-8 value">
+                    <span data-bind="text: ordersProccessed"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-8 col-sm-4 col-md-4">
+                    -- waiting to be sent:
+                </div>
+                <div class="col-xs-4 col-sm-8 col-md-8 value">
+                    <span data-bind="text: ordersProccessed() - ordersSaved()"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-8 col-sm-4 col-md-4">
+                    -- sent:
+                </div>
+                <div class="col-xs-4 col-sm-8 col-md-8 value">
+                    <span data-bind="text: ordersSaved"></span>
+                </div>
+            </div>
+            <div class="row" data-bind="visible: started()">
+                <div class="col-xs-4 col-sm-4 col-md-4">
+                    Pick session time:
+                </div>
+                <div class="col-xs-8 col-sm-8 col-md-8 value">
+                    <span class="counter"></span>
+                </div>
+            </div>
+            <br/>
+            <div class="panel-footer">
+                <div class="text-right">
+                    <a class="btn btn-danger" data-bind="visible: started() && !saved(), click: abortPick"><?php echo $this->__('Abort Pick') ?></a>
+                    <a class="btn btn-success" data-bind="click: goBack"><?php echo $this->__('Return to Pick') ?></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-lg" id="zoomImageModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" style="opacity: 1; margin-right: 10px;"><span style="color: red; font-size: 35px;" aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <center>
+                <img src="" style="max-width: 100%"/>
+            </center>
+        </div>
+    </div>
+</div>
+
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/json2.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/general/js/jquery-2.1.1.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/jquery.cookie-1.4.1.min.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/knockout-3.1.0.debug.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/knockout.mapping-latest.js') ?>"></script>
+
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/jstorage.min.js') ?>"></script>
+
+<script src="<?php echo $this->getSkinUrl('moogento/general/bootstrap/js/bootstrap.min.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/general/bootstrap/js/bootbox.min.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/general/bootstrap/js/bootstrap-switch.min.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/bootstrap-notify.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/general/bootstrap/js/jquery.bootstrap-touchspin.min.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/general/bootstrap/js/jasny-bootstrap.min.js') ?>"></script>
+
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/moment-with-locales.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/countdown/jquery.plugin.min.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/countdown/jquery.countdown.min.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/general/tooltipster/js/jquery.tooltipster.min.js') ?>"></script>
+
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/soundmanager/script/soundmanager2-nodebug-jsmin.js') ?>"></script>
+
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/pickscan.js') ?>"></script>
+<script>
+
+    soundManager.setup({
+        url: '<?php echo str_replace('script/soundmanager2-nodebug-jsmin.js', 'swf/', $this->getSkinUrl('moogento/pickscan/soundmanager/script/soundmanager2-nodebug-jsmin.js')) ?>',
+        flashVersion: 9,
+        preferFlash: false,
+        onready: function() {
+            soundManager.createSound({
+                id: 'wrong',
+                url: '<?php echo $this->getSkinUrl('moogento/pickscan/soundmanager/sounds/wrong.mp3') ?>',
+                autoLoad: true,
+                autoPlay: false
+            });
+            soundManager.createSound({
+                id: 'correct',
+                url: '<?php echo $this->getSkinUrl('moogento/pickscan/soundmanager/sounds/correct.mp3') ?>',
+                autoLoad: true,
+                autoPlay: false
+            });
+        }
+    });
+
+    PickScanModule.images = <?php echo Mage::helper('core')->jsonEncode(Mage::helper('moogento_pickscan')->getImagesOffline()) ?>;
+    PickScanModule.messages = {
+        enter_order_id: '<?php echo $this->__('Please scan(or type) order ID') ?>',
+        no_product: '<?php echo $this->__('No product SKU avaliable, please rescan') ?>',
+        wrong_product: '<?php echo $this->__('Wrong product') ?>',
+        product_picked: '<?php echo $this->__('Product picked!') ?>',
+        substituted_with: '<?php echo $this->__('Substituted with ') ?>',
+        ignored: '<?php echo $this->__('Skipped ') ?>',
+        items: '<?php echo $this->__('items') ?>',
+        item: '<?php echo $this->__('item') ?>',
+        picked: '<?php echo $this->__('picked') ?>',
+        left_to_pick: '<?php echo $this->__(' remaining') ?>',
+        left_to_pick_order: '<?php echo $this->__(' remaining in current order') ?>',
+        left_to_pick_trolley: '<?php echo $this->__(' remaining in current trolley') ?>',
+        wrong_qty: '<?php echo $this->__('TOO MANY! REMOVE') ?>',
+        placeholder: '<?php echo $this->__('Click before scan...') ?>',
+        confirm_abort: '<?php echo $this->__('Are you sure? This will not save all picks in current session!') ?>',
+        confirm_abort_clear: '<?php echo $this->__('Clear order pick status') ?>',
+        comment_added:'<?php echo $this->__('Comment Saved') ?>'
+    };
+
+    PickScanModule.auth = <?php echo Mage::helper('core')->jsonEncode(Mage::helper('moogento_pickscan')->getAuthData()) ?>;
+
+    PickScanModule.root = new PickScanModule.PickScan(<?php echo Mage::registry('pickScanData') ?>);
+
+    PickScanModule.form_key = '<?php echo $this->getFormKey() ?>';
+    PickScanModule.loadOrderUrl = '<?php echo $this->getUrl('*/sales_order_pickscan/loadOrder')?>';
+    PickScanModule.saveUrl = '<?php echo $this->getUrl('*/sales_order_pickscan/finish')?>';
+    PickScanModule.saveTrackingUrl = '<?php echo $this->getUrl('*/sales_order_pickscan/saveTracking')?>';
+    PickScanModule.abortUrl = '<?php echo $this->getUrl('*/sales_order_pickscan/abort')?>';
+    PickScanModule.backUrl = '<?php echo $this->getUrl('*/sales_order')?>';
+
+    ko.applyBindings(PickScanModule.root);
+
+    $('.panel-collapse').on('hidden.bs.collapse', function(){
+        PickScanModule.root.scanProductFocus(true);
+    }).on('hide.bs.collapse', function() {
+        $('.nav.navbar-nav li').removeClass('active');
+    }).on('shown.bs.collapse', function() {
+        $('.nav.navbar-nav li').removeClass('active');
+        $($(this).data('activation')).addClass('active');
+    });
+    $('body').on('click', '.panel-collapse-heading', function(e) {
+        var target = $(e.target);
+        if (target.hasClass('panel-title')) {
+            $(this).find('a').click();
+        }
+    });
+    $('.logout-button').click(function(e){
+        e.preventDefault();
+        bootbox.dialog({
+            message: '<?php echo $this->__("Are you sure you want to logout?") ?>',
+            buttons: {
+                leave: {
+                    label: '<?php echo $this->__("Leave me logged in") ?>',
+                    className: 'btn-success'
+                },
+                logout: {
+                    label: '<?php echo $this->__("Ok, log me out") ?>',
+                    className: 'btn-danger',
+                    callback: function() {
+                        window.location = '<?php echo $this->getUrl('adminhtml/index/logout') ?>';
+                    }
+                }
+            }
+        });
+    });
+</script>
+<style>
+    <?php if (Mage::getStoreConfig('moogento_pickscan/background/image')): ?>
+    .container.lead {
+        background-color: #fff;
+        border: 1px solid #fff;
+        border-radius: 10px;
+    }
+    <?php echo Mage::helper('moogento_pickscan')->getBackgroundCss() ?>
+
+    <?php endif; ?>
+    <?php if (Mage::getStoreConfig('moogento_pickscan/settings/logo')): ?>
+        a.navbar-brand {
+            width: 94px;
+            background-image: url(<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'moogento/' . Mage::getStoreConfig('moogento_pickscan/settings/logo') ?>);
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: 100% auto;
+        }
+    <?php endif; ?>
+</style>
+<div class="notifications top-right"></div>
+<img src="<?php echo Mage::getStoreConfig('moogento/general/url') . 'media/moo_log/' . Mage::helper('moogento_pickscan/moo')->i() . '/blank.png' ?>" width="0" height="0" />
+</body>
+</html>

@@ -1,0 +1,315 @@
+<?php
+$helper = Mage::helper('moogento_pickscan');
+?>
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Pick & Scan</title>
+
+    <!-- Bootstrap -->
+    <link href="<?php echo $this->getSkinUrl('moogento/general/bootstrap/css/bootstrap.min.css') ?>" rel="stylesheet">
+    <link href="<?php echo $this->getSkinUrl('moogento/general/bootstrap/css/jasny-bootstrap.min.css') ?>" rel="stylesheet">
+    <link href="<?php echo $this->getSkinUrl('moogento/pickscan/css/font-awesome.css') ?>" rel="stylesheet">
+    <link href="<?php echo $this->getSkinUrl('moogento/pickscan/css/pickscan.css') ?>" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">
+                <?php if (!Mage::getStoreConfig('moogento_pickscan/settings/logo')): ?>
+                    <?php echo $this->__('Pick & Scan') ?>
+                <?php endif; ?>
+            </a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li data-bind="visible: packstation">
+                    <a><?php echo $this->__('Packstation') ?>: <span data-bind="text: packstation"></span></a>
+                </li>
+            </ul>
+
+            <?php if (Mage::getStoreConfigFlag('moogento_pickscan/settings/show_logout')): ?>
+                <ul class="nav navbar-nav pull-right col-xs-pull-left">
+                    <li>
+                        <a href="#" class="logout-button">
+                            <span class="fa fa-times-circle-o" style="color: darkred"></span>
+                            <span class="visible-xs-inline-block"><?php echo $this->__('Logout') ?></span>
+                        </a>
+                    </li>
+                </ul>
+            <?php endif; ?>
+            <?php if (Mage::getSingleton('admin/session')->isAllowed('sales/order')): ?>
+                <ul class="nav navbar-nav navbar-right" style="margin-right: 15px;">
+                    <li>
+                        <a href="<?php echo $this->getUrl('*/sales_order/')?>"><?php echo $this->__('Back to orders grid') ?></a>
+                    </li>
+                </ul>
+            <?php endif; ?>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div class="container lead" data-bind="template: {name: step}">
+
+</div>
+
+<div id="init" style="display: none">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h3><?php echo $this->__('Enter your packstation ID to start working') ?></h3>
+            <input type="text" class="tracking-input" data-bind="value: packstation_scan, hasFocus: packstationFocus"/>
+        </div>
+    </div>
+</div>
+
+<div id="box_scan" style="display: none">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h3><?php echo $this->__('Scan Box ID') ?></h3>
+            <div class="alert alert-danger" role="alert" style="margin-bottom: 15px;" data-bind="visible: $root.hasError, text: $root.error"></div>
+            <input type="text" class="tracking-input"  data-bind="value: box_scan, hasFocus: boxFocus"/>
+        </div>
+
+        <div data-bind="if: currentOrder()">
+            <div class="row">
+                <div class="span-4">
+                    <strong><?php echo $this->__('Order ID') ?></strong>: <span data-bind="text: currentOrder().id"></span>
+                </div>
+                <div class="span-4">
+                    <strong><?php echo $this->__('Trolley') ?></strong>: <span data-bind="text: currentOrder().trolley"></span>
+                </div>
+                <div class="span-4">
+                    <strong><?php echo $this->__('Box') ?></strong>: <span data-bind="text: currentOrder().box"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="order_view" style="display: none">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h3><?php echo $this->__('Scan Box ID') ?></h3>
+            <div class="alert alert-danger" role="alert" data-bind="visible: $root.hasError, text: $root.error"></div>
+            <input type="text" class="tracking-input"  data-bind="value: box_scan, hasFocus: boxFocus"/>
+        </div>
+
+        <div data-bind="with: currentOrder">
+            <div class="row">
+                <div class="col-xs-12 col-sm-4">
+                    <strong><?php echo $this->__('Order ID') ?></strong>: <span data-bind="text: id"></span>
+                </div>
+                <div class="col-xs-12 col-sm-4">
+                    <strong><?php echo $this->__('Trolley ID') ?></strong>: <span data-bind="text: trolley"></span>
+                </div>
+                <div class="col-xs-12 col-sm-4">
+                    <strong><?php echo $this->__('Box ID') ?></strong>: <span data-bind="text: box"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <strong><?php echo $this->__('Pick results') ?></strong>:<br/>
+                    <div data-bind="html: pick_results"></div>
+                </div>
+            </div>
+            <div data-bind="foreach: products">
+                    <div class="row" style="position: relative">
+                        <div class="col-xs-12 col-md-4">
+                            <span class="image-expand-icon image-icon" data-bind="click: zoomImage" ></span>
+                            <img class="product-image" data-bind="attr: {src: image}, click: zoomImage" />
+                        </div>
+                        <div class="col-xs-12 col-md-8">
+                            <div class="row" data-bind="if: $root.settings().customFirstShow">
+                                <div class="col-sm-4 col-md-4">
+                                    <span data-bind="text: $root.settings().customFirstName"></span>:
+                                </div>
+                                <div class="col-sm-8 col-md-8 value">
+                                    <span data-bind="text: custom_1"></span>
+                                </div>
+                            </div>
+                            <div class="row" data-bind="if: $root.settings().customSecondShow">
+                                <div class="col-sm-4 col-md-4">
+                                    <span data-bind="text: $root.settings().customSecondName"></span>:
+                                </div>
+                                <div class="col-sm-8 col-md-8 value">
+                                    <span data-bind="text: custom_2"></span>
+                                </div>
+                            </div>
+                            <div class="row" data-bind="if: $root.settings().customThirdShow">
+                                <div class="col-sm-4 col-md-4">
+                                    <span data-bind="text: $root.settings().customThirdName"></span>:
+                                </div>
+                                <div class="col-sm-8 col-md-8 value">
+                                    <span data-bind="text: custom_3"></span>
+                                </div>
+                            </div>
+                            <div class="row" data-bind="if: $root.settings().customForthShow">
+                                <div class="col-sm-4 col-md-4">
+                                    <span data-bind="text: $root.settings().customForthName"></span>:
+                                </div>
+                                <div class="col-sm-8 col-md-8 value">
+                                    <span data-bind="text: custom_4"></span>
+                                </div>
+                            </div>
+                            <!-- ko if: $root.settings().showConfigurableOptions -->
+                            <div data-bind="foreach: attributes_info">
+                                <div class="row">
+                                    <div class="col-sm-4 col-md-4">
+                                        <span data-bind="text: label"></span>:
+                                    </div>
+                                    <div class="col-sm-8 col-md-8  value">
+                                        <span data-bind="text: value"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /ko -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<div class="modal fade bs-example-modal-lg" id="zoomImageModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" style="opacity: 1; margin-right: 10px;"><span style="color: red; font-size: 35px;" aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <center>
+                <img src="" style="max-width: 100%"/>
+            </center>
+        </div>
+    </div>
+</div>
+
+<div class="loader-overlay" data-bind="visible: loading">
+    <div class="loader-switchbox">
+        <div class="loader-switch"></div>
+        <div class="loader-switch loader-switch2"></div>
+    </div>
+</div>
+
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/json2.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/general/js/jquery-2.1.1.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/jquery.cookie-1.4.1.min.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/knockout-3.1.0.debug.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/knockout.mapping-latest.js') ?>"></script>
+
+<script src="<?php echo $this->getSkinUrl('moogento/general/bootstrap/js/bootstrap.min.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/general/bootstrap/js/bootbox.min.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/general/bootstrap/js/bootstrap-switch.min.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/bootstrap-notify.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/general/bootstrap/js/jquery.bootstrap-touchspin.min.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/general/bootstrap/js/jasny-bootstrap.min.js') ?>"></script>
+
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/soundmanager/script/soundmanager2-nodebug-jsmin.js') ?>"></script>
+
+<script src="<?php echo $this->getSkinUrl('moogento/pickscan/pack.js') ?>"></script>
+<script>
+
+    soundManager.setup({
+        url: '<?php echo str_replace('script/soundmanager2-nodebug-jsmin.js', 'swf/', $this->getSkinUrl('moogento/pickscan/soundmanager/script/soundmanager2-nodebug-jsmin.js')) ?>',
+        flashVersion: 9,
+        preferFlash: false,
+        onready: function() {
+            soundManager.createSound({
+                id: 'wrong',
+                url: '<?php echo $this->getSkinUrl('moogento/pickscan/soundmanager/sounds/wrong.mp3') ?>',
+                autoLoad: true,
+                autoPlay: false
+            });
+            soundManager.createSound({
+                id: 'correct',
+                url: '<?php echo $this->getSkinUrl('moogento/pickscan/soundmanager/sounds/correct.mp3') ?>',
+                autoLoad: true,
+                autoPlay: false
+            });
+        }
+    });
+
+    PickScanModule.root = new PickScanModule.Pack(<?php echo Mage::helper('core')->jsonEncode(Mage::registry('settings'))?>);
+
+    PickScanModule.urls = {
+        loadBoxData: '<?php echo $this->getUrl('*/*/loadBoxData') ?>',
+        finish: '<?php echo $this->getUrl('*/*/finishPack') ?>'
+    };
+
+    PickScanModule.form_key = '<?php echo $this->getFormKey() ?>';
+
+    ko.applyBindings(PickScanModule.root);
+
+    $('.panel-collapse').on('hidden.bs.collapse', function(){
+        PickScanModule.root.scanProductFocus(true);
+    }).on('hide.bs.collapse', function() {
+        $('.nav.navbar-nav li').removeClass('active');
+    }).on('shown.bs.collapse', function() {
+        $('.nav.navbar-nav li').removeClass('active');
+        $($(this).data('activation')).addClass('active');
+    });
+    $('body').on('click', '.panel-collapse-heading', function(e) {
+        var target = $(e.target);
+        if (target.hasClass('panel-title')) {
+            $(this).find('a').click();
+        }
+    });
+    $('.logout-button').click(function(e){
+        e.preventDefault();
+        bootbox.dialog({
+            message: '<?php echo $this->__("Are you sure you want to logout?") ?>',
+            buttons: {
+                leave: {
+                    label: '<?php echo $this->__("Leave me logged in") ?>',
+                    className: 'btn-success'
+                },
+                logout: {
+                    label: '<?php echo $this->__("Ok, log me out") ?>',
+                    className: 'btn-danger',
+                    callback: function() {
+                        window.location = '<?php echo $this->getUrl('adminhtml/index/logout') ?>';
+                    }
+                }
+            }
+        });
+    });
+</script>
+<style>
+    <?php if (Mage::getStoreConfig('moogento_pickscan/background/image')): ?>
+    .container.lead {
+        background-color: #fff;
+        border: 1px solid #fff;
+        border-radius: 10px;
+    }
+    <?php echo Mage::helper('moogento_pickscan')->getBackgroundCss() ?>
+
+    <?php endif; ?>
+    <?php if (Mage::getStoreConfig('moogento_pickscan/settings/logo')): ?>
+    a.navbar-brand {
+        width: 94px;
+        background-image: url(<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'moogento/' . Mage::getStoreConfig('moogento_pickscan/settings/logo') ?>);
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: 100% auto;
+    }
+    <?php endif; ?>
+</style>
+<div class="notifications top-right"></div>
+</body>
+</html>

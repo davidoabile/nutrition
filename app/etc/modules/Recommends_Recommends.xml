@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Recommends_Recommends>
+      <active>true</active>
+      <codePool>local</codePool>
+      <version>0.0.9</version>
+    </Recommends_Recommends>
+  </modules>
+</config>

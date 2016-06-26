@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Ayasoftware_SimpleProductPricing>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Ayasoftware_SimpleProductPricing>
+    </modules>
+</config>

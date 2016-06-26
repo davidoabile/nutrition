@@ -1,0 +1,161 @@
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     n/a
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+.login-link {
+    margin: 0px 0px 5px 0px;
+    padding:0px;
+}
+
+#co-checkout-form .opc .step,
+#co-checkout-form .opc .active .step-title{
+	border-style:solid solid none solid;
+}
+
+.aitcheckout-wait{
+    width:100%;
+    height:100%;
+    background-color:#FFFFFF;
+    z-index:500;
+    opacity: 0.6;
+    filter:progid:DXImageTransform.Microsoft.Alpha(opacity=60);
+    position:absolute;
+    top:0;
+    left:0;
+}
+
+.aitcheckout-wait img{
+    left:50%;
+    top:40%;
+    display:block;
+    position:absolute;
+}
+
+#co-checkout-form #checkoutSteps {
+   overflow: hidden;
+}
+
+#co-checkout-form #checkoutSteps li.section{
+	display:block;
+	margin-bottom:10px;
+	border-bottom:1px solid #BBAFA0;
+    overflow: hidden;}
+	
+#co-checkout-form #checkoutSteps li#opc-coupon,
+#co-checkout-form #checkoutSteps li#opc-review,
+#co-checkout-form #checkoutSteps li#opc-giftmessage,
+#co-checkout-form #checkoutSteps li#opc-agreements,
+#co-checkout-form #checkoutSteps li#opc-newsletter,
+#co-checkout-form #checkoutSteps li#opc-aitgiftwrap{
+	margin-bottom:0;
+	border-bottom:none;}
+	
+#co-checkout-form li#opc-coupon .form-list li, #co-checkout-form li#opc-giftcard .form-list li{
+	display:block;
+	width: 52%;
+}
+#co-checkout-form li#opc-coupon .form-list li.right, #co-checkout-form li#opc-giftcard .form-list li.right{
+    width: 48%;
+}
+	
+#co-checkout-form #coupon-apply-button,
+#co-checkout-form #coupon-cancel-button{
+	margin:18px 0 0 15px;}
+	
+#co-checkout-form .success-msg{
+	overflow:hidden;
+	clear:both;}
+	
+#co-checkout-form .buttons-set{
+    border-top: 1px solid #ddd;
+    margin: 0;
+    padding: 10px 0 0;
+}
+#co-checkout-form .checkout-agreements .agree{
+	padding:5px 0px 3px 0px;}
+	
+#co-checkout-form .gift-messages-form .inner-box{
+	height:auto;}
+	
+#co-checkout-form #checkout-subscribe-newsletter{
+    background: url("../../../../../default/default/images/bkg_checkout.gif") repeat-x scroll 0 0 #FBFAF6;
+	border-left:1px solid #BBAFA0;
+	border-right:1px solid #BBAFA0;
+    padding: 15px 30px;
+    position: relative;
+	border-bottom:none;}
+ 
+#co-checkout-form #customreview-aitcheckoutfields-top,
+#co-checkout-form #customreview-aitcheckoutfields-bottom{
+   padding-left:30px;
+   border-left:1px solid #BBAFA0;
+   border-right:1px solid #BBAFA0;}
+   
+#co-checkout-form #opc-review #checkout-step-review fieldset{
+   margin-top:0;}
+
+*+html #co-checkout-form #checkoutSteps li.section{
+   margin-top:-4px;}
+   
+   
+/* qty buttons */
+
+.qty_box{
+	width:55px;}
+
+#co-checkout-form .qty{
+	width:35px;
+	margin-right:5px;
+	float:left;}
+	
+#co-checkout-form .qty_buttons{
+	overflow:hidden;
+	width:10px;}
+	
+#co-checkout-form .qty_buttons .btn-increase{
+	display:block;
+	width:10px;
+	height:10px;
+	background-image:url(../../../images/aitoc/aitcheckout/incr.png);
+	background-position:top left;
+	background-repeat:no-repeat;
+	margin-bottom:3px;}
+	
+#co-checkout-form .qty_buttons .btn-decrease{
+	display:block;
+	width:10px;
+	height:10px;
+	background-image:url(../../../images/aitoc/aitcheckout/decr.png);
+	background-position:top left;
+	background-repeat:no-repeat;}
+   
+button.btn-move-to-wishlist span {
+   background:none repeat scroll 0 0 #618499;
+   border-color:#406A83;}
+   
+*+html #checkoutSteps{
+   padding-top:7px;}
+   
+#checkout-step-review .buttons-set{
+        margin: 0;
+}   
+.co-checkout-insteadform-div{
+    background-color: #FBFAF6;
+    border: 1px solid #D9DDE3;
+    padding: 10px;
+}
+.page-title.title-buttons{
+    clear: both;
+}
+.cart-table {
+    width: 100%  !important;
+}
+.cart-totals-wrapper .cart-totals{
+    background: none;
+    border: none;
+}

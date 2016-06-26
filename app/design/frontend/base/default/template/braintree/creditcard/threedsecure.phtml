@@ -1,0 +1,62 @@
+<?php
+/**
+* Braintree Payments Extension
+*
+* This source file is subject to the Braintree Payment System Agreement (https://www.braintreepayments.com/legal)
+*
+* DISCLAIMER
+* This file will not be supported if it is modified.
+*
+* @copyright   Copyright (c) 2015 Braintree. (https://www.braintreepayments.com/)
+*/
+?>
+<script type="text/javascript">
+    <?php if (Mage::helper('braintree_payments')->is3DSecureAvailable()): ?>
+        var defaultPlaceOrderButton = $$('button[type=submit][class~="btn-checkout"]')[0];
+        defaultPlaceOrderButton.setAttribute('onclick', '');
+        // Callback on 3D Secure success
+        var onSuccess = function(){
+            review.save();
+        };
+        // Callback on 3D Secure error
+        var onError = function(message){
+            alert(message);
+            checkout.back();
+        };
+        // Disable place order button before 3D Secure starts
+        var beforeStart = function(){
+            defaultPlaceOrderButton.disabled = true;
+        };
+        // Actions to perform if user declines 3D Secure interface
+        var onUserClose = function(){
+            defaultPlaceOrderButton.disabled = false;
+            $('liability_shifted').remove();
+            $('liability_shift_possible').remove();
+            checkout.back();
+        };
+        // Process 3D Secure order
+        var place3DSecureOrder = function(){
+            var nonce = '<?php echo $this->getNonce();?>';
+            if (!nonce) {
+                nonce = $('<?php echo Mage::helper('braintree_payments')->getNonceInputId() ?>').value;
+            }
+            braintreeUtils.place3DSecureOrder(
+                nonce,
+                "<?php echo Mage::helper('braintree_payments')->getOrderAmount()?>",
+                Boolean(<?php echo Mage::helper('braintree_payments')->canContinueOn3DSecureFail()?>),
+                onError,
+                onSuccess,
+                '<?php echo Mage::helper('braintree_payments')->__('Please try another form of payment') ?>',
+                '<?php echo $this->getFormId()?>',
+                '<?php echo Braintree_Payments_Model_Creditcard::PAYMENT_METHOD_CODE ?>_cc_token',
+                "<?php echo Mage::helper('braintree_payments')->getToken(); ?>",
+                onUserClose,
+                beforeStart
+            );
+        };
+        Event.observe(defaultPlaceOrderButton, 'click', place3DSecureOrder);
+    <?php else: ?>
+        var defaultPlaceOrderButton = $$('button[type=submit][class~="btn-checkout"]')[0];
+        defaultPlaceOrderButton.setAttribute('onclick', 'review.save();');
+    <?php endif; ?>
+</script>

@@ -1,0 +1,93 @@
+<?php 
+/** 
+* Moogento
+* 
+* SOFTWARE LICENSE
+* 
+* This source file is covered by the Moogento End User License Agreement
+* that is bundled with this extension in the file License.html
+* It is also available online here:
+* http://www.moogento.com/License.html
+* 
+* NOTICE
+* 
+* If you customize this file please remember that it will be overwrtitten
+* with any future upgrade installs. 
+* If you'd like to add a feature which is not in this software, get in touch
+* at www.moogento.com for a quote.
+* 
+* ID          pe+sMEDTrtCzNq3pehW9DJ0lnYtgqva4i4Z=
+* File        scanform.phtml
+* @category   Moogento
+* @package    pickPack
+* @copyright  Copyright (c) 2014 Moogento <info@moogento.com> / All rights reserved.
+* @license    http://www.moogento.com/License.html
+*/ 
+?>
+<?php
+if (!function_exists('strip_whitespace'))
+{
+    function strip_whitespace($input)
+    {
+        $output = 
+        preg_replace('~\s>~','>',
+        preg_replace('~<\s~','<',
+        preg_replace('~\s=\s~','=',
+        preg_replace('#(\\r|\\n|\\t)#','',
+        preg_replace('#\s</div#','</div',
+        preg_replace('#\s<div#','<div',
+        preg_replace('#\s<ul#','<ul',
+        preg_replace('#\s</ul#','</ul',
+        preg_replace('#\s<li#','<li',
+        preg_replace('/\s\s+/',' ',$input))))))))));
+        return $output;
+    }
+}
+
+ob_start('ob_gzhandler');
+?>
+<?php 
+    $fields = $this->getData("massaction_fields");
+?>
+
+<div id="messages"><?php echo $this->getMessagesBlock()->getGroupedHtml(); ?></div>
+<script type="text/javascript">
+    window.idGridMassactionFieldsInBarcode = [];
+    function set_focus() {
+        var text_input = document.getElementById('scan_order_number');
+        text_input.focus ();
+    }
+    setTimeout(function() { set_focus(); }, 1000);
+
+    idGridMassactionFieldsInBarcode = <?php echo json_encode($fields); ?>;
+    window.getCheckOrderShipmentUrl = '<?php echo $this->getUrl('*/*/checkOrderShipment'); ?>';
+</script>
+<form id="scan-form" action="<?php echo $this->getSaveUrl() ?>" method="post">
+    <input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
+    <ul class="messages" id="scanform_messages"></ul>
+    <div class="order-scan-form">
+        <div class="field-row-title">
+            <label class="normal" for="scan_order_number"><?php echo Mage::helper('moogento_shipeasy')->__('Barcode') ?></label>
+            <input style="font-size: 30px;" name="scan[order_number]" id="scan_order_number" value="" class="a-right required-entry" autofocus />
+            <div id="barcode_submit" class="f-right">
+                <button id="scan-button" type="submit" class="scalable save">
+                    <span><?php echo $this->__('Manual Submit') ?></span>
+                </button>
+            </div>
+        </div>
+        <?php foreach ($fields as $item):?>
+            <div class="field-row">
+                <?php echo $this->getChildHtml($item) ?>
+            </div>
+        <?php endforeach; ?>
+        <div class="clear"></div>
+    </div>
+</form>
+<?php 
+echo $this->getChildHtml('actions_history');
+?>
+<script type="text/javascript">
+    var <?php echo 'ma_' . $this->getHtmlId() ?> = new moogentoPopupMassaction('<?php echo $this->getHtmlId() ?>', 'scan-form');
+    <?php echo 'ma_' . $this->getHtmlId() ?>.setItems(<?php echo $this->getItemsJson() ?>);
+</script>
+<?php ob_end_flush(); ?>

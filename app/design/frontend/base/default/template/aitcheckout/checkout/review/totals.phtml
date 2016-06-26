@@ -1,0 +1,27 @@
+<?php
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+if ($this->getTotals()): ?>
+<tfoot>
+    <?php $_colspan = $this->helper('aitcheckout')->getReviewTotalsColspan(); ?>
+    <?php echo $this->renderTotals(null, $_colspan); ?>
+    <?php echo $this->renderTotals('footer', $_colspan); ?>
+    <?php if ($this->needDisplayBaseGrandtotal()):?>
+    <tr>
+        <td class="a-right" colspan="<?php echo $_colspan; ?>">
+            <small><?php echo $this->helper('sales')->__('Your credit card will be charged for') ?></small>
+        </td>
+        <td class="a-right">
+            <small><?php echo $this->displayBaseGrandtotal() ?></small>
+        </td>
+    </tr>
+    <?php endif?>
+</tfoot>
+<?php endif; ?>

@@ -1,0 +1,80 @@
+<?php
+$element = $this->getElement();
+$htmlId = $element->getHtmlId();
+
+$statuses = Mage::getSingleton('sales/order_config')->getStatuses();
+
+if ($element->getExpanded() !== null) {
+    $collapseState = 1;
+} else {
+    $extra = Mage::getSingleton('admin/session')->getUser()->getExtra();
+    if (isset($extra['configState'][$element->getId()])) {
+        $collapseState = (int)$extra['configState'][$element->getId()];
+    } else {
+        $collapseState = 0;
+    }
+}
+
+?>
+<div class="section-config" xmlns="http://www.w3.org/1999/html">
+<div class="entry-edit-head collapseable">
+    <a onclick="Fieldset.toggleCollapse('<?php echo $htmlId ?>', '<?php echo $this->getUrl('*/*/state/')?>'); return false;" href="#" id="<?php echo $htmlId ?>-head" class="">
+        <?php echo $element->getLegend() ?>
+    </a>
+</div>
+<input type="hidden" value="<?php echo $collapseState ?>" name="config_state[<?php echo $htmlId ?>]" id="<?php echo $htmlId ?>-state">
+<fieldset id="<?php echo $htmlId ?>" class="config collapseable grid">
+    <table class="data" cellspacing="0" style="width: 100%;">
+        <thead>
+        <tr class="headings">
+            <th>&nbsp;</th>
+            <th style="width: 200px;"><?php echo $this->__('Original order status') ?></th>
+            <th style="width: 200px;"><?php echo $this->__('Trigger-time') ?></th>
+            <th><?php echo $this->__('New order status to set') ?></th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody class="toggle-light" data-bind="foreach: rows">
+        <tr>
+            <td>
+                <span style="display: inline-block">
+                    <input type="hidden" value="0" data-bind="attr: {name: buildName('enable')}" />
+                    <input type="checkbox" value="1" data-bind="attr: {name: buildName('enable')}, checked: enable, switch: enable" />
+                </span>
+            </td>
+            <td>
+                <select class="chosen" data-bind="chosen: {width: '200px'}, value: status, attr: {name: buildName('status')}">
+                    <?php foreach ($statuses as $code => $label): ?>
+                        <option value="<?php echo $code ?>"><?php echo $label ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </td>
+            <td>
+                <select class="chosen" data-bind="chosen: {width: '100px'}, value: check_time, attr: {name: buildName('check_time')}">
+                    <?php for ($i = 0; $i < 24; $i++): ?>
+                        <option value="<?php echo $i ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?>:00</option>
+                    <?php endfor; ?>
+                </select>
+            </td>
+            <td>
+                <select class="chosen" data-bind="chosen: {width: '200px'}, value: target_status, attr: {name: buildName('target_status')}">
+                    <?php foreach ($statuses as $code => $label): ?>
+                        <option value="<?php echo $code ?>"><?php echo $label ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </td>
+            <td>
+                <a href="#" class="fa fa-times" style="color: red" data-bind="click: $parent.deleteRow"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br/>
+    <button class="button add" data-bind="click:addRow"><span><?php echo $this->__('Add') ?></span></button>
+</fieldset>
+<script type="text/javascript">
+    Fieldset.applyCollapse('<?php echo $htmlId ?>');
+    ko.applyBindings(new AutomationModule.StatusUpdate(<?php echo $this->_getJson() ?>),
+        document.getElementById('<?php echo $htmlId ?>'));
+</script>
+</div>

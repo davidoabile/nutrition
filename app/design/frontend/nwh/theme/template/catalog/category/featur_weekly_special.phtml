@@ -1,0 +1,273 @@
+<?php
+$layer = Mage::getSingleton('catalog/layer');
+$_category = $layer->getCurrentCategory();
+$currentCategoryId = $_category->getId();
+
+$categoryid = $currentCategoryId;
+$category2 = new Mage_Catalog_Model_Category();
+$category2->load($categoryid);
+$collection = $category2->getProductCollection();
+
+$collection->addAttributeToSelect('*');
+
+
+        $fileName = $_category->getThumbnail();
+        if (!$fileName) {
+            $url = Mage::getBaseUrl('media') . 'catalog/category/small_image.jpg';
+        } else {
+            $url = Mage::getBaseUrl('media') . 'catalog/category/' . $fileName;
+        }
+?>
+<div class="main_part mrgn_b20">
+                  	<div class="ws_banner">
+                    	<div class="ws_text"><h3>WEEKLY<br>SPECIALS</h3><div class="triangle-up"></div></div>
+                    	<div class="ws_img"><img src="<?php echo $this->getSkinUrl('images/ws_banner.png') ?>"></div>
+                    </div>
+                </div>
+<?php
+$connection = Mage::getSingleton('core/resource')->getConnection('distributor_read'); //I assuming that you created the model for your table
+$results = $connection->fetchAll("SELECT * FROM feature_product WHERE id = 2 AND status = 1 limit 1");
+$Featureproduct = Mage::getModel('catalog/product')->loadByAttribute('sku', $results[0]['sku']);
+?>
+<div class="main_part mrgn_b20">
+    <div class="hadd_pink2">
+        <h1>FEATURED WEEKLY SPECIAL</h1><div class="triangle-bottomleft"></div>
+    </div>
+    <div class="fw_area">
+        <div class="left">
+            <div class="fwimg"><span><img  src="<?php echo $this->helper('catalog/image')->init($Featureproduct, 'small_image')->resize(115, 115) ?>" alt="<?php echo $this->htmlEscape($Featureproduct->getName()) ?>" /></span></div>
+            <div class="fwimg_detl">
+                <h4><?php 
+                $pname = $this->htmlEscape($Featureproduct->getName()); 
+                
+                 
+if (strlen($pname) > 25) {
+    echo substr($pname, 0, 25) . '...';
+} else {
+    echo $pname;
+}
+                
+                ?></h4>
+                <div class="comman mrgn_t10 font14_blk"><?php
+                
+              $shortdesc =  strip_tags($Featureproduct->getShortDescription());
+if (strlen($shortdesc) > 22) {
+    echo substr($this->htmlEscape($shortdesc), 0, 22) . '...';
+} else {
+    echo $this->htmlEscape($shortdesc);
+}
+?></div>
+                <div class="comman mrgn_t5 font12_gry">
+                    <?php
+                  $description = strip_tags($Featureproduct->getDescription()); 
+                    if (strlen($description) > 335) {
+                        echo substr($this->htmlEscape($description), 0, 335) . '...';
+                    } else {
+                        echo $this->htmlEscape($description);
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="pricing">
+                <ul>
+<div style="float: left; height: 105px;">
+                    <?php if ($Featureproduct->getSpecialPrice()) { ?>
+                     <?php if($Featureproduct->getPrice() < $Featureproduct->getSpecialPrice()) { ?>
+                        <li>
+                            <div class="pricingleft font18_gry">RRP</div>
+                            <div class="pricingright font30_gry">$0.00</div>
+                        </li>
+                        <li>
+                            <div class="pricingleft font18_red">WP</div>
+                            <div class="pricingright font30_red"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($Featureproduct->getPrice(), '2', '.', ','); ?></div>
+                        </li>
+                    <?php } else { ?>
+                        <li>
+                            <div class="pricingleft font18_gry">RRP</div>
+                            <div class="pricingright font30_gry"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($Featureproduct->getPrice(), '2', '.', ','); ?></div>
+                        </li>
+                        <li>
+                            <div class="pricingleft font18_red">WP</div>
+                            <div class="pricingright font30_red"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($Featureproduct->getSpecialPrice(), '2', '.', ','); ?></div>
+                        </li>
+                        <?php } ?>
+                             
+                    <?php } else { ?>
+                        <li>
+                            <div class="pricingleft font18_gry">RRP</div>
+                            <div class="pricingright font30_gry">$0.00</div>
+                        </li>
+                        <li>
+                            <div class="pricingleft font18_red">WP</div>
+                            <div class="pricingright font30_red"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($Featureproduct->getPrice(), '2', '.', ','); ?></div>
+                        </li>
+
+                    <?php } ?>
+
+                    <?php
+                    $_finalPrice = $Featureproduct->getFinalPrice();
+                    $_price = $Featureproduct->getPrice();
+
+                    if ($_finalPrice < $_price):
+                        ?>
+                        <?php
+                        $_savePercent = 100 - round(($_finalPrice / $_price) * 100);
+                        $_saveAmount = number_format(($_price - $_finalPrice), 2);
+                        ?>
+
+                        <li>
+                            <div class="pricingleft font14_blk">SAVE</div>
+                            <div class="pricingright font14_blk"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo $_saveAmount; ?></div>
+                        </li>
+
+
+                    <?php endif; ?>
+</div>
+
+<?php $_compareUrl = $this->helper('catalog/product_compare')->getAddUrl($Featureproduct) ?>
+
+                    <li class="mrgn_t5"><a class="link12_red" href="<?php echo $_compareUrl ?>">+ Add to compare</a></li>
+                   <!-- <li><a href="<?php //echo Mage::helper('checkout/cart')->getAddUrl($Featureproduct); ?>" class="buy_btn">BUY NOW</a></li> -->
+                       <li><a href="<?php echo $Featureproduct->getProductUrl(); ?>" class="view_detail_button">VIEW DETAILS</a></li>
+                    <li class="mrgn_t5">
+                        <div style="line-height:20px;" class="pricingleft font14_blk">SHARE +</div>
+                        <div class="pricingright">
+                            <div class="social_small">
+<?php $share_url = urlencode($Featureproduct->getProductUrl()) ?>
+<!--<a style="float:right;width:49px;" title="Add To Yahoo" target="_blank" href="http://myweb2.search.yahoo.com/myresults/bookmarklet?t=<?php echo $share_url ?>&amp;title=<?php echo urlencode($Featureproduct->getName()) ?>"  title="Add To Yahoo"><img src="<?php echo $this->getSkinUrl('images/youtube_red.png'); ?>"></a>-->
+<?php //echo $this->getLayout()->createBlock('cms/block')->setBlockId('addthis')->toHtml() ?>
+
+<a href="javascript:popWin('https://www.facebook.com/sharer/sharer.php?s=100&p[title]=<?php echo urlencode($Featureproduct->getName()); ?>&p[summary]=<?php echo urlencode($shortdesc); ?>&p[url]=<?php echo urlencode($Featureproduct->getProductUrl()); ?>&p[images][0]=<?php echo urlencode($this->helper('catalog/image')->init($Featureproduct, 'small_image')->resize(115, 115)); ?>', 'facebook', 'width=640,height=480,left=0,top=0,location=no,status=yes,scrollbars=yes,resizable=yes');" ><img src="<?php echo $this->getSkinUrl('images/fb_red.png'); ?>"></a>
+
+<a href="javascript:popWin('http://twitter.com/home/?status=<?php echo urlencode($Featureproduct->getName() . '' . $Featureproduct->getProductUrl()); ?>', 'twitter', 'width=640,height=480,left=0,top=0,location=no,status=yes,scrollbars=yes,resizable=yes');" title="<?php echo $this->__('Tweet') ?>"><img src="<?php echo $this->getSkinUrl('images/twitter_red.png'); ?>"></a>
+                                                             
+                            </div>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php if (count($collection) > 0) { ?>
+    <div class="main_part mrgn_b20">
+        <div class="hadd_pink2">
+            <h1>ALL WEEKLY SPECIALS</h1><div class="triangle-bottomleft"></div>
+    <!--                    <a class="link14_gry right" href="<?php echo $_category->getUrl(); ?>">VIEW ALL</a>-->
+
+        </div>
+        <div class="prod_slider fp_area_main">
+            
+                <?php 
+                $count = 0;
+                $_columnCount = 4;
+                                $j = 0;
+                                $k = 0;
+                foreach ($collection as $product) {
+             if ($k++%$_columnCount==0):  
+            $j++;
+            
+            ?>
+                <ul style="float: left; width: 100%;">
+        <?php endif; ?>
+                  
+                    
+
+           
+<li>
+                        <div class="ps_part">
+                            <ul>
+                                <li>
+
+                                    <div class="ps_img_cntr">
+                                        <div class="ps_img">
+                                            <a class="EnableQuickView" data-link="<?php echo $j; ?>" id="pb_item_<?php echo $product->getId() ?>" href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>" >
+                                                <img  src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(115, 115) ?>" alt="<?php echo $this->htmlEscape($product->getName()) ?>" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="quickview">&nbsp;</div>
+                                    </a>
+                                </li>
+                                <li class="font14_blk"><a class="font14_blk" href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>)">
+        <?php 
+                                           $Lengthname = $this->htmlEscape($product->getName());
+                                             if(strlen($Lengthname) > 16)
+                                    echo substr($Lengthname,0,16).'...'; 
+                                    else 
+                                    echo substr($Lengthname,0,16);
+                                            
+        
+        ?>
+                                    </a>
+                                </li>
+                               <li class="font12_gry"><?php
+                                   $length = $this->htmlEscape(strip_tags($product->getShortDescription()));
+                                   if(strlen($length) > 18)
+                                    echo substr($length,0,18).'...'; 
+                                    else 
+                                    echo substr($length,0,18);
+                                     ?></li>
+                                <li class="mrgn_t5">
+                                    
+                                    <?php if ($product->getSpecialPrice()) { ?>
+                                    <span class="font16_red" ><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($product->getSpecialPrice(), '2', '.', ','); ?></span>
+                                    <span class="font16_gry" style="margin-left: 9px;"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($product->getPrice(), '2', '.', ','); ?>
+                                    </span>
+                                        
+        <?php }else{ ?>
+        <span class="font16_red"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($product->getPrice(), '2', '.', ','); ?>
+                                    </span>
+        <?php } ?>
+                                </li>
+                                
+        <?php $_compareUrl = $this->helper('catalog/product_compare')->getAddUrl($product) ?>
+
+                                <li class="mrgn_t5"><a class="link12_red" href="<?php echo $_compareUrl ?>">+ Add to compare</a></li>
+
+        <?php if ($product->isSaleable()): ?>
+
+
+                                    <li class="mrgn_t5">
+                                    <span class="buy_btn" style="background-image:none;cursor:default;" href="javascript:;">&nbsp;</span>
+                                    </li> 
+                                <?php else: ?>
+                                    <li class="mrgn_t5 outofstock"><?php echo $this->__('Out of stock') ?></li>
+        <?php endif; ?>
+
+                            </ul>
+                        </div>
+
+        <?php //echo $this->getReviewsSummaryHtml($product, 'short')   ?>
+                    </li>
+
+
+
+
+                  <?php  $count += 1;
+                   if($count == 8){
+                    ?>
+                     </ul>
+            <div id="<?php echo $j; ?>" class="slidmain product_data" style="float: left;display:none;"></div>
+        
+        
+                    <div class="brandpromr_banner mrgn_t20"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('brand_promo_banner')->toHtml() ?></div>
+<?php $count = 0; } ?> 
+ 
+<?php if ($k%$_columnCount==0 || $k==$collection->count()): ?>
+        </ul>
+        <div id="<?php echo $j; ?>" class="slidmain product_data" style="float: left;display:none;"></div>   
+           <?php endif ?>      
+            
+    <?php } ?>
+    
+       
+            
+        </div>
+    </div>
+    
+<?php } ?>

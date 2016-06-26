@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Qtm_Faq>
+      <active>true</active>
+      <codePool>local</codePool>
+      <version>0.0.9</version>
+    </Qtm_Faq>
+  </modules>
+</config>

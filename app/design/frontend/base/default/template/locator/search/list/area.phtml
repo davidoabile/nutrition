@@ -1,0 +1,90 @@
+<?php
+/**
+ * Location extension for Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @copyright   Copyright (c) 2013 Andrew Kett. (http://www.andrewkett.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+?>
+
+<?php
+$locations = $this->getLocations()->getItems();
+
+?>
+<?php
+$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+$secure = false;
+if(strpos($currentUrl,"https") !== false){
+    $secure = true;
+}
+?>
+
+<?php if($locations): ?>
+    <?php if(count($locations) > 0): ?>
+        <h2 id="listing-store">Listing Stores</h2>
+        <ul class="locations">
+            <?php
+            $i = 0;
+            foreach($locations as $location):
+                $i++;
+                ?>
+                <li class="loc-ls-item <?php if($i>7) echo 'hidden'?> <?php echo $location->getId();?>">
+                    <article itemscope itemtype="http://data-vocabulary.org/Place" class="loc loc-teaser" data-id="<?php echo $location->getId(); ?>">
+                        <h3 itemprop="name"><?php echo $location->getTitle(); ?></h3>
+                        <address itemprop="address"><?php echo $location->getAddress() ?>
+                        </address>
+                        <address itemprop="address"><?php echo implode(",", array($location->getTitle(),$location->getPostalCode(),$location->getCountry())) ?></address>
+                        <?php if($location->getPhone()):?>
+                            <p class="loc-data-phone">Phone: <?php echo $location->getPhone();?></p>
+                        <?php endif; ?>
+                        <div class="view-store-detail">
+                            <?php
+                            $realLocatorUrl = $location->getUrl();
+                            if ($secure) {
+                                if(strpos($realLocatorUrl,"http://") !== false){
+                                    $realLocatorUrl = str_replace("http://","https://",$realLocatorUrl);
+                                }
+                            }
+                            ?>
+                            <a itemprop="url" href="<?php echo $realLocatorUrl; ?>"  class="view"><?php echo $this->__('More Info')?></a> <span> | </span> <a href="<?php echo $location->getDirectionsLink(); ?>"  class="get" target="_blank"><?php echo $this->__('Get Directions') ?></a>
+                        </div>
+                    </article>
+
+                </li>
+            <?php endforeach; ?>
+        </ul>
+        <?php if (count($locations) >7) :?>
+            <button class="locator_loadmore" onclick="loadmore()">Load More</button>
+        <?php endif;?>
+    <?php endif; ?>
+ <script>
+     var $nwhjquery = jQuery.noConflict();
+     function loadmore(id){
+         if($nwhjquery(".loc-ls-item.hidden").length){
+             var i =0;
+             $nwhjquery(".loc-ls-item.hidden").each(function(index) {
+                 if(i<7){
+                     $nwhjquery(this).removeClass('hidden').addClass('show');
+                 }
+                 i++;
+             });
+         }
+         if(!$nwhjquery(".loc-ls-item.hidden").length){
+             $nwhjquery(".locator_loadmore").hide();
+         }
+     }
+ </script>
+
+<?php else: ?>
+    No results found
+<?php endif; ?>
+
+
+

@@ -1,0 +1,55 @@
+<?php
+/**
+* Braintree Payments Extension
+*
+* This source file is subject to the Braintree Payment System Agreement (https://www.braintreepayments.com/legal)
+*
+* DISCLAIMER
+* This file will not be supported if it is modified.
+*
+* @copyright   Copyright (c) 2015 Braintree. (https://www.braintreepayments.com/)
+*/
+?>
+<?php
+    $braintree = Mage::getModel('braintree_payments/creditcard');
+    $_storedCards = $braintree->currentCustomerStoredCards();
+?>
+<div class="page-title title-buttons">
+    <h1><?php echo $this->__('My Credit Cards') ?></h1>
+    <?php if ($braintree->useVault()): ?>
+        <button type="button" title="<?php echo $this->__('Add Credit Card') ?>" class="button" onclick="window.location='<?php echo $this->getAddUrl() ?>';"><span><span><?php echo $this->__('Add Credit Card') ?></span></span></button>
+    <?php endif ?>
+</div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<?php if (count($_storedCards)): ?>
+    <table class="data-table" id="my-quotes-table">
+        <col width="1" />
+        <col width="1" />
+        <col width="1" />
+        <col width="1" />
+        <col width="1" />
+        <thead>
+            <tr>
+                <th><?php echo $this->__('Type') ?></th>
+                <th><?php echo $this->__('Card Number') ?></th>
+                <th><?php echo $this->__('Is Default') ?></th>
+                <th colspan="2"><?php echo $this->__('Actions') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($_storedCards as $card): ?>
+                <tr>
+                    <td><?php echo $this->escapeHtml($card->cardType) ?></td>
+                    <td><?php echo $this->escapeHtml($card->maskedNumber) ?></td>
+                    <td><?php echo ($card->default) ? $this->__('Yes') : $this->__('No') ?></td>
+                    <td>
+                        <a href="<?php echo $this->getEditUrl($card->token) ?>"><?php echo $this->__('Edit')?></a>
+                    </td>
+                    <td>
+                        <a href="<?php echo $this->getDeleteUrl($card->token) ?>"><?php echo $this->__('Delete')?></a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>        
+    </table>
+<?php endif; ?>

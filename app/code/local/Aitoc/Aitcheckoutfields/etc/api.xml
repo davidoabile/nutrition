@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <api>
+        <resources>
+            <sales_order translate="title" module="sales">
+                <title>Order API with Aitoc custom data</title>
+                <model>sales/order_api</model>
+                <methods>
+                    <info translate="title" module="sales">
+                        <title>Retrieve order information</title>
+                        <acl>sales/order/info</acl>
+                    </info>
+                    <list translate="title" module="sales">
+                        <title>Retrieve list of orders by filters</title>
+                        <method>items</method>
+                        <acl>sales/order/info</acl>
+                    </list>
+                </methods>
+            </sales_order>
+        </resources>
+       	<resources_alias>
+            <order>sales_order</order>
+        </resources_alias>
+        <v2>
+            <resources_function_prefix>
+                <order>salesOrder</order>
+            </resources_function_prefix>
+        </v2>
+    </api>
+</config>
+<!--
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (CFM Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckoutfields
+ * @version      1.0.9 - 2.9.8
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+-->

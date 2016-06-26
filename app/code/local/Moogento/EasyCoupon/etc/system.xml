@@ -1,0 +1,210 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <moogento translate="label">
+            <label>
+                <![CDATA[<img src="//moogento.com/logo/moogento_tinylogo.ls.png" alt="Moogento" width="20" style="vertical-align:bottom;margin-left:-1px;"/> MOOGENTO Extensions]]></label>
+            <sort_order>200</sort_order>
+        </moogento>
+    </tabs>
+
+    <sections>
+        <moogento_easycoupon translate="label comment" module="moogento_easycoupon">
+            <label>easyCoupon</label>
+            <tab>moogento</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>5100</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <hint>
+                    <frontend_model>moogento_easycoupon/adminhtml_system_config_fieldset_hint</frontend_model>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                </hint>
+                <quick>
+                    <frontend_model>moogento_easycoupon/adminhtml_system_config_quick</frontend_model>
+                    <label>QuickStart: Make your easyCoupon, easily, here!</label>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                </quick>
+                <moodetails>
+                    <label>License</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>2</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <server_name translate="label">
+                            <label>Server Name</label>
+                            <frontend_type>text</frontend_type>
+                            <backend_model>moogento_easycoupon/adminhtml_system_config_backend_import_name</backend_model>
+                            <frontend_model>moogento_easycoupon/adminhtml_system_config_fieldset_name</frontend_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </server_name>
+                        <license translate="label">
+                            <label>License Key</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <frontend_model>moogento_easycoupon/adminhtml_system_config_fieldset_key</frontend_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Enter your license key here</comment>
+                        </license>
+                    </fields>
+                </moodetails>
+                <settings translate="label comment" module="moogento_easycoupon">
+                    <label>Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <show_coupon_bar translate="label">
+                            <label>Show coupon bounce-bar?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment><![CDATA[<span style="line-height: 1em;display: block;margin: 0.5em 0 0;color: #888;">When your visitor uses an easyCoupon link, it'll show a horizontal bar at the top of the page, confirming the coupon has been activated.</span>]]></comment>
+                        </show_coupon_bar>
+
+                        <bar_background>
+                            <label><![CDATA[ &nbsp; <em class = "moo_down_arrow">&#10551;</em>]]> Background color</label>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_class>color</frontend_class>
+                            <depends>
+                                <show_coupon_bar>1</show_coupon_bar>
+                            </depends>
+							<comment>
+								<![CDATA[Default: #529BBD (blue) or #90BD82 (green)]]>
+							</comment>
+                        </bar_background>
+                        <bar_text_color>
+                            <label><![CDATA[ &nbsp; <em class = "moo_down_arrow">&#10551;</em>]]> Text color</label>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_class>color</frontend_class>
+                            <depends>
+                                <show_coupon_bar>1</show_coupon_bar>
+                            </depends>
+                        </bar_text_color>
+                        <bar_font_size>
+                            <label><![CDATA[ &nbsp; <em class = "moo_down_arrow">&#10551;</em>]]> Font size</label>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <show_coupon_bar>1</show_coupon_bar>
+                            </depends>
+							<comment>
+								<![CDATA[Default: 18px]]>
+							</comment>
+                        </bar_font_size>
+                        <bar_font_family>
+                            <label><![CDATA[ &nbsp; <em class = "moo_down_arrow">&#10551;</em>]]> Font family</label>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <show_coupon_bar>1</show_coupon_bar>
+                            </depends>
+							<comment>
+								<![CDATA[Default: Raleway,Verdana,sans-serif]]>
+							</comment>
+                        </bar_font_family>
+                        <include_google_font>
+                            <label><![CDATA[ &nbsp; &nbsp; &nbsp; &nbsp; <em class = "moo_down_arrow">&#10551;</em>]]> Include Raleway google font?</label>
+                            <sort_order>55</sort_order>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <show_coupon_bar>1</show_coupon_bar>
+                            </depends>
+                        </include_google_font>
+                        <coupon_bar_text translate="label comment">
+                            <label><![CDATA[ &nbsp; <em class = "moo_down_arrow">&#10551;</em>]]> Coupon description</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[<span style="line-height: 1em;display: block;margin: 0.5em 0 0;color: #888;">Template for bounce-bar message. Use these: 
+								<br /><b>[coupon code]</b>
+								<br /><b>[coupon name]</b>
+                                <br /><b>[coupon description]</b></span>]]>
+                            </comment>
+                            <depends>
+                                <show_coupon_bar>1</show_coupon_bar>
+                            </depends>
+                        </coupon_bar_text>
+                        <number_characters translate="label">
+                            <label><![CDATA[ &nbsp; &nbsp; &nbsp; &nbsp; <em class = "moo_down_arrow">&#10551;</em>]]> Max description length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <show_coupon_bar>1</show_coupon_bar>
+                            </depends>
+							<comment><![CDATA[<span style="line-height: 1em;display: block;margin: 0.5em 0 0;color: #888;">If you have long coupon codes, this can help keep the design tidy.</span>]]></comment>
+                        </number_characters>
+                        <show_image>
+                            <label><![CDATA[ &nbsp; <em class = "moo_down_arrow">&#10551;</em>]]> Add an image inside?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <show_coupon_bar>1</show_coupon_bar>
+                            </depends>
+							<comment><![CDATA[<span style="line-height: 1em;display: block;margin: 0.5em 0 0;color: #888;">Helps visually confirm the coupon has been applied, or promoting your brand, product, or landing page.</span>]]></comment>
+                        </show_image>
+                        <default_image translate="label comment">
+                            <label><![CDATA[ &nbsp; &nbsp; &nbsp; &nbsp; <em class = "moo_down_arrow">&#10551;</em>]]> Default image</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">moogento/easycoupon</upload_dir>
+                            <base_url type="media" scope_info="0">moogento/easycoupon</base_url>
+                            <sort_order>90</sort_order>
+                            <depends><show_image>1</show_image></depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <show_coupon_bar>1</show_coupon_bar>
+                            </depends>
+							<comment><![CDATA[<span style="line-height: 1em;display: block;margin: 0.5em 0 0;color: #888;">Override this setting with coupon-specific images inside coupon edit pages - great to eg. welcome visitors from specific websites.</span>]]></comment>
+                        </default_image>
+                    </fields>
+                </settings>
+            </groups>
+        </moogento_easycoupon>
+    </sections>
+</config>

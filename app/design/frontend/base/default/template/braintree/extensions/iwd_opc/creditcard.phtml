@@ -1,0 +1,144 @@
+<?php
+/**
+* Braintree Payments Extension
+*
+* This source file is subject to the Braintree Payment System Agreement (https://www.braintreepayments.com/legal)
+*
+* DISCLAIMER
+* This file will not be supported if it is modified.
+*
+* @copyright   Copyright (c) 2015 Braintree. (https://www.braintreepayments.com/)
+*/
+?>
+<?php $helper = Mage::helper('braintree_payments'); ?>
+<?php if ($helper->isIwdOpcExtensionEnabled()) :?>
+    <?php $_ccCode = Braintree_Payments_Model_Creditcard::PAYMENT_METHOD_CODE ; ?>
+    <script type="text/javascript">
+        if (typeof braintreeUtils === "undefined") {
+            var braintreeUtils = new BraintreeUtils();
+        }
+        var nonceInputId = '<?php echo $helper->getNonceInputId() ?>';
+        var formId = '<?php echo $this->getFormId()?>';
+        var braintree3DSecureGrandTotal = 0;
+
+        // Remove native extension event listener for place order button
+        var removeSubmitOrderEvents = function() {
+            $j_opc(document).off('click', '.opc-btn-checkout');
+        };
+
+        // Add Braintree event listener for place order button to allow custom flow
+        var addBraintreeFlow = function() {
+            $j_opc(document).on('click', '.opc-btn-checkout', processBraintreeOrder);
+        };
+
+        // Set up again native extension event listener for place order button and click button
+        var processNativeExtensionOrder = function() {
+            IWD.OPC.Checkout.hideLoader();
+            removeSubmitOrderEvents();
+            IWD.OPC.initSaveOrder();
+            $j_opc('.opc-btn-checkout').disabled = 'false';
+            <?php if (Mage::helper('braintree_payments')->isAdvancedFraudProtectionEnabled()): ?>
+                if ($('device_data')) {
+                    $('device_data').disabled = false;
+                }
+            <?php endif;?>
+            $j_opc('.opc-btn-checkout').click();
+            removeSubmitOrderEvents();
+            setTimeout(addBraintreeFlow(), 500);
+        };
+
+        // Show error message using extension tools
+        var showErrorMessage = function(message) {
+            $j_opc('.opc-message-container').html(message);
+            $j_opc('.opc-message-wrapper').show();
+            IWD.OPC.Checkout.hideLoader();
+            $j_opc('.opc-btn-checkout').disabled = 'false';
+        };
+
+        // Process custom flow
+        var processBraintreeOrder = function() {
+            if (payment.currentMethod == '<?php echo $_ccCode; ?>') {
+                // Payment method is Braintree Credit Card
+                IWD.OPC.Checkout.showLoader();
+                var token = $('<?php echo $_ccCode; ?>_cc_token');
+                var storedCard = token && (token.value != '');
+                var threeDSecure = Boolean($('<?php echo $_ccCode; ?>_3dsecure_available'));
+                if (threeDSecure && storedCard) {
+                    // Checkout using stored card, 3D Secure is enabled
+                    new Ajax.Request('<?php echo Mage::getUrl('braintree/checkout/onestepcheckout3dsecure') ?>', {
+                        method: 'post',
+                        parameters: {token: token.value},
+                        onSuccess: function(transport)  {
+                            if (transport.status == 200) {
+                                var result = transport.responseText.evalJSON();
+                                if (result.error == true) {
+                                    showErrorMessage(result.text);
+                                } else {
+                                    processBraintree3DSecure(result.nonce);
+                                }
+                            }
+                        }
+                    });
+                } else if (threeDSecure && !storedCard) {
+                    // Checkout using new card, 3D Secure is enabled
+                    IWD.OPC.Checkout.showLoader();
+                    var card = {
+                        number: $('<?php echo $_ccCode ?>_cc_number').value,
+                        expirationMonth: $('<?php echo $_ccCode ?>_expiration').value,
+                        expirationYear: $('<?php echo $_ccCode ?>_expiration_yr').value,
+                        cardholderName : '<?php echo $helper->getCardholderName() ?>'
+                    };
+                    if ($('<?php echo $_ccCode ?>_cc_cid')) {
+                        card['cvv'] = $('<?php echo $_ccCode ?>_cc_cid').value;
+                    }
+                    processBraintree3DSecure(card);
+                } else if (!threeDSecure && storedCard) {
+                    // Checkout using stored card, 3D Secure is disabled
+                    processNativeExtensionOrder();
+                } else {
+                    // Checkout using new card, 3D Secure is disabled
+                    braintreeUtils.createHiddenInput({name: "payment[nonce]", id: nonceInputId}, formId);
+                    braintreeUtils.getPaymentNonce(
+                        '<?php echo $_ccCode ?>',
+                        '<?php echo $helper->getCardholderName() ?>',
+                        processNativeExtensionOrder,
+                        "<?php echo $helper->getToken(); ?>"
+                    );
+                }
+            } else {
+                // Selected payment method is not Braintree Credit Card
+                processNativeExtensionOrder();
+            }
+        };
+
+        // Process 3D Secure
+        var processBraintree3DSecure = function(card) {
+            braintreeUtils.createHiddenInput({name: "payment[nonce]", id: nonceInputId}, formId);
+            var onUserClose = function(){
+                IWD.OPC.Checkout.hideLoader();
+            };
+            var beforeStart = function(){
+                IWD.OPC.Checkout.showLoader();
+            };
+            braintreeUtils.place3DSecureOrder(
+                card,
+                braintree3DSecureGrandTotal,
+                Boolean(<?php echo $helper->canContinueOn3DSecureFail()?>),
+                showErrorMessage,
+                processNativeExtensionOrder,
+                '<?php echo $helper->__('Please try another form of payment') ?>',
+                formId,
+                '<?php echo $_ccCode ?>_cc_token',
+                "<?php echo $helper->getToken(); ?>",
+                onUserClose,    
+                beforeStart
+            );
+        };
+
+        // Initially set up Braintree flow
+        $j_opc(document).ready(function(){
+            removeSubmitOrderEvents();
+            addBraintreeFlow();
+        });
+    </script>
+<?php endif; ?>

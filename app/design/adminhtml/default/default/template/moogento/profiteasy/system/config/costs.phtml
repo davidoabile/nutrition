@@ -1,0 +1,193 @@
+<?php
+$element = $this->getElement();
+$htmlId = $element->getHtmlId();
+
+if ($element->getExpanded() !== null) {
+    $collapseState = 1;
+} else {
+    $extra = Mage::getSingleton('admin/session')->getUser()->getExtra();
+    if (isset($extra['configState'][$element->getId()])) {
+        $collapseState = (int)$extra['configState'][$element->getId()];
+    } else {
+        $collapseState = 0;
+    }
+}
+
+?>
+<div class="section-config" xmlns="http://www.w3.org/1999/html">
+<div class="entry-edit-head collapseable">
+    <a onclick="Fieldset.toggleCollapse('<?php echo $htmlId ?>', '<?php echo $this->getUrl('*/*/state/')?>'); return false;" href="#" id="<?php echo $htmlId ?>-head" class="">
+        <?php echo $element->getLegend() ?>
+    </a>
+</div>
+<input type="hidden" value="<?php echo $collapseState ?>" name="config_state[<?php echo $htmlId ?>]" id="<?php echo $htmlId ?>-state">
+<fieldset id="<?php echo $htmlId ?>" class="config collapseable grid">
+    <p class="note">
+        <?php echo $this->__('* All costs will be automatically re-compiled after changing settings') ?>
+    </p>
+    <button class="button" title="<?php echo $this->__('Current rules will be deleted') ?>" onclick="setLocation('<?php echo $this->getUrl('*/order_costs/reset') ?>');return false;">
+        <span><?php echo $this->__('Use defaults') ?></span>
+    </button>
+    <table class="data" cellspacing="0" style="width: 100%;">
+        <thead>
+        <tr class="headings">
+            <th>&nbsp;</th>
+            <th style="width: 200px;"><?php echo $this->__('Label') ?></th>
+            <th style="width: 200px;"><?php echo $this->__('Charge based on') ?></th>
+            <th><?php echo $this->__('Costs (fixed base-currency amount or %)') ?></th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody class="toggle-light" data-bind="foreach: rows">
+        <tr>
+            <td>
+                <span style="display: inline-block">
+                    <input type="hidden" value="0" data-bind="attr: {name: buildName('enable')}" />
+                    <input type="checkbox" value="1" data-bind="attr: {name: buildName('enable')}, checked: enable, switch: enable" />
+                </span>
+            </td>
+            <td>
+                <input type="text" class="" data-bind="value: label, attr: {name: buildName('label')}" />
+            </td>
+            <td>
+                <select class="chosen" data-bind="chosen: {width: '200px'}, value: charge_type, attr: {name: buildName('charge_type')}">
+                    <option value="<?php echo Moogento_ProfitEasy_Helper_Data::CHARGE_PER_ORDER ?>"><?php echo $this->__('Per Order') ?></option>
+                    <option value="<?php echo Moogento_ProfitEasy_Helper_Data::CHARGE_PER_ITEM ?>"><?php echo $this->__('Per Item') ?></option>
+                    <option value="<?php echo Moogento_ProfitEasy_Helper_Data::CHARGE_PER_PAYMENT ?>"><?php echo $this->__('Payment type') ?></option>
+                    <option value="<?php echo Moogento_ProfitEasy_Helper_Data::CHARGE_CURRENCY ?>"><?php echo $this->__('Currency (non-base xchg)') ?></option>
+                    <option value="<?php echo Moogento_ProfitEasy_Helper_Data::CHARGE_TIMED ?>"><?php echo $this->__('Time period') ?></option>
+                </select>
+                <div data-bind="visible: charge_type() == 'per_payment'">
+                    <select class="chosen" data-bind="chosen: {width: '200px'}, value: payment, attr: {name: buildName('payment')}">
+                        <?php $payments = Mage::getSingleton('payment/config')->getActiveMethods();
+                        foreach ($payments as $paymentCode => $paymentModel): ?>
+                            <option value="<?php echo $paymentCode ?>"><?php echo Mage::getStoreConfig('payment/'.$paymentCode.'/title') ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div data-bind="visible: charge_type() == 'time_period'">
+                    <label><i>(Choose at least one 'Year' or 'Month')</i><br />Specific Year (optional)</label>
+                    <input type="text" class="" data-bind="value: year, attr: {name: buildName('year')}" />
+                    <br/>
+                    <label>Specific Month (optional)</label>
+                    <select multiple="multiple" class="chosen" data-bind="chosen: {width: '200px'}, selectedOptions: month, attr: {name: buildName('month', true)}">
+                        <?php foreach ($this->_getMonthList() as $index => $name): ?>
+                            <option value="<?php echo $index ?>"><?php echo $name ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </td>
+            <td>
+                <select class="chosen" data-bind="chosen: {width: '200px'}, value: calculation_type, attr: {name: buildName('calculation_type')}">
+                    <option value="<?php echo Moogento_ProfitEasy_Helper_Data::CALCULATE_FIXED ?>"><?php echo $this->__('Fixed') ?></option>
+                    <option value="<?php echo Moogento_ProfitEasy_Helper_Data::CALCULATE_PERCENT ?>"><?php echo $this->__('Percentage') ?></option>
+                </select>
+                <br/>
+                <input type="text" class="" data-bind="value: cost, attr: {name: buildName('cost')}" />
+                <br/>  
+				<button class="button add" data-bind="click:addRow"><span><?php echo $this->__('Add Store-specific Cost Override') ?></span></button>             
+                <table class="data" cellspacing="0">
+                    <thead>
+                    <tr class="headings">
+                        <th style="width: 200px;"><?php echo $this->__('Store-specific Overrides') ?></th>
+                        <th style="width: 200px;"><?php echo $this->__('Store-specific Cost') ?></th>
+                        <th style="width: 50px;">&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody data-bind="foreach: store_costs">
+                        <tr>
+                            <td>
+                                <select data-bind="chosen: {width: '200px'}, value: store, attr: {name: buildName('store')}">
+                                    <?php foreach ($this->getWebsiteCollection() as $_website): ?>
+                                        <?php $showWebsite=false; ?>
+                                        <?php foreach ($this->getGroupCollection($_website) as $_group): ?>
+                                            <?php $showGroup=false; ?>
+                                            <?php foreach ($this->getStoreCollection($_group) as $_store): ?>
+                                                <?php if ($showWebsite == false): ?>
+                                                    <?php $showWebsite = true; ?>
+                                                    <optgroup label="<?php echo $_website->getName() ?>">
+                                                <?php endif; ?>
+                                                <?php if ($showGroup == false): ?>
+                                                    <?php $showGroup = true; ?>
+                                                    <optgroup label="&nbsp;&nbsp;&nbsp;<?php echo $_group->getName() ?>">
+                                                <?php endif; ?>
+                                                <option value="<?php echo $_store->getId() ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $_store->getName() ?></option>
+                                            <?php endforeach; ?>
+                                            <?php if ($showGroup): ?>
+                                                </optgroup>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                        <?php if ($showWebsite): ?>
+                                            </optgroup>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="chosen" data-bind="chosen: {width: '200px'}, value: calculation_type, attr: {name: buildName('calculation_type')}">
+                                    <option value="<?php echo Moogento_ProfitEasy_Helper_Data::CALCULATE_FIXED ?>"><?php echo $this->__('Fixed') ?></option>
+                                    <option value="<?php echo Moogento_ProfitEasy_Helper_Data::CALCULATE_PERCENT ?>"><?php echo $this->__('Percentage') ?></option>
+                                </select>
+                                <br/>
+                                <input type="text" class="" data-bind="value: cost, attr: {name: buildName('cost')}" />
+                            </td>
+                            <td>
+                                <a href="#" class="fa fa-times" style="color: red" data-bind="click: $parent.deleteRow"></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+            </td>
+            <td>
+                <a href="#" class="fa fa-times" style="color: red" data-bind="click: $parent.deleteRow"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br/>
+    <button class="button add" data-bind="click:addRow"><span><?php echo $this->__('Add') ?></span></button>
+</fieldset>
+<script type="text/javascript">
+    Fieldset.applyCollapse('<?php echo $htmlId ?>');
+    ko.applyBindings(new CostsModule.Costs(<?php echo $this->_getJson() ?>),
+        document.getElementById('<?php echo $htmlId ?>'));
+</script>
+<style>
+    .additional-field {
+        float: left;
+        margin-right: 15px;
+    }
+    .helper-info i {
+        font-size: 10px;
+        font-weight: bold;
+        line-height: 12px;
+        text-align: center;
+        position: absolute;
+        left: 3px;
+        font-style: normal;
+    }
+    .helper-info {
+        background: none repeat scroll 0 0 lightgrey;
+        border: 1px solid lightgrey;
+        border-radius: 6px;
+        display: inline-block;
+        height: 12px;
+        position: relative;
+        width: 12px;
+    }
+    .helper-info div.content {
+        display: none;
+        position: absolute;
+        width: 400px;
+        border: 1px solid black;
+        background: lightgrey;
+        box-shadow: 1px 1px #000;
+    }
+    .helper-info:hover div.content {
+        display: block;
+        z-index: 1000;
+        top:12px;
+    }
+</style>
+</div>

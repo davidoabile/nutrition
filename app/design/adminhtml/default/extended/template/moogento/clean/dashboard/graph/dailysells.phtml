@@ -1,0 +1,91 @@
+<div style="margin:20px 0;">
+        	<div class="moo_chart_title">
+            	<h4>Average Orders by Day/Hour</h4>
+			</div>
+            <div class="moo_chart_body">
+				<label>
+					<span style="color: white;">Current Sales Peak : </span>
+					<span class="winner"><?php echo $this->getWinner(); ?>s</span>
+                    <span class="winner"><span>@ <?php echo $this->getHourWinner(); ?></span></span>
+					<i>* based on previous 365 days</i>
+				</label>
+				<div>
+                    <em class="spider_label">Daily</em>
+					<canvas id="dailySellsRadarChart" width="380" height="380"></canvas>
+				</div>
+				<div>
+                    <em class="spider_label hourly">Hourly</em>
+					<canvas id="hourlySellsRadarChart" width="380" height="380"></canvas>
+				</div>
+                <div style="clear: both;float: none;"></div>
+                <?php if ($this->_hasDirtyData()): ?>
+                    <span class="value-hint"><?php echo $this->__('Sync pending : may not be 100% accurate') ?></span>
+                <?php endif; ?>
+			</div>
+</div>
+<script>
+    jQuery(function() {
+        var daily_sells_options = {
+            scaleShowLine : true,
+            angleShowLineOut : true,
+            scaleShowLabels : false,
+            scaleBeginAtZero : true,
+	        scaleLineColor: "#777",
+	        angleLineColor : "#777",
+	        angleLineWidth : 1,
+	        pointLabelFontFamily : "'Arial'",
+	        pointLabelFontStyle : "normal",
+	        pointLabelFontSize : 11,
+	        pointLabelFontColor : "#DDD",
+            pointDot : true,
+            pointDotRadius : 3,
+            pointDotStrokeWidth : 1,
+            pointHitDetectionRadius : 20,
+            datasetStroke : true,
+            datasetStrokeWidth : 2,
+            datasetFill : true,
+            legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+        };
+        var daily_sells_data ={
+            labels: <?php echo $this->getLabelsData(); ?>,
+            datasets: [
+                {
+                    label: "Average Daily Sales",
+                    fillColor: "rgba(220,100,255,0.2)",
+                    strokeColor: "rgba(220,100,255,1)",
+                    pointColor: "rgba(220,100,255,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(220,100,255,1)",
+                    data: <?php echo $this->getDailyData(); ?>
+                }
+            ]
+        };
+
+        var hourly_sells_data ={
+            labels: <?php echo $this->getHourlyLabelsData(); ?>,
+            datasets: [
+                {
+                    label: "Average Daily Sales",
+                    fillColor: "rgba(220,100,255,0.2)",
+                    strokeColor: "rgba(220,100,255,1)",
+                    pointColor: "rgba(220,100,255,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(220,100,255,1)",
+                    data: <?php echo $this->getHourlyData(); ?>
+                }
+            ]
+        };
+        var dailySellsRadarChart;
+        var ctx = jQuery("#dailySellsRadarChart").get(0).getContext("2d");
+        var ctx2 = jQuery("#hourlySellsRadarChart").get(0).getContext("2d");
+        varienGlobalEvents.attachEventHandler('showTab', function(tab_data){
+            if (jQuery(tab_data.tab).attr('id') == 'diagram_tab_dailysells' && !dailySellsRadarChart) {
+                dailySellsRadarChart  = new Chart(ctx).Radar(daily_sells_data, daily_sells_options);
+                hourlySellsRadarChart  = new Chart(ctx2).Radar(hourly_sells_data, daily_sells_options);
+            }
+        });
+         
+    });
+</script>

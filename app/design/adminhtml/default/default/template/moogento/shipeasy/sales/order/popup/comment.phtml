@@ -1,0 +1,47 @@
+<?php 
+/** 
+* Moogento
+* 
+* SOFTWARE LICENSE
+* 
+* This source file is covered by the Moogento End User License Agreement
+* that is bundled with this extension in the file License.html
+* It is also available online here:
+* http://www.moogento.com/License.html
+* 
+* NOTICE
+* 
+* If you customize this file please remember that it will be overwrtitten
+* with any future upgrade installs. 
+* If you'd like to add a feature which is not in this software, get in touch
+* at www.moogento.com for a quote.
+* 
+* ID          pe+sMEDTrtCzNq3pehW9DJ0lnYtgqva4i4Z=
+* File        comment.phtml
+* @category   Moogento
+* @package    pickPack
+* @copyright  Copyright (c) 2014 Moogento <info@moogento.com> / All rights reserved.
+* @license    http://www.moogento.com/License.html
+*/ 
+?>
+<div id="messages"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+<form id="history_form" action="<?php echo $this->getSaveUrl() ?>" method="post">
+    <div class="order-history-form">
+        <span class="field-row">
+            <label class="normal" for="history_comment"><?php echo Mage::helper('moogento_shipeasy')->__('Save-to-order this <b>Private</b> comment (not visible to customer) :') ?></label>
+            <textarea name="history[admin_comment]" rows="2" cols="5" style="height:5em; width:99%;" id="admin_comment"><?php echo $this->getAdminComment();?></textarea>
+        </span>
+        <span class="field-row">
+            <label class="normal" for="history_comment">
+                <input type="checkbox" value="1" name="history[checkbox_comment]" id="checkbox_comment" onclick="checkCheckboxComment()"/>
+                    <?php echo Mage::helper('moogento_shipeasy')->__('AND Save-to-order & email customer this <b>Non-Private</b> comment :') ?>
+            </label>
+            <textarea name="history[history_comment]" class="disabled_history_comment" disabled id="history_comment"><?php echo $this->getCustomerComment();?></textarea>
+        </span>
+        <input type="hidden" name="history[order_id]" value="<?php echo $this->_getOrderId()?>" />
+        <div class="f-right">
+            <?php echo $this->getChildHtml('submit_button') ?>
+        </div>
+        <div class="clear"></div>
+    </div>
+</form>

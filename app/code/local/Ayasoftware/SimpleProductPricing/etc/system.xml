@@ -1,0 +1,253 @@
+<config>
+
+    <tabs>
+        <ayasoftware translate="label" module="spp">
+            <label>Ayasoftware modules</label>
+            <sort_order>100</sort_order>
+        </ayasoftware>
+    </tabs>
+    <sections>
+        <spp translate="label" module="spp">
+            <label>Simple Product Pricing</label>
+            <tab>ayasoftware</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>12</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <about translate="label">
+                    <label>About This Extension</label>
+                    <sort_order>60</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <notice translate="label">
+                            <label>Extension Information Provided By Ayasoftware</label>
+                            <frontend_type>text</frontend_type>
+                            <frontend_model>spp/system_html</frontend_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </notice>
+                        <info>
+                            <label>Version</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <frontend_model>spp/system_config_form_fieldset_extensions</frontend_model>
+                        </info>
+                    </fields>
+                </about>
+                
+                
+                <setting translate="label">
+                    <label>Extension settings</label>
+                    <sort_order>120</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enableModule translate="label">
+                            <label>Enable module </label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </enableModule>
+                        <hideprices translate="label">
+                            <label>Hide price from dropdowns </label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>188</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </hideprices>
+                        <spp_cache_lifetime>
+                            <label>Cache lifetime (in seconds)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>235</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Leave it 0 to disable price cache </comment>
+                        </spp_cache_lifetime>
+                        </fields>
+                </setting>
+                <markup translate="label">
+                    <label>HTML Markup</label>
+                    <sort_order>140</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <product_name_markup>
+                            <label>Product name class</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Find it with Google chrome element inspector </comment>
+                        </product_name_markup>
+                        <product_shortdescription_markup>
+                            <label>Product short description class</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>105</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </product_shortdescription_markup>
+                        <product_description_markup>
+                            <label>Product description class</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>106</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </product_description_markup>
+                        <product_attributes_markup>
+                            <label>Product attributes class</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>107</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </product_attributes_markup>
+                        <product_image_markup>
+                            <label>Product image class</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>108</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </product_image_markup>
+                        <product_customstockdisplay_markup>
+                            <label>Product stock availability class</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>114</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </product_customstockdisplay_markup>
+                    </fields>
+                </markup>
+                <details translate="label">
+                    <label>Product details</label>
+                    <sort_order>200</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <productname translate="label">
+                            <label>Update name</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </productname>
+                        <shortdescription translate="label">
+                            <label>Update short description</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </shortdescription>
+                        <description translate="label">
+                            <label>Update description</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </description>
+                        <productAttributes translate="label">
+                            <label>Update attributes</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </productAttributes>
+                        <show translate="label">
+                            <label>Show out of stock products </label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>180</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </show>
+                        <showfromprice translate="label">
+                            <label>Show from $XX.XX</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>240</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </showfromprice>
+                        <customstockdisplay translate="label">
+                            <label>Display stock availability</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>320</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </customstockdisplay>
+                        <disable_out_of_stock_option>
+                            <label>Disable out of stock option </label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>340</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment>To make out of stock dropdown options unselectable</comment>
+                        </disable_out_of_stock_option>
+                    </fields>
+                </details>
+                <media translate="label">
+                    <label>Product media</label>
+                    <sort_order>300</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <updateproductimage translate="label">
+                            <label>Update image</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>230</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment>Choose no to disable image switcher </comment>
+                        </updateproductimage>
+                        <zoomtype translate="label comment">
+                            <label>Zoom Type</label>
+                            <frontend_type>select</frontend_type>
+                            <backend_model>spp/Config_ZoomType</backend_model>
+                            <source_model>spp/Config_ZoomType</source_model>
+                            <sort_order>250</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                        </zoomtype>
+                    </fields>
+                </media>
+            </groups>
+        </spp>
+    </sections>
+</config>

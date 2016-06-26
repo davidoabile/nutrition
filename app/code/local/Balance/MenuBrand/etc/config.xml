@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<modules>
+		<Balance_MenuBrand>
+			<version>0.1.0</version>
+		</Balance_MenuBrand>
+	</modules>
+	<global>
+		<blocks>
+			<menubrand>
+				<class>Balance_MenuBrand_Block</class>
+			</menubrand>
+		</blocks>
+		<resources>
+			<balancemenubrand_setup>
+				<setup>
+					<module>Balance_MenuBrand</module>
+					<connection>
+						<use>core_setup</use>
+					</connection>
+				</setup>
+			</balancemenubrand_setup>
+		</resources>
+	</global>
+	
+</config>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<config>
+    <template>
+        <frontend>
+            <file path="design--frontend--base--default--template--checkout--onepage--progress"></file>
+            <file path="design--frontend--base--default--template--checkout--onepage--billing"></file>
+            <file path="design--frontend--base--default--template--checkout--onepage--shipping"></file>
+            <file path="design--frontend--base--default--template--paypal--express--review" version="1.7.0.0" operator="ge"></file>
+            <file path="design--frontend--base--default--template--paypal--express--review--address" version="1.7.0.0" operator="ge" optional="1"></file>
+
+            <file path="design--frontend--rwd--default--template--checkout--onepage--progress" version="1.9.0.0" operator="ge"></file>
+            <file path="design--frontend--rwd--default--template--checkout--onepage--shipping" version="1.9.0.0" operator="ge"></file>
+            <file path="design--frontend--rwd--default--template--paypal--express--review--address" version="1.9.0.0" operator="ge"></file>
+        </frontend>
+    </template>
+</config>
+<!--
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (CC Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitconfcheckout
+ * @version      1.0.9 - 2.1.23
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+-->

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <sections>
+        <moogento_profiteasy translate="label" module="moogento_profiteasy">
+            <label>profitEasy</label>
+            <tab>moogento</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>0</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>0</show_in_website>
+            <show_in_store>0</show_in_store>
+            <groups>
+                <hint>
+                    <frontend_model>moogento_profiteasy/adminhtml_system_config_fieldset_hint</frontend_model>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                </hint>
+                <moodetails>
+                    <label>License</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <server_name translate="label">
+                            <label>Server Name</label>
+                            <frontend_type>text</frontend_type>
+                            <backend_model>moogento_profiteasy/adminhtml_system_config_backend_import_name</backend_model>
+                            <frontend_model>moogento_profiteasy/adminhtml_system_config_fieldset_name</frontend_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </server_name>
+                        <license translate="label">
+                            <label>License Key</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <frontend_model>moogento_profiteasy/adminhtml_system_config_fieldset_key</frontend_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Enter your license key here</comment>
+                        </license>
+                    </fields>
+                </moodetails>
+                <costs translate="label" module="moogento_profiteasy">
+                    <label>Costs</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <frontend_model>moogento_profiteasy/adminhtml_system_config_costs</frontend_model>
+                </costs>
+                <dashboard translate="label" module="moogento_profiteasy">
+                    <label>Dashboard</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <show_panel translate="label" module="moogento_profiteasy">
+                            <label><![CDATA[Show profit panel]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_panel>
+                        <split_per_store translate="label" module="moogento_profiteasy">
+                            <label><![CDATA[Split profit per store]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </split_per_store>
+                        <split_per_store_list translate="label" module="moogento_profiteasy">
+                            <label><![CDATA[Show stores]]></label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>adminhtml/system_config_source_store</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><split_per_store>1</split_per_store></depends>
+                        </split_per_store_list>
+                    </fields>
+                </dashboard>
+                <csv_import translate="label" module="moogento_profiteasy">
+                    <label>Process : CSV</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <actual_shipping_field translate="label,comment" module="moogento_profiteasy">
+                            <label>CSV Column title for: Actual shipping cost</label>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Optional, will update actual shipping costs of an order</comment>
+                        </actual_shipping_field>
+
+                        <additional_costs_field translate="label,comment" module="moogento_profiteasy">
+                            <label>CSV Column title for: Additional costs amount</label>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Optional, will add/update additional costs of an order</comment>
+                        </additional_costs_field>
+
+                        <additional_costs_label_field translate="label,comment" module="moogento_profiteasy">
+                            <label>CSV Column title for: Additional costs label</label>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Optional, requires "Additional costs amount" to work, used to find existing additional costs in order</comment>
+                        </additional_costs_label_field>
+
+                        <additional_costs_calculation_field translate="label,comment" module="moogento_profiteasy">
+                            <label>CSV Column title for: Additional costs calculation type</label>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Optional, requires "Additional costs amount" to work, use "fixed" or "percent" as column value, any other values will be replaced with "fixed"</comment>
+                        </additional_costs_calculation_field>
+
+                        <additional_costs_new_line_field translate="label,comment" module="moogento_profiteasy">
+                            <label>CSV Column title for: Additional costs new line</label>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Optional, requires "Additional costs amount" to work, allows to add new costs line even if additional costs with same label already exists</comment>
+                        </additional_costs_new_line_field>
+
+                        <additional_costs_override_field translate="label,comment" module="moogento_profiteasy">
+                            <label>CSV Column title for: Additional costs override config</label>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Optional, requires "Additional costs amount" to work, allows to override some costs rule from config (rules are matched by label)</comment>
+                        </additional_costs_override_field>
+                    </fields>
+                </csv_import>
+            </groups>
+        </moogento_profiteasy>
+    </sections>
+</config>

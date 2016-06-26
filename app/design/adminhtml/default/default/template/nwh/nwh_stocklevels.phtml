@@ -1,0 +1,64 @@
+<?php
+//Get the current product
+$product = Mage::registry('product');
+?>
+
+<div class="entry-edit">
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend">Stock Levels</h4>
+    </div>
+</div>
+<div class="grid">
+    <div class="hor-scroll">
+        <form id="stocklevels-frm">
+        <table cellspacing="0" class="data" id="stocklevels_product_grid_table">
+            <colgroup>
+                <col width="60">
+                <col>
+                <col width="90">
+                <col width="80">
+                 <col width="80">
+                <col width="60">
+                <col width="180">
+                <col width="60">
+                <col width="135">
+            </colgroup>
+            <thead>
+                <tr class="headings">
+                    <th><span class="nobr"><a href="#" name="entity_id" title="asc"><span class="sort-title">ID</span></a></span></th>
+                    <th><span class="nobr"><a href="#" name="name" title="asc" class="not-sort"><span class="sort-title">Name</span></a></span></th>
+                    <th><span class="nobr"><a href="#" name="sku" title="asc" class="not-sort"><span class="sort-title">SKU</span></a></span></th>
+                    <th class="nobr"><span class="nobr"><a href="#" name="qty" title="asc" class="not-sort"><span class="sort-title">QTY</span></a></span></th>
+                    <th class="nobr"><span class="nobr"><a href="#" name="stock_on_order" title="asc" class="not-sort"><span class="sort-title">On Order</span></a></span></th>
+                    <th class="a-center"><span class="nobr"><a href="#" name="show_web" title="asc" class="not-sort"><span class="sort-title">Show Front</span></a></span></th>
+                    <th><span class="nobr"><a href="#" name="last_updated" title="asc" class="not-sort"><span class="sort-title">Last Sync</span></a></span></th>
+                    <th><span class="nobr"><a href="#" name="auto_update" title="asc" class="not-sort"><span class="sort-title">Auto Update</span></a></span></th>
+                     <th><span class="last"><a href="#" name="action" title="asc" class="not-sort"><span class="sort-title">Action</span></a></span></th>
+                    </tr>
+                
+            </thead>
+
+            <tbody id="stocklevels-main">
+               
+            </tbody>
+
+        </table>
+        </form>
+    </div>
+</div>
+
+<div style="display:none" id="product-info" data-sku="<?php echo $product->getSku()?>">
+    <table><tbody id='stocklevels-tpl'>
+        <tr>
+                    <td class="a-center">{{channelid}}</td><td>{{name}}</td><td>{{sku}}</td>
+                    <td><input type="text" name="qty" id="stocklevels_product_grid_filter_sku" value="" class="input-text no-changes"></td>
+                    <td>{{stock_on_order}}</td>
+                    <td class="a-center"><input type="checkbox" name="show_web" value="Y" class="massaction-checkbox"></td>
+                    <td>{{last_updated}}</td>
+                    <td class="a-center"><input type="checkbox" name="auto_update" value="Y" class="massaction-checkbox"></td>
+                    <td class="a-center"><button title="Sync" type="button" class="scalable sync" data-seqno="{{seqno}}"  data-productid="<?php echo $product->getId()?>" data-sku="<?php echo $product->getSku()?>"><span><span><span>Sync</span></span></span></button>
+                        <button title="Save" type="button" class="scalable save save-levels" data-productid="<?php echo $product->getSku() ?>" data-id="<?php echo $product->getId()?>" data-sku="<?php echo $product->getSku()?>"><span><span><span>Update</span></span></span></button></td>
+                    
+                </tr>
+        </tbody></table>
+</div>

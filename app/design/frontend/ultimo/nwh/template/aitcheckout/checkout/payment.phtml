@@ -1,0 +1,162 @@
+<?php
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+$cfmHelper = Mage::helper('aitcheckout/aitcheckoutfields'); 
+?>
+<script type="text/javascript">
+//<![CDATA[
+    var payment = new Payment('co-payment-form', '<?php echo $this->getUrl('checkout/onepage/savePayment') ?>');
+<?php if($cfmHelper->isEnabled()){ ?>
+    payment.init = function(){
+        var elements = Form.getElements(this.form);
+        if ($(this.form)) {
+            $(this.form).observe('submit', function(event){this.save();Event.stop(event);}.bind(this));
+        }
+        var method = null;
+        for (var i=0; i<elements.length; i++) {
+            if ((elements[i].name=='payment[method]')||(elements[i].name.indexOf('aitoc_checkout_')!=-1)) {
+                if (elements[i].checked) {
+                    method = elements[i].value;
+                }
+            } else {
+                elements[i].disabled = true;
+            }
+            elements[i].setAttribute('autocomplete','off');
+        }
+        if (method) this.switchMethod(method);
+    }
+<?php } ?>
+//]]>
+</script>
+<form action="" id="co-payment-main-form">
+<div id="co-payment-form">
+    <!--     START AITOC CHECKOUT ATTRIBUTES     -->
+    <?php if ($aFieldList = $cfmHelper->getCustomFieldList('payment', 1)): ?>
+    <div id="payment-aitcheckoutfields-top">
+        <fieldset>
+            <ul class="form-list">
+            <?php foreach ($aFieldList as $aField): ?>
+                <?php echo $cfmHelper->getFieldHtml('payment', $aField); ?>
+            <?php endforeach; ?>
+            </ul>                
+        </fieldset>
+    </div>
+    <?php endif; ?>
+    <!--     FINISH AITOC CHECKOUT ATTRIBUTES     -->
+    <fieldset>
+        <?php echo $this->getChildHtml('methods') ?>
+    </fieldset>
+    <!--     START AITOC CHECKOUT ATTRIBUTES     -->
+    <?php if ($aFieldList = $cfmHelper->getCustomFieldList('payment', 2)): ?>
+    <div id="payment-aitcheckoutfields-bottom">
+        <fieldset>
+            <ul class="form-list">
+            <?php foreach ($aFieldList as $aField): ?>
+                <?php echo $cfmHelper->getFieldHtml('payment', $aField); ?>
+            <?php endforeach; ?>
+            </ul>                
+        </fieldset>
+    </div>
+    <?php endif; ?>
+    <!--     FINISH AITOC CHECKOUT ATTRIBUTES     -->
+</div>
+</form>
+<div class="tool-tip" id="payment-tool-tip" style="display:none;">
+    <div class="btn-close"><a href="#" id="payment-tool-tip-close" title="<?php echo Mage::helper('checkout')->__('Close') ?>"><?php echo Mage::helper('checkout')->__('Close') ?></a></div>
+    <div class="tool-tip-content"><img src="<?php echo $this->getSkinUrl('images/cvv.gif') ?>" alt="<?php echo Mage::helper('checkout')->__('Card Verification Number Visual Reference') ?>" title="<?php echo Mage::helper('checkout')->__('Card Verification Number Visual Reference') ?>" /></div>
+</div>
+<div id="payment-waiting" class="aitcheckout-wait" style="display:none"><img src="<?php echo Mage::getDesign()->getSkinUrl('images/opc-ajax-loader.gif'); ?>" /></div>                                                                                                            
+<script type="text/javascript">
+//<![CDATA[
+    function toggleToolTip(event){
+        if($('payment-tool-tip')){
+            $('payment-tool-tip').setStyle({
+                top: (Event.pointerY(event)-560)+'px'//,
+                //left: (Event.pointerX(event)+100)+'px'
+            })
+            $('payment-tool-tip').toggle();
+        }
+        Event.stop(event);
+    }
+    if($('payment-tool-tip-close')){
+        Event.observe($('payment-tool-tip-close'), 'click', toggleToolTip);
+    }
+//]]>
+</script>
+<script type="text/javascript">
+//<![CDATA[
+    payment.currentMethod = "<?php echo $this->getChild('methods')->getSelectedMethodCode() ?>";
+    if(payment.currentMethod == 'authorizenet_directpost' || (payment.currentMethod == '' && $('p_method_authorizenet_directpost')) )
+    document.observe('dom:loaded',function(){
+        if($$('div#co-payment-form fieldset dt input[type="radio"]').length == 1)
+        {
+            $('p_method_authorizenet_directpost').click();
+        }
+    });
+    
+    if(payment.currentMethod == '' && $('p_method_ewayrapid_notsaved')) {
+        document.observe('dom:loaded',function(){
+            if($$('div#co-payment-form fieldset dt input[type="radio"]').length > 0)
+            {
+                $('p_method_ewayrapid_notsaved').click();
+            }
+        });
+    }
+
+    if($('p_method_authorizenet_directpost'))
+    {
+        $$('div#co-payment-form fieldset dt input[type="radio"]').each(function(rad){
+            if(rad.id != 'p_method_authorizenet_directpost')
+            {
+                Event.observe(rad,'mousedown', fdp_handler);
+                Event.observe(rad.next(),'mousedown', fdp_handler);
+            }
+        });
+    }
+
+    function fdp_handler(event)
+    {
+        if($('directpost-iframe'))
+        {
+            $('directpost-iframe').next().remove();
+            $('directpost-iframe').remove();
+        }
+        var button = $('checkout-buttons-container').down('button');
+        if(button)
+        {
+            button.stopObserving('click');
+            button.writeAttribute('onclick', 'review.save();');
+        }
+    }
+//]]>
+</script>
+<script type="text/javascript">
+//<![CDATA[
+
+
+    aitCheckout.createStep('payment',{}, {
+                doCheckErrors : false,
+                isLoadWaiting : true,
+                isUpdateOnReload : false,
+                cache : ['ccsave_cc_number', 'ccsave_cc_cid',
+                    'authorizenet_cc_number', 'authorizenet_cc_cid',
+                    'sagepaydirectpro_cc_number', 'sagepaydirectpro_cc_cid',
+                    'sagepaydirectpro_token_cvv_\\d+$'
+                ],
+                container: 'checkout-step-payment',
+                ids: {
+                    paymentMethodLoad: 'co-payment-form'
+                }
+            }
+    );
+
+    payment.initWhatIsCvvListeners();    
+//]]>
+</script>

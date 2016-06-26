@@ -1,0 +1,308 @@
+/* Base style for location map */
+.loc-map {
+    -webkit-transform: translate3d(0, 0, 0);
+}
+
+.loc-infowindow-loader.is-loading {
+    width: 100%;
+    height: 50px;
+}
+
+/* Base style for location teasers */
+.loc-teaser {
+    padding: 25px 0;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    font: normal 13px Arial;
+    line-height: 20px;
+    color: #6d6d71;
+}
+.loc-teaser:hover{
+    opacity: 0.8;
+}
+.loc-srch-res-list .locations{
+    border-top: 1px solid #ddd;
+    overflow-y: auto;
+}
+.loc-teaser.is-hidden {
+    display: none;
+}
+.loc-teaser p{
+    line-height: 24px;
+    margin: 4px 0;
+}
+.loc-teaser h3 {
+    font: normal 16px 'exobold';
+    color: #222;
+    line-height: 20px;
+    margin: 0 0 7px;
+    padding: 0 0 0 20px;
+    background: url("../../images/newdesign/map-pin-ic.png") no-repeat;
+}
+.view-store-detail a{
+    line-height: 24px;
+}
+button.locator_loadmore{
+    width: 100%;
+    height: 40px;
+    background: #333;
+    font: normal 16px 'exobold';
+    line-height: 20px;
+    padding: 10px 0;
+    text-align: center;
+    border: none;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    color: #fff;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin: 20px 0;
+}
+button.locator_loadmore:hover{
+    background: #1b1b1b;
+}
+/* Locator search form */
+.loc-srch {
+    background: #e31e31;
+    margin: 0 -20px;
+    padding: 23px 25px 27px;
+}
+
+.loc-srch > * {
+    display: inline-block;
+    vertical-align: middle;
+    color: #fff;
+    font: normal 13px Arial;
+    line-height: 22px;
+    margin: 0 5px;
+}
+.loc-srch-form > *{
+    display: inline-block;
+    vertical-align: middle;
+}
+.loc-srch-form > h4{
+    font: normal 13px Arial;
+    margin: 0;
+}
+.loc-srch-form div.selector{
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    border: none;
+}
+
+input.loc-srch-s[type=text],
+input.loc-srch-dis[type=text] {
+    width: 190px;
+    padding: 8px;
+    height: 40px;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border: none;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    color: #999;
+    font: normal 13px Arial;
+    margin: 0 4px;
+}
+input.loc-srch-dis[type=text]{
+    width: 60px;
+}
+.loc-srch-form button{
+    font: normal 16px 'exobold';
+    line-height: 20px;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    padding: 11px 20px 9px;
+    text-transform: uppercase;
+    color: #fff;
+    background: #333;
+    border: none;
+    cursor: pointer;
+    margin: 0 5px;
+}
+.loc-srch-form button:hover{
+    background: #1b1b1b;
+}
+.locator-btn > span{
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 8px;
+}
+.loc-srch-dis {
+    width: 40px;
+    padding: 5px;
+}
+
+.search-areas .loc-trigger{
+    font: normal 13px Arial;
+    color: #fff;
+    text-transform: uppercase;
+    text-decoration: underline;
+    margin: 0 8px;
+}
+.search-areas .verticalline{
+    display: none;
+}
+.box-loc-srch span.or{
+    margin: 0 15px;
+}
+/* Locator search results */
+.loc-srch-res {
+
+}
+
+/* hide no results page by default */
+.loc-srch-res-noresults {
+    display: none;
+}
+
+/* when no results are shown show no results and hide search; */
+.loc-srch-res.is-no-results .loc-srch-res-list, .loc-srch-res.is-no-results .loc-srch-res-map {
+    display: none;
+}
+
+.loc-srch-res.is-no-results .loc-srch-res-noresults {
+    display: block;
+}
+
+/* Map */
+.loc-srch-res .loc-srch-res-map-wrap{
+    padding: 30px 0 0;
+    width: 74%;
+    margin: 0;
+    float: right;
+}
+.loc-srch-res-map-wrap img,
+.loc-page-map img{
+    max-width: none;
+}
+
+.loc-srch-res-map-wrap.is-fixed {
+    position: fixed;
+    top: 0;
+    margin-left: 298px;
+}
+
+.loc-srch-res-map {
+    width: 100%;
+    height: 678px;
+}
+
+/* Teaser List */
+.loc-srch-res .loc-srch-res-list {
+    width: 24%;
+    padding: 30px 0 0;
+    margin: 0;
+}
+
+/* Individual Location Page */
+.loc-page {
+    float: left;
+    width: 100%;
+    clear: both;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.loc-page-data {
+    float: left;
+    width: 24%;
+}
+
+.loc-page-data h2 {
+    font: normal 20px 'exobold';
+    line-height: 22px;
+    padding: 11px 15px 9px;
+    color: #fff;
+    text-transform: uppercase;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    background: #e31e31;
+    margin-bottom: 10px;
+}
+.address-info,
+.open-hour{
+    padding: 0 10px 22px;
+    font: normal 13px Arial;
+    line-height: 22px;
+    color: #6d6d71;
+}
+.address-info h2,
+.open-hour h2{
+    margin: 0 -10px 10px;
+}
+.loc-page-map-wrap {
+    float: right;
+    width: 74%;
+}
+
+.loc-page-map {
+    width: 100%;
+    height: 528px;
+}
+
+/* Nearby Locations */
+.loc-nearby {
+    float: left;
+    margin-top: 20px;
+}
+
+.loc-nearby-item {
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    width: 207px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+}
+
+.loc-nearby-item .loc-teaser {
+    padding-right: 20px;
+}
+
+.loc-nearby-item:nth-child(4n) {
+    margin-right: 0;
+}
+
+/* Loader styles */
+.loader {
+    display: none;
+    width: 24px;
+    height: 24px;
+    text-indent: -9999px;
+}
+
+.loader.is-loading {
+    display: inline-block;
+    background: url(../images/loader/loader-med.gif) center no-repeat;
+}
+
+.loader-tiny {
+    width: 10px;
+    height: 10px;
+}
+
+.loader-tiny.is-loading {
+    background-image: url(../images/loader/loader-tiny.gif);
+}
+
+.loader-sml {
+    width: 16px;
+    height: 16px;
+}
+
+.loader-sml.is-loading {
+    background-image: url(../images/loader/loader-sml.gif);
+}
+
+.loader-lrg {
+    width: 48px;
+    height: 48px;
+}
+
+.loader-lrg.is-loading {
+    background-image: url(../images/loader/loader-lrg.gif);
+}

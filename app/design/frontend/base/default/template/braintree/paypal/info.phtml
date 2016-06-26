@@ -1,0 +1,27 @@
+<?php
+/**
+* Braintree Payments Extension
+*
+* This source file is subject to the Braintree Payment System Agreement (https://www.braintreepayments.com/legal)
+*
+* DISCLAIMER
+* This file will not be supported if it is modified.
+*
+* @copyright   Copyright (c) 2015 Braintree. (https://www.braintreepayments.com/)
+*/
+?>
+<p><strong><?php echo $this->escapeHtml($this->getMethod()->getTitle()) ?></strong></p>
+
+<?php if ($_specificInfo = $this->getSpecificInformation()):?>
+<table>
+    <tbody>
+    <?php foreach ($_specificInfo as $_label):?>
+        <tr>
+            <td><?php echo $this->escapeHtml($_label)?></td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+<?php endif;?>
+
+<?php echo $this->getChildHtml()?>

@@ -1,0 +1,97 @@
+<?php
+$modules = Mage::getConfig()->getNode('modules')->children();
+$modulesArray = (array)$modules;
+if(isset($modulesArray['Moogento_Pickpack'])) {
+    ?>
+    <div id="pools-list">
+        <div data-bind="if: dirty">
+            <ul class="messages">
+                <li class="notice-msg">
+                    <ul>
+                        <li><?php echo $this->__('You have unsaved changes.') ?></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="content-header setting-header" data-bind="click: toggleCollapsed">
+            <h4>
+                <span class="icon-up-big" data-bind="css: {'icon-down-big': collapsed}"></span>
+                <?php echo $this->__('Settings') ?>
+            </h4>
+        </div>
+        <table class="noborder" cellspacing="5" data-bind="css: {hidden: collapsed}">
+            <tr>
+                <td>
+                    <label><strong><?php echo $this->__('Email for notifications') ?>:</strong></label>
+                </td>
+                <td>
+                    <input type="text" class="input-text" name="settings[email_notification]" data-bind="value: email_notification" />
+                </td>
+            </tr>
+        </table>
+        <br/>
+        <div class="left">
+            <button data-bind="click: addPool" class="add blue-button" type="button"><span><span><span><?php echo $this->__('Add tracking numbers group') ?></span></span></span></button>
+        </div>
+        <div class="right">
+            <span id="import" class="import-hide"><strong><?php echo $this->__('Import') ?></strong>: <input type="file" name="tracking_numbers_file" /></span>
+            <button onclick="$('import').removeClassName('import-hide'); this.hide();" class="add import-button" type="button"><span><span><span><?php echo $this->__('Import') ?></span></span></span></button>
+            | <button onclick="setLocation('<?php echo $this->getUrl('*/courierrules_tracking/exportCsv') ?>')" class="add export-button" type="button"><span><span><span><?php echo $this->__('Export') ?></span></span></span></button>
+        </div>
+        <br/><br/>
+        <div class="entry-edit" data-bind="foreach: pools">
+            <div class="section-config">
+                <div class="entry-edit-head collapseable" data-bind="click: toggleCollapse">
+                    <div class="left" data-bind="text: name">
+                    </div>
+                    <div class="right">
+                        <span class="collapse-icon" data-bind="css: {collaped: collapsed()}"></span>
+                        <button data-bind="click: $root.removePool" class="scalable delete" type="button"><span><span><span><?php echo $this->__('Delete') ?></span></span></span></button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <fieldset class="config collapseable" data-bind="style: {display: collapsed() ? 'none' : 'inherit'}">
+                    <table class="form-list" cellspacing="0">
+                        <tr>
+                            <td class="label">
+                                <label><?php echo $this->__('Group name') ?></label>
+                            </td>
+                            <td class="value">
+                                <input type="text" class="input-text required-entry" data-bind="value: name, attr: {name: buildName('name') }" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">
+                                <label><?php echo $this->__('Codes') ?></label>
+                            </td>
+                            <td class="value">
+                               <textarea class="input-text required-entry" data-bind="value: codes, attr: {name: buildName('codes') }">
+
+                               </textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">
+                                <label><?php echo $this->__('Warn when code amount reaches') ?></label>
+                            </td>
+                            <td class="value">
+                                <input type="text" class="input-text required-entry" data-bind="value: warn_low, attr: {name: buildName('warn_low') }" />
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </div>
+        </div>
+        <br/>
+        <div data-bind="visible: pools().length > 0">
+            <button data-bind="click: addPool" class="add blue-button" type="button"><span><span><span><?php echo $this->__('Add tracking numbers group') ?></span></span></span></button>
+        </div>
+    </div>
+    <script>
+        ko.applyBindings(new TrackingPools(<?php echo $this->_getPoolsJson() ?>, <?php echo $this->_getConfig() ?>), document.getElementById('pools-list'));
+    </script>
+<?php
+} else {
+    ?>
+    <h1>To make the module work you should have <a href="https://moogento.com/magento-pickpack-picklist">Moogento Pickpack</a> module installed.</h1>
+<?php } ?>

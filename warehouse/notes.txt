@@ -1,0 +1,38 @@
+• Magento Attribute ID's •
+--------------------------
+Supplement Depot - Warehouse Location - 210
+NWH Test         - Warehouse Location - 820
+Supplement Depot - Barcode            - 211
+NWH Test         - Barcode            - 823
+
+
+
+• SQL Logins Supplement Depot Magento •
+---------------------------------------
+$hostname = '122.201.121.182:3306';
+$db_user = 'suppleme_locsync';
+$db_password = 'sync123';
+$database_name = 'suppleme_metona';
+
+• SQL Logins NWH Test Magento •
+---------------------------------------
+$db_hostname = 'development.c4ffouecxrat.ap-southeast-2.rds.amazonaws.com:3306';
+$db_username = 'nwh-db';
+$db_password = 'uncs2dAPdFxyRdS5';
+$db_database = 'nutrition';
+
+
+
+• SQL Query to Update Supplement Depot Magento •
+------------------------------------------------
+Update `suppleme_catalog_product_entity`, `suppleme_catalog_product_entity_varchar` SET `suppleme_catalog_product_entity_varchar`.`value` = '1647' WHERE `suppleme_catalog_product_entity_varchar`.`entity_id` = `suppleme_catalog_product_entity`.`entity_id` and `suppleme_catalog_product_entity_varchar`.`attribute_id` = 210 and `suppleme_catalog_product_entity`.`sku` = 130379;
+
+
+
+• Move to new site process • 
+----------------------------
+• upload files
+• update login details
+• Find and replace domain for images etc
+• edit mysql query string if there's a prefix on table names
+• Find and replace Warehouse Location and Barcide attribute ids

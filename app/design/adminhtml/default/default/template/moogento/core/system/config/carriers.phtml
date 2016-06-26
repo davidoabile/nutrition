@@ -1,0 +1,113 @@
+<?php
+$element = $this->getElement();
+$htmlId = $element->getHtmlId();
+
+if ($element->getExpanded() !== null) {
+    $collapseState = 1;
+} else {
+    $extra = Mage::getSingleton('admin/session')->getUser()->getExtra();
+    if (isset($extra['configState'][$element->getId()])) {
+        $collapseState = (int)$extra['configState'][$element->getId()];
+    } else {
+        $collapseState = 0;
+    }
+}
+
+?>
+<style type="text/css" media="screen">
+.tracking_pattern_subtitle {
+  color: #555;
+  display: block;
+  font-style: italic;
+  font-weight: 100;
+  line-height: 12px;
+  margin: 8px 0 2px;
+}
+</style>
+<div class="section-config">
+<div class="entry-edit-head collapseable">
+    <a onclick="Fieldset.toggleCollapse('<?php echo $htmlId ?>', '<?php echo $this->getUrl('*/*/state/')?>'); return false;" href="#" id="<?php echo $htmlId ?>-head" class="">
+        <?php echo $element->getLegend() ?>
+    </a>
+</div>
+<input type="hidden" value="<?php echo $collapseState ?>" name="config_state[<?php echo $htmlId ?>]" id="<?php echo $htmlId ?>-state">
+<fieldset id="<?php echo $htmlId ?>" class="config collapseable grid">
+    <table class="data" cellspacing="0">
+        <thead>
+        <tr class="headings">
+            <th style="width: 75px">&nbsp;</th>
+            <th>
+			<?php echo $this->__('Tracking Pattern-match').'<br />
+			<span class="tracking_pattern_subtitle">'.$this->__('<b style="font-weight: 900;">Start</b> of tracking number is matched
+			<br />
+			Eg. <b style="font-weight: 900;">ABC</b> matches <b style="font-weight: 900;">ABC1234</b> , <b style="font-weight: 900;">ABC2345</b>').'</span>'; ?>
+			</th>
+            <th>
+				<?php echo $this->__('Title').'<br /><span class="tracking_pattern_subtitle">'.$this->__('Frontend (customer) label').'</span>'; ?>
+			</th>
+            <th>
+				<?php echo $this->__('Live carrier tracking link').'<br /><span class="tracking_pattern_subtitle"><b style="font-weight: 900;">#tracking#</b> '.$this->__('replaced by actual tracking id').'<br /><b style="font-weight: 900;">#postcode#</b> '.$this->__('replaced by actual postcode / zipcode').'</span>'; ?>
+			</th>
+            <th>
+				<?php echo $this->__('Image').'<br /><span class="tracking_pattern_subtitle">'.$this->__('Shows in Orders Grid instead of Title').'</span>'; ?>
+			</th>
+            <th>
+				<?php echo $this->__('Length-match').'<br /><span class="tracking_pattern_subtitle">'.$this->__('If set, tracking number length must match this').'</span>'; ?>
+			</th>
+			
+        </tr>
+        </thead>
+        <tbody class="toggle-light" data-bind="sortable: {data: list, options: sortableOptions, afterMove: updateSort}">
+        <tr>
+            <td>
+                <span class="icon-drag"></span>
+                <input type="hidden" data-bind="value: sort_order, attr: {name: buildName('sort_order')}" />
+                <span style="display: inline-block">
+                    <input type="hidden" value="0" data-bind="attr: {name: buildName('enable')}" />
+                    <input type="checkbox" value="1" data-bind="attr: {name: buildName('enable')}, checked: enable, switch: enable" />
+                </span>
+                <span data-bind="click: $parent.removeCarrier" class="fa fa-times" style="color: red; cursor: pointer"></span>
+            </td>
+            <td>
+                <input type="text" data-bind="value: code, attr: {name: buildName('code')}" />
+            </td>
+            <td>
+                <input type="text" data-bind="value: title, attr: {name: buildName('title')}" />
+            </td>
+            <td>
+                <input type="text" data-bind="value: link, attr: {name: buildName('link')}" />
+            </td>
+            <td>
+                <span data-bind="visible: imageSrc">
+                    <img style="max-width: 200px;" data-bind="attr: {src: imageSrc}" />
+                    <span style="display: inline-block">
+                        <label>
+                            <input type="checkbox" value="1" data-bind="attr: {name: buildName('remove_image')}" />
+                            <?php echo $this->__('Remove image') ?>
+                        </label>
+                    </span>
+                    <input type="hidden" data-bind="attr: {name: buildName('old_file')}, value: file" />
+                </span>
+                <input type="file" class="input-text" data-bind="attr: {name: buildName('file')}" />
+            </td>
+            <td>
+                <input type="text" data-bind="value: length, attr: {name: buildName('length')}" />
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <h5>
+        <button class="add" data-bind="click: addCarrier"><span><?php echo $this->__('Add New Carrier') ?></span></button>
+    </h5>
+</fieldset>
+<script type="text/javascript">
+    Fieldset.applyCollapse('<?php echo $htmlId ?>');
+    var imageBase = '<?php echo Mage::getBaseUrl('media').'moogento/core/carriers/' ?>';
+    ko.applyBindings(new CarriersConfigModule.Carriers(<?php echo $this->_getJson() ?>), document.getElementById('<?php echo $htmlId ?>'));
+</script>
+<style>
+    .icon-drag {
+        cursor: move;
+    }
+</style>
+</div>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="<?php echo $this->getSkinUrl('favicon.ico') ?>" type="image/x-icon"/>
+    <link rel="shortcut icon" href="<?php echo $this->getSkinUrl('favicon.ico') ?>" type="image/x-icon"/>
+
+    <title><?php echo Mage::helper('adminhtml')->__('Log into') . ' ' . Mage::helper('moogento_powerlogin')->getSitename() ?></title>
+    <link href="<?php echo $this->getSkinUrl('moogento/general/bootstrap/css/bootstrap.min.css') ?>" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<?php
+    $logoData = Mage::helper('moogento_powerlogin')->getLogoData();
+    $showLogo = Mage::getStoreConfigFlag('moogento_powerlogin/logo/show') && $logoData;
+?>
+<body>
+<?php if ($showLogo && !$logoData['inBox'] && !$logoData['inMiddle']): ?>
+<div class="logo"></div>
+<?php endif; ?>
+<div class="container">
+    <?php if ($showLogo && !$logoData['inBox'] && $logoData['inMiddle']): ?>
+        <div class="logo"></div>
+    <?php endif; ?>
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-4 formContainer">
+            <?php if ($showLogo && $logoData['inBox'] && $logoData['position'] == 'login_top'): ?>
+                <div class="logo"></div>
+            <?php endif; ?>
+            <div class="wrapper">
+            <div class="panel panel-default" id="loginForm">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><?php echo Mage::helper('adminhtml')->__('Log in to')  . ' ' . Mage::helper('moogento_powerlogin')->getSitename()  ?></h3>
+                </div>
+                <div class="panel-body">
+                    <form id="loginForm" accept-charset="UTF-8" role="form" action="" method="post" novalidate>
+                        <input name="form_key" type="hidden" value="<?php echo $this->getFormKey() ?>" />
+                        <div id="messages">
+                            <?php foreach($this->getMessagesBlock()->getMessages(Mage_Core_Model_Message::ERROR) as $message): ?>
+                                <div class="alert alert-danger" role="alert">
+                                    <?php echo $message->getText(); ?>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <fieldset>
+                            <div class="control-group form-group">
+                                <div class="controls">
+                                    <input class="form-control" placeholder="<?php echo Mage::helper('adminhtml')->__('User Name') ?>"
+                                           name="login[username]" type="text" value="" required data-validation-required-message="<?php echo Mage::helper('adminhtml')->__('This field is required') ?>" />
+                                </div>
+                            </div>
+                            <div class="control-group form-group">
+                                <div class="controls">
+                                    <input class="form-control" placeholder="<?php echo Mage::helper('adminhtml')->__('Password') ?>"
+                                        name="login[password]" type="password" value="" required data-validation-required-message="<?php echo Mage::helper('adminhtml')->__('This field is required') ?>" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <a class="left flipper" href="<?php echo Mage::helper('adminhtml')->getUrl('adminhtml/index/forgotpassword', array('_nosecret' => true)) ?>"><?php echo Mage::helper('adminhtml')->__('Forgot your password?') ?></a>
+                            </div>
+                            <input class="btn btn-lg btn-success btn-block" type="submit" value="<?php echo Mage::helper('adminhtml')->__('Login') ?>">
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="panel panel-default" id="recoverForm">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><?php echo Mage::helper('adminhtml')->__('Forgot your user name or password?') ?></h3>
+                </div>
+                <div class="panel-body">
+                    <form accept-charset="UTF-8" role="form" action="<?php echo $this->getUrl('*/index/forgotpassword') ?>" method="post" novalidate>
+                        <input name="form_key" type="hidden" value="<?php echo $this->getFormKey() ?>" />
+                        <fieldset>
+                            <div class="control-group form-group">
+                                <div class="controls">
+                                    <input class="form-control" placeholder="<?php echo Mage::helper('adminhtml')->__('Email Address') ?>"
+                                           name="email" type="email" value="" required data-validation-required-message="<?php echo Mage::helper('adminhtml')->__('This field is required') ?>" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <a class="left flipper" href="<?php echo Mage::helper('adminhtml')->getUrl('*/index', array('_nosecret' => true)) ?>">&laquo; <?php echo Mage::helper('adminhtml')->__('Back to Login'); ?></a>
+                            </div>
+                            <input class="btn btn-lg btn-success btn-block" type="submit" value="<?php echo Mage::helper('adminhtml')->__('Retrieve Password') ?>">
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            </div>
+            <?php if ($showLogo && $logoData['inBox'] && $logoData['position'] == 'login_bottom'): ?>
+                <div class="logo"></div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+<style>
+    .vertical-offset-100{
+        padding-top:100px;
+    }
+    .container, .row {
+        height: 100%;
+    }
+    .formContainer {
+        top: 50%;
+        margin-top: -160px;
+        position: relative;
+    }
+    .wrapper {
+        position: relative;
+        min-height: 248px;
+    }
+    .formContainer .panel-default {
+        -moz-backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        left: 0;
+        position: absolute;
+        top: 0;
+        -moz-transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        -moz-transition: all 0.8s ease 0s;
+        -webkit-transition: all 0.8s ease 0s;
+        transition: all 0.8s ease 0s;
+        width: 100%;
+    }
+    .formContainer.flipped #loginForm {
+        opacity:0;
+        -moz-transform:rotateY(-180deg);
+        -webkit-transform:rotateY(-180deg);
+        transform:rotateY(-180deg);
+    }
+    .formContainer.flipped #recoverForm {
+        z-index: 101;
+        opacity:1;
+        -moz-transform:rotateY(0deg);
+        -webkit-transform:rotateY(0deg);
+        transform:rotateY(0deg);
+    }
+    #loginForm {
+        z-index: 100;
+    }
+    #recoverForm {
+        z-index: 99;
+        -moz-transform:rotateY(180deg);
+        -webkit-transform:rotateY(180deg);
+        transform:rotateY(180deg);
+    }
+    .panel {
+        background: none repeat scroll 0 0 rgba(255, 255, 255, 0.5);
+        border: 0;
+        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.08);
+    }
+
+    .panel-heading {
+        background: none repeat scroll 0 0 rgba(255, 255, 255, 0.8);
+        border-bottom: 0 none;
+    }
+
+    .form-group {
+        text-align: right;
+    }
+    html, body {height: 100%;}
+    <?php echo Mage::helper('moogento_powerlogin')->getBackgroundCss() ?>
+
+    <?php if ($showLogo):?>
+        .logo {
+            width: <?php echo $logoData['imageSize'][0]/2 ?>px;
+            height: <?php echo $logoData['imageSize'][1]/2 ?>px;
+            background-image: url(<?php echo $logoData['logo'] ?>);
+            background-size: 100%;
+        <?php if ($logoData['inBox']): ?>
+            margin: 20px auto;
+        <?php else: ?>
+            position: absolute;
+            <?php switch ($logoData['position']) {
+                case 'top_left':
+                    echo 'top: 20px;';
+                    echo 'left: 20px;';
+                    break;
+                case 'top_right':
+                    echo 'top: 20px;';
+                    echo 'right: 20px;';
+                    break;
+                case 'top_center':
+                    echo 'top: 20px;';
+                    echo 'left: 50%;';
+                    echo 'margin-left: -' . ($logoData['imageSize'][0]/4) . 'px;';
+                    break;
+                case 'bottom_left':
+                    echo 'bottom: 20px;';
+                    echo 'left: 20px;';
+                    break;
+                case 'bottom_right':
+                    echo 'bottom: 20px;';
+                    echo 'right: 20px;';
+                    break;
+                case 'bottom_center':
+                    echo 'bottom: 20px;';
+                    echo 'left: 50%;';
+                    echo 'margin-left: -' . ($logoData['imageSize'][0]/4) . 'px;';
+                    break;
+            } ?>
+        <?php endif; ?>
+        }
+        <?php if ($logoData['position'] == 'login_top'): ?>
+        .formContainer {
+            margin-top: -<?php echo $logoData['imageSize'][1]/2 + 40 + 160 ?>px;
+        }
+        @media only screen
+        and (min-device-width : 320px)
+        and (max-device-width : 760px) {
+            .formContainer {
+                top: 0;
+                margin-top: 0;
+            }
+        }
+        <?php endif; ?>
+    <?php endif; ?>
+</style>
+<script src="<?php echo $this->getSkinUrl('moogento/general/js/jquery-2.1.1.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/general/bootstrap/js/bootstrap.min.js') ?>"></script>
+<script src="<?php echo $this->getSkinUrl('moogento/general/bootstrap/js/jqBootstrapValidation.js') ?>"></script>
+<script>
+    $(function () {
+        $('.form-control').jqBootstrapValidation();
+        $.support.css3d = supportsCSS3D();
+        $('.flipper').on('click', function(e){
+            e.preventDefault();
+            $('.formContainer').toggleClass('flipped');
+            if(!$.support.css3d){
+                $('#loginForm').toggle();
+            }
+        });
+        function supportsCSS3D() {
+            var props = [
+                'perspectiveProperty', 'WebkitPerspective', 'MozPerspective'
+            ], testDom = document.createElement('a');
+
+            for(var i=0; i<props.length; i++){
+                if(props[i] in testDom.style){
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    });
+</script>
+</body>
+</html>

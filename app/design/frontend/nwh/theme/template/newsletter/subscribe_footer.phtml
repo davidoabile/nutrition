@@ -1,0 +1,53 @@
+<div id="feedback" style="display:none" class="mini-newsletter del_updt_pop_main">
+	<div class="del_updt_pop_heading">
+    	<div class="popup_heading_txt">
+            <?php echo $this->__('SIGN UP SUCCESSFUL') ?>
+        </div>
+    </div>
+    <div class="del_updt_pop_mid">
+    	<div class="popup_mid_txt">
+    		<?php echo $this->__('THANKS FOR SUBSCRIBING<br>TO OUR NEWSLETTER!') ?>
+        </div>
+        <span class="font12_gry">
+            <?php echo $this->__('You will be the first to find out about exclusive  Nutrition Warehouse deals, promotions and giveaways as well as receiving helpful training tips and healthy ideas.') ?>
+        </span>
+        <div class="popup_mid_btn_main mrgn_t20">
+            <div class="popup_mid_btn">
+                <a class="closepopup1" href="<?php echo $this->getUrl('') ?>">
+                    <?php echo $this->__('CONTINUE SHOPPING') ?>
+                </a>
+                &nbsp;
+            </div>
+        </div>
+     </div>
+</div>
+
+<div style="float:left;">
+    <form action="<?php echo $this->getUrl('collection/subscriber/new') ?>" name="newsletter-form" id="newsletter-form" method="post">
+        <div class="signup_coupon"><img src="<?php echo $this->getSkinUrl('images/discountcard.png') ?>"></div>        
+        <div class="home_signup">
+            <div class="left">
+                <span class="font18_b_red"><?php echo $this->__('SIGN UP') ?></span>
+                <span class="font18_m_blk">&amp; <?php echo $this->__('SAVE') ?></span>
+            </div>
+            <button type="submit" name="submit" title="<?php echo $this->__('SUBMIT') ?>" class="submit_btn">
+                <?php echo $this->__('SUBMIT') ?>
+            </button>
+            <input placeholder="Enter email here" type="text" name="email" id="newsletter" title="<?php echo $this->__('Subscribe to Our Newsletter') ?>" class="signup_field required-entry validate-email input-subscribe" />
+            <div style="display: none;" id="error-news-msg" class="error-news-msg">
+                <?php echo $this->__('Please insert a valid email address.') ?>
+            </div>
+        </div>
+    </form>    
+</div>
+
+<script>
+    var newsletterSubscriberFormDetail = new VarienForm('newsletter-validate-detail');
+
+    <?php $test = Mage::getSingleton('core/session')->getSuccessNewsletter() ?>
+    <?php if (isset($test) && $test =='success'): ?>
+        jQuery(".popup_gray2").show();
+        jQuery("#feedback").fancybox().trigger('click');
+    <?php endif ?> 
+</script>
+<?php Mage::getSingleton('core/session')->setSuccessNewsletter('unsuccess') ?>

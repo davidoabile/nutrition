@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Balance_Device>
+      <version>0.1.0</version>
+    </Balance_Device>
+  </modules>
+  <global>
+    <helpers>
+      <device>
+        <class>Balance_Device_Helper</class>
+      </device>
+    </helpers>
+  </global>
+</config> 

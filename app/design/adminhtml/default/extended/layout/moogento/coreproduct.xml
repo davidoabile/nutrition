@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_catalog_product_grid>
+        <remove name="admin.product.grid" />
+        <remove name="root" />
+        <update handle="formkey"/>
+        <block type="core/text_list" name="root_ajax" output="toHtml">
+            <block type="moogento_coreproduct/adminhtml_catalog_product_grid" name="coreproduct.grid">
+                <action method="setTemplate"><template>moogento/clean/widget/grid.phtml</template></action>
+                <action method="setMassactionBlockName"><name>Moogento_Clean_Block_Adminhtml_Widget_Grid_Massaction</name></action>
+            </block>
+        </block>
+    </adminhtml_catalog_product_grid>
+</layout>

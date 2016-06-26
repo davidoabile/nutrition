@@ -1,0 +1,45 @@
+<?php
+$element = $this->getElement();
+$htmlId = $element->getHtmlId();
+
+if ($element->getExpanded() !== null) {
+    $collapseState = 1;
+} else {
+    $extra = Mage::getSingleton('admin/session')->getUser()->getExtra();
+    if (isset($extra['configState'][$element->getId()])) {
+        $collapseState = (int)$extra['configState'][$element->getId()];
+    } else {
+        $collapseState = 0;
+    }
+}
+
+?>
+
+<div class="section-config">
+    <div class="entry-edit-head collapseable">
+        <a onclick="Fieldset.toggleCollapse('<?php echo $htmlId ?>', '<?php echo $this->getUrl('*/*/state/')?>'); return false;" href="#" id="<?php echo $htmlId ?>-head" class="">
+            <?php echo $element->getLegend() ?>
+        </a>
+    </div>
+    <input type="hidden" value="<?php echo $collapseState ?>" name="config_state[<?php echo $htmlId ?>]" id="<?php echo $htmlId ?>-state">
+    <fieldset id="<?php echo $htmlId ?>" class="config collapseable grid" style="display: none">
+        <table>
+            <thead>
+                <tr>
+                    <th><?php echo $this->__('Username') ?></td>
+                    <th style="width: 5%;">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($this->_getUsers() as $user): ?>
+                <tr>
+                    <td><?php echo $user->getUsername() ?></td>
+                    <td>
+                        <a target="_blank" href="<?php echo $this->getUrl('*/system_config_pickscan/printAuthCard', array('id' => $user->getId())) ?>">Print</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </fieldset>
+</div>

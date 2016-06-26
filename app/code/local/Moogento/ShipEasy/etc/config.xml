@@ -1,0 +1,783 @@
+<?xml version="1.0"?>
+<!--
+  Moogento
+  
+  SOFTWARE LICENSE
+  
+  This source file is covered by the Moogento End User License Agreement
+  that is bundled with this extension in the file License.html
+  It is also available online here:
+  http://moogento.com/License.html
+  
+  NOTICE
+  
+  If you customize this file please remember that it will be overwrtitten
+  with any future upgrade installs. 
+  If you'd like to add a feature which is not in this software, get in touch
+  at www.moogento.com for a quote.
+  
+  ID          pe+sMEDTrtCzNq3pehW9DJ0lnYtgqva4i4Z=
+  File        config.xml
+  @category   Moogento
+  @package    pickPack
+  @copyright  Copyright (c) 2014 Moogento <info@moogento.com> / All rights reserved.
+  @license    http://moogento.com/License.html
+-->
+<config>
+    <modules>
+        <Moogento_ShipEasy>
+            <version>3.3.4</version>
+        </Moogento_ShipEasy>
+    </modules>
+    <global>
+        <sales>
+            <order>
+                <statuses>
+                    <shipped translate="label"><label>Shipped</label></shipped>
+                </statuses>
+                <states>
+                    <processing>
+                        <statuses>
+                            <shipped />
+                        </statuses>
+                    </processing>
+                </states>
+            </order>
+        </sales>
+
+        <helpers>
+            <moogento_shipeasy>
+                <class>Moogento_ShipEasy_Helper</class>
+            </moogento_shipeasy>
+        </helpers>
+
+        <blocks>
+            <moogento_shipeasy>
+                <class>Moogento_ShipEasy_Block</class>
+            </moogento_shipeasy>
+            <adminhtml>
+                <rewrite>
+                    <sales_order_view_info>Moogento_ShipEasy_Block_Adminhtml_Sales_Order_View_Info</sales_order_view_info>
+                </rewrite>
+            </adminhtml>
+        </blocks>
+
+        <models>
+            <moogento_shipeasy>
+                <class>Moogento_ShipEasy_Model</class>
+                <resourceModel>moogento_shipeasy_mysql4</resourceModel>
+            </moogento_shipeasy>
+            <moogento_shipeasy_mysql4>
+                <class>Moogento_ShipEasy_Model_Mysql4</class>
+                <entities>
+                    <sales_order_log>
+                        <table>moogento_shipeasy_log</table>
+                    </sales_order_log>
+                    <indexer_attributes>
+                        <table>moogento_shipeasy_attributes_index</table>
+                    </indexer_attributes>
+                    <indexer_order>
+                        <table>moogento_shipeasy_order_index</table>
+                    </indexer_order>
+                </entities>
+            </moogento_shipeasy_mysql4>
+        </models>
+
+        <resources>
+            <moogento_shipeasy_setup>
+                <setup>
+                    <module>Moogento_ShipEasy</module>
+                    <class>Moogento_ShipEasy_Model_Mysql4_Setup</class>
+                </setup>
+            </moogento_shipeasy_setup>
+        </resources>
+
+        <events>
+
+            <core_block_abstract_to_html_after>
+                <observers>
+                    <moogento_shipeasy_core_block_abstract_to_html_after>
+                        <class>moogento_shipeasy/adminhtml_sales_order_observer</class>
+                        <method>core_block_abstract_to_html_after</method>
+                    </moogento_shipeasy_core_block_abstract_to_html_after>
+                </observers>
+            </core_block_abstract_to_html_after>
+            
+            <sales_order_item_save_before>
+                <observers>
+                    <moogento_shipeasy_order_item_save_before>
+                        <model>moogento_shipeasy/sales_order_observer</model>
+                        <method>itemBeforeSave</method>
+                    </moogento_shipeasy_order_item_save_before>
+                </observers>
+            </sales_order_item_save_before>
+
+            <sales_order_save_commit_after>
+                <observers>
+                    <moogento_shipeasy_order_save_after>
+                        <model>moogento_shipeasy/sales_order_observer</model>
+                        <method>orderAfterSave</method>
+                    </moogento_shipeasy_order_save_after>
+                </observers>
+            </sales_order_save_commit_after>
+
+            <sales_order_save_before>
+                <observers>
+                    <moogento_shipeasy_order_save_before>
+                        <model>moogento_shipeasy/sales_order_observer</model>
+                        <method>orderBeforeSave</method>
+                    </moogento_shipeasy_order_save_before>
+                </observers>
+            </sales_order_save_before>
+
+            <sales_order_shipment_save_before>
+                <observers>
+                    <moogento_shipeasy_shipment_save_after>
+                        <model>moogento_shipeasy/sales_order_observer</model>
+                        <method>sales_order_shipment_save_before</method>
+                    </moogento_shipeasy_shipment_save_after>
+                </observers>
+            </sales_order_shipment_save_before>
+
+            <sales_order_resource_init_virtual_grid_columns>
+                <observers>
+                    <moogento_shipeasy_order_grid_select>
+                        <model>moogento_shipeasy/adminhtml_sales_order_observer</model>
+                        <method>initGridColumn</method>
+                    </moogento_shipeasy_order_grid_select>
+                </observers>
+            </sales_order_resource_init_virtual_grid_columns>
+
+            <sales_order_resource_save_attribute_before>
+                <observers>
+                    <moogento_shipeasy_order_attribute_before_save>
+                        <model>moogento_shipeasy/adminhtml_sales_order_observer</model>
+                        <method>beforeSaveAttribute</method>
+                    </moogento_shipeasy_order_attribute_before_save>
+                </observers>
+            </sales_order_resource_save_attribute_before>
+
+            <sales_order_resource_update_grid_records>
+                <observers>
+                    <moogento_shipeasy_order_update_grid>
+                        <model>moogento_shipeasy/adminhtml_sales_order_observer</model>
+                        <method>beforeGridUpdate</method>
+                    </moogento_shipeasy_order_update_grid>
+                </observers>
+            </sales_order_resource_update_grid_records>
+            <moogento_core_order_grid_columns>
+                <observers>
+                    <moogento_shipeasy_order_update_grid>
+                        <model>moogento_shipeasy/adminhtml_sales_order_grid_observer</model>
+                        <method>moogento_core_order_grid_columns</method>
+                    </moogento_shipeasy_order_update_grid>
+                </observers>
+            </moogento_core_order_grid_columns>
+            <moogento_core_order_grid_columns_prepare>
+                <observers>
+                    <moogento_shipeasy_order_update_grid>
+                        <model>moogento_shipeasy/adminhtml_sales_order_grid_observer</model>
+                        <method>moogento_core_order_grid_columns_prepare</method>
+                    </moogento_shipeasy_order_update_grid>
+                </observers>
+            </moogento_core_order_grid_columns_prepare>
+            <moogento_core_order_grid_actions>
+                <observers>
+                    <moogento_shipeasy_order_update_grid_actions>
+                        <model>moogento_shipeasy/adminhtml_sales_order_grid_observer</model>
+                        <method>moogento_core_order_grid_actions</method>
+                    </moogento_shipeasy_order_update_grid_actions>
+                </observers>
+            </moogento_core_order_grid_actions>
+            <sales_order_address_save_after>
+                <observers>
+                    <moogento_shipeasy_order_address_save_after>
+                        <model>moogento_shipeasy/adminhtml_sales_order_grid_observer</model>
+                        <method>moogento_shipeasy_order_address_save_after</method>
+                    </moogento_shipeasy_order_address_save_after>
+                </observers>
+            </sales_order_address_save_after>
+            <sales_order_save_commit_after>
+                <observers>
+                    <moogento_shipeasy_order_save_commit_after>
+                        <model>moogento_shipeasy/adminhtml_sales_order_grid_observer</model>
+                        <method>moogento_shipeasy_order_save_commit_after</method>
+                    </moogento_shipeasy_order_save_commit_after>
+                </observers>
+            </sales_order_save_commit_after>
+            <customer_save_after>
+                <observers>
+                    <moogento_shipeasy_customer_save_after>
+                        <model>moogento_shipeasy/adminhtml_observer</model>
+                        <method>customer_save_after</method>
+                    </moogento_shipeasy_customer_save_after>
+                </observers>
+            </customer_save_after>
+            <moogento_core_order_grid_prepare_layout>
+                <observers>
+                    <moogento_shipeasy_order_grid_prepare_layout>
+                        <model>moogento_shipeasy/sales_order_grid_observer</model>
+                        <method>moogento_core_order_grid_prepare_layout</method>
+                    </moogento_shipeasy_order_grid_prepare_layout>
+                </observers>
+            </moogento_core_order_grid_prepare_layout>
+            <catalog_product_save_after>
+                <observers>
+                    <moogento_shipeasy>
+                        <model>moogento_shipeasy/observer</model>
+                        <method>catalog_product_save_after</method>
+                    </moogento_shipeasy>
+                </observers>
+            </catalog_product_save_after>
+        </events>
+
+        <template>
+            <email>
+                <sales_email_shipment_track_template translate="label" module="sales">
+                    <label>New Shipment Tracks</label>
+                    <file>sales/shipment_track.html</file>
+                    <type>html</type>
+                </sales_email_shipment_track_template>
+                <sales_email_shipment_guest_track_template translate="label" module="sales">
+                    <label>New Shipment Tracks for Guest</label>
+                    <file>sales/shipment_track_guest.html</file>
+                    <type>html</type>
+                </sales_email_shipment_guest_track_template>
+            </email>
+        </template>
+    </global>
+    <adminhtml>
+
+        <events>
+
+            <core_config_data_save_before>
+                <observers>
+                    <moogento_szy_config_save_before>
+                        <class>moogento_shipeasy/adminhtml_system_config_observer</class>
+                        <method>saveBefore</method>
+                    </moogento_szy_config_save_before>
+                </observers>
+            </core_config_data_save_before>
+            <model_config_data_save_before>
+                <observers>
+                    <moogento_szy_config_save_before>
+                        <class>moogento_shipeasy/adminhtml_system_config_observer</class>
+                        <method>model_config_data_save_before</method>
+                    </moogento_szy_config_save_before>
+                </observers>
+            </model_config_data_save_before>
+            <admin_system_config_changed_section_moogento_shipeasy>
+                <observers>
+                    <moogento_shipeasy>
+                        <class>moogento_shipeasy/adminhtml_system_config_observer</class>
+                        <method>admin_system_config_changed_section_moogento_shipeasy</method>
+                    </moogento_shipeasy>
+                </observers>
+            </admin_system_config_changed_section_moogento_shipeasy>
+			
+            <sales_order_address_save_after>
+                <observers>
+                    <moogento_szy_address_save_after>
+                        <class>moogento_shipeasy/sales_order_observer</class>
+                        <method>saveAddressAfter</method>
+                    </moogento_szy_address_save_after>
+                </observers>
+            </sales_order_address_save_after>
+            <moogento_core_order_grid_init>
+                <observers>
+                    <moogento_shipeasy>
+                        <class>moogento_shipeasy/adminhtml_sales_order_grid_observer</class>
+                        <method>moogento_core_order_grid_init</method>
+                    </moogento_shipeasy>
+                </observers>
+            </moogento_core_order_grid_init>
+            
+            <moogento_core_order_grid_collection_prepare>
+                <observers>
+                    <moogento_shipeasy>
+                        <class>moogento_shipeasy/adminhtml_sales_order_grid_collection_observer</class>
+                        <method>moogento_core_order_grid_collection_prepare</method>
+                    </moogento_shipeasy>
+                </observers>
+            </moogento_core_order_grid_collection_prepare>
+
+
+            
+            <core_collection_abstract_load_before>
+                <observers>
+                    <moogento_shipeasy_mysql4_collection_before_load>
+                        <class>moogento_shipeasy/dataflow_profile_observer</class>
+                        <method>addFilterToProfileCollection</method>
+                    </moogento_shipeasy_mysql4_collection_before_load>
+                </observers>
+            </core_collection_abstract_load_before>
+
+            <moogento_core_sales_order_prepare>
+                <observers>
+                    <moogento_shipeasy>
+                        <class>moogento_shipeasy/adminhtml_sales_order_grid_observer</class>
+                        <method>moogento_core_sales_order_prepare</method>
+                    </moogento_shipeasy>
+                </observers>
+            </moogento_core_sales_order_prepare>
+
+            <admin_session_user_login_success>
+                <observers>
+                    <shipeasy_notification>
+                        <type>singleton</type>
+                        <class>Moogento_ShipEasy_Model_Feed_Updates</class>
+                        <method>check</method>
+                    </shipeasy_notification>
+                </observers>
+            </admin_session_user_login_success>
+            <controller_action_predispatch_adminhtml_system_config_save>
+                <observers>
+                    <moogento_shipeasy>
+                        <class>moogento_shipeasy/adminhtml_observer</class>
+                        <method>controller_action_predispatch_adminhtml_system_config_save</method>
+                    </moogento_shipeasy>
+                </observers>
+            </controller_action_predispatch_adminhtml_system_config_save>
+        </events>
+
+        <translate>
+            <modules>
+                <moogento_shipeasy>
+                    <files>
+                        <default>Moogento_ShipEasy.csv</default>
+                    </files>
+                </moogento_shipeasy>
+            </modules>
+        </translate>
+
+        <layout>
+            <updates>
+                <moogento_shipeasy>
+                    <file>moogento/shipeasy.xml</file>
+                </moogento_shipeasy>
+            </updates>
+        </layout>
+    </adminhtml>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <moogento_shipeasy before="Mage_Adminhtml">Moogento_ShipEasy_Adminhtml</moogento_shipeasy>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <default>
+        <moogento>
+            <general>
+                <url>https://moogento.com/</url>
+            </general>
+        </moogento>
+        <sales_email>
+            <shipment>
+                <track_template>sales_email_shipment_track_template</track_template>
+                <guest_track_template>sales_email_shipment_guest_track_template</guest_track_template>
+            </shipment>
+        </sales_email>
+
+
+        <moogento_shipeasy>
+
+            <general>
+            	<allow_ship_without_invoice>1</allow_ship_without_invoice>
+                <order_page_title_color>#F50C18</order_page_title_color>
+                <column_title_color>#F2FA00</column_title_color>
+                <filter_buttons_color>#FAF200</filter_buttons_color>
+                <filter_buttons_hover_color>#003EFA</filter_buttons_hover_color>
+                <use_ship_easy_css>1</use_ship_easy_css>
+                <override_bl_grid>1</override_bl_grid>
+                <cron_period>1</cron_period>
+            </general>
+			
+            <notify_defaults>
+                <ship_order>1</ship_order>
+                <invoice_order>1</invoice_order>
+                <ship_invoice_order>1</ship_invoice_order>
+                <order_status>0</order_status>
+                <assign_tracking>0</assign_tracking>
+            </notify_defaults>
+
+            <attributes_edit>
+                <preset>
+<![CDATA[Red|#ff0000
+Green|#00ff00
+Blue|#0000ff
+        ]]></preset>
+            </attributes_edit>
+
+            <shipping_cost>
+                <use_default>0</use_default>
+                <default_currency>USD</default_currency>
+            </shipping_cost>
+
+            <email_to>
+                <default_subject><![CDATA[Default Subject]]></default_subject>
+                <default_body>
+<![CDATA[Hi {customer-name},
+Thanks for your order #{order-id}
+
+SKUS:
+{ordered-skus}
+
+Names:
+{ordered-product-names}]]>
+                </default_body>
+                <default_customer_message>
+<![CDATA[Hi {customer-name},
+Thanks for your order #{order-id}
+
+SKUS:
+{ordered-skus}
+
+Names:
+{ordered-product-names}]]>
+                </default_customer_message>
+                <default_admin_message><![CDATA[Default Admin Message]]></default_admin_message>
+            </email_to>
+			<action_menu>
+				<show_seperator1>1</show_seperator1>
+				<show_ship>1</show_ship>
+				<show_invoice>1</show_invoice>
+				<show_ship_and_invoice>1</show_ship_and_invoice>
+				<show_change_status>1</show_change_status>
+				<show_update_custom_attribute>1</show_update_custom_attribute>
+			</action_menu>
+			<order_details_page>
+				<show_product_images>1</show_product_images>
+			</order_details_page>
+            <import>
+                <add_track_email>1</add_track_email>
+                <order_increment_id>order_id</order_increment_id>
+                <shipping_cost>shipping_cost</shipping_cost>
+                <tracking_info>tracking</tracking_info>
+                <sku_column>sku</sku_column>
+                <qty_column>qty</qty_column>
+                <import_shipment>1</import_shipment>
+                <order_comment>order_comment</order_comment>
+                <order_comment_public>order_comment_public</order_comment_public>
+            </import>
+           <colors>
+                <processing>#FFFFFF</processing>
+                <ebay_payment_complete>#FFFFFF</ebay_payment_complete>
+                <pending_payment>#FFAFAF</pending_payment>
+                <fraud>#FFAFAF</fraud>
+                <payment_review>#FFAFAF</payment_review>
+                <paypal_canceled_reversal>#FFFFFF</paypal_canceled_reversal>
+                <pending>#FFAFAF</pending>
+                <ebay_checkout_complete>#FFAFAF</ebay_checkout_complete>
+                <holded>#FEFE00</holded>
+                <complete>#A2D39C</complete>
+                <ebay_complete>#A2D39C</ebay_complete>
+                <closed>#F33535</closed>
+                <canceled>#F70000</canceled>
+                <pending_paypal>#FFAFAF</pending_paypal>
+                <shipped>#EEEEEE</shipped>
+                <hover_highlight>10</hover_highlight>
+            </colors>
+
+            <!-- Start set value for Grid session -->
+                <grid>
+                    <common_sorting_field></common_sorting_field>
+                    <sorting_group_type_field></sorting_group_type_field>
+                    <sorting_group_courier_rule_field>ship</sorting_group_courier_rule_field>
+                    <action_sorting>click-goes-nowhere</action_sorting>
+                    <weight_disposition>0</weight_disposition>
+
+                    <szy_email_only_main>1</szy_email_only_main>
+
+                    <massaction_show>1</massaction_show>
+                    <szy_created_at_show>1</szy_created_at_show>
+                    <szy_created_at_order>200</szy_created_at_order>
+                    <szy_created_at_format>0</szy_created_at_format>
+                    <szy_created_at_custom_format>M j, Y</szy_created_at_custom_format>
+
+                    <real_order_id_show>1</real_order_id_show>
+                    <real_order_id_order>300</real_order_id_order>
+
+                    <mkt_order_id_show>1</mkt_order_id_show>
+                    <mkt_order_id_order>400</mkt_order_id_order>
+                    <mkt_order_id_show_ebay_sales_number>1</mkt_order_id_show_ebay_sales_number>
+                    
+                    <szy_store_name_show>1</szy_store_name_show>
+                    <szy_store_name_order>500</szy_store_name_order>
+                    <szy_store_name_format>0</szy_store_name_format>
+
+                    <szy_website_id_show>0</szy_website_id_show>
+                    <szy_website_id_order>600</szy_website_id_order>
+
+                    <szy_store_id_show>0</szy_store_id_show>
+                    <szy_store_id_order>700</szy_store_id_order>
+
+                    <szy_status_show>1</szy_status_show>
+                    <szy_status_order>800</szy_status_order>
+
+                    <exact_stock_status_show>1</exact_stock_status_show>
+                    <exact_stock_status_order>900</exact_stock_status_order>
+
+                    <szy_sku_number_show>1</szy_sku_number_show>
+                    <szy_sku_number_order>1200</szy_sku_number_order>
+                    
+                    <product_image_show>1</product_image_show>
+                    <product_image_width>80px</product_image_width>
+                    <product_image_order>1300</product_image_order>
+                    <product_image_max_number>1</product_image_max_number>
+                    <product_image_show_product_image_type>0</product_image_show_product_image_type>
+
+                    <szy_qty_show>0</szy_qty_show>
+                    <szy_qty_order>1400</szy_qty_order>
+
+                    <szy_product_skus_show>1</szy_product_skus_show>
+                    <szy_product_skus_order>1500</szy_product_skus_order>
+                    <szy_product_skus_mkt_link>1</szy_product_skus_mkt_link>
+                    <szy_product_skus_fill_color>1</szy_product_skus_fill_color>
+                    <szy_product_skus_product_availability>istock</szy_product_skus_product_availability>
+                    <szy_product_skus_default_color>#EEEEEE</szy_product_skus_default_color>
+                    <szy_product_skus_fully_unavailable>#FF0A0A</szy_product_skus_fully_unavailable>
+                    <szy_product_skus_fully_available>#CCFFFF</szy_product_skus_fully_available>
+                    <szy_product_skus_partially_available>#FF6B1C</szy_product_skus_partially_available>
+                    <szy_product_skus_truncate>1</szy_product_skus_truncate>
+                    <szy_product_skus_x_truncate>20</szy_product_skus_x_truncate>
+                    <szy_product_skus_custom_qty>0</szy_product_skus_custom_qty>
+                    <szy_product_skus_go-to-product-page>0</szy_product_skus_go-to-product-page>
+
+
+                    <billing_name_show>0</billing_name_show>
+                    <billing_name_order>1600</billing_name_order>
+                    <billing_name_expanded>0</billing_name_expanded>
+                    <billing_name_fields>prefix,firstname,middlename,lastname,suffix,company,street,city,country_id,region_field,postcode,telephone,fax,vat_id</billing_name_fields>
+
+                    <szy_email_show>0</szy_email_show>
+                    <szy_email_order>1700</szy_email_order>
+ 
+                    <szy_ebay_customer_id_show>1</szy_ebay_customer_id_show>
+                    <szy_ebay_customer_id_show_email>1</szy_ebay_customer_id_show_email>
+                    <szy_ebay_customer_id_order>1800</szy_ebay_customer_id_order>
+                    <szy_ebay_customer_id_header>eBay User ID</szy_ebay_customer_id_header>
+
+                    <shipping_name_show>1</shipping_name_show>
+                    <shipping_name_order>1900</shipping_name_order>
+                    <shipping_name_expanded>1</shipping_name_expanded>
+                    <shipping_name_fields>prefix,firstname,middlename,lastname,suffix,company,street,city,country_id,region_field,postcode,telephone,fax,vat_id</shipping_name_fields>
+
+                    <szy_country_region_show>0</szy_country_region_show>
+                    <szy_country_region_order>2000</szy_country_region_order>
+                    <szy_country_region_header>Zone</szy_country_region_header>
+
+                    <szy_region_show>0</szy_region_show>
+                    <szy_region_order>2100</szy_region_order>
+                    <szy_region_show_abbreviation>1</szy_region_show_abbreviation>
+
+                    <szy_postcode_show>0</szy_postcode_show>
+                    <szy_postcode_order>2200</szy_postcode_order>
+
+                    <szy_country_show>1</szy_country_show>
+                    <szy_country_order>2300</szy_country_order>
+
+                    <paid_show>1</paid_show>
+                    <paid_order>2400</paid_order>
+                    <paid_non_invoiced_amounts>1</paid_non_invoiced_amounts>
+                    <paid_show_paypal_logo>1</paid_show_paypal_logo>
+
+                    <curr_show>0</curr_show>
+                    <curr_order>2500</curr_order>
+                                                          
+                    <weight_show>0</weight_show>
+                    <weight_order>2600</weight_order>
+                    
+                    <szy_product_names_show>1</szy_product_names_show>
+                    <szy_product_names_order>2700</szy_product_names_order>
+                    <szy_product_names_mkt_link>0</szy_product_names_mkt_link>
+                    <szy_product_names_fill_color>1</szy_product_names_fill_color>
+                    <szy_product_names_custom_qty>0</szy_product_names_custom_qty>
+                    <szy_product_names_product_availability>istock</szy_product_names_product_availability>
+                    <szy_product_names_default_color>#EEEEEE</szy_product_names_default_color>
+                    <szy_product_names_fully_unavailable>#FF0A0A</szy_product_names_fully_unavailable>
+                    <szy_product_names_fully_available>#CCFFFF</szy_product_names_fully_available>
+                    <szy_product_names_partially_available>#FF6B1C</szy_product_names_partially_available>
+                    <szy_product_names_truncate>1</szy_product_names_truncate>
+                    <szy_product_names_x_truncate>25</szy_product_names_x_truncate>
+                    <szy_product_names_cut_name>0</szy_product_names_cut_name>
+                    <szy_product_names_cut_name_length>25</szy_product_names_cut_name_length>
+                    
+                    <szy_payment_method_show>1</szy_payment_method_show>
+                    <szy_payment_method_order>2800</szy_payment_method_order>
+
+                    <szy_shipping_method_show>1</szy_shipping_method_show>
+                    <szy_shipping_method_order>2900</szy_shipping_method_order>
+
+                    <szy_tracking_number_show>1</szy_tracking_number_show>
+                    <szy_tracking_number_order>3100</szy_tracking_number_order>
+                    <szy_tracking_number_base_link><![CDATA[http://www.packagetrackr.com/tracking/#]]></szy_tracking_number_base_link>
+
+                    <coupon_show>1</coupon_show>
+                    <coupon_order>3200</coupon_order>
+
+                    <admin_comments_show>1</admin_comments_show>
+                    <admin_comments_display>all</admin_comments_display>
+                    <admin_comments_order>3300</admin_comments_order>
+                    <admin_comments_truncate>30</admin_comments_truncate>
+                    <admin_comments_max_count>3</admin_comments_max_count>
+                    <admin_comments_filter>1</admin_comments_filter>
+                    <admin_comments_filter_words>IPN "Completed",Transaction,Notified customer about invoice</admin_comments_filter_words>
+                    <admin_comments_filter_labels>1</admin_comments_filter_labels>
+
+                    <contact_show>1</contact_show>
+                    <contact_order>3400</contact_order>
+                    <contact_allow_comment>1</contact_allow_comment>
+                    <contact_allow_email>0</contact_allow_email>
+                    <contact_allow_gmail>0</contact_allow_gmail>
+
+                    <base_grand_total_show>0</base_grand_total_show>
+                    <base_grand_total_order>3500</base_grand_total_order>
+
+                    <grand_total_show>0</grand_total_show>
+                    <grand_total_order>3600</grand_total_order>
+
+                    <!--<szy_customer_name_show>0</szy_customer_name_show>
+                    <szy_customer_name_order>3700</szy_customer_name_order>
+                    <szy_customer_name_expanded>0</szy_customer_name_expanded>-->
+
+                    <szy_custom_product_attribute_show>0</szy_custom_product_attribute_show>
+                    <szy_custom_product_attribute_order>3800</szy_custom_product_attribute_order>
+
+                    <szy_custom_product_attribute2_show>0</szy_custom_product_attribute2_show>
+                    <szy_custom_product_attribute2_order>3900</szy_custom_product_attribute2_order>
+                    
+                    <szy_company_show>1</szy_company_show>
+                    <szy_company_order>10000</szy_company_order>
+
+                    <szy_customer_group_id_show>0</szy_customer_group_id_show>
+                    <szy_customer_group_id_order>4000</szy_customer_group_id_order>
+
+                    <szy_custom_attribute_show>0</szy_custom_attribute_show>
+                    <szy_custom_attribute_order>4200</szy_custom_attribute_order>
+                    <szy_custom_attribute_header>Calls</szy_custom_attribute_header>
+                    <szy_custom_attribute_preset><![CDATA[Call AM|{{flag_call_am.png}}
+Call PM|{{flag_call_pm.png}}
+Call NIGHT|{{flag_call_night.png}}
+Called > SUCCESS|{{flag_call_green.png}}
+Called > ABORT|{{flag_call_red.png}}
+Alert|{{flag_alert.png}}]]></szy_custom_attribute_preset>
+
+                    <szy_custom_attribute2_show>1</szy_custom_attribute2_show>
+                    <szy_custom_attribute2_order>4300</szy_custom_attribute2_order>
+                    <szy_custom_attribute2_header>Flags</szy_custom_attribute2_header>
+                    <szy_custom_attribute2_preset><![CDATA[Red Flag|{{flag_red.png}}
+Orange Flag|{{flag_orange.png}}
+Green Flag|{{flag_green.png}}
+Grey Flag|{{flag_grey.png}}
+Shipped Flag|{{flag_shipped.png}}
+Checkered Flag|{{flag_checkered.png}}
+Alert Flag|{{flag_alert.png}}]]></szy_custom_attribute2_preset>
+
+                    <szy_custom_attribute3_show>1</szy_custom_attribute3_show>
+                    <szy_custom_attribute3_order>4400</szy_custom_attribute3_order>
+                    <szy_custom_attribute3_header>Printed?</szy_custom_attribute3_header>
+                    <szy_custom_attribute3_preset>
+<![CDATA[Printed|#f0dba6
+Auto|#f0dba6]]>
+                    </szy_custom_attribute3_preset>
+
+                    <action_show>1</action_show>
+                    <action_order>4500</action_order>
+
+                    <timezone_show>1</timezone_show>
+                    <!--<timezone_order>10000</timezone_order>-->
+                    <timezone_time_start>09:00</timezone_time_start>
+                    <timezone_time_end>18:00</timezone_time_end>
+                    <timezone_type_call>1</timezone_type_call>
+
+                    <common_sorting_field>real_order_id</common_sorting_field>
+                    <sorting_group_type_field></sorting_group_type_field>
+                    <common_sorting_type>0</common_sorting_type>
+                    
+                    <backorder_header>Stock</backorder_header>
+                    <backorder_images_of_status><![CDATA[All not in stock|{{szy_stock_all_out.png}}
+Some in stock|{{szy_stock_some_out.png}}
+All in stock|{{szy_stock_all_in.png}}]]></backorder_images_of_status>
+
+                </grid>
+
+            <!-- End set value for Grid session -->
+
+            <orderpage>
+                <button_scan_enable>0</button_scan_enable>
+            </orderpage>
+
+            <weight>
+                <enabled>1</enabled>
+                <measure_unit>kg</measure_unit>
+                <statuses>processing</statuses>
+                <show_single>0</show_single>
+            </weight>
+
+            <fonts>
+                <font><![CDATA[trebuchet MS]]></font>
+                <size>11</size>
+            </fonts>
+
+            <carriers>
+
+            </carriers>
+        </moogento_shipeasy>
+    </default>
+    <crontab>
+        <jobs>
+            <moogento_shipeasy_mkt_order_id_update>
+                <schedule>
+                    <cron_expr>* * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>moogento_shipeasy/cron::updateMktOrderId</model>
+                </run>
+            </moogento_shipeasy_mkt_order_id_update>
+            <moogento_shipeasy_timezone_update>
+                <schedule>
+                    <cron_expr>* * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>moogento_shipeasy/cron::updateTimezone</model>
+                </run>
+            </moogento_shipeasy_timezone_update>
+            <moogento_shipeasy_ebay_items_links_update>
+                <schedule>
+                    <cron_expr>* * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>moogento_shipeasy/cron::updateEbayItemsLinks</model>
+                </run>
+            </moogento_shipeasy_ebay_items_links_update>
+            <moogento_shipeasy_fill_columns>
+                <schedule>
+                    <cron_expr>* * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>moogento_shipeasy/cron::updateOrderData</model>
+                </run>
+            </moogento_shipeasy_fill_columns>
+            <moogento_shipeasy_fill_product_columns>
+                <schedule>
+                    <cron_expr>* * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>moogento_shipeasy/cron::updateProductData</model>
+                </run>
+            </moogento_shipeasy_fill_product_columns>
+            <moogento_shipeasy_fix_old_columns>
+                <schedule>
+                    <cron_expr>* * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>moogento_shipeasy/cron::fixOldColumns</model>
+                </run>
+            </moogento_shipeasy_fix_old_columns>
+        </jobs>
+    </crontab>
+</config>

@@ -1,0 +1,52 @@
+<div id="feedback" style="display:none" class="mini-newsletter del_updt_pop_main">
+	<div class="del_updt_pop_heading">
+    	<div class="popup_heading_txt">
+            <?php echo $this->__('SIGN UP SUCCESSFUL') ?>
+        </div>
+    </div>
+    <div class="del_updt_pop_mid">
+    	<?php echo Mage::app()->getLayout()->createBlock("cms/block")->setBlockId("content-popup-subscribe-success")->toHtml()?>
+        <div class="popup_mid_btn_main mrgn_t20">
+            <div class="popup_mid_btn">
+                <a class="closepopup1" href="<?php echo $this->getUrl('') ?>">
+                    <?php echo $this->__('CONTINUE SHOPPING') ?>
+                </a>
+                &nbsp;
+            </div>
+        </div>
+    </div>
+</div>
+<div class="newsletter-wrap">
+    <form action="<?php echo $this->getUrl('collection/subscriber/new') ?>" name="newsletter-form" id="newsletter-footer" method="post">
+        <div class="signup_coupon"><img src="<?php echo $this->getSkinUrl('images/discountcard.png') ?>"></div>
+        <div class="home_signup">
+            <h2>
+                <?php echo $this->__('<span class="red">SIGN UP</span> &amp; SAVE'); ?>
+            </h2>
+            <div class="subscribe-input">
+                <button type="submit" name="submit" title="<?php echo $this->__('Submit') ?>" class="submit_btn b-main">
+                    <?php echo $this->__('Submit') ?>
+                </button>
+                <button type="submit" name="submit" title="<?php echo $this->__('Sign up') ?>" class="submit_btn b-foot">
+                    <?php echo $this->__('Sign up') ?>
+                </button>
+                <input placeholder="Enter email here" type="email" name="email" id="newsletter" title="<?php echo $this->__('Subscribe to Our Newsletter') ?>" class="signup_field required-entry validate-email input-subscribe" />
+                <!-- <div style="display: none;" id="error-news-msg" class="error-news-msg">
+                    <?php echo $this->__('Please insert a valid email address.') ?>
+                </div> -->
+            </div>
+        </div>
+    </form>    
+</div>
+<script type="text/javascript">
+//<![CDATA[
+    var newsletterSubscriberFormDetail = new VarienForm('newsletter-footer');
+
+    <?php $test = Mage::getSingleton('core/session')->getSuccessNewsletter() ?>
+    <?php if (isset($test) && $test =='success'): ?>
+        jQuery(".popup_gray2").show();
+        jQuery("#feedback").fancybox().trigger('click');
+    <?php endif ?> 
+//]]>
+</script>
+<?php Mage::getSingleton('core/session')->setSuccessNewsletter('unsuccess') ?>

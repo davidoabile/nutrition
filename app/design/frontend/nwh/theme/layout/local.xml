@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+
+<layout>
+    <default>
+        <remove name="left.newsletter" />
+        <remove name="auguria_sliders" />
+        <remove name="footer_links" />
+        <reference name="jquery_head">
+            <action method="addLib"><script>jquery</script></action>
+            <action method="addLib"><script>noconflict</script></action>
+        </reference>
+        <reference name="head">
+            <action method="addJs"><script>belvg/jqueryext/ui/jquery-ui-1.11.0.full.min.js</script></action>
+            <!--<action method="addCss"><stylesheet>belvg/jqueryext/ui/lightness/jquery-ui.min.css</stylesheet></action>-->
+            <action method="addJs"><script>belvg/jqueryext/jquery.fancybox.js</script></action>
+
+            <!--<action method="addJs"><script>belvg/jqueryext/dscountdown/dscountdown.min.js</script></action>
+            <action method="addItem"><type>js_css</type><name>belvg/jqueryext/dscountdown/dscountdown.css</name><params/></action>-->
+
+            <action method="addJs"><script>belvg/jqueryext/jcarousel/jquery.jcarousel.min.js</script></action>
+            <action method="addItem"><type>js_css</type><name>belvg/jqueryext/jcarousel/skin.css</name><params/></action>
+
+            <action method="addCss"><stylesheet>css/fonts.css</stylesheet><params></params></action>
+
+            <action method="addJs"><script>belvg/prototype_loader/prototype_loader.js</script></action>
+            <action method="addJs"><script>balance/script.js</script></action>
+            <action method="addJs" ifconfig="pbconfig/pb_group/pb_enabled"><script>balance/pb_enabled.js</script></action>
+            <action method="addItem"><type>js_css</type><name>belvg/prototype_loader/prototype_loader.css</name></action>
+
+            <action method="addItem"><type>skin_js</type><name>js/local.js</name><params/><if/></action>
+        </reference>
+        <reference name="root">
+            <block type="core/text_list" name="pre.content" as="pre_content" />
+            <block type="core/text_list" name="pre.footer" as="pre_footer" />
+        </reference>
+        <reference name="header">
+            <block type="core/text_list" name="under.menu" as="underMenu">
+                <!--<block type="core/template" name="gift.header" template="checkout/gift_checkout_header.phtml" />-->
+            </block>
+            <block type="core/template" name="header.mini.cart" as="header_mini_cart" template="checkout/mini_cart.phtml" />
+            <block type="cms/block" name="header.top.content" as="header_top_content">
+                <action method="setBlockId"><id>header_top_content</id></action>
+            </block>
+        </reference>
+        <reference name="top.links">
+            <action method="removeLinkByUrl"><url helper="checkout/url/getCheckoutUrl" /></action>
+        </reference>
+        <reference name="before_body_end">
+            <block type="core/template" name="loader.script" template="belvg/loader.phtml" />
+        </reference>
+    </default>
+
+    <onibi_storelocator_index_index>
+        <reference name="pre_footer">
+            <block type="core/template" name="newsletter_storelocator" template="newsletter/newsletter_storelocator.phtml"/>
+        </reference>
+    </onibi_storelocator_index_index>
+    <onibi_storelocator_index_search>
+        <reference name="pre_footer">
+            <block type="core/template" name="newsletter_storelocator" template="newsletter/newsletter_storelocator.phtml"/>
+        </reference>
+    </onibi_storelocator_index_search>
+    <onibi_storelocator_index_shop>
+        <reference name="pre_footer">
+            <block type="core/template" name="newsletter_storelocator" template="newsletter/newsletter_storelocator.phtml"/>
+        </reference>
+    </onibi_storelocator_index_shop>
+
+
+    <local_init_remove_cols>
+        <remove name="right" />
+        <reference name="root">
+            <action method="setTemplate"><template>page/2columns-left.phtml</template></action>
+        </reference>
+    </local_init_remove_cols>
+    <local_set_default_product_list>
+        <reference name="head">
+            <action method="addCss"><style>css/attribute-splash.css</style></action>
+        </reference>
+        <reference name="category.products">
+            <block type="core/template" name="feature_single_product" as="feature_single_product" template="catalog/feature_product/feature_single_product.phtml" />
+        </reference>
+        <reference name="product_list">
+            <action method="setTemplate">
+                <template>catalog/product/list.phtml</template>
+            </action>
+            <action method="setColumnCount"><count>4</count></action>
+        </reference>
+        <reference name="search_result_list">
+            <action method="setTemplate">
+                <template>catalog/product/list.phtml</template>
+            </action>
+            <action method="setColumnCount"><count>4</count></action>
+        </reference>
+        <reference name="left">
+            <block type="local/shopassistence" before="-" template="catalog/layer/shop_assistence.phtml" />
+            <block type="core/template" name="home.left.weekly_spcial" template="catalog/home/side_ads.phtml" />
+            <block type="cms/block" name="checkout-header-block">
+                <action method="setBlockId"><id>home_page_left_col_banner</id></action>
+            </block>
+        </reference>
+    </local_set_default_product_list>
+
+    <catalog_category_default>
+        <update handle="local_init_remove_cols" />
+        <update handle="local_set_default_product_list" />
+    </catalog_category_default>
+    <catalog_category_layered>
+        <update handle="local_init_remove_cols" />
+        <update handle="local_set_default_product_list" />
+    </catalog_category_layered>
+    <catalogsearch_result_index>
+        <update handle="local_init_remove_cols" />
+        <update handle="local_set_default_product_list" />
+    </catalogsearch_result_index>
+    <catalogsearch_advanced_result>
+        <update handle="local_init_remove_cols" />
+        <update handle="local_set_default_product_list" />
+    </catalogsearch_advanced_result>
+    <tag_product_list>
+        <update handle="local_init_remove_cols" />
+        <update handle="local_set_default_product_list" />
+    </tag_product_list>
+
+    <product_view_structure>
+        <remove name="left" />
+        <remove name="right" />
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        <remove name="product_tag_list" />
+    </product_view_structure>
+    <catalog_product_view>
+        <reference name="head">
+            <action method="addJs"><script>belvg/jqueryext/lodash.min.js</script></action>
+            <action method="addJs"><script>belvg/jqueryext/countdown/jquery.countdown.js</script></action>
+            <action method="addItem"><type>js_css</type><name>belvg/jqueryext/countdown/countdown.css</name><params/></action>
+        </reference>
+        <update handle="product_view_structure" />
+        <reference name="product.info">
+            <block type="inchoo_customlinkedproducts/catalog_product_list_custom"  name="works_well_with" as="works_well_with"  template="inchoo/catalog/product/list/custom.phtml"/>
+            <block type="review/product_view_list" name="product.info.product_additional_data" as="reviews" template="review/product/view/list.phtml" />
+            <block type="review/form" name="product.review.form" as="review_form">
+                <block type="page/html_wrapper" name="product.review.form.fields.before" as="form_fields_before" translate="label">
+                    <label>Review Form Fields Before</label>
+                    <action method="setMayBeInvisible"><value>1</value></action>
+                </block>
+            </block>
+            <block type="catalog/product_list_related" name="catalog.product.related.local" as="related_products" template="catalog/product/list/related.phtml"/>
+            <block type="core/template" name="countdown" as="countdown" template="catalog/product/view/countdown.phtml" />
+        </reference>
+        <reference name="product.info.upsell">
+            <action method="setColumnCount"><columns>5</columns></action>
+            <action method="setItemLimit"><type>upsell</type><limit>10</limit></action>
+        </reference>
+    </catalog_product_view>
+
+    <attributesplash_page_view>
+        <update handle="local_init_remove_cols" />
+        <update handle="local_set_default_product_list" />
+
+        <reference name="product_list">
+            <action method="setTemplate"><template>catalog/product/list_splash.phtml</template></action>
+        </reference>
+    </attributesplash_page_view>
+    <attributesplash_group_view>
+        <update handle="local_init_remove_cols" />
+        <update handle="local_set_default_product_list" />
+        <!--<remove name="left" />
+        <remove name="right" />
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>-->
+    </attributesplash_group_view>
+
+    <local_init_checkout>
+        <remove name="left" />
+        <remove name="right" />
+        <remove name="catalog.topnav" />
+        <remove name="ddmenu.decorate" />
+        <remove name="header.top.content" />
+
+        <reference name="head">
+            <action method="addCss"><stylesheet>css/checkout.css</stylesheet><params></params></action>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column_checkout.phtml</template></action>
+        </reference>
+        <reference name="pre.content">
+            <block type="cms/block" name="checkout-header-block">
+                <action method="setBlockId"><id>account_policy</id></action>
+            </block>
+        </reference>
+    </local_init_checkout>
+    <checkout_cart_index>
+        <reference name="head">
+            <action method="addJs"><script>balance/checkout.js</script></action>
+        </reference>
+        <update handle="local_init_checkout" />
+        <reference name="checkout.cart">
+            <block type="core/template" name="gift.popup" as="gift_popup" template="checkout/gift-offer-cart.phtml" />
+            <block type="core/template" name="bonus.offer.popup" as="bonus_offer_popup" template="checkout/bonus_offer.phtml" />
+        </reference>
+    </checkout_cart_index>
+    <checkout_onepage_index>
+        <update handle="local_init_checkout" />
+    </checkout_onepage_index>
+    <aitcheckout_checkout_index>
+        <update handle="local_init_checkout" />
+    </aitcheckout_checkout_index>
+
+    <customer_account>
+
+    </customer_account>
+    <customer_account_login>
+        <update handle="local_init_checkout" />
+    </customer_account_login>
+    <!--<customer_account_logoutsuccess>
+        <update handle="local_init_checkout" />
+    </customer_account_logoutsuccess>
+    <customer_account_create>
+        <update handle="local_init_checkout" />
+    </customer_account_create>
+    <customer_account_forgotpassword>
+        <update handle="local_init_checkout" />
+    </customer_account_forgotpassword>
+    <customer_account_resetpassword>
+        <update handle="local_init_checkout" />
+    </customer_account_resetpassword>
+    <customer_account_confirmation>
+        <update handle="local_init_checkout" />
+    </customer_account_confirmation>
+    <customer_account_edit>
+        <update handle="local_init_checkout" />
+    </customer_account_edit>-->
+
+
+    <checkout_multishipping_addresses>
+        <update handle="local_init_checkout" />
+    </checkout_multishipping_addresses>
+    <checkout_multishipping_shipping>
+        <update handle="local_init_checkout" />
+    </checkout_multishipping_shipping>
+    <checkout_multishipping_billing>
+        <update handle="local_init_checkout" />
+    </checkout_multishipping_billing>
+    <checkout_multishipping_overview>
+        <update handle="local_init_checkout" />
+    </checkout_multishipping_overview>
+
+    <contacts_index_index translate="label">
+        <remove name="catalog.topnav" />
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        <reference name="pre.content">
+            <block type="cms/block" name="pageblock">
+                <action method="setBlockId"><id>contact_page_pre_content</id></action>
+            </block>
+        </reference>
+    </contacts_index_index>
+
+</layout>

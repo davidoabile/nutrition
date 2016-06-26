@@ -1,0 +1,46 @@
+<?php
+/**
+* Braintree Payments Extension
+*
+* This source file is subject to the Braintree Payment System Agreement (https://www.braintreepayments.com/legal)
+*
+* DISCLAIMER
+* This file will not be supported if it is modified.
+*
+* @copyright   Copyright (c) 2015 Braintree. (https://www.braintreepayments.com/)
+*/
+?>
+<script type="text/javascript">
+    if (typeof braintreeUtils !== 'object') {
+        var braintreeUtils = new BraintreeUtils();
+    }
+    braintreeUtils.createHiddenInput(
+        {id: "cardholder_name"},
+        "<?php echo $this->getFormId()?>"
+    );
+    $('cardholder_name').writeAttribute('data-braintree-name', 'cardholder_name');
+    $('cardholder_name').value = '<?php echo Mage::helper('braintree_payments')->getCardholderName() ?>';
+
+    var onPaymentMethodReceived = function(obj) {
+        var nonceInputId = '<?php echo Mage::helper('braintree_payments')->getNonceInputId() ?>';
+        braintreeUtils.createHiddenInput(
+            {name: "payment[nonce]", id: nonceInputId},
+            "<?php echo $this->getFormId()?>"
+        );
+        $(nonceInputId).value = obj.nonce;
+        var dataForm = new VarienForm('<?php echo $this->getFormId()?>');
+        dataForm.submitForm = function() {
+            if (this.validator.validate()) {
+                $('<?php echo $this->getFormId()?>').submit();
+            }
+        }.bind(dataForm);
+        dataForm.submitForm();
+    };
+    <?php if (Mage::helper('braintree_payments')->isBraintreeCreditCardEnabled()) : ?>
+        braintreeUtils.setup(
+            "<?php echo Mage::helper('braintree_payments')->getToken(); ?>",
+            "<?php echo $this->getFormId()?>",
+            onPaymentMethodReceived
+        );
+    <?php endif; ?>
+</script>

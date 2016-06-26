@@ -1,0 +1,160 @@
+<?php
+$productid = Mage::app()->getRequest()->getParam('id');
+$model = Mage::getModel('catalog/product'); //getting product model
+$_product = $model->load($productid); //getting product object for particular product id
+//$_helper = $this->helper('catalog/output');
+//$_product1 = $this->getProduct();
+$productBlock = Mage::getBlockSingleton('catalog/product_view');
+
+$_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($_product);
+$helpImg = $this->helper('infortis/image');
+?>
+
+<form action="<?php echo Mage::helper('collection/cart')->getAddUrl($_product) ?>" method="post"
+      id="product_addtocart_form"<?php if ($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+    <input type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" name="form_key">
+
+    <div class="main_part mrgn_b20 quickviewNew">
+        <a href="javascript:;" id="" class="pb_close"><img
+                src="<?php echo $this->getSkinUrl("images/close_20.png") ?>"/></a>
+
+        <div class="fw_area product-view">
+            <div class="left product-img-column">
+                <div class="fwimg">
+                    <span><img title="<?php echo $_product->getName() ?>" alt="<?php echo $_product->getName() ?>"
+                               src="<?php echo $helpImg->getImg($_product, 750, 750); ?>"></span>
+                </div>
+            </div>
+
+            <div class="right product-shop">
+                <div class="fwimg_detl">
+                    <div class="product-name">
+                        <h1><span><?php echo $_product->getName(); ?></span></h1>
+                    </div>
+                    <div class="short-description">
+                        <div class="std">
+                            <?php $shortdesc = strip_tags($_product->getShortDescription());
+                            if (strlen($shortdesc) > 90) {
+                                echo substr($shortdesc, 0, 90) . '...';
+                            } else {
+                                echo $shortdesc;
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <?php echo $productBlock->getReviewsSummaryHtml($_product, false, true); //reviews ?>
+
+                    <div class="product-type-data">
+                        <ul class="price-box">
+                           <?php  $product_block = new Mage_Catalog_Block_Product;
+                            echo $product_block->getPriceHtml($_product);
+                            unset($product_block);
+                           ?>
+                        </ul>
+                        <?php if ($_product->isAvailable()): ?>
+                            <p class="availability in-stock"><?php echo $this->__('Availability:') ?> <span><?php echo $this->__('In stock') ?></span></p>
+                            <meta itemprop="availability" content="http://schema.org/InStock">
+                        <?php else: ?>
+                            <p class="availability out-of-stock"><?php echo $this->__('Availability:') ?> <span><?php echo $this->__('Out of stock') ?></span></p>
+                            <meta itemprop="availability" content="http://schema.org/OutOfStock">
+                        <?php endif; ?>
+                    </div>
+                    <?php if ($_product->isSaleable()) { ?>
+                        <div class="product-actions">
+                            <div class="product-options">
+                                <dl>
+                                    <?php $cProduct = Mage::getModel('catalog/product')->load($_product->getId());
+                                    if ($cProduct->getData('type_id') == "configurable") {
+                                        $config = $cProduct->getTypeInstance(true);
+                                        foreach ($config->getConfigurableAttributesAsArray($cProduct) as $attributes) {
+                                            ?>
+                                            <dt class="lableNew"><label><?php echo $attributes['label'] ?></label></dt>
+                                            <dd class="dropdownqty">
+                                                <select name="super_attribute[<?php echo $attributes['attribute_id'] ?>]"
+                                                        id="attribute<?php echo $attributes['attribute_id'] ?>"
+                                                        class="changeprice  required-entry super-attribute-select">
+                                                    <option price='0'
+                                                            value="0"><?php echo $this->__('----Select----') ?></option>
+                                                    <?php foreach ($attributes["values"] as $values) : ?>
+                                                        <?php
+                                                        $price1 = number_format($values['pricing_value'], '2', '.', ',');
+                                                        $pricelable1 = ($price1 != '0.00') ? ' +' . Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol() . $price1 : '';
+                                                        ?>
+                                                        <option value="<?php echo $values['value_index'] ?>"
+                                                                price="<?php echo number_format($values['pricing_value'], '2', '.', ','); ?>">
+                                                            <?php echo $values['label'] ?><?php echo $pricelable1; ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </dd>
+                                        <?php
+                                        }
+                                    }
+                                    $attVal = $_product->getOptions();
+                                    $optStr = "";
+                                    if (count($attVal) > 0) {
+                                        foreach ($attVal as $optionKey => $optionVal) {
+                                            $optStr .= '<dt class="lableNew">' . $optionVal->getTitle() . '</dt>';
+
+                                            $optStr .= "<dd class='dropdownqty'><select class='changeprice' name='options[" . $optionVal->getId() . "]'>";
+                                            $optStr .= "<option value='0'  price='0'>--Please select--</option>";
+                                            foreach ($optionVal->getValues() as $valuesKey => $valuesVal) {
+                                                $price = number_format($valuesVal->getPrice(), '2', '.', ',');
+                                                $pricelable = ($price != '0.0000') ? ' +' . Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol() . $price : '';
+                                                $optStr .= "<option price='" . $valuesVal->getPrice() . "' value='" . $valuesVal->getId() . "'>" . $valuesVal->getTitle() . $pricelable . "</option>";
+                                            }
+                                            $optStr .= "</select></dd>";
+
+                                        }
+                                        echo($optStr);
+                                    }
+                                    ?>
+
+                                </dl>
+                            </div>
+                            <div class="product-options-bottom">
+                            <div class="add-to-cart">
+                                <div class="qty-wrapper">
+                                    <label class="lableNew" for="qty">Quantity</label>
+                                    <input type="hidden" class="input-text qty" title="Qty" value="1" maxlength="12"
+                                           id="qty_<?php echo $productid ?>" name="qty">
+
+                                    <div class="dropdownqty">
+                                        <select name="qty" onchange="jQuery('.qty').val(this.value);">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                        </select>
+                                    </div>
+<!--                                    <div class="mrgn_t5"><a class="add-compare" href="--><?php //echo $_compareUrl ?><!--">+ Add to compare</a></div>-->
+                                </div>
+                                <div class="addcart-wrap">
+                                    <div class="buttonMain">
+                                        <button class="btn-cart buy_btn" id="pb_cart_<?php echo $_product->getId() ?>"
+                                                title="Add to Cart" type="submit">Add To Cart
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    <?php } ?>
+                    <div class="view-full-product">
+
+                        <a href="<?php echo $_product->getProductUrl() ?>" class="viewDtails">Go to full
+                            product
+                            details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>     
+

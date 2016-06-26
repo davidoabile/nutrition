@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_sales_order_grid>
+        <remove name="sales_order.grid"/>
+        <block type="moogento_core/adminhtml_sales_order_grid" name="adminhtml_sales_order.grid" output="toHtml"/>
+    </adminhtml_sales_order_grid>
+
+    <adminhtml_sales_order_index>
+        <reference name="head">
+            <action method="addJs">
+                <script>moogento/general/jquery.min.js</script>
+            </action>
+        </reference>
+    </adminhtml_sales_order_index>
+    <adminhtml_system_config_edit>
+        <reference name="head">
+            <!-- add css vs js for config section here -->
+            <action  method="addCss"><name>moogento/general/config.css</name></action>
+		</reference>    
+    </adminhtml_system_config_edit>
+</layout>

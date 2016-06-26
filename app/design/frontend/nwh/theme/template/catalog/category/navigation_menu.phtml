@@ -1,0 +1,145 @@
+<script type="text/javascript">
+jQuery(document).ready(function() { 
+jQuery(".ddmenu_block").hover(function(){
+      
+    jQuery('.ddmenu').show();
+    jQuery(".ddmenu_frame").on({
+    mouseover: function() {
+        jQuery(".ddmenu").show();
+        jQuery(".ddmenu_block").css('background-color','#9A9B9D');
+    },
+    
+    mouseout: function() {
+        jQuery(".ddmenu").hide();
+         jQuery(".ddmenu_block").css('background-color','');
+    }
+})
+},function(){
+    
+    jQuery('.ddmenu').hide();
+});
+    });
+</script> 
+<?php
+$parentCategoryId = 7;
+$categories = Mage::getModel('catalog/category')->getCategories($parentCategoryId);
+
+
+
+
+$cat = Mage::getModel('catalog/category')->load($parentCategoryId);
+        ?>
+<div class="ddmenu" style="display:none;">
+<div class="ddmenu_frame">
+	<div class="ddmenu_left">
+    	<div class="ddmenu_catg ddmenu_rbodr">
+        	<div class="ddmenu_hadd"><?php echo $cat->getName(); ?></div>
+        	<ul>
+                     <?php
+    $_helper= Mage::helper('catalog/category');
+    foreach ($categories as $category): 
+        if ($category->getIncludeInMenu()) {
+            $navCat = Mage::getModel('catalog/category')->load($category->getId());
+            $getUrl = $_helper->getCategoryUrl($navCat);
+            ?>
+            	<li><a href="<?php echo $getUrl ?>"><?php echo ucwords(strtolower($category->getName())); ?></a></li>
+        <?php }
+    endforeach; ?>                
+            </ul>
+        </div>
+        <div class="ddmenu_catg ddmenu_rbodr">
+        	<div class="ddmenu_hadd">CATEGORY HEADING</div>
+        	<ul>
+            	<li><a href="#">Sports Nutrition & Workout Support</a></li>
+                <li><a href="#">Diet & Weight Management</a></li>
+                <li><a href="#">Protein</a></li>
+            </ul>
+            <div class="ddmenu_hadd">CATEGORY HEADING</div>
+        	<ul>
+            	<li><a href="#">Sports Nutrition & Workout Support</a></li>
+                <li><a href="#">Diet & Weight Management</a></li>
+                <li><a href="#">Protein</a></li>
+            </ul>
+        </div>
+<?php $_Pdetails = 
+Mage::getModel('catalog/product')->loadByAttribute('sku','SKU1686');
+$_Pdetails1 = 
+Mage::getModel('catalog/product')->loadByAttribute('sku','SKU1683');
+?>             
+        <div class="ddmenu_prod">
+            <ul>
+            <?php if($_Pdetails){ ?> 
+                <li>
+                    <a href="<?php echo $_Pdetails->getProductUrl(); ?>">
+                        <div class="dpleft"><img width="70" height="70" src="<?php echo $_Pdetails->getImageUrl(); ?>"></div>
+                    <div class="dpright">
+                        <span class="font14_blk"><?php $namelength = $_Pdetails->getName();;
+                                   if(strlen($namelength) > 10)
+                                    echo substr($namelength,0,10).'...'; 
+                                    else 
+                                    echo substr($namelength,0,10); ?>
+                        </span><br>
+ <span class="font12_gry">By <?php $length = $this->htmlEscape(strip_tags($_Pdetails->getShortDescription()));
+                                   if(strlen($length) > 12)
+                                    echo substr($length,0,12).'...'; 
+                                    else 
+                                    echo substr($length,0,12); ?></span><br>
+                        <span class="font14_red"><?php if($_Pdetails->getSpecialPrice()){
+                         echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($_Pdetails->getSpecialPrice(), '2', '.', ','); 
+                         }else {
+                         echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($_Pdetails->getPrice(), '2', '.', ',');
+                         } ?></span>
+                    </div>
+                    </a>
+                </li>
+                <?php } ?> 
+                <hr>    
+                <?php if($_Pdetails1){ ?> 
+                
+                 <li>
+                    <a href="<?php echo $_Pdetails1->getProductUrl(); ?>">
+                        <div class="dpleft"><img width="70" height="70" src="<?php echo $_Pdetails1->getImageUrl(); ?>"></div>
+                    <div class="dpright">
+                        <span class="font14_blk">
+                        <?php $namelength1 = $_Pdetails1->getName();;
+                                   if(strlen($namelength1) > 10)
+                                    echo substr($namelength1,0,10).'...'; 
+                                    else 
+                                    echo substr($namelength1,0,10); ?>
+                        </span><br>
+                        <span class="font12_gry">By <?php $length = $this->htmlEscape(strip_tags($_Pdetails1->getShortDescription()));
+                                   if(strlen($length) > 12)
+                                    echo substr($length,0,12).'...'; 
+                                    else 
+                                    echo substr($length,0,12); ?></span><br>
+                        <span class="font14_red"><?php if($_Pdetails1->getSpecialPrice()){
+                         echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($_Pdetails1->getSpecialPrice(), '2', '.', ','); 
+                         }else {
+                         echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($_Pdetails1->getPrice(), '2', '.', ',');
+                         } 
+                         ?></span>
+                    </div>
+                    </a>
+                </li>
+                <?php } ?> 
+            </ul>
+        </div>
+    </div>
+    <div class="ddmenu_right">
+    	<ul>
+        	<li class="font18_dgry ddmenu_bbodr">
+            	FREE SHIPPING<br /><span class="font18_dgry2">ON ORDERS OVER $150</span>
+            </li>
+            <li class="font18_dgry ddmenu_bbodr">
+            	AUSTRALIAS NO.1<br /><span class="font18_dgry2">FOR SUPPLEMENTS</span>
+            </li>
+            <li class="font18_dgry ddmenu_bbodr">
+            	SAVE UPTO 60% OFF<br /><span class="font18_dgry2">REGULAR RETAIL PRICES</span>
+            </li>
+            <li>
+            	<img src="<?php echo $this->getSkinUrl('images/ddmenu_policy.png')?>" />
+            </li>
+        </ul>
+    </div>
+</div>
+</div>

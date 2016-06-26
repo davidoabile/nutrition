@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<layout version="0.1.1">
+    <default>
+		<reference name="head">
+			<block type="core/text" name="google.cdn.jquery">
+				<action method="setText" ifconfig="pbconfig/pb_group/pb_load_jq">
+					<text>
+						<![CDATA[<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script><script type="text/javascript">jQuery.noConflict();</script>]]>
+					</text>
+				</action>
+			</block>
+			<action method="addCss" ifconfig="pbconfig/pb_group/pb_enabled">
+				<stylesheet>productbook/css/productbook.css</stylesheet>
+			</action>
+			<action method="addItem" ifconfig="pbconfig/pb_group/pb_enabled">
+				<type>skin_css</type><name>css/jquery.fancybox.css</name>
+			</action>
+			<action method="additem"  ifconfig="pbconfig/pb_group/pb_enabled">
+				<type>skin_js</type><name>js/jquery.fancybox.js</name></action>
+		</reference>
+		<reference name="footer">
+            <block type="productbook/productbook" name="productbook.footer" after="-" template="productbook/pb_footer.phtml" />
+		</reference>
+    </default>
+	<catalog_category_default translate="label">
+            
+		<reference name="content">
+			<!-- Remove the actual product list block -->
+<!--			<remove name="product_list" />-->
+			<!-- Add our custom product list block -->
+<!--			<block type="catalog/product_list" name="pb_product_list">
+                            <action method="setColumnCount"><columns>4</columns></action>
+                <action method="setTemplate">
+                    <template>productbook/product/list.phtml</template>
+                </action>
+			</block>-->
+		</reference>
+	</catalog_category_default>
+
+    <productbook_index_view>
+        <update handle="catalog_product_view"/>
+        <remove name="footer.before"/>
+        <remove name="product.info.upsell"/>
+        <remove name="cross-sell"/>
+        <remove name="header"/>
+        <remove name="breadcrumbs"/>
+        <remove name="messages"/>
+        <remove name="global_messages"/>
+        <remove name="left"/>
+        <remove name="right"/>
+        <remove name="footer"/>
+        <remove name="store_switcher"/>
+        <remove name="before_body_end"/>
+        <remove name="carpet.product.desc.img"/>
+        <remove name="product.info.tabs"/>
+        <remove name="addthis_sharetool"/>
+        <remove name="countdown" />
+        <remove name="product.reviews" />
+        <remove name="brands_brands" />
+        <remove name="container_product_secondary_1" />
+        <remove name="container_product_secondary_2" />
+        <remove name="product.info.additional" />
+        <remove name="i_block_product_secondary_bottom" />
+        <remove name="delivery-product" />
+        <remove name="works_well_with" />
+       <remove name="cross_sells" />
+        <remove name="product.info.upsell" />
+        <remove name="catalog.product.related" />
+    </productbook_index_view>
+
+</layout> 

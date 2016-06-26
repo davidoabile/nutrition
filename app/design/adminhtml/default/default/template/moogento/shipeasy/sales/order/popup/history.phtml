@@ -1,0 +1,99 @@
+<?php 
+/** 
+* Moogento
+* 
+* SOFTWARE LICENSE
+* 
+* This source file is covered by the Moogento End User License Agreement
+* that is bundled with this extension in the file License.html
+* It is also available online here:
+* http://www.moogento.com/License.html
+* 
+* NOTICE
+* 
+* If you customize this file please remember that it will be overwrtitten
+* with any future upgrade installs. 
+* If you'd like to add a feature which is not in this software, get in touch
+* at www.moogento.com for a quote.
+* 
+* ID          pe+sMEDTrtCzNq3pehW9DJ0lnYtgqva4i4Z=
+* File        history.phtml
+* @category   Moogento
+* @package    pickPack
+* @copyright  Copyright (c) 2014 Moogento <info@moogento.com> / All rights reserved.
+* @license    http://www.moogento.com/License.html
+*/ 
+ if ($logRecord = Mage::helper('moogento_shipeasy/sales')->getOrderLogRecord(5)) : ?>
+    <?php if (!$this->getAjaxFor()):?>
+    <div class="clear"></div>
+    <div class="grid" id="history_container">
+    <?php endif;?>
+        <table class="data">
+            <thead>
+                <tr class="headings">
+                    <th><?php echo $this->__('Recent Processed Order Details') ?></th>
+                    <th><?php echo $this->__('Actions') ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+$count = 0;
+$greyout = '';
+$greyout_text = '';
+foreach ($logRecord as $logId => $record)
+{
+	$flag = 0;
+	$actions = $record->getAction();
+	foreach($actions as $action)
+	{	
+		$action_name = $action['action'];
+		if(strpos($action_name,'Separator') !== false)
+		{
+			$flag++ ;
+		}
+		
+	}
+	if($flag > 1)
+		continue;
+
+	if($count > 0) 
+	{
+		$greyout = ' class = "grey"';
+		$greyout_text = ' grey';
+	}
+    $order = $record->getOrder();
+	echo '<tr><td><h4'.$greyout.'>'.$order->getIncrementId().'</h4>';
+	$historical_address = str_replace(' ,',',',$order->getShippingAddress()->format('online'));
+	$historical_address = str_replace(' ,',',',$historical_address);
+	$historical_address = preg_replace('~,,,(.*)~im','',$historical_address);
+	echo '<div class="historical_address'.$greyout_text.'">'.$historical_address.'</div></td>';
+    echo '<td class="log_description">';
+foreach($actions as $action)
+{
+	$action_name = $action['action'];
+	if((strpos($action_name,'Separator') !== false) || ($action_name === ""))
+		continue;
+	$action_result = str_ireplace('Attribute: ','',$this->renderLogActionArguments($record, $action));
+	$action_result = str_ireplace('; Value:',':',$action_result);
+	 echo '
+     <b class="log_title'.$greyout_text.'">'.$record->getActionTitle($action).'</b>
+     <div class="log_descr'.$greyout_text.'">'.$action_result.'</div>';
+
+
+} 
+?>
+    </td>
+</tr>
+
+<?php 
+	$count ++;
+} 
+?>
+            </tbody>
+        </table>
+    <?php if (!$this->getAjaxFor()):?>
+    </div>
+    <?php endif;?>
+<?php else : ?>
+    <span><?php echo $this->__('There is no history record yet.') ?></span>
+<?php endif; ?>

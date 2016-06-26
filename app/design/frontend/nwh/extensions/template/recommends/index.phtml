@@ -1,0 +1,132 @@
+<?php
+$session = Mage::getSingleton('checkout/session');
+$quote = $session->getQuote();
+$address = $quote->getShippingAddress();
+
+$sessionCost = $session->getQuoteShippingCost();
+$sessionCountry = $session->getQuoteShippingCountry();
+
+$country = null;
+$customerSession = Mage::getSingleton("customer/session");
+if ($customerSession -> isLoggedIn()) {
+$customerAddress = $customerSession -> getCustomer() -> getDefaultShippingAddress();
+if ($customerAddress != null) {
+if ($customerAddress -> getId()) 
+$country = $customerAddress -> getCountryId();
+}
+}
+if ($country == null)	
+$country = 'AU';
+
+$address->setCountryId($country)->setCollectShippingRates(true)->collectShippingRates();
+$quote->setShippingMethod('flatrate_flatrate')->save();
+
+$method = $quote->getShippingMethod();
+
+if ($method) {
+foreach ($address->getAllShippingRates() as $rate) {
+if ($rate->getCode()==$method) {
+
+$session->setQuoteShippingCost($address->getQuote()->getStore()->convertPrice($rate->getPrice(), false));
+Mage::getSingleton('checkout/type_onepage')->getQuote()->getShippingAddress()->setCountryId($country)->setShippingMethod($method)->save();
+break;
+}
+}
+}
+$session->getQuote()->save();
+$session->resetCheckout();
+
+
+// $count = $this->helper('checkout/cart')->getSummaryCount();
+//echo $count = Mage::helper('checkout/cart')->getCart()->getQty();
+$lastid = Mage::getSingleton('checkout/session')->getLastAddedProductId(true);
+ 
+
+$session= Mage::getSingleton('checkout/session');
+foreach($session->getQuote()->getAllItems() as $item)
+{
+
+$productid = $item->getProductId();
+ 
+
+if($productid == $lastid){
+$count = $item->getQty();
+$sku = Mage::getModel('catalog/product')->load($item->getProductId());
+Mage::getSingleton('core/session')->setCurrentProdId($item->getProductId());
+Mage::getSingleton('core/session')->setProdQty($count);
+}
+
+}
+$productid = Mage::getSingleton('core/session')->getCurrentProdId();
+$count = Mage::getSingleton('core/session')->getProdQty();
+$_product = Mage::getModel('catalog/product')->load($productid);
+
+ 	            if (count($sku) > 0 && $sku->getData('type_id') == "configurable") {
+                   	$prodUrl = $sku->getProductUrl();
+                   	$prodname = $sku->getName();
+                   	$shorDescription = $sku->getShortDescription();
+                   
+                   	$imageUrl = $this->helper('catalog/image')->init($sku, 'small_image')->resize(124,121);
+                   	Mage::register('product', $sku);
+		    } else {
+		    
+		     $prodUrl = $_product->getProductUrl();
+		     $prodname = $_product->getName();
+		     $shorDescription = $_product->getShortDescription();
+ 		     $imageUrl = $this->helper('catalog/image')->init($_product, 'small_image')->resize(124,121);
+		         Mage::register('product', $_product);
+		         }	     
+
+?>
+<div class="l_prod_added">
+    <div class="pa_hadd">
+        <span class="font30_red">PRODUCT SUCCESSFULLY ADDED!</span><br>
+        <span class="font18_gry">THIS ITEM IS NOW IN YOUR SHOPPING CART</span>
+    </div>
+    <div class="pa_detail mrgn_t20">
+        <div class="pa_detail_inner">
+            <div class="pa_detail_inner_left">
+                <div class="paimg"><span><img height="121" width="124" alt="<?php echo $prodname; ?>" title="<?php echo $prodname; ?>" src="<?php echo $imageUrl; ?>"></span></div>
+            </div>
+            <div class="pa_detail_inner_right mrgn_t20">
+                <div class="comman">
+                    <div class="pa_size"><?php echo $count ?> X </div>
+                    <div class="pa_title font30_dgry" style="margin-top:8px;">
+                        <div>
+                        <?php
+                        if (strlen($prodname) > 18) {
+                            echo substr($prodname, 0, 18) . '...';
+                        } else {
+                            echo $prodname;
+                        }
+                        ?>
+                        </div>
+                        <div class="font14_blk">
+                            <?php
+                            $shorDescription = strip_tags($shorDescription);
+                            if (strlen($shorDescription) > 30) {
+                                echo substr($shorDescription, 0, 30) . '...';
+                            } else {
+                                echo $shorDescription;
+                            }
+                            ?>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="comman mrgn_t40">
+                    <?php 
+                        $checkout_link = Mage::helper('checkout/url')->getCheckoutUrl(); 
+                        $checkout_link = Mage::helper('checkout/cart')->getCartUrl(); 
+                    ?>
+                    <div class="recco_left"><a class="recco_btn_gry" onclick="setLocation('<?php echo $prodUrl ?>')"  href="javascript:;">CONTINUE</a></div>
+                    <div class="recco_right"><a class="recco_grn_btn" href="javascript:;" onclick="setLocation('<?php echo $checkout_link ?>')">CHECKOUT</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="comman mrgn_t20">
+        <?php echo Mage::helper('local')->getStaticBlockHtml('add-to-cart-recommends') ?>
+    </div>
+    <?php echo $this->getChildHtml('product-list-recommends') ?>
+</div>

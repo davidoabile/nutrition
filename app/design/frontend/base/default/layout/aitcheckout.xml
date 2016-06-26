@@ -1,0 +1,254 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+
+    <default>
+        <reference name="top.links">
+            <remove name="checkout_cart_link" />
+            <action method="removeLinkByUrl"><url>checkout</url></action>
+            <action method="removeLinkByUrl"><url>checkout/cart</url></action>
+            <block type="aitcheckout/links" name="aitcheckout_cart_link">
+                <action method="addCartLink"></action>
+                <action method="addCheckoutLink"></action>
+            </block>
+        </reference>
+    </default>
+
+    <aitcheckout_checkout_review_default>
+        <reference name="aitcheckout.checkout">
+            <block type="aitcheckout/checkout_review" name="aitcheckout.checkout.review" as="review" after="checkout.onepage.payment" template="aitcheckout/checkout/review.phtml">
+                <block type="aitcheckout/checkout_review_info" name="aitcheckout.checkout.review.info" as="info"  template="aitcheckout/checkout/review/info.phtml">
+                    <action method="addItemRender"><type>default</type><block>checkout/cart_item_renderer</block><template>checkout/onepage/review/item.phtml</template></action>
+                    <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>checkout/onepage/review/item.phtml</template></action>
+                    <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>checkout/onepage/review/item.phtml</template></action>
+                    <action method="addItemRender"><type>bundle</type><block>bundle/checkout_cart_item_renderer</block><template>checkout/onepage/review/item.phtml</template></action>
+                    <action method="addItemRender"><type>downloadable</type><block>downloadable/checkout_cart_item_renderer</block><template>downloadable/checkout/onepage/review/item.phtml</template></action>
+                    <block type="checkout/cart_totals" name="checkout.onepage.review.info.totals" as="totals" template="aitcheckout/checkout/review/totals.phtml"/>
+                </block>
+                <block type="checkout/cart" name="checkout.onepage.review.cart" after="checkout.onepage.review.info" as="cart"  template="aitcheckout/checkout/review/cart.phtml">
+                    <action method="addItemRender"><type>default</type><block>checkout/cart_item_renderer</block><template>aitcheckout/cart/item/default.phtml</template></action>
+                    <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>aitcheckout/cart/item/default.phtml</template></action>
+                    <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>aitcheckout/cart/item/default.phtml</template></action>
+                    <action method="addItemRender"><type>bundle</type><block>bundle/checkout_cart_item_renderer</block><template>aitcheckout/cart/item/default.phtml</template></action>
+                    <action method="addItemRender"><type>downloadable</type><block>downloadable/checkout_cart_item_renderer</block><template>aitcheckout/cart/item/downloadable.phtml</template></action>
+                    <block type="checkout/cart_totals" name="checkout.onepage.review.cart.totals" as="totals" template="aitcheckout/checkout/review/totals.phtml"/>
+                </block>
+                <block type="checkout/cart" name="checkout.onepage.review.cart" after="checkout.onepage.review.info" as="compact_cart"  template="aitcheckout/compact/review/cart.phtml">
+                    <action method="addItemRender"><type>default</type><block>checkout/cart_item_renderer</block><template>aitcheckout/cart/compact/item/default.phtml</template></action>
+                    <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>aitcheckout/cart/compact/item/default.phtml</template></action>
+                    <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>aitcheckout/cart/compact/item/default.phtml</template></action>
+                    <action method="addItemRender"><type>bundle</type><block>bundle/checkout_cart_item_renderer</block><template>aitcheckout/cart/compact/item/default.phtml</template></action>
+                    <action method="addItemRender"><type>downloadable</type><block>downloadable/checkout_cart_item_renderer</block><template>aitcheckout/cart/compact/item/downloadable.phtml</template></action>
+                    <block type="checkout/cart_totals" name="checkout.onepage.review.cart.totals" as="totals" template="aitcheckout/checkout/review/totals.phtml"/>
+                </block>
+                <block type="core/text_list" name="checkout.onepage.review.info.items.before" as="items_before" translate="label">
+                    <label>Items Before</label>
+                </block>
+                <block type="core/text_list" name="checkout.onepage.review.info.items.after" as="items_after" translate="label">
+                    <label>Items After</label>
+                </block>
+            </block>
+        </reference>
+    </aitcheckout_checkout_review_default>
+    
+    <aitcheckout_checkout_review_empty>
+        <block type="core/template" name="aitcheckout.checkout" output="getChildHtml" />
+    </aitcheckout_checkout_review_empty>
+
+    <aitcheckout_checkout_default>
+        <reference name="head">
+            <action method="addJs"><script>varien/product.js</script></action>
+        
+            <action method="addItem"><type>skin_js</type><name>js/opcheckout.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/validation.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout.js</name></action>
+            <action method="removeItem"><type>js</type><name>mage/directpost.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/directpost.js</name></action>            
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/step.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/step/address.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/step/address/billing.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/step/address/shipping.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/step/address/billinglocation.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/step/address/shippinglocation.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/step/messages.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/step/shipping_method.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/step/payment.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/step/messages.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/step/customreview.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/step/review.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/review.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/step/coupon.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/step/giftwrap.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/step/deliverydate.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/step/giftmessage.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aitoc/aitcheckout/checkout/login.js</name></action>
+            <action method="addItem"><type>skin_css</type><name>css/aitoc/aitcheckout/checkout.css</name></action>
+
+            <action method="addItem"><type>js_css</type><name>calendar/calendar-win2k-1.css</name><params/></action>
+            <action method="addItem"><type>js</type><name>calendar/calendar.js</name></action>
+            <action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name></action>
+        </reference>
+        <reference name="content">
+            <block type="core/html_calendar" name="head.calendar" as="html_calendar" template="aitcheckout/js/calendar.phtml"/>
+            <block type="aitcheckout/checkout" name="aitcheckout.checkout">
+                <block type="aitcheckout/checkout_login" name="aitcheckout.login" as="login" template="aitcheckout/checkout/login.phtml">
+                    <block type="core/text_list" name="aitchekout.login.info">
+                        <block type="aitcheckout/captcha" name="captcha.login">
+                            <action method="setFormId"><formId>user_login</formId> </action>
+                            <action method="setImgWidth"><width>230</width> </action>
+                            <action method="setImgHeight"><width>50</width></action>
+                        </block>
+                    </block>
+                    <block type="core/text_list" name="aitchekout.login.forgot_password">
+                        <block type="aitcheckout/captcha" name="captcha.forgot">
+                            <action method="setFormId"><formId>user_forgotpassword</formId> </action>
+                            <action method="setImgWidth"><width>230</width> </action>
+                            <action method="setImgHeight"><width>50</width></action>
+                        </block>
+                    </block>
+                </block>
+                <block type="aitcheckout/checkout_billing" name="aitcheckout.checkout.billing" as="billing" template="aitcheckout/checkout/billing.phtml">
+                    <block type="core/text_list" name="aitcheckout.checkout.billing.info">
+                        <block type="aitcheckout/captcha" name="captcha.guest.checkout">
+                            <action method="setFormId"><formId>guest_checkout</formId></action>
+                            <action method="setImgWidth"><width>200</width></action>
+                            <action method="setImgHeight"><width>50</width></action>
+                        </block>
+                        <block type="aitcheckout/captcha" name="captcha.register.during.checkout">
+                            <action method="setFormId"><formId>register_during_checkout</formId></action>
+                            <action method="setImgWidth"><width>200</width></action>
+                            <action method="setImgHeight"><width>50</width></action>
+                        </block>
+                    </block>
+                </block>
+                <block type="aitcheckout/checkout_shipping" name="aitcheckout.checkout.shipping" as="shipping" template="aitcheckout/checkout/shipping.phtml" />
+                <block type="checkout/onepage_shipping_method" name="checkout.onepage.shipping_method" as="shipping_method" template="aitcheckout/checkout/shipping_method.phtml">
+                    <block type="checkout/onepage_shipping_method_available" name="checkout.onepage.shipping_method.available" as="available" template="aitcheckout/checkout/shipping_method/available.phtml"/>
+                </block>
+                <block type="aitcheckout/checkout_giftwrap" name="checkout.onepage.giftwrap" as="aitgiftwrap" template="aitcheckout/checkout/giftwrap.phtml"/>
+                <block type="aitcheckout/checkout_giftmessage" name="checkout.onepage.giftmessage" as="giftmessage" />
+                <block type="aitcheckout/checkout_deliverydate" name="checkout.onepage.deliverydate" as="deliverydate" />
+                <block type="checkout/onepage_payment" name="checkout.onepage.payment" as="payment" template="aitcheckout/checkout/payment.phtml">
+                    <block type="checkout/onepage_payment_methods" name="checkout.payment.methods" as="methods" template="checkout/onepage/payment/methods.phtml">
+                        <action method="setMethodFormTemplate"><method>purchaseorder</method><template>payment/form/purchaseorder.phtml</template></action>
+                    </block>
+                </block>    
+                <block type="checkout/agreements" name="checkout.agreements" as="agreements" template="aitcheckout/checkout/agreements.phtml"/>
+                <block type="checkout/cart_coupon" name="aitcheckout.cart.coupon" as="coupon" template="aitcheckout/checkout/coupon.phtml" />
+                <block type="aitcheckout/newsletter_subscribe" name="aitcheckout.checkout.newsletter" as="newsletter" template="aitcheckout/newsletter/subscribe.phtml"/>                                            
+            </block>
+        </reference>
+    </aitcheckout_checkout_default>
+        
+    <aitcheckout_checkout_index>
+        <update handle="aitcheckout_checkout_default" />
+        <update handle="aitcheckout_checkout_review_default" />
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="aitcheckout/giftreg_indicator" name="adjgiftreg_indicator" before="-" />
+        </reference>
+        <reference name="aitcheckout.checkout">
+            <action method="setCheckoutTemplate"><value>aitcheckout/checkout.phtml</value></action>
+            <action method="setEmptyTemplate"><value>checkout/cart/noItems.phtml</value></action>
+            <action method="setCompactTemplate"><value>aitcheckout/compact.phtml</value></action>
+            <action method="setCompact2Template"><value>aitcheckout/compact2.phtml</value></action>
+            <action method="chooseTemplate"/>
+            
+            <block type="checkout/onepage_login" name="checkout.onepage.login" as="reqlogin" >
+                <block type="persistent/form_remember" name="persistent.remember.me" template="persistent/remember_me.phtml" ifconfig="persistent/options/enabled" />
+                <block type="page/html_wrapper" name="checkout.onepage.login.before" as="login_before" translate="label">
+                    <label>Login/Registration Before</label>
+                    <action method="setMayBeInvisible"><value>1</value></action>
+                </block>
+                <action method="setTemplate"><template helper="aitcheckout/login/getLoginTemplatePath"/></action>
+            </block>
+            
+            <block type="core/text_list" name="checkout.cart.top_methods" as="top_methods" translate="label">
+                <block type="paypal/express_shortcut" name="checkout.cart.methods.paypal_express.top" template="paypal/express/shortcut.phtml">
+                    <action method="setIsQuoteAllowed"><value>1</value></action>
+                </block>
+                <block type="paypaluk/express_shortcut" name="checkout.cart.methods.paypaluk_express.top" template="paypal/express/shortcut.phtml">
+                    <action method="setIsQuoteAllowed"><value>1</value></action>
+                </block>
+                <block type="googlecheckout/link" name="checkout.cart.methods.googlecheckout.top" template="googlecheckout/link.phtml" />
+                <block type="checkout/multishipping_link" name="checkout.cart.methods.multishipping" template="checkout/multishipping/link.phtml"/>
+            </block>
+        </reference>
+    </aitcheckout_checkout_index>
+    
+    <aitcheckout_checkout_payment>
+        <block type="checkout/onepage_payment" name="root" output="toHtml" template="aitcheckout/checkout/payment.phtml">
+            <block type="checkout/onepage_payment_methods" name="checkout.payment.methods" as="methods" template="checkout/onepage/payment/methods.phtml">
+                <action method="setMethodFormTemplate"><method>purchaseorder</method><template>payment/form/purchaseorder.phtml</template></action>
+            </block>
+        </block>
+    </aitcheckout_checkout_payment>
+
+    <aitcheckout_checkout_shipping_method>
+        <block type="checkout/onepage_shipping_method" name="root" output="toHtml" template="aitcheckout/checkout/shipping_method.phtml">
+            <block type="checkout/onepage_shipping_method_available" name="checkout.onepage.shipping_method.available" as="available" template="aitcheckout/checkout/shipping_method/available.phtml"/>
+        </block>    
+    </aitcheckout_checkout_shipping_method>
+
+    <aitcheckout_checkout_giftmessage>
+        <block type="aitcheckout/checkout_giftmessage" name="root" output="toHtml"/>  
+    </aitcheckout_checkout_giftmessage>
+
+    <aitcheckout_checkout_aitgiftwrap>
+        <block type="aitcheckout/checkout_giftwrap" name="root" output="toHtml" template="aitcheckout/checkout/giftwrap.phtml"/>  
+    </aitcheckout_checkout_aitgiftwrap>
+    
+    <aitcheckout_checkout_review>
+        <update handle="aitcheckout_checkout_review_empty" />
+        <update handle="aitcheckout_checkout_review_default" />
+        <block type="aitcheckout/authorizenet_directpost_form" name="root" output="toHtml" template="authorizenet/directpost/form.phtml">
+            <action method="setMethodInfo"></action>
+        </block>          
+        <reference name="checkout.onepage.review.info.items.after">
+             <block type="aitcheckout/checkout_paypal_iframe" name="paypal.iframe.wrapper" />
+        </reference>
+    </aitcheckout_checkout_review>
+    
+    <aitcheckout_checkout_coupon>
+        <block type="checkout/cart_coupon" name="root" output="toHtml" template="aitcheckout/checkout/coupon.phtml" />
+    </aitcheckout_checkout_coupon>
+    
+    <checkout_cart_index>
+        <update handle="aitcheckout_checkout_default" />
+        <update handle="aitcheckout_checkout_review_default" />
+        <reference name="aitcheckout.checkout">
+            <action method="setCheckoutTemplate"><value>aitcheckout/checkout.phtml</value></action>
+            <action method="setCompactTemplate"><value>aitcheckout/compact.phtml</value></action>
+            <action method="setCompact2Template"><value>aitcheckout/compact2.phtml</value></action>
+            <action method="chooseTemplate"/>
+
+            <block type="checkout/onepage_login" name="checkout.onepage.login" as="reqlogin" >
+                <block type="persistent/form_remember" name="persistent.remember.me" template="persistent/remember_me.phtml"  ifconfig="persistent/options/enabled" />
+                <block type="page/html_wrapper" name="checkout.onepage.login.before" as="login_before" translate="label">
+                    <label>Login/Registration Before</label>
+                    <action method="setMayBeInvisible"><value>1</value></action>
+                </block>
+                <action method="setTemplate"><template helper="aitcheckout/login/getLoginTemplatePath"/></action>
+            </block>
+            
+            <action method="setContext"><context>cart</context></action>
+            <block type="core/text_list" name="checkout.cart.top_methods" as="top_methods" translate="label">
+                <block type="checkout/multishipping_link" name="checkout.cart.methods.multishipping" template="checkout/multishipping/link.phtml"/>        
+            </block>
+            <block type="checkout/cart_crosssell" name="checkout.cart.crosssell" as="crosssell" template="checkout/cart/crosssell.phtml" />
+        </reference>
+    </checkout_cart_index>
+    
+</layout>
+<!--
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+-->

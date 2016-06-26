@@ -1,0 +1,60 @@
+<?php $collection = $this->_getCollection() ?>
+<h1><?php echo $this->_getTitle() ?></h1>
+<div class="grid">
+<table class="data">
+    <thead>
+        <tr class="headings">
+            <th><?php echo $this->__('Date') ?></th>
+            <th><?php echo $this->__('Carrier') ?></th>
+            <th><?php echo $this->__('File') ?></th>
+            <th><?php echo $this->__('Returned') ?></th>
+            <th><?php echo $this->__('Printed') ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($collection as $manifest): ?>
+            <tr>
+                <td><?php echo $manifest->getDate() ?></td>
+                <td><?php echo $manifest->getCarrier() ?></td>
+                <td>
+                    <a href="<?php echo Mage::getBaseUrl('media') . $manifest->getFile() ?>" target="_blank"><?php echo $this->__('Download') ?></a>
+                </td>
+                <td class="a-center">
+                    <input class="returned-checkbox" type="checkbox" value="1" <?php if ($manifest->getReturned()): ?>checked="checked"<?php endif; ?> data-id="<?php echo $manifest->getId() ?>" />
+                </td>
+                <td class="a-center">
+                    <input class="printed-checkbox" type="checkbox" value="1" <?php if ($manifest->getPrinted()): ?>checked="checked"<?php endif; ?> data-id="<?php echo $manifest->getId() ?>" />
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+</div>
+<script>
+    jQuery(function($){
+        $('.returned-checkbox').on('change', function(){
+            var el = $(this);
+            $.ajax({
+                method: 'post',
+                url: '<?php echo $this->getUrl('*/*/toggleReturned') ?>',
+                data: {
+                    form_key: FORM_KEY,
+                    id: el.data('id'),
+                    value: el.is(':checked') * 1
+                }
+            })
+        });
+        $('.printed-checkbox').on('change', function(){
+            var el = $(this);
+            $.ajax({
+                method: 'post',
+                url: '<?php echo $this->getUrl('*/*/togglePrinted') ?>',
+                data: {
+                    form_key: FORM_KEY,
+                    id: el.data('id'),
+                    value: el.is(':checked') * 1
+                }
+            })
+        });
+    });
+</script>

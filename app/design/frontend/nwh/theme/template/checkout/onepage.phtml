@@ -1,0 +1,128 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+$quote = Mage::getSingleton('checkout/session')->getQuote();
+        $cartItems = $quote->getAllVisibleItems();
+        $isGiftSelected = false;
+        foreach ($cartItems as $item)
+        {
+            $productId = $item->getProductId();
+            $product = Mage::getModel('catalog/product')->load($productId);
+            $cats = $product->getCategoryIds(); 
+            foreach ($cats as $category_id) {
+		    $_cat = Mage::getModel('catalog/category')->load($category_id) ;
+		    if( $_cat->getName() == "Gifts")
+		    {
+		    	$isGiftSelected = true;
+		    }
+		} 
+        }
+?>
+ <?php if(!$isGiftSelected):?>
+<?php echo $this->getLayout()->createBlock("Mage_Core_Block_Template")->setTemplate("checkout/gift-offer-cart.phtml")->toHtml();?>
+ <?php endif;?>
+
+<!--<div class="page-title">
+    <h1><?php //echo $this->__('Checkout') ?></h1>
+</div>-->
+<!--<div class="a_step">
+    <ul>
+        <li id="step1">
+            <div class="num bg_red">1</div>
+            <div class="text font12_dgry">SHOPPING<br>
+                CART</div>
+        </li>
+        <li id="step2">
+            <div class="num bg_red">2</div>
+            <div class="text font12_dgry">CHECKOUT<br>
+                METHOD</div>
+        </li>
+        <li id="step3">
+            <div class="num bg_gry">3</div>
+            <div class="text font12_lgry">PERSONAL<br>
+                DETAILS</div>
+        </li>
+        <li id="step4">
+            <div class="num bg_gry">4</div>
+            <div class="text font12_lgry">SHIPPING &amp; <br>
+                PAYMENT</div>
+        </li>
+        <li id="step5">
+            <div class="num bg_gry">5</div>
+            <div class="text font12_lgry">ORDER<br>
+                CONFIRMATION</div>
+        </li>
+    </ul>
+</div>-->
+
+<div class="form_main">
+    <script type="text/javascript" src="<?php echo $this->getJsUrl('varien/accordion.js') ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->getSkinUrl('js/opcheckout.js') ?>"></script>
+    <ol class="opc" id="checkoutSteps">
+        <?php $i = 0;
+        foreach ($this->getSteps() as $_stepId => $_stepInfo): ?>
+    <?php if (!$this->getChild($_stepId) || !$this->getChild($_stepId)->isShow()): continue;
+    endif;
+    $i++ ?>
+            <li id="opc-<?php echo $_stepId ?>" class="section<?php echo!empty($_stepInfo['allow']) ? ' allow' : '' ?><?php echo!empty($_stepInfo['complete']) ? ' saved' : '' ?>">
+                <div class="step-title">
+                    <span class="number"><?php echo $i ?></span>
+                   <h2><?php echo ($_stepInfo['label'] == "Shipping Method") ? "Payment Method" : $_stepInfo['label'] ?></h2>
+                    <!--<div class="form_heading_right">
+                    	NEED HELP? 1300 837 785
+                        <div class="form_heading_right_text">
+                             <a class="link14_gry" href="#">CONTINUE SHOPPING</a> 
+                        </div>
+                    </div>-->
+                    <!--<a href="#"><?php echo $this->__('Edit') ?></a>-->
+                </div>
+               <!-- <div class="form_center_line_checkout"></div>-->
+                <div id="checkout-step-<?php echo $_stepId ?>" class="step a-item" style="display:none;">
+            <?php echo $this->getChildHtml($_stepId) ?>
+                </div>
+            </li>
+<?php endforeach ?>
+    </ol>
+    <script type="text/javascript">
+    //<![CDATA[
+        var accordion = new Accordion('checkoutSteps', '.step-title', true);
+<?php if ($this->getActiveStep()): ?>
+            accordion.openSection('opc-<?php echo $this->getActiveStep() ?>');
+<?php endif ?>
+        var checkout = new Checkout(accordion, {
+            progress: '<?php echo $this->getUrl('checkout/onepage/progress') ?>',
+            review: '<?php echo $this->getUrl('checkout/onepage/review') ?>',
+            saveMethod: '<?php echo $this->getUrl('checkout/onepage/saveMethod') ?>',
+            failure: '<?php echo $this->getUrl('checkout/cart') ?>'}
+        );
+    //]]>
+    if($j('#opc-billing').hasClass('active')){
+            $j("#step3 .num").removeClass('bg_gry');
+            $j("#step3 .num").addClass('bg_red');
+    }
+    </script>
+</div>

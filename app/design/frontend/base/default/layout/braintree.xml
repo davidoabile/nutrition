@@ -1,0 +1,269 @@
+<?xml version="1.0"?>
+<!--
+/**
+* Braintree Payments Extension
+*
+* This source file is subject to the Braintree Payment System Agreement (https://www.braintreepayments.com/legal)
+*
+* DISCLAIMER
+* This file will not be supported if it is modified.
+*
+* @copyright   Copyright (c) 2015 Braintree. (https://www.braintreepayments.com/)
+*/
+-->
+<layout version="0.1.0">
+    <!-- All pages, because minicart is presented on all pages -->
+    <default>
+        <reference name="head">
+            <action method="addJs"><file>braintree/braintree.js</file></action>
+            <action method="addJs"><file>braintree/braintree-utils.js</file></action>
+            <action method="addCss"><stylesheet>braintree/css/braintree.css</stylesheet></action>
+        </reference>
+        <reference name="cart_sidebar.extra_actions">
+            <block type="braintree_payments/paypal_js" name="braintree_paypal.minicart" template="braintree/paypal/shortcut.phtml">
+                <action method="setShortcutType">
+                    <value>minicart</value>
+                </action>
+            </block>
+        </reference>
+        <reference name="topCart.extra_actions">
+            <block type="braintree_payments/paypal_js" name="braintree_paypal.minicart" template="braintree/paypal/shortcut.phtml">
+                <action method="setShortcutType">
+                    <value>minicart</value>
+                </action>
+            </block>
+        </reference>
+    </default>
+    <!-- Native onepage checkout -->
+    <default>
+        <reference name="after_body_start">
+            <block type="core/template" name="braintree_payments_setup_utils" template="braintree/creditcard/setup_utils.phtml" />
+        </reference>
+        <reference name="before_body_end">
+            <block type="braintree_payments/datajs" name="braintree_payments_data_js" template="braintree/data_js.phtml" >
+                <action method="setData">
+                    <key>form_id</key>
+                    <value>co-payment-form</value>
+                </action>
+            </block>
+            <!-- Compatibility with Uni_Opcheckout extension start-->
+            <block type="braintree_payments/paypal_js" name="braintree_opcheckout" template="braintree/extensions/opcheckout/js.phtml">
+                <action method="setData">
+                    <key>form_id</key>
+                    <value>co-payment-form</value>
+                </action>
+            </block>
+            <!-- Compatibility with Uni_Opcheckout extension end-->
+        </reference>
+    </default>
+    <checkout_onepage_savepayment>
+        <reference name="checkout.onepage.review.info.items.before">
+            <block type="braintree_payments/creditcard_threedsecure" name="braintree_threedsecure" template="braintree/creditcard/threedsecure.phtml">
+                <action method="setData">
+                    <key>form_id</key>
+                    <value>co-payment-form</value>
+                </action>
+            </block>
+            <block type="braintree_payments/paypal_js" name="braintree_paypal_js" template="braintree/paypal/js.phtml">
+                <action method="setData">
+                    <key>form_id</key>
+                    <value>co-payment-form</value>
+                </action>
+            </block>
+        </reference>
+    </checkout_onepage_savepayment>
+    <checkout_onepage_paymentmethod>
+        <reference name="root">
+            <block type="core/template" name="braintree_payments_setup" template="braintree/creditcard/setup.phtml" output="toHtml">
+                <action method="setData">
+                    <key>form_id</key>
+                    <value>co-payment-form</value>
+                </action>
+            </block>
+            <block type="core/template" name="braintree_payments_nonce" template="braintree/creditcard/nonce.phtml" output="toHtml">
+                <action method="setData">
+                    <key>form_id</key>
+                    <value>co-payment-form</value>
+                </action>
+            </block>
+        </reference>
+        <!-- Compatibility with Iwd_Opc (One Page Checkout) extension start-->
+        <reference name="checkout.onepage.review.info.items.before">
+            <block type="core/template" name="braintree_iwd_opc_threedsecure" template="braintree/extensions/iwd_opc/threedsecure.phtml" output="toHtml"/>
+        </reference>
+        <!-- Compatibility with Iwd_Opc (One Page Checkout) extension end-->
+    </checkout_onepage_paymentmethod>
+    <!-- Native checkout with multiple addresses -->
+    <checkout_multishipping_billing>
+        <reference name="before_body_end">
+            <block type="core/template" name="braintree_payments_multishipping" template="braintree/creditcard/multishipping.phtml" >
+                <action method="setData">
+                    <key>form_id</key>
+                    <value>multishipping-billing-form</value>
+                </action>
+            </block>
+            <block type="braintree_payments/datajs" name="braintree_payments_data_js" template="braintree/data_js.phtml" >
+                <action method="setData">
+                    <key>form_id</key>
+                    <value>multishipping-billing-form</value>
+                </action>
+            </block>
+        </reference>        
+    </checkout_multishipping_billing>
+    <!-- Customer account -->
+    <customer_account>
+        <reference name="customer_account_navigation">
+            <action method="addLink" translate="label" module="braintree_payments" ifconfig="payment/braintree/use_vault">
+                <name>credit_card</name>
+                <path>customer/creditcard/</path>
+                <label>Credit Cards</label>
+            </action>
+        </reference>
+    </customer_account>
+    <customer_creditcard_index>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">
+            <block type="braintree_payments/creditcard_management" name="customer_creditcard_management" template="braintree/creditcard/management/index.phtml" />
+        </reference>
+    </customer_creditcard_index>
+    <customer_creditcard_new>
+        <reference name="after_body_start">
+            <block type="core/template" name="braintree_payments_setup" template="braintree/creditcard/setup.phtml" >
+                <action method="setData">
+                    <key>form_id</key>
+                    <value>form-validate</value>
+                </action>
+            </block>
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">
+            <block type="braintree_payments/creditcard_management" name="customer_creditcard_management" template="braintree/creditcard/management/edit.phtml"/>
+        </reference>
+    </customer_creditcard_new>
+    <customer_creditcard_edit>
+        <reference name="after_body_start">
+            <block type="core/template" name="braintree_payments_setup" template="braintree/creditcard/setup.phtml" >
+                <action method="setData">
+                    <key>form_id</key>
+                    <value>form-validate</value>
+                </action>
+            </block>
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">
+            <block type="braintree_payments/creditcard_management" name="customer_creditcard_management" template="braintree/creditcard/management/edit.phtml">
+                <action method="setType"><value>edit</value></action>
+            </block>
+        </reference>
+    </customer_creditcard_edit>
+    <customer_creditcard_delete>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">
+            <block type="braintree_payments/creditcard_management" name="customer_creditcard_management" template="braintree/creditcard/management/delete.phtml" />
+        </reference>
+    </customer_creditcard_delete>
+    <!-- Shopping cart, Braintree PayPal shortcuts -->
+    <checkout_cart_index>
+        <reference name="checkout.cart.top_methods">
+            <block type="braintree_payments/paypal_js" name="checkout.cart.methods.braintree_paypal.top" before="-" template="braintree/paypal/shortcut.phtml">
+                <action method="setShortcutType">
+                    <value>top</value>
+                </action>
+            </block>
+        </reference>
+        <reference name="checkout.cart.methods">
+            <block type="braintree_payments/paypal_js" name="checkout.cart.methods.braintree_paypal.bottom" before="-" template="braintree/paypal/shortcut.phtml">
+                <action method="setShortcutType">
+                    <value>bottom</value>
+                </action>
+            </block>
+        </reference>
+    </checkout_cart_index>
+    <!-- Braintree PayPal shortcuts checkout -->
+    <braintree_checkout_review translate="label">
+        <label>Order Review Form</label>
+        <remove name="right"/>
+        <remove name="left"/>
+
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="braintree_payments/paypal_review" name="braintree.paypal.review" template="braintree/paypal/review.phtml">
+                <block type="braintree_payments/paypal_reviewDetails" name="braintree.paypal.review.details" as="details" template="braintree/paypal/review_details.phtml">
+                    <action method="addItemRender"><type>default</type><block>checkout/cart_item_renderer</block><template>checkout/onepage/review/item.phtml</template></action>
+                    <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>checkout/onepage/review/item.phtml</template></action>
+                    <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>checkout/onepage/review/item.phtml</template></action>
+                    <action method="addItemRender"><type>bundle</type><block>bundle/checkout_cart_item_renderer</block><template>checkout/onepage/review/item.phtml</template></action>
+                    <block type="checkout/cart_totals" name="braintree.paypal.review.details.totals" as="totals" template="checkout/onepage/review/totals.phtml"/>
+                </block>
+                <block type="checkout/agreements" name="braintree.paypal.review.details.agreements" as="agreements" template="checkout/onepage/agreements.phtml"/>
+            </block>
+        </reference>
+        <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>js/checkout/review.js</name></action>
+        </reference>
+        <block type="core/text_list" name="additional.product.info" />
+    </braintree_checkout_review>
+    <braintree_checkout_review_details>
+        <block type="braintree_payments/paypal_reviewDetails" name="root" output="toHtml" template="braintree/paypal/review_details.phtml">
+            <action method="addItemRender"><type>default</type><block>checkout/cart_item_renderer</block><template>checkout/onepage/review/item.phtml</template></action>
+            <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>checkout/onepage/review/item.phtml</template></action>
+            <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>checkout/onepage/review/item.phtml</template></action>
+            <action method="addItemRender"><type>bundle</type><block>bundle/checkout_cart_item_renderer</block><template>checkout/onepage/review/item.phtml</template></action>
+            <block type="checkout/cart_totals" name="braintree.paypal.review.details.totals" as="totals" template="checkout/onepage/review/totals.phtml"/>
+        </block>
+    </braintree_checkout_review_details>
+    <braintree_checkout_editaddress translate="label">
+        <label>Order Shipping Address Edit Form</label>
+        <remove name="right"/>
+        <remove name="left"/>
+
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="braintree_payments/paypal_reviewShippingAddress" template="braintree/paypal/review_shipping_address.phtml" />
+        </reference>
+    </braintree_checkout_editaddress>
+    <!-- Compatibility with OneStepCheckout extension -->
+    <onestepcheckout_index_index>
+        <reference name="before_body_end">
+            <block type="braintree_payments/datajs" name="braintree_payments_data_js" template="braintree/data_js.phtml" >
+                <action method="setData">
+                    <key>form_id</key>
+                    <value>onestepcheckout-form</value>
+                </action>
+            </block>
+            <block type="braintree_payments/paypal_js" name="braintree_paypal_js" template="braintree/extensions/onestepcheckout/js.phtml">
+                <action method="setData">
+                    <key>form_id</key>
+                    <value>onestepcheckout-form</value>
+                </action>
+            </block>
+        </reference>
+    </onestepcheckout_index_index>
+    <!-- Compatibility with Uni_Opcheckout extension -->
+    <opcheckout_onepage_review>
+        <reference name="root">
+            <block type="core/template" name="braintree_opcheckout_paypal" template="braintree/extensions/opcheckout/paypal.phtml" output="toHtml"/>
+        </reference>
+    </opcheckout_onepage_review>
+    <!-- Compatibility with Iwd_Opc (One Page Checkout) extension -->
+    <opc_index_index>
+        <reference name="before_body_end">
+            <block type="core/template" name="braintree_threedsecure_iwd_opc" template="braintree/extensions/iwd_opc/creditcard.phtml">
+                <action method="setData">
+                    <key>form_id</key>
+                    <value>co-payment-form</value>
+                </action>
+            </block>
+            <block type="braintree_payments/paypal_js" name="braintree_paypal_iwd_opc" template="braintree/extensions/iwd_opc/paypal.phtml">
+                <action method="setData">
+                    <key>form_id</key>
+                    <value>co-payment-form</value>
+                </action>
+            </block>
+        </reference>
+    </opc_index_index>
+</layout>

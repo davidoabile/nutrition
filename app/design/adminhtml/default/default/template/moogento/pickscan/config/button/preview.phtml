@@ -1,0 +1,69 @@
+<script type="text/javascript">
+    //<![CDATA[
+    var previewWindow;
+    function previewBackground() {
+        var image = '',
+            link = $('row_moogento_pickscan_background_image').down('td.value').down('a');
+        if (link) {
+            image = link.href;
+        } else {
+            alert('<?php echo $this->__('Please upload an image first') ?>');
+            return;
+        }
+
+        previewWindow = new Window({
+                title: "<?php echo $this->__('Background preview') ?>",
+                zIndex: 3000,
+                destroyOnClose: true,
+                recenterAuto:true,
+                resizable: true,
+                width:450, height:450,
+                minimizable: false,
+                maximizable: false,
+                draggable: false,
+                windowClassName: 'preview-window'
+        });
+        previewWindow.setContent('background-preview-container');
+        previewWindow.showCenter();
+        $('background-preview').setStyle({
+            backgroundImage: 'url(' + image + ')',
+            backgroundRepeat: $('moogento_pickscan_background_repeat').value,
+            backgroundPosition: $('moogento_pickscan_background_horizontal_align').value + ' ' + $('moogento_pickscan_background_vertical_align').value,
+            backgroundSize: $('moogento_pickscan_background_size').value
+        });
+        updateSize();
+        $('background-presets').observe("change", updateSize);
+    }
+    function updateSize() {
+        var sizes = $('background-presets').value.split('x');
+        $('background-preview').setStyle({
+            'width': '' + sizes[0] + 'px',
+            'height': '' + sizes[1] + 'px'
+        });
+        var container = $('background-preview-container');
+        previewWindow.setSize(sizes[0], container.scrollHeight, true);
+        previewWindow.showCenter();
+    }
+    //]]>
+</script>
+<div style="display: none;">
+    <div id="background-preview-container" style="text-align: center;">
+        <br/>
+        <select id="background-presets">
+            <option value="1024x768">iPad / iPad mini</option>
+            <option value="320x480">iPhone 3/4</option>
+            <option value="320x568">iPhone 5</option>
+            <option value="375x667">iPhone 6</option>
+            <option value="414x736">iPhone 6 Plus</option>
+            <option value="1280x800">Generic notebook</option>
+        </select>
+        <br/>
+        <div id="background-preview" style="background-color: white;">
+
+        </div>
+    </div>
+</div>
+<?php echo $this->getButtonHtml() ?>
+<style>
+    .preview-window_content {background: #fff;}
+</style>

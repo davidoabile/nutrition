@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout version="0.1.0">
+    <nwh_bonus_index>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/1column.phtml</template>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="nwh_bonus_index" template="nwh/bonus/index.phtml"></block>
+        </reference>
+    </nwh_bonus_index>
+</layout>

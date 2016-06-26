@@ -1,0 +1,25 @@
+<?php
+/**
+* Braintree Payments Extension
+*
+* This source file is subject to the Braintree Payment System Agreement (https://www.braintreepayments.com/legal)
+*
+* DISCLAIMER
+* This file will not be supported if it is modified.
+*
+* @copyright   Copyright (c) 2015 Braintree. (https://www.braintreepayments.com/)
+*/
+?>
+<?php $helper = Mage::helper('braintree_payments'); ?>
+<?php if ($helper->isUniOpcheckoutExtensionEnabled() && $helper->isBraintreePayPalEnabled()): ?>
+    <?php $_paypalCode = Braintree_Payments_Model_Paypal::PAYMENT_METHOD_CODE; ?>
+    <script type="text/javascript">
+        var paypalDivId = 'braintree-paypal-container';
+        var nativeButtonId = 'opcheckout-place-order-button';
+        var paypalCheckboxId = 'p_method_<?php echo $_paypalCode; ?>';
+        if ($(paypalDivId) && !$(paypalCheckboxId)) {
+            $(nativeButtonId).show();
+            $(paypalDivId).remove();
+        }
+    </script>
+<?php endif; ?>

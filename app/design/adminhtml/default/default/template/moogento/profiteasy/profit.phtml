@@ -1,0 +1,349 @@
+<?php $_order = $this->getOrder() ?>
+<?php $_profitData = Mage::helper('moogento_profiteasy')->calculateProfit($_order) ?>
+<div class="box-right" id="real_shipping_cost">
+    <div class="entry-edit">
+        <div class="entry-edit-head">
+            <h4>profitEasy</h4>
+        </div>
+        <fieldset>
+        	<div>
+        		<div class="box-left">
+					<?php
+					$is_profitable = 'lightcoral';
+					if(stripos($_profitData['profit'],'-')===false) $is_profitable = 'lightgreen';
+					?>
+                    <div style="border: 1px dashed #222; padding: 1rem 2rem 2rem; color: #111; margin: 0.5rem 0.5rem 1rem;border-radius: 3px;background: <?php echo $is_profitable; ?>;font-size: 2em;font-weight: 600;font-family: 'open sans';line-height: 1rem;text-shadow: 1px 1px 1px #fff;">
+                        <h4><?php echo $this->__('Net profit') ?></h4><br/>
+                        <span style="">
+							<?php echo Mage::helper('core')->currency($_profitData['profit'], true, false) ?>
+						</span>
+                    </div>
+					
+    				<form id="order_real_shipping" onsubmit="return false;" action="<?php echo  Mage::helper('adminhtml')->getUrl('*/order_costs/shipping') ?>" method="post" style="margin:18px 8px 0 8px;display: block;background: #ddd;padding: 4px 0 10px;border-radius: 4px;">
+    					<input type="hidden" id="current_order_id" value="<?php echo $_order->getId() ?>" />
+    					<ul style="margin:0 0 0 11px;">
+	    					<li>
+								<span style="margin-bottom: 0.5em; display: inline-block;"><?php echo $this->__('Set actual shipping cost') ?> :</span>
+                                <i class="info">
+                                    ?
+                                    <div class="info-text" style="display: none">
+                                        <?php echo $this->__('CSV column title') ?>: <b><?php echo Mage::getStoreConfig('moogento_profiteasy/csv_import/actual_shipping_field') ?></b>
+                                    </div>
+                                </i>
+                                <br/>
+								<input type="text" class="input-text" id="shipping_cost" value="<?php echo $_profitData['shipping_costs']; ?>" />
+							</li>
+							<li>
+								<button id="update_shipping_cost" type="button" class="scalable save" onclick="updateShippingCost(this);">
+									<span><span><?php echo $this->__('Update Shipping Cost') ?></span></span>
+								</button>
+							</li>
+						</ul>
+    				</form>
+    			</div>
+    			<div class="box-right">
+                    <table width="100%" style="font-size:0.8em;">
+                        <tr style="font-size:1.2em;">
+                            <th colspan="2"><?php echo $this->__('Revenue') ?></th>
+                        </tr>
+                        <tr>
+                            <td>
+                                ⤷ <?php echo $this->__('Product') ?>
+                            </td>
+                            <td>
+                                <?php echo Mage::helper('core')->currency($_profitData['order_revenue'], true, false) ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                ⤷ <?php echo $this->__('Shipping') ?>
+                            </td>
+                            <td>
+                                <?php echo Mage::helper('core')->currency($_profitData['shipping'], true, false) ?>
+                            </td>
+                        </tr>
+                        <tr style="font-size:1.2em;">
+                            <td style="border-top: 1px solid black;">
+                                <?php echo $this->__('Total revenue') ?>
+                            </td>
+                            <td style="border-top: 1px solid black;">
+                                <?php echo Mage::helper('core')->currency($_profitData['total_revenue'], true, false) ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="2">&nbsp;</th>
+                        </tr>
+						<tr style="font-size:1.2em;">
+                            <th colspan="2"><?php echo $this->__('Costs') ?></th>
+                        </tr>
+                        <tr>
+                            <td>
+                                ⤷ <?php echo $this->__('Actual Shipping') ?>
+                            </td>
+                            <td>
+                                <?php echo Mage::helper('core')->currency($_profitData['shipping_costs'], true, false) ?>
+                            </td>
+                        </tr>
+                        <?php foreach ($_profitData['order_costs'] as $label => $cost): ?>
+                            <?php if ($label == 'total') continue; ?>
+                            <tr>
+                                <td>
+                                ⤷ <?php echo $this->__('per Order') ?> (<?php echo $label ?>)
+                                </td>
+                                <td>
+                                    <?php echo Mage::helper('core')->currency($cost, true, false) ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        <?php foreach ($_profitData['item_costs'] as $label => $cost): ?>
+                            <?php if ($label == 'total') continue; ?>
+                            <tr>
+                                <td>
+                                ⤷ <?php echo $this->__('per Item') ?> (<?php echo $label ?>)
+                                </td>
+                                <td>
+                                    <?php echo Mage::helper('core')->currency($cost, true, false) ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        <?php foreach ($_profitData['payment_costs'] as $label => $cost): ?>
+                            <?php if ($label == 'total') continue; ?>
+                            <tr>
+                                <td>
+                                ⤷ <?php echo $this->__('Payment type') ?> (<?php echo $label ?>)
+                                </td>
+                                <td>
+                                    <?php echo Mage::helper('core')->currency($cost, true, false) ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        <?php foreach ($_profitData['currency_costs'] as $label => $cost): ?>
+                            <?php if ($label == 'total') continue; ?>
+                            <tr>
+                                <td>
+                                ⤷ <?php echo $this->__('Currency xchg') ?> (<?php echo $label ?>)
+                                </td>
+                                <td>
+                                    <?php echo Mage::helper('core')->currency($cost, true, false) ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        <?php foreach ($_profitData['timed_costs'] as $key => $amount): ?>
+                            <?php if ($key != 'total'):?>
+                                <tr>
+                                    <td>
+                                        ⤷ <?php echo $this->__('per Time Period (%s)', $key) ?>
+                                    </td>
+                                    <td>
+                                        <?php echo Mage::helper('core')->currency($amount, true, false) ?>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                        <?php foreach ($_profitData['additional_costs'] as $key => $amount): ?>
+                            <?php if ($key != 'total'):?>
+                                <tr>
+                                    <td>
+                                        ⤷ <?php echo $this->__('additional (%s)', $key) ?>
+                                    </td>
+                                    <td>
+                                        <?php echo Mage::helper('core')->currency($amount, true, false) ?>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                        <tr style="font-size:1.2em;">
+                            <td style="border-top: 1px solid black;">
+                                <?php echo $this->__('Total cost') ?>
+                            </td>
+                            <td style="border-top: 1px solid black;">
+                                <?php echo Mage::helper('core')->currency($_profitData['total_costs'], true, false) ?>
+                            </td>
+                        </tr>
+                    </table>
+    			</div>
+                <div class="clearfix"></div>
+                <br/>
+                <div>
+                    <form id="additional_costs" action="<?php echo  Mage::helper('adminhtml')->getUrl('*/order_costs/additional') ?>" method="post" style="margin:18px 8px 0 8px;" class="grid">
+                        <input type="hidden" name="order_id" value="<?php echo $_order->getId() ?>" />
+                        <span style="margin-bottom: 0.5em; "><?php echo $this->__('Additional order costs') ?> :</span>
+                        <span class="info">
+                            ?
+                            <div class="info-text" style="display: none">
+                                CSV columns<br/>
+                                <?php echo $this->__('Label') ?>:&nbsp;<b><?php echo Mage::getStoreConfig('moogento_profiteasy/csv_import/additional_costs_label_field') ?></b><br/>
+                                <?php echo $this->__('Costs') ?>:&nbsp;<b><?php echo Mage::getStoreConfig('moogento_profiteasy/csv_import/additional_costs_field') ?></b><br/>
+                                <?php echo $this->__('Calculation type') ?>:&nbsp;<b><?php echo Mage::getStoreConfig('moogento_profiteasy/csv_import/additional_costs_calculation_field') ?></b><br/>
+                                <?php echo $this->__('Override') ?>:&nbsp;<b><?php echo Mage::getStoreConfig('moogento_profiteasy/csv_import/additional_costs_override_field') ?></b><br/>
+                                <?php echo $this->__('Add as new line') ?>:&nbsp;<b><?php echo Mage::getStoreConfig('moogento_profiteasy/csv_import/additional_costs_new_line_field') ?></b>
+                            </div>
+                        </span><br/>
+                        <table class="data order-tables">
+                            <thead>
+                            <tr class="headings">
+                                <td><?php echo $this->__('Label') ?></td>
+                                <td><?php echo $this->__('Costs') ?></td>
+                                <td><?php echo $this->__('Calculation type') ?></td>
+                                <td><?php echo $this->__('Override') ?></td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach (Mage::helper('moogento_profiteasy')->getAdditionalCosts($_order) as $_addCost): ?>
+                                <tr>
+                                    <td>
+                                        <input type="text" name="additional_costs[<?php echo $_addCost->getId() ?>][label]" value="<?php echo $_addCost->getLabel() ?>" />
+                                    </td>
+                                    <td>
+                                        <input type="text" name="additional_costs[<?php echo $_addCost->getId() ?>][cost]" value="<?php echo $_addCost->getCost() ?>" />
+                                    </td>
+                                    <td>
+                                        <select name="additional_costs[<?php echo $_addCost->getId() ?>][calculation_type]">
+                                            <option <?php if ($_addCost->getCalculationType() == Moogento_ProfitEasy_Helper_Data::CALCULATE_FIXED): ?>selected="selected"<?php endif; ?> value="<?php echo Moogento_ProfitEasy_Helper_Data::CALCULATE_FIXED ?>"><?php echo $this->__('Fixed') ?></option>
+                                            <option <?php if ($_addCost->getCalculationType() == Moogento_ProfitEasy_Helper_Data::CALCULATE_PERCENT): ?>selected="selected"<?php endif; ?> value="<?php echo Moogento_ProfitEasy_Helper_Data::CALCULATE_PERCENT ?>"><?php echo $this->__('Percentage') ?></option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="additional_costs[<?php echo $_addCost->getId() ?>][rule_id]">
+                                            <option value="">----</option>
+                                            <?php foreach (Mage::getResourceModel('moogento_profiteasy/costs_collection') as $rule): ?>
+                                                <?php if ($rule->getEnable()): ?>
+                                                    <option <?php if ($_addCost->getRuleId() == $rule->getId()): ?>selected="selected"<?php endif; ?> value="<?php echo $rule->getId() ?>"><?php echo $rule->getLabel() ?></option>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <a href="javascript: void 0;" class="fa fa-times removeRow" onclick="deleteRow(this)" style="color: red"></a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </form>
+                    <button class="button add" onclick="addAditionalCosts()"><span><?php echo $this->__('Add') ?></span></button>
+                    <button class="button" onclick="saveAditionalCosts()"><span><?php echo $this->__('Save') ?></span></button>
+                </div>
+			</div>
+		</fieldset>
+    </div>
+</div>
+<script type="text/javascript">
+    var shippingCostForm = new varienForm('order_real_shipping');
+	var MooProfitEasy = Class.create();
+    MooProfitEasy.prototype = {
+	    initialize: function(form, orderId, shippingCost) {
+            this.form = form;
+	        this.url = form.readAttribute('action');
+	        this.orderid = orderId;
+	        this.shipping_amount = shippingCost;
+	    },
+
+	    saveShippingCost: function() {
+	        new Ajax.Request(this.url, {
+	        	method: 'POST',
+	        	parameters: {order_id: this.orderid, shipping_amount: this.shipping_amount},
+	            onSuccess: function(transport) {
+	                var response = transport.responseText.evalJSON();
+                    if (response.html) {
+                        $("real_shipping_cost").replace(response.html);
+                    } else {
+                        $("update_shipping_cost").insert({ after: "<p>"+response.msg+"</p>" });
+                    }
+
+	            }.bind(this)
+	        });
+	    },
+
+        saveAdditionalCosts: function()
+        {
+            new Ajax.Request(this.url, {
+                method: 'POST',
+                parameters: this.form.serialize(),
+                onSuccess: function(transport) {
+                    var response = transport.responseText.evalJSON();
+                    if (response.html) {
+                        $("real_shipping_cost").replace(response.html);
+                    } else {
+                        $("additional_costs").insert({ after: "<p>"+response.msg+"</p>" });
+                    }
+
+                }.bind(this)
+            });
+        }
+	};
+
+	function updateShippingCost() {
+		if(shippingCostForm.validator && shippingCostForm.validator.validate()){
+			var updater = new MooProfitEasy($('order_real_shipping'), $('current_order_id').value, $('shipping_cost').value);
+		    updater.saveShippingCost();
+		}
+	}
+
+    function saveAditionalCosts()
+    {
+        var updater = new MooProfitEasy($('additional_costs'));
+        updater.saveAdditionalCosts();
+    }
+
+    function addAditionalCosts()
+    {
+        var template = [
+            '<tr>',
+                '<td>',
+                    '<input type="text" name="additional_costs[__ID__][label]" value="" />',
+                '</td>',
+                '<td>',
+                    '<input type="text" name="additional_costs[__ID__][cost]" value="" />',
+                '</td>',
+                '<td>',
+                    '<select name="additional_costs[__ID__][calculation_type]">',
+                        '<option value="<?php echo Moogento_ProfitEasy_Helper_Data::CALCULATE_FIXED ?>"><?php echo $this->__('Fixed') ?></option>',
+                        '<option value="<?php echo Moogento_ProfitEasy_Helper_Data::CALCULATE_PERCENT ?>"><?php echo $this->__('Percentage') ?></option>',
+                    '</select>',
+                '</td>',
+                '<td>',
+                    '<select name="additional_costs[__ID__][rule_id]" title="">',
+                        '<option value="">----</option>',
+                        <?php foreach (Mage::getResourceModel('moogento_profiteasy/costs_collection') as $rule): ?>
+                            <?php if ($rule->getEnable()): ?>
+                                '<option value="<?php echo $rule->getId() ?>"><?php echo $rule->getLabel() ?></option>',
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    '</select>',
+                '</td>',
+                '<td>',
+                    '<a href="javascript: void 0;" class="fa fa-times removeRow" onclick="deleteRow(this)" style="color: red"></a>',
+                '</td>',
+            '</tr>'].join('').split('__ID__').join(-(new Date().getTime()));
+        $('additional_costs').down('tbody').insert({ bottom: template });
+    }
+
+    function deleteRow(link) {
+        $(link).up('tr').remove();
+        return false;
+    }
+</script>
+<style>
+    #additional_costs input, #additional_costs select {
+        width: 100px;
+    }
+    .info {
+        font-size: 80%;
+        font-weight: bold;
+        cursor: help;
+        position: relative;
+    }
+    .info:hover .info-text {
+        display: block !important;
+        position: absolute;
+        top: 15px;
+        padding: 15px;
+        background: #FAFAFA;
+        border: 1px solid black;
+        font-weight: normal;
+        white-space: nowrap;
+        z-index: 10;
+    }
+</style>

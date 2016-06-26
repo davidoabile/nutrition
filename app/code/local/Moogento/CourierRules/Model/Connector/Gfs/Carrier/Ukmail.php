@@ -1,0 +1,170 @@
+<?php
+/**
+ * Created by 4dcode.net
+ * User: Alexey Bogatsky
+ * Date: 06.02.15
+ * Time: 10:54
+ */
+
+class Moogento_CourierRules_Model_Connector_Gfs_Carrier_Ukmail extends Moogento_CourierRules_Model_Connector_Carrier_Abstract
+{
+    protected $_label = 'UK Mail';
+
+    protected $_package_required = false;
+
+    public function getConnectorCode()
+    {
+        return 'UK MAIL';
+    }
+
+    public function getCode()
+    {
+        return 'UKMAIL';
+    }
+
+    protected $_limits = array(
+        'name' => 40,
+        'company' => 40,
+        'street' => 40,
+        'district' => 35,
+        'town' => 40,
+        'county' => 35,
+        'reference' => 20,
+        'instructions' => 60,
+        'countent' => 80,
+    );
+
+    protected $_servicesConfig = array(
+        '1' => 'NEXT DAY',
+        '2' => 'NEXT DAY BY NOON',
+        '3' => 'NEXT DAY - BY 9AM',
+        '4' => 'SATURDAY',
+        '5' => 'SATURDAY - BY 9AM',
+        '6' => 'TIMED',
+        '7' => 'SATURDAY - BY 10:30AM',
+        '41' => 'Express - BY NOON',
+        '42' => 'Express - BY 9AM',
+        '43' => 'Express - SAT',
+        '44' => 'Express - SAT 9AM',
+        '45' => 'Express - TIMED',
+        '46' => 'Express - SAT 10:30',
+        '48' => 'PREMIER 48',
+        '49' => 'Bagit S - BY 10:30AM',
+        '70' => 'HOME SERVE - ALL DAY',
+        '71' => 'HOME SERVE - AM',
+        '72' => 'PREMIER 72',
+        '73' => 'HOME SERVE - SAT AM',
+        '75' => '48 HOUR ECONOMY PACK',
+        '77' => 'HOME SERVE - PM',
+        '78' => 'HOME SERVE - Evening',
+        '79' => 'HOME SERVE - By 10:30AM',
+        '80' => 'PARCEL POST',
+        '98' => 'Pallets 48',
+        '210' => 'Signature Optional - All Day',
+        '211' => 'Signature Optional - AM',
+        '212' => 'Signature Optional - By 10:30',
+        '213' => 'Signature Optional - PM',
+        '214' => 'Signature Optional - Evening',
+        '215' => 'Signature Optional - Saturday',
+        '216' => 'Signature Optional - Sat By 10:30',
+        '220' => 'Signature Mandatory - All Day',
+        '221' => 'Signature Mandatory - AM',
+        '222' => 'Signature Mandatory - By 10:30',
+        '223' => 'Signature Mandatory - PM',
+        '224' => 'Signature Mandatory - Evening',
+        '225' => 'Signature Mandatory - Saturday',
+        '226' => 'Signature Mandatory - Sat By 10:30',
+        '230' => 'HomePack - All Day',
+        '240' => 'Express (Signature) - All Day',
+        '241' => 'Express (Signature) - AM',
+        '242' => 'Express (Signature) - By 10:30',
+        '243' => 'Express (Signature) - PM',
+        '244' => 'Express (Signature) - Evening',
+        '245' => 'Express (Signature) - Saturday',
+        '246' => 'Express (Signature) - Sat By 10:30',
+        '310' => 'Premium Pallets - Next Day',
+        '311' => 'Premium Pallets - By Noon',
+        '312' => 'Premium Pallets - By 9am',
+        '313' => 'Premium Pallets - By 10:30',
+        '314' => 'Premium Pallets - Timed',
+        '315' => 'Premium Pallets - Saturday',
+        '316' => 'Premium Pallets - Sat By 9am',
+        '317' => 'Premium Pallets - Sat By 10:30',
+        '340' => 'Boxit M - Next Day',
+        '341' => 'Boxit M - By Noon',
+        '342' => 'Boxit M - By 9AM',
+        '343' => 'Boxit M - Saturday',
+        '344' => 'Boxit M - Sat By 9AM',
+        '346' => 'Boxit M - Sat By 10:30',
+        '349' => 'Boxit M - By 10:30',
+        '350' => 'Boxit M (Home) - All Day',
+        '351' => 'Boxit M (Home) - AM',
+        '352' => 'Boxit M (Home) - 10:30',
+        '353' => 'Boxit M (Home) - PM',
+        '355' => 'Boxit M (Home) - Saturday',
+        '356' => 'Boxit M (Home) - Saturday 10:30',
+        '360' => 'Boxit L - Next Day',
+        '361' => 'Boxit L - By Noon',
+        '362' => 'Boxit L - By 9AM',
+        '363' => 'Boxit L - Saturday',
+        '364' => 'Boxit L - Sat By 9AM',
+        '366' => 'Boxit L - Sat By 10:30',
+        '369' => 'Boxit L - By 10:30',
+        '370' => 'Boxit L (Home) - All Day',
+        '371' => 'Boxit L (Home) - AM',
+        '372' => 'Boxit L (Home) - 10:30',
+        '373' => 'Boxit L (Home) - PM',
+        '375' => 'Boxit L (Home) - Saturday',
+        '376' => 'Boxit L (Home) - Saturday 10:30',
+        '9' => 'NEXT DAY - BY 10:30AM',
+        '10' => 'Bagit XL - NEXT DAY',
+        '11' => 'Bagit XL - BY NOON',
+        '12' => 'Bagit XL - BY 9AM',
+        '13' => 'Bagit XL - SATURDAY',
+        '14' => 'Bagit XL - SAT. 9AM',
+        '15' => 'Bagit XL - TIMED',
+        '16' => 'Bagit XL - SAT 10:30',
+        '19' => 'Bagit XL - BY 10:30AM',
+        '20' => 'Bagit L - NEXT DAY',
+        '21' => 'Bagit L - BY NOON',
+        '22' => 'Bagit L - BY 9AM',
+        '23' => 'Bagit L - SATURDAY',
+        '24' => 'Bagit L - SAT 9AM',
+        '25' => 'Bagit L - TIMED',
+        '26' => 'Bagit L - SAT 10:30',
+        '29' => 'Bagit L - BY 10:30AM',
+        '30' => 'Bagit M - NEXT DAY',
+        '31' => 'Bagit M - BY NOON',
+        '32' => 'Bagit M - BY 9AM',
+        '33' => 'Bagit M - SAT',
+        '34' => 'Bagit M - SAT 9AM',
+        '35' => 'Bagit M - TIMED',
+        '36' => 'Bagit M - SAT 10:30',
+        '39' => 'Bagit M - BY 10:30AM',
+        '40' => 'Express - NEXT DAY',
+        '60' => 'Final Mile',
+        '61' => 'Final Mile Timed',
+        '62' => 'Retail Logistics',
+        '63' => 'Retail Logistics Timed',
+        '64' => 'Final Mile',
+        '65' => 'Final Mile Timed',
+        '66' => 'Retail Logistics',
+        '67' => 'Retail Logistics Timed',
+        '101' => 'Air Express',
+        '204' => 'Road Economy',
+        '235' => 'HomePack - Saturday',
+        '401' => 'Collection Next Day',
+        '402' => 'Collection Day by Noon',
+        '403' => 'Collection Next Day - 9AM',
+        '404' => 'Collection Saturday',
+        '409' => 'Collection Next Day - 10:30',
+        '451' => 'Carriage Fwd Next Day',
+        '452' => 'Carriage Fwd Day by Noon',
+        '453' => 'Carriage Fwd Next Day - 9AM',
+        '454' => 'Carriage Fwd Saturday',
+        '459' => 'Carriage Fwd Next Day - 10:30',
+    );
+
+    protected $_packagesConfig = array(
+    );
+}

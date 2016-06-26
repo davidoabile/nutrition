@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_system_config_edit>
+        <reference name="head">
+            <action method="addJs"><script>moogento/jscolor/jscolor.js</script></action>
+        </reference>
+    </adminhtml_system_config_edit>
+    <adminhtml_promo_quote_edit>
+        <reference name="head">
+            <action method="addJs"><script>moogento/jscolor/jscolor.js</script></action>
+        </reference>
+    </adminhtml_promo_quote_edit>
+
+    <adminhtml_easycoupon_shortlink_index>
+        <reference name="content">
+            <block type="moogento_easycoupon/adminhtml_shortlink" name="shortlink.grid.container"></block>
+        </reference>
+    </adminhtml_easycoupon_shortlink_index>
+    <adminhtml_easycoupon_shortlink_grid>
+        <update handle="formkey"/>
+        <block type="moogento_easycoupon/adminhtml_shortlink_grid" name="shortlink.grid" output="toHtml"></block>
+    </adminhtml_easycoupon_shortlink_grid>
+</layout>

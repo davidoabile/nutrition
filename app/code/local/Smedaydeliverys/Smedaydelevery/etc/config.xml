@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Smedaydeliverys_Smedaydelevery>
+      <version>0.1.0</version>
+    </Smedaydeliverys_Smedaydelevery>
+  </modules>
+  <global>
+    <helpers>
+      <smedaydelevery>
+        <class>Smedaydeliverys_Smedaydelevery_Helper</class>
+      </smedaydelevery>
+    </helpers>
+  </global>
+</config> 

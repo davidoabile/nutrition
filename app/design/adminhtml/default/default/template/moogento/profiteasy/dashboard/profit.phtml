@@ -1,0 +1,101 @@
+<?php
+    $profitData = $this->getProfitData();
+?>
+
+	</fieldset>
+</div>
+<div class="entry-edit">
+    <div class="entry-edit-head">
+        <h4><?php echo $this->__('24h Profit') ?></h4>
+        <span class="drop_graph_img"></span>
+        <style>
+            .gauge-container {
+                display: inline-block;
+                position: relative;
+                width: 400px;
+                height: 200px;
+                overflow: hidden;
+                text-align: center;
+            }
+            .gauge-a {
+                z-index: 1;
+                position: absolute;
+                background-color: rgba(0,0,0,.2);
+                width: 400px;
+                height: 200px;
+                top: 0%;
+                border-radius: 250px 250px 0px 0px;
+            }
+            .gauge-b {
+                z-index: 3;
+                position: absolute;
+                background-color: #222;
+                width: 250px;
+                height: 125px;
+                top: 75px;
+                margin-left: 75px;
+                margin-right: auto;
+                border-radius: 250px 250px 0px 0px;
+            }
+            .gauge-c {
+                z-index: 2;
+                position: absolute;
+                background-color: <?php echo $this->_getColor( $profitData['percent']) ?>;
+                width: 400px;
+                height: 200px;
+                top: 200px;
+                margin-left: auto;
+                margin-right: auto;
+                border-radius: 0px 0px 200px 200px;
+                transform-origin: center top;
+                transition: all 1.3s ease-in-out;
+                transform:rotate(<?php echo ($profitData['percent'] > 100 ? 100 : $profitData['percent']) / 100 * 0.5 ?>turn)
+            }
+            .gauge-data {
+                z-index: 4;
+                color: rgba(255,255,255,.2);
+                font-size: 1.5em;
+                line-height: 25px;
+                position: absolute;
+                width: 400px;
+                height: 200px;
+                top: 90px;
+                margin-left: auto;
+                margin-right: auto;
+                transition: all 1s ease-out;
+            }
+        </style>
+    </div>
+    <fieldset class="np a-center bold">
+        <div style="padding: 20px 0 5px;">
+            <span class="gauge-container">
+                <div class="gauge-a"></div>
+                <div class="gauge-b"></div>
+                <div class="gauge-c"></div>
+                <div class="gauge-data">
+                    <h1><?php echo $profitData['percent'] ?>%</h1>
+                </div>
+            </span>
+            <br/>
+            <span style="font-size: 30px;">
+                <?php if ($profitData['diff'] > 0): ?>
+                    <span style="color: green;">&#x21E7;</span>
+                <?php elseif ($profitData['diff'] == 0): ?>
+                     <span style="color: green;">&#x21CB;</span>
+                <?php else: ?>
+                    <span style="color: red;">&#x21E9;</span>
+                <?php endif; ?>
+                &nbsp;
+                <?php echo ($profitData['diff'] > 0 ? '+' : '') . Mage::helper('core')->currency($profitData['diff'], true, false) ?>
+            </span>
+            <?php if (Mage::getStoreConfigFlag('moogento_profiteasy/dashboard/split_per_store')): ?>
+                <?php $perStore = $this->getStoreProfit() ?>
+                <?php if (count($perStore)): ?>
+                    <ul>
+                        <?php foreach ($perStore as $id => $profit): ?>
+                            <li><?php echo Mage::app()->getStore($id)->getName()?> - <?php echo Mage::helper('core')->currency($profit, true, false) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>

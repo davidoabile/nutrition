@@ -1,0 +1,24 @@
+<?php if ($crumbs && is_array($crumbs)): ?>
+    <div class="bread_crumbs">
+        <div class="left">
+            <a class="link_back" href="">&lt; <?php echo $this->__('BACK') ?></a>
+        </div>
+        <div class="bread_crumbs_txt font14_blk">
+            <span class="font14_red"><?php echo $this->__('YOU ARE HERE:') ?></span>
+            <?php foreach($crumbs as $_crumbName => $_crumbInfo): ?>
+                <?php if ($_crumbInfo['link']): ?>
+                    <a href="<?php echo $_crumbInfo['link'] ?>" title="<?php echo $this->escapeHtml($_crumbInfo['title']) ?>">
+                        <?php echo $this->escapeHtml($_crumbInfo['label']) ?>
+                    </a>
+                <?php elseif ($_crumbInfo['last']): ?>
+                    <?php echo $this->escapeHtml($_crumbInfo['label']) ?>
+                <?php else: ?>
+                    <?php echo $this->escapeHtml($_crumbInfo['label']) ?>
+                <?php endif ?>
+                <?php if (!$_crumbInfo['last']): ?>
+                    /
+                <?php endif ?>
+            <?php endforeach ?>
+        </div>
+    </div>
+<?php endif ?>

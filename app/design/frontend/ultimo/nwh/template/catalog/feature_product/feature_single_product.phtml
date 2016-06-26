@@ -1,0 +1,132 @@
+
+<?php
+    // $connection = Mage::getSingleton('core/resource')->getConnection('distributor_read');
+    // //I assuming that you created the model for your table
+    // $results = $connection->fetchAll("SELECT * FROM feature_product WHERE id = 1 limit 1");
+    // $Featureproduct = Mage::getModel('catalog/product')->loadByAttribute('sku', $results[0]['sku']);
+    $Featureproduct = false;
+    $skuPromo = false;
+    $_currentCategory = Mage::registry("current_category");
+    if ($_currentCategory) {
+        $category = Mage::getModel("catalog/category")->load($_currentCategory->getId());
+        $skuPromo = $category->getSkuPromo();
+    }
+    if ($skuPromo) {
+        $Featureproduct = Mage::getModel('catalog/product')->loadByAttribute('sku', $skuPromo);
+    }
+?>
+<?php if ($Featureproduct): ?>
+<div class="feature-single-product">    
+    <head>
+        <meta property="og:title" content="<?php echo $Featureproduct->getName() ?>" />
+        <meta property="og:type" content="product" />
+        <meta property="og:url" content="<?php echo $this->helper('catalog/product')->getProductUrl($Featureproduct) ?>" />
+        <meta property="og:image" content="<?php echo $this->helper('catalog/image')->init($Featureproduct, 'image')->resize(300, 300) ?>" />
+        <meta property="og:description" content="<?php echo strip_tags($Featureproduct->getShortDescription()) ?>" />
+        <meta property="og:site_name" content="<?php echo Mage::app()->getStore()->getName() ?>" />
+    </head>
+    <div class="block-red clearfix">
+        <div class="block-title clearfix">
+            <h1><?php echo $this->__('Featured Product')?></h1>
+        </div>
+        <div class="block-content clearfix">
+
+            <ul class="products-list">
+                <li class="item">
+                    <div class="item-inner">
+                        <h4><span><?php echo $this->htmlEscape($Featureproduct->getName()) ?></span></h4>
+
+                        <div class="product-image-wrapper grid12-3 mobile-grid-half">
+                            <a href="<?php echo $Featureproduct->getProductUrl() ?>" class="product-image"><img  src="<?php echo $this->helper('catalog/image')->init($Featureproduct, 'small_image')->resize(295, 295) ?>" alt="<?php echo $this->htmlEscape($Featureproduct->getName()) ?>" /></a>
+                        </div>
+
+                        <div class="product-shop grid12-6 mobile-grid-half">
+                            <div class="product-shop-inner">
+                                <h4><span><?php echo $this->htmlEscape($Featureproduct->getName()) ?></span></h4>
+                                <div class="short-desc std">
+                                    <?php
+                                    $shordesc = strip_tags($Featureproduct->getShortDescription());
+                                    if (strlen($shordesc) > 34) {
+                                        echo substr($this->htmlEscape($shordesc), 0, 34) . '...';
+                                    } else {
+                                        echo $this->htmlEscape($shordesc);
+                                    }
+                                    ?>
+                                </div>
+                                <div class="desc std">
+                                    <?php
+                                    $description = strip_tags($Featureproduct->getDescription());
+                                    if (strlen($description) > 335) {
+                                        echo substr($this->htmlEscape($description), 0, 335) . '...';
+                                    } else {
+                                        echo $this->htmlEscape($description);
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="right-column grid12-3 mobile-grid-half">
+                            <div class="price-box clearfix">
+                                <ul class="clearfix">
+                                    <?php if ($Featureproduct->getSpecialPrice()): ?>
+                                        <?php if ($Featureproduct->getPrice() < $Featureproduct->getSpecialPrice()): ?>
+                                            <li class="wp-price clearfix">
+                                                <div class="price-label">From: </div>
+                                                <div class="price-number"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol() ?><?php echo number_format($Featureproduct->getPrice(), '2', '.', ',') ?></div>
+                                            </li>
+                                            <li class="rrp-price clearfix">
+                                                <div class="price-label">RRP:</div>
+                                                <!-- <div class="price-number">$0.00</div> -->
+                                                <div class="price-number"><?php echo Mage::helper('core')->currency($Featureproduct->getMsrp(), true, false);?></div>
+                                            </li>
+                                        <?php else: ?>
+                                            <li class="wp-price clearfix">
+                                                <div class="price-label">From: </div>
+                                                <div class="price-number"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol() ?><?php echo number_format($Featureproduct->getSpecialPrice(), '2', '.', ',') ?></div>
+                                            </li>
+                                            <li class="rrp-price clearfix">
+                                                <div class="price-label">RRP:</div>
+                                                <div class="price-number"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol() ?><?php echo number_format($Featureproduct->getPrice(), '2', '.', ',') ?></div>
+                                            </li>
+                                        <?php endif ?>
+                                    <?php else: ?>
+                                        <li class="wp-price clearfix">
+                                            <div class="price-label">From: </div>
+                                            <div class="price-number"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol() ?><?php echo number_format($Featureproduct->getPrice(), '2', '.', ',') ?></div>
+                                        </li>
+                                        <li class="rrp-price clearfix">
+                                            <div class="price-label">RRP:</div>
+                                            <div class="price-number change_"><?php echo Mage::helper('core')->currency($Featureproduct->getMsrp(), true, false);?></div>
+                                        </li>
+                                    <?php endif ?>
+                                    <?php
+                                    $_finalPrice = $Featureproduct->getFinalPrice();
+                                    $_price = $Featureproduct->getPrice();
+                                    ?>
+                                    <?php if ($_finalPrice < $_price): ?>
+                                        <?php
+                                        $_savePercent = 100 - round(($_finalPrice / $_price) * 100);
+                                        $_saveAmount  = number_format(($_price - $_finalPrice), 2);
+                                        ?>
+                                        <li class="save-price clearfix">
+                                            <div class="price-label">SAVE</div>
+                                            <div class="price-number"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol() ?><?php echo $_saveAmount ?></div>
+                                        </li>
+                                    <?php endif ?>
+                                </ul>
+                            </div>
+
+                            <div class="pd-view-detail"><a href="<?php echo $Featureproduct->getProductUrl() ?>" class="button">View details</a></div>
+
+
+                        </div>
+
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+<?php endif; ?>

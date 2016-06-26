@@ -1,0 +1,66 @@
+
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     n/a
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+.popup-agreement
+{
+    padding: 25px;
+    text-align: left;
+    position:fixed;
+    z-index:990;
+    top:-500%;
+    right:0;
+    left:50%;
+    margin: 0px auto 0px auto;
+    border: 1px solid black;
+    background-color: #f5f5f5;
+    overflow-y:auto;
+}
+
+#co-checkout-form .popup-agreement-close
+{
+    font-weight: bold;
+    text-align: right;
+}
+
+#co-checkout-form .popup-agreement-close .deny
+{
+    color: #d83820;
+}
+
+.popup-agreement.show
+{
+    top:50px;
+}
+
+.popup-agreement .buttons-set
+{
+    border-top: none;
+    margin-top: 0px;
+    padding-top: 2px;
+}
+
+#popup-litebox, #popup-litebox-agreem
+{
+    position:fixed;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:980;
+    background-color:#000000;
+    opacity:.75;
+    filter:alpha(opacity=75);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)";
+    -moz-opacity: 0.75;
+    -khtml-opacity: 0.75;
+    display: none;
+}

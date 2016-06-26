@@ -1,0 +1,572 @@
+<?php
+/**
+ * Product view template
+ *
+ * @see Mage_Catalog_Block_Product_View
+ * @see Mage_Review_Block_Product_View
+ */
+?>
+<?php
+	$_helper = $this->helper('catalog/output');
+	$_product = $this->getProduct();
+	$theme = $this->helper('ultimo');
+	$helperThis = $this->helper('ultimo/template_catalog_product_view');
+	$helperSnippets = $this->helper('ultimo/rsnippets');
+
+	//CSS classes based on product type
+	$productTypeId = $_product->getTypeId();
+	$productTypeClasses = '';
+	if ($productTypeId === 'grouped') {
+		$productTypeClasses .= ' is-type-grouped';
+	}
+
+	//
+	$shortDescription = $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description');
+
+	//Rich snippets
+	$useRichSnippets = ($helperSnippets->isEnabledOnProductPage() && $productTypeId !== 'grouped');
+	$priceProperties = '';
+	if ($useRichSnippets)
+	{
+		$priceProperties = $helperSnippets->getPriceProperties($_product); //Has to be called before getOfferItemscope
+	}
+
+	//Get grid classes for product page sections
+	$grid = $helperThis->getGridClasses();
+
+	//Product collaterals
+	//--------------------------------------------------------------
+	$section = array();
+	$relatedProductsHtml = '';
+	$upsellProductsHtml = '';
+	$workwellProductsHtml = '';
+
+	//Related products.
+	//If related products not assigned to collateral data container.
+	if (!$theme->getCfg('product_page/collateral_related'))
+	{
+		$replaceRelated = $theme->getCfg('product_page/replace_related');
+		if ($replaceRelated == 1) //don't replace with static block
+		{
+			if ($tmpHtml = trim($this->getChildHtml('related_products_wrapper')))
+				$relatedProductsHtml = $tmpHtml;
+			//$relatedProductsHtml = trim($this->getChildHtml('related_products_wrapper'));
+		}
+		elseif ($replaceRelated == 2) //if related is empty, replace with static block
+		{
+			if ($tmpHtml = trim($this->getChildHtml('related_products_wrapper')))
+				$relatedProductsHtml = $tmpHtml;
+			else //related empty
+				if ($tmpHtml = $this->getChildHtml('block_product_replace_related'))
+					$relatedProductsHtml = '<div class="block_product_replace_related">'. $tmpHtml .'</div>';
+		}
+		elseif ($replaceRelated == 3) //replace with static block
+		{
+			if ($tmpHtml = $this->getChildHtml('block_product_replace_related'))
+				$relatedProductsHtml = '<div class="block_product_replace_related">'. $tmpHtml .'</div>';
+		}
+	}
+
+	//Up-sell products.
+	//If up-sell products not assigned to collateral data container.
+	if (!$theme->getCfg('product_page/collateral_upsell'))
+	{
+		$replaceUpsell = $theme->getCfg('product_page/replace_upsell');
+		if ($replaceUpsell == 1) //don't replace with static block
+		{
+			if ($tmpHtml = trim($this->getChildHtml('upsell_products_wrapper')))
+				$upsellProductsHtml = $tmpHtml;
+			//$upsellProductsHtml = $this->getChildHtml('upsell_products_wrapper');
+		}
+		elseif ($replaceUpsell == 2) //if upsell is empty, replace with static block
+		{
+			if ($tmpHtml = trim($this->getChildHtml('upsell_products_wrapper')))
+				$upsellProductsHtml = $tmpHtml;
+			else //upsell empty
+				if ($tmpHtml = $this->getChildHtml('block_product_replace_upsell'))
+					$upsellProductsHtml = '<div class="block_product_replace_upsell">'. $tmpHtml .'</div>';
+		}
+		elseif ($replaceUpsell == 3) //replace with static block
+		{
+			if ($tmpHtml = $this->getChildHtml('block_product_replace_upsell'))
+				$upsellProductsHtml = '<div class="block_product_replace_upsell">'. $tmpHtml .'</div>';
+		}
+	}
+    //work well with products;
+    $workwellProductsHtml=trim($this->getChildHtml('works_well_with'));
+     $crossSellProductsHtml=trim($this->getChildHtml('cross_sells'));
+     $workwellProductsHtml = '';
+    $relatedProductsHtml=$relatedProductsHtml.$workwellProductsHtml.$crossSellProductsHtml;
+	//Assign blocks to selected position
+	$p = array();
+
+	//Related products
+	$position = $theme->getCfg('product_page/related_position');
+	if (isset($p[$position]))
+		$p[$position] = $p[$position] . $relatedProductsHtml;
+	else
+		$p[$position] = $relatedProductsHtml;
+
+	//Up-sell products
+	$position = $theme->getCfg('product_page/upsell_position');
+	if (isset($p[$position]))
+		$p[$position] = $p[$position] . $upsellProductsHtml;
+	else
+		$p[$position] = $upsellProductsHtml;
+
+	//Product collateral data (displayed as tabs or stacked blocks)
+	$position = $theme->getCfg('product_page/collateral_position');
+	if (isset($p[$position]))
+		$p[$position] = $p[$position] . $this->getChildHtml('productCollaterals');
+	else
+		$p[$position] = $this->getChildHtml('productCollaterals');
+?>
+
+<script type="text/javascript">
+	var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+    var base_oldPrice = optionsPrice.productOldPrice;
+    optionsPrice.reload =function() {
+        var price;
+        var formattedPrice;
+        var optionPrices = this.getOptionPrices();
+        var nonTaxable = optionPrices[1];
+        var optionOldPrice = optionPrices[2];
+        var priceInclTax = optionPrices[3];
+        optionPrices = optionPrices[0];
+        $H(this.containers).each(function(pair) {
+            var _productPrice;
+            var _plusDisposition;
+            var _minusDisposition;
+            var _priceInclTax;
+            if ($(pair.value)) {
+                if (pair.value == 'old-price-'+this.productId && this.productOldPrice != this.productPrice) {
+                    _productPrice = this.productOldPrice;
+                    _plusDisposition = this.oldPlusDisposition;
+                    _minusDisposition = this.oldMinusDisposition;
+                } else {
+                    _productPrice = this.productPrice;
+                    _plusDisposition = this.plusDisposition;
+                    _minusDisposition = this.minusDisposition;
+                }
+                _priceInclTax = priceInclTax;
+
+                if (pair.value == 'old-price-'+this.productId && optionOldPrice !== undefined) {
+                    price = optionOldPrice+parseFloat(_productPrice);
+                } else if (this.specialTaxPrice == 'true' && this.priceInclTax !== undefined && this.priceExclTax !== undefined) {
+                    price = optionPrices+parseFloat(this.priceExclTax);
+                    _priceInclTax += this.priceInclTax;
+                } else {
+                    price = optionPrices+parseFloat(_productPrice);
+                    _priceInclTax += parseFloat(_productPrice) * (100 + this.currentTax) / 100;
+                }
+
+                if (this.specialTaxPrice == 'true') {
+                    var excl = price;
+                    var incl = _priceInclTax;
+                } else if (this.includeTax == 'true') {
+                    // tax = tax included into product price by admin
+                    var tax = price / (100 + this.defaultTax) * this.defaultTax;
+                    var excl = price - tax;
+                    var incl = excl*(1+(this.currentTax/100));
+                } else {
+                    var tax = price * (this.currentTax / 100);
+                    var excl = price;
+                    var incl = excl + tax;
+                }
+
+                var subPrice = 0;
+                var subPriceincludeTax = 0;
+                Object.values(this.customPrices).each(function(el){
+                    if (el.excludeTax && el.includeTax) {
+                        subPrice += parseFloat(el.excludeTax);
+                        subPriceincludeTax += parseFloat(el.includeTax);
+                    } else {
+                        subPrice += parseFloat(el.price);
+                        subPriceincludeTax += parseFloat(el.price);
+                    }
+                });
+                excl += subPrice;
+                incl += subPriceincludeTax;
+
+                if (typeof this.exclDisposition == 'undefined') {
+                    excl += parseFloat(_plusDisposition);
+                }
+
+                incl += parseFloat(_plusDisposition) + parseFloat(this.plusDispositionTax);
+                excl -= parseFloat(_minusDisposition);
+                incl -= parseFloat(_minusDisposition);
+
+                //adding nontaxlable part of options
+                excl += parseFloat(nonTaxable);
+                incl += parseFloat(nonTaxable);
+
+                if (pair.value == 'price-including-tax-'+this.productId) {
+                    price = incl;
+                } else if (pair.value == 'price-excluding-tax-'+this.productId) {
+                    price = excl;
+                } else if (pair.value == 'old-price-'+this.productId) {
+                    if (this.showIncludeTax || this.showBothPrices) {
+                        price = incl;
+                    } else {
+                        price = excl;
+                    }
+                } else {
+                    if (this.showIncludeTax) {
+                        price = incl;
+                    } else {
+                        price = excl;
+                    }
+                }
+
+                if (price < 0) price = 0;
+
+                if (price > 0 || this.displayZeroPrice) {
+                    formattedPrice = this.formatPrice(price);
+                } else {
+                    formattedPrice = '';
+                }
+                if ($(pair.value).select('.price')[0]) {
+                    $(pair.value).select('.price')[0].innerHTML = formattedPrice;
+                    if ($(pair.value+this.duplicateIdSuffix) && $(pair.value+this.duplicateIdSuffix).select('.price')[0]) {
+                        $(pair.value+this.duplicateIdSuffix).select('.price')[0].innerHTML = formattedPrice;
+                    }
+                } else {
+                    $(pair.value).innerHTML = formattedPrice;
+                    if ($(pair.value+this.duplicateIdSuffix)) {
+                        $(pair.value+this.duplicateIdSuffix).innerHTML = formattedPrice;
+                    }
+                }
+                /*calculate save monney*/
+                var parent= $(pair.value).up();
+                if(parent.hasClassName('special-price')){
+                    setTimeout(function(){$$('.special-price')[0].show();},1000);
+                }else{
+                    var old_pr_elm=$(pair.value).next();
+                    if(old_pr_elm == undefined){
+                        old_pr_elm=$(pair.value).up(1).select('.old-price')[0];
+                        if(old_pr_elm == undefined){
+                            old_pr_elm=$(pair.value).up(1).select('.was-old-price')[0];
+                        }
+                    }
+                   /* console.log($(pair.value));
+                    console.log(old_pr_elm);
+                    console.log($(pair.value).up());*/
+                    if(old_pr_elm.hasClassName('was-old-price') || old_pr_elm.hasClassName('old-price')){
+                        var old_pr_p=old_pr_elm.select('.price')[1];
+                        if(old_pr_p == undefined){
+                            old_pr_p=old_pr_elm.select('.price')[0];
+                        }
+                        if (this.productOldPrice != this.productPrice) {
+                            jQuery(old_pr_p).html(this.formatPrice(this.productOldPrice));
+                        }else{
+                            jQuery(old_pr_p).html(this.formatPrice(base_oldPrice));
+                        }
+                        var current_price=$('product-price-'+this.productId).innerHTML;
+                        current_price=current_price.replace("$", "");
+                        var old_pr=old_pr_p.innerHTML;
+
+                        old_pr=old_pr.replace("$", "");
+                        //console.log(old_pr);
+                        if(old_pr > 0){
+                            var save_monney= old_pr-price;
+                            if(save_monney < 0.1) save_monney= old_pr-current_price;
+                            var mns=$(pair.value).up(1).select('.monney-save')[0];
+                            if(mns.hasClassName('monney-save')){
+                                mns.innerHTML='<p><span>Save </span>'+this.formatPrice(save_monney)+'</p>';
+                            }
+                            if(save_monney <= 0) {
+                                mns.hide();
+                                old_pr_elm.hide();
+                            }
+                            else {
+                                mns.show();
+                                old_pr_elm.show();
+                            }
+                        };
+
+                    };
+                    //console.log(price);
+                }
+                /*******/
+            };
+        }.bind(this));
+
+        if (typeof(skipTierPricePercentUpdate) === "undefined" && typeof(this.tierPrices) !== "undefined") {
+            for (var i = 0; i < this.tierPrices.length; i++) {
+                $$('.benefit').each(function(el) {
+                    var parsePrice = function(html) {
+                        var format = this.priceFormat;
+                        var decimalSymbol = format.decimalSymbol === undefined ? "," : format.decimalSymbol;
+                        var regexStr = '[^0-9-' + decimalSymbol + ']';
+                        //remove all characters except number and decimal symbol
+                        html = html.replace(new RegExp(regexStr, 'g'), '');
+                        html = html.replace(decimalSymbol, '.');
+                        return parseFloat(html);
+                    }.bind(this);
+
+                    var updateTierPriceInfo = function(priceEl, tierPriceDiff, tierPriceEl, benefitEl) {
+                        if (typeof(tierPriceEl) === "undefined") {
+                            //tierPrice is not shown, e.g., MAP, no need to update the tier price info
+                            return;
+                        }
+                        var price = parsePrice(priceEl.innerHTML);
+                        var tierPrice = price + tierPriceDiff;
+
+                        tierPriceEl.innerHTML = this.formatPrice(tierPrice);
+
+                        var $percent = Selector.findChildElements(benefitEl, ['.percent.tier-' + i]);
+                        $percent.each(function(el) {
+                            el.innerHTML = Math.ceil(100 - ((100 / price) * tierPrice));
+                        });
+                    }.bind(this);
+
+                    var tierPriceElArray = $$('.tier-price.tier-' + i + ' .price');
+                    if (this.showBothPrices) {
+                        var containerExclTax = $(this.containers[3]);
+                        var tierPriceExclTaxDiff = this.tierPrices[i];
+                        var tierPriceExclTaxEl = tierPriceElArray[0];
+                        updateTierPriceInfo(containerExclTax, tierPriceExclTaxDiff, tierPriceExclTaxEl, el);
+                        var containerInclTax = $(this.containers[2]);
+                        var tierPriceInclTaxDiff = this.tierPricesInclTax[i];
+                        var tierPriceInclTaxEl = tierPriceElArray[1];
+                        updateTierPriceInfo(containerInclTax, tierPriceInclTaxDiff, tierPriceInclTaxEl, el);
+                    } else if (this.showIncludeTax) {
+                        var container = $(this.containers[0]);
+                        var tierPriceInclTaxDiff = this.tierPricesInclTax[i];
+                        var tierPriceInclTaxEl = tierPriceElArray[0];
+                        updateTierPriceInfo(container, tierPriceInclTaxDiff, tierPriceInclTaxEl, el);
+                    } else {
+                        var container = $(this.containers[0]);
+                        var tierPriceExclTaxDiff = this.tierPrices[i];
+                        var tierPriceExclTaxEl = tierPriceElArray[0];
+                        updateTierPriceInfo(container, tierPriceExclTaxDiff, tierPriceExclTaxEl, el);
+                    }
+                }, this);
+            }
+        }
+
+    };
+
+
+
+
+
+
+
+
+</script>
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+<div class="product-view nested-container" <?php if ($useRichSnippets) echo $helperSnippets->getProductItemscope(); ?>>
+
+	<form action="<?php echo $this->getSubmitUrl($_product) ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+
+		<?php echo $this->getBlockHtml('formkey'); ?>
+		<div class="no-display">
+			<input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+			<input type="hidden" name="related_product" id="related-products-field" value="" />
+		</div>
+
+        <div class="product-name name-mobile">
+            <h1 itemprop="name"><span><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></span></h1>
+        </div>
+
+		<div class="product-img-column <?php echo $grid['imgCol']; ?>">
+
+			<?php echo $this->getChildHtml('media') ?>
+			<?php echo $this->helper('ultimo/labels')->getLabels($_product); //Product labels ?>
+			<?php echo $this->getChildHtml('container_product_image_1'); ?>
+
+		</div>
+		
+		<div class="product-primary-column product-shop <?php echo $grid['primCol']; ?>">
+
+			<div class="product-name">
+				<h1 itemprop="name"><span><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></span></h1>
+			</div>
+
+            <?php if ($shortDescription): ?>
+<!--                <div class="std" itemprop="description"><?php //echo substr(strip_tags($_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description')),0,90) ?></div>-->
+                <div class="short-description"><?php echo Mage::app()->getLayout()->createBlock('zblocks/block')->setPosition('product_short_description')->toHtml(); ?></div>
+            <?php endif;?>
+			
+			<?php echo $this->getReviewsSummaryHtml($_product, false, true); //reviews ?>
+
+			<?php echo $this->getChildHtml('container_product_primary_1'); ?>
+
+			<?php if (isset($p['primCol_1'])) echo $p['primCol_1']; ?>
+
+			<?php if ($sku = $_product->getSku()): ?>
+				<?php if ($theme->getCfg('product_page/sku')): ?>
+					<div class="sku">
+						<span class="label"><?php echo $this->__('SKU'); ?>: </span>
+						<span class="value"><?php echo $sku; ?></span>
+					</div>
+				<?php endif; ?>
+				<?php if ($useRichSnippets): ?><meta itemprop="productID" content="sku:<?php echo $sku; ?>" /><?php endif; ?>
+			<?php endif; ?>
+
+			<?php echo $this->getChildHtml('alert_urls'); //alerts ?>
+			
+			<?php if ($extrahint_html = $this->getChildHtml('extrahint')): //qty increments ?>
+				<div class="extrahint-wrapper"><?php echo $extrahint_html; ?></div>
+			<?php endif; ?>
+
+			<div <?php if ($useRichSnippets) echo $helperSnippets->getOfferItemscope(); ?>>
+				<div class="product-type-data<?php echo $productTypeClasses; ?>"><?php echo $this->getChildHtml('product_type_data'); ?></div>
+				<?php echo $this->getTierPriceHtml(); ?>
+				<?php echo $priceProperties; ?>
+			</div> <?php //end: offers ?>
+
+			<?php if (!$this->hasOptions()): //add to cart when no options (e.g. simple products) ?>
+				<?php if($_product->isSaleable()): ?>
+					<div class="add-to-box">
+						<?php echo $this->getChildHtml('addtocart') ?>
+					</div>
+				<?php endif; ?>
+				<?php echo $this->getChildHtml('extra_buttons') ?>
+			<?php endif; ?>
+
+			<?php if ($_product->isSaleable() && $this->hasOptions()): ?>
+				<?php if ($container1_html = $this->getChildChildHtml('container1', '', true, true)): ?>
+					<div class="container1-wrapper"><?php echo $container1_html; ?></div>
+				<?php endif; ?>
+			<?php endif;?>
+
+            <?php if ($_product->isSaleable() && $this->hasOptions()): ?>
+                <?php if ($container2_html = $this->getChildChildHtml('container2', '', true, true)): ?>
+                    <div class="box-additional <?php //echo $grid['cont2Col']; ?>">
+                        <div class="container2-wrapper"><?php echo $container2_html; ?></div>
+
+                        <?php if ($addtoLinksHtml = $this->getChildHtml('addto')): //compare, wishlist, send to friend ?>
+                            <div class="action-box clearer">
+                                <?php echo $addtoLinksHtml; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
+
+            <div class="social-share">
+                <?php echo $this->getChildHtml('addthis_sharetool'); ?>
+            </div>
+
+			<?php if (isset($p['primCol_2'])) echo $p['primCol_2']; ?>
+			<?php echo $this->getChildHtml('other'); ?>
+
+			<?php echo $this->getChildHtml('container_product_primary_2'); ?>
+
+		</div> <!-- end: product-shop -->
+		
+		<?php if (isset($grid['secCol'])): //(!empty($secondaryColUnits)): ?>
+
+			<div class="product-secondary-column <?php echo $grid['secCol']; ?> custom-sidebar-right">
+				<div class="inner">
+
+					<?php echo $this->getChildHtml('container_product_secondary_1'); ?>
+
+					<?php if (isset($p['secCol_1'])) echo $p['secCol_1']; ?>
+
+					<?php if ($tmpHtml = $this->getChildHtml('product_secondary_top_placeholder')): //Brand logo ?>
+						<div class="feature-wrapper bottom-border"><?php echo $tmpHtml; ?></div>
+					<?php endif; ?>
+                    <?php echo $this->getChildHtml('delivery-product'); ?>
+
+                    <?php if (isset($p['secCol_2'])) echo $p['secCol_2']; ?>
+
+					<?php echo $this->getChildHtml('container_product_secondary_2'); ?>
+
+					<?php if (isset($p['secCol_3'])) echo $p['secCol_3']; ?>
+
+                    <?php $nowtime=date('D');if($nowtime !='Sun' && $nowtime !='Sat') echo $this->getChildHtml('countdown'); else { ?>
+                        <script>
+                            jQuery(document).ready(function(){
+                                move_similar_product();
+                            });
+                        </script>
+                    <?php } ?>
+
+				</div>
+			</div> <!-- end: product-secondary-column -->
+
+        <?php endif; ?>
+
+	</form>
+	<script type="text/javascript">
+	//<![CDATA[
+		var productAddToCartForm = new VarienForm('product_addtocart_form');
+		productAddToCartForm.submit = function(button, url) {
+			if (this.validator.validate()) {
+				var form = this.form;
+				var oldUrl = form.action;
+
+				if (url) {
+				   form.action = url;
+				}
+				var e = null;
+				try {
+                    this.form.target = "_parent";
+					this.form.submit();
+				} catch (e) {
+				}
+				this.form.action = oldUrl;
+				if (e) {
+					throw e;
+				}
+
+				if (button && button != 'undefined') {
+					button.disabled = true;
+				}
+			}
+		}.bind(productAddToCartForm);
+
+		productAddToCartForm.submitLight = function(button, url){
+			if(this.validator) {
+				var nv = Validation.methods;
+				delete Validation.methods['required-entry'];
+				delete Validation.methods['validate-one-required'];
+				delete Validation.methods['validate-one-required-by-name'];
+				if (this.validator.validate()) {
+					if (url) {
+						this.form.action = url;
+					}
+					this.form.submit();
+				}
+				Object.extend(Validation.methods, nv);
+			}
+		}.bind(productAddToCartForm);
+	//]]>
+	</script>
+
+	<?php //Lower primary column ?>
+    <div class="box-additional-container">
+            <div class="box-additional <?php echo $grid['lowerPrimCol']; ?>">
+
+                <?php if (isset($p['lowerPrimCol_1'])) echo $p['lowerPrimCol_1']; ?>
+
+                <?php echo $this->getChildHtml('product_additional_data') ?>
+
+                <div class="only-mobile">
+                    <?php if ($tmpHtml = $this->getChildHtml('product_secondary_top_placeholder')): //Brand logo ?>
+                        <div class="feature-wrapper bottom-border"><?php echo $tmpHtml; ?></div>
+                    <?php endif; ?>
+
+                    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('delivery-product')->toHtml();?>
+                </div>
+
+                <?php echo $this->getChildHtml('reviews'); //Reviews ?>
+
+            </div> <!-- end: box-tabs -->
+
+            <?php //Lower secondary column ?>
+            <?php if (isset($p['lowerSecCol_2'])): ?>
+                <div class="box-additional box-sidebar custom-sidebar-right <?php echo $grid['lowerSecCol']; ?>">
+                    <div class="inner"><?php echo $p['lowerSecCol_2']; ?></div>
+                </div>
+            <?php endif; ?>
+
+            <?php if (isset($p['lowerPrimCol_2'])): ?>
+                <div class="box-additional grid12-3<?php //echo $grid['lowerPrimCol']; ?>"><?php echo $p['lowerPrimCol_2']; ?></div>
+            <?php endif; ?>
+    </div>
+
+</div> <!-- end: product-view -->

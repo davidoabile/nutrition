@@ -1,0 +1,70 @@
+<div style="margin:20px 0;">
+        	<div class="moo_chart_title">
+            	<h4>Orders/Amounts, by Month (previous 365 days)</h4>
+			</div>
+            <div class="moo_chart_body">
+				<canvas id="yearSalesQtyRadarChart" width="380" height="380"></canvas>
+                <?php if ($this->_hasDirtyData()): ?>
+                <span class="value-hint"><?php echo $this->__('Sync pending : may not be 100% accurate') ?></span>
+                <?php endif; ?>
+			</div>
+</div>
+<script>
+    jQuery(function() {
+        var year_sales_qty_options = {
+            scaleShowLine : true,
+            angleShowLineOut : true,
+            scaleShowLabels : false,
+            scaleBeginAtZero : true,
+        scaleLineColor: "#777",
+        angleLineColor : "#777",
+            angleLineWidth : 1,
+            pointLabelFontFamily : "'Arial'",
+            pointLabelFontStyle : "normal",
+            pointLabelFontSize : 11,
+            pointLabelFontColor : "#DDD",
+            pointDot : true,
+            pointDotRadius : 3,
+            pointDotStrokeWidth : 1,
+            pointHitDetectionRadius : 20,
+            datasetStroke : true,
+            datasetStrokeWidth : 2,
+            datasetFill : true,
+            legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+        }
+        var year_sales_qty_data ={
+            labels: <?php echo $this->getLabelsData(); ?>,
+            datasets: [
+                {
+                    label: "# Orders",
+					fillColor: "rgba(220,220,220,0.2)",
+					strokeColor: "rgba(220,220,220,1)",
+					pointColor: "rgba(220,220,220,1)",
+					pointStrokeColor: "#ccc",
+					pointHighlightFill: "#ddd",
+					pointHighlightStroke: "rgba(220,220,220,1)",
+                    data: <?php echo $this->getSumsData(); ?>
+                },
+                {
+                    label: "$ Sales",
+					fillColor: "rgba(220,100,255,0.2)",
+                    strokeColor: "rgba(220,100,255,1)",
+                    pointColor: "rgba(220,100,255,1)",
+                    pointStrokeColor: "#ccc",
+                    pointHighlightFill: "#ddd",
+                    pointHighlightStroke: "rgba(220,100,255,1)",
+                    data: <?php echo $this->getQtysData(); ?>
+                }
+            ]
+        }
+
+        var yearSalesQtyRadarChart;
+        var ctx_sum = jQuery("#yearSalesQtyRadarChart").get(0).getContext("2d");
+        varienGlobalEvents.attachEventHandler('showTab', function(tab_data){
+            if (jQuery(tab_data.tab).attr('id') == 'diagram_tab_yearsells' && !yearSalesQtyRadarChart) {
+                yearSalesQtyRadarChart  = new Chart(ctx_sum).Radar(year_sales_qty_data, year_sales_qty_options);
+            }
+        });
+         
+    });
+</script>

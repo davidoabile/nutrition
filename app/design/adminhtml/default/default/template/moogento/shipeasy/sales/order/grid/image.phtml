@@ -1,0 +1,57 @@
+<?php
+/**
+ * Moogento
+ *
+ * SOFTWARE LICENSE
+ *
+ * This source file is covered by the Moogento End User License Agreement
+ * that is bundled with this extension in the file License.html
+ * It is also available online here:
+ * http://www.moogento.com/License.html
+ *
+ * NOTICE
+ *
+ * If you customize this file please remember that it will be overwrtitten
+ * with any future upgrade installs.
+ * If you'd like to add a feature which is not in this software, get in touch
+ * at www.moogento.com for a quote.
+ *
+ * ID          pe+sMEDTrtCzNq3pehW9DJ0lnYtgqva4i4Z=
+ * File        image.phtml
+ *
+ * @category   Moogento
+ * @package    pickPack
+ * @copyright  Copyright (c) 2014 Moogento <info@moogento.com> / All rights reserved.
+ * @license    http://www.moogento.com/License.html
+ */
+$order_id          = $this->getOrder()->getId();
+$number_max_image  = Mage::getStoreConfig('moogento_shipeasy/grid/product_image_max_number');
+$show_product_name = Mage::getStoreConfig('moogento_shipeasy/grid/product_image_show_product_name');
+$truncate_name_pos = Mage::getStoreConfig('moogento_shipeasy/grid/product_image_name_max_number');
+$truncate_flag     = 0;
+
+$no_image = $this->getSkinUrl('moogento/general/images/default_image.png');
+if ($truncate_name_pos) {
+    $truncate_flag = 1;
+}
+?>
+<div class="data order-tables szy_image <?php echo $show_product_name == 1 ? "szy_image_name" : ''?> ">
+    <?php $product_children_count = 0; ?>
+
+    <?php foreach ($this->_getImages() as $_imageData): ?>
+        <?php $product_children_count++ ?>
+        <div class="one_of_image <?php echo ($product_children_count > $number_max_image) ? 'hide_images ' . $order_id : '' ?>">
+            <img src="<?php echo $_imageData['image']; ?>" width="80" height="80" alt="" class="mini-pic <?php echo $product_children_count > $number_max_image ? "hide_images" : '' ?>"/>
+            <div class="preview" style="overflow:hidden;"> <img src="<?php echo $_imageData['image_full']; ?>" alt="" class="<?php echo $product_children_count > $number_max_image ? "hide_images" : '' ?>" style="max-width:400px; max-height:400px; "/> </div>
+            <?php if ($show_product_name == 1): ?>
+                <span class="szy-name <?php echo $product_children_count > $number_max_image ? "hide_images" : '' ?>">
+                    <?php echo $this->truncate($_imageData['name'], $truncate_name_pos, $truncate_flag); ?>
+                </span>
+            <?php endif; ?>
+        </div>
+    <?php endforeach; ?>
+    <?php if ($product_children_count > $number_max_image): ?>
+        <a id="<?php echo $order_id ?>" href="javascript:void(0)" class="show_hide_images">Show more &darr;</a>
+    <?php endif; ?>
+</div>
+ 

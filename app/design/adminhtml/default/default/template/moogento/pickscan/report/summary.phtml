@@ -1,0 +1,22 @@
+<?php
+    $capacities = $this->getCapacities();
+?>
+<div class="entry-edit">
+    <div class="entry-edit-head">
+        <h4 class="head-edit-form fieldset-legend"><?php echo $this->__('Estimated capacities') ?></h4>
+    </div>
+    <div class="fieldset">
+        <ul>
+           <li>
+               <?php echo $this->__('Weekly') ?>: <br/>
+               - <?php echo (int)$capacities['week_orders'] . ' ' . $this->__('orders') ?><br/>
+               - <?php echo (int)$capacities['week_items'] . ' ' . $this->__('items') ?>
+           </li>
+            <li>
+                <?php echo $this->__('Daily') ?>:<br/>
+                - <?php echo (float)$capacities['day_orders'] . ' ' . $this->__('orders') ?><br/>
+                - <?php echo (float)$capacities['day_items'] . ' ' . $this->__('items') ?>
+            </li>
+        </ul>
+    </div>
+</div>

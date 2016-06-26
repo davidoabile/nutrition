@@ -1,0 +1,53 @@
+
+    <div class="shipping_part mrgn_t40">
+        <div class="cart_hadd"><?php echo $this->__('Shipping') ?></div>
+        <div class="shipping_detl">
+            <?php if (($_shippingRateGroups = $this->getEstimateRates())): ?>
+                <form id="co-shipping-method-form" action="<?php echo $this->getUrl('checkout/cart/estimateUpdatePost') ?>">
+                    <ul>
+                        <?php
+                            $iR     = 0;
+                            $iS     = 0;
+                            $countR = 0;
+                            $countS = count($_shippingRateGroups);
+                        ?>
+                        <?php foreach ($_shippingRateGroups as $code => $_rates): ?>
+                            <?php $countR = count($_rates) ?>
+                            <?php $iS++ ?>
+                            <?php $iR = 0 ?>
+                            <?php foreach ($_rates as $_rate): ?>
+                                <?php $iR++ ?>
+                                <li<?php if ($_rate->getErrorMessage()) echo ' class="error-msg"';?>>
+                                    <?php if ($_rate->getErrorMessage()): ?>
+                                        <?php echo $this->escapeHtml($_rate->getErrorMessage()) ?>
+                                    <?php else: ?>
+                                        <div class="left">
+                                            <input title="<?php echo $this->escapeHtml($this->getCarrierName($code)) ?>" type="radio" name="estimate_method" class="css-radiobox" value="<?php echo $this->escapeHtml($_rate->getCode()) ?>" id="s_method_<?php echo $_rate->getCode() ?>"<?php if ($_rate->getCode() === $this->getAddressShippingMethod()) echo ' checked="checked"' ?> />
+                                            <label for="radio4" class="css-label2">
+                                                <span class=""><?php echo $this->escapeHtml($_rate->getMethodTitle()) ?></span><br />
+                                                <span class="shipping_subtitle"><?php echo $this->escapeHtml($this->getCarrierName($code)) ?></span>
+                                            </label>
+                                        </div>
+                                        <div class="right font18_gry">
+                                            <?php $_excl = $this->getShippingPrice($_rate->getPrice(), $this->helper('tax')->displayShippingPriceIncludingTax()); ?>
+                                            <?php $_incl = $this->getShippingPrice($_rate->getPrice(), true); ?>
+                                            <?php echo $_excl; ?>
+                                            <?php if ($this->helper('tax')->displayShippingBothPrices() && $_incl != $_excl): ?>
+                                                (<?php echo $this->__('Incl. Tax'); ?> <?php echo $_incl; ?>)
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php endif ?>
+                                </li>
+                                <?php if ($countS != $iS || $countR != $iR): ?>
+                                    <div class="divider"></div>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                        <?php endforeach ?>
+                    </ul>
+                </form>
+            <?php endif ?>
+        </div>
+    </div>
+
+
+

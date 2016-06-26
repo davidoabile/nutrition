@@ -1,0 +1,324 @@
+/* Overlay */
+.amscheckout #ampromo-items-add
+{
+    margin: 7px 10px;
+}
+
+#ampromo-overlay
+{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,.8);
+    top: 0;
+    left: 0;
+    z-index: 10000;
+    text-align: center;
+    direction: ltr;
+}
+
+#ampromo-overlay .close
+{
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    background: url(../../../images/amasty/ampromo/close_icon.png) no-repeat;
+    width: 40px;
+    height: 40px;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+    font-size: 0;
+    display: block;
+
+    opacity: .8;
+}
+
+#ampromo-overlay .close:hover
+{
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
+/* Items */
+
+#ampromo-items
+{
+   /* min-width:1000px;*/
+    border: 1px solid #ededed;
+    background-color: white;
+    position: relative;
+    margin: 0 auto;
+    padding: 24px;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+#ampromo-items .popup_mid_wrap{
+    padding: 23px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    text-align: left;
+}
+#ampromo-items.amcarousel,
+#ampromo-items.bonus-items-1
+{
+    display: block;
+    width: 735px;
+    max-height: 90%;
+    overflow-y: auto;
+}
+#ampromo-items.bonus-items-1 .popup_left{
+    width: 100%;
+}
+#ampromo-items #ampromo-wrapper{
+    text-align: center;
+}
+#ampromo-items #ampromo-content{
+    display: inline-block;
+    vertical-align: top;
+}
+#ampromo-items .ampromo-item
+{
+    box-sizing: border-box;
+    width: 176px;
+    position: relative;
+    margin: 0 23px 23px;
+    float: left;
+}
+#ampromo-items .ampromo-item:nth-child(3n+1){
+    clear: both;
+}
+
+#ampromo-items .ampromo-item-options
+{
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+#ampromo-items .ampromo-item-image
+{
+    display: block;
+    margin: 0 auto;
+}
+#ampromo-items .gift-price-box{
+    padding: 10px 0 0;
+    margin: 10px 0 0;
+    border-top: 1px solid #ddd;
+    display: inline-block;
+    width: 100%;
+    vertical-align: top;
+}
+#ampromo-items .gift-price-box .free-price,
+#ampromo-items .gift-price-box .price-box{
+    float: left;
+    text-transform: uppercase;
+    font-size: 16px;
+    line-height: 20px;
+    margin-right: 7px;
+}
+
+#ampromo-items .ampromo_items_form h4,
+#ampromo-items .ampromo_items_form h4 a{
+    line-height: 22px;
+}
+#ampromo-items > h4{
+    font-size: 20px;
+    text-transform: uppercase;
+}
+#ampromo-items .btn-cart{
+    width: 100%;
+}
+#ampromo-items .ampromo-item-options dt{
+    padding: 8px 0 0;
+}
+#ampromo-items .ampromo-item-title h4{
+    text-align: left;
+    font: normal 14px 'exomedium';
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-transform: uppercase;
+}
+#ampromo-items .ampromo-item-title a{
+    color: #333;
+    display: inline;
+}
+/* Carousel */
+
+.amcarousel #ampromo-carousel-wrapper
+{
+    width: 520px;
+}
+
+#ampromo-carousel-wrapper
+{
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.amcarousel #ampromo-carousel-content
+{
+    width: 4500px;
+    height: 1px;
+}
+
+#ampromo-carousel-content .slide
+{
+    float: left;
+}
+
+.amcarousel .ampromo-carousel-control
+{
+    display: block;
+}
+
+.ampromo-carousel-control
+{
+    position: absolute;
+    top: 260px;
+    background: url(../../../images/amasty/ampromo/buttons_next_prev.png) no-repeat;
+    width: 48px;
+    height: 45px;
+    font-size: 0;
+    display: none;
+}
+
+.ampromo-carousel-control.carousel-disabled.prev
+{
+    background-position: 0 0 !important;
+}
+
+.ampromo-carousel-control.amcarousel-disabled.next
+{
+    background-position: -46px 0 !important;
+}
+
+.ampromo-carousel-control.prev
+{
+    background-position: 0 -45px;
+    left: 20px;
+}
+
+.ampromo-carousel-control.next
+{
+    background-position: -46px -45px;
+    right: 20px;
+}
+
+.ampromo-carousel-control.prev:hover
+{
+    background-position: 0 -91px;
+}
+
+.ampromo-carousel-control.next:hover
+{
+    background-position: -46px -91px;
+}
+
+.ampromo-item .qty-holder
+{
+    display: none;
+}
+
+.ampromo-item-options select,
+.ampromo-item-options input
+{
+    max-width: 210px;
+}
+
+.ampromo-notification
+{
+    padding: 7px;
+    text-align: center;
+    margin-bottom: 12px;
+
+    border: 1px solid #f16048;
+    color: #df280a;
+    background: #faebe7;
+}
+
+.ampromo_items_form h4 {
+    line-height: 50px;
+}
+
+.ampromo_items_form h4 a {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 22px;
+}
+.bonus-items-1{
+    width:300px!important;
+}
+.bonus-items-2{
+    width:600px!important;
+}
+.bonus-items-3{
+    width:900px!important;
+}
+@media screen and (max-width: 1024px){
+    #ampromo-items {
+        min-width:100px;
+    }
+}
+@media screen and (max-width: 767px) {
+    #ampromo-items.amcarousel{
+        width: 300px;
+    }
+    #ampromo-items .ampromo-item{
+        float: none;
+    }
+    .ampromo-item{
+        display: inline-block;
+        width: 100%;
+        padding: 10px 0;
+        border-bottom: 1px solid #ddd;
+    }
+    .ampromo-item .ampromo-item-image{
+        float: left;
+        width: 25%;
+    }
+    .ampromo-item .ampromo-item-info{
+        float: left;
+        width: 75%;
+        margin: 0;
+        padding: 0 0 10px 10px;
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+    }
+    .ampromo-item .ampromo-item-info h4{
+        line-height: 20px;
+        margin: 5px 0 0;
+    }
+    .ampromo-item .ampromo-item-info h4 a{
+        font: normal 12px 'exomedium';
+        color: #333;
+        line-height: 16px;
+        text-transform: uppercase;
+    }
+    .ampromo-item .gift-price-box{
+        padding: 0 0 8px;
+        text-align: left;
+    }
+    .ampromo-item div.selector{
+        width: 140px;
+        height: 26px;
+    }
+    .ampromo-item div.selector span{
+        height: 24px;
+        line-height: 24px;
+    }
+    .ampromo-item div.selector select{
+        height: 24px;
+    }
+    .ampromo-item .ampromo-item-buttons{
+        margin-top: 10px;
+    }
+    .ampromo-item .gift-price-box .price-box .price{
+        font-size: 14px;
+        line-height: 18px;
+    }
+    .gift-price-box .free-price{
+        font-size: 14px;
+        line-height: 20px;
+    }
+}

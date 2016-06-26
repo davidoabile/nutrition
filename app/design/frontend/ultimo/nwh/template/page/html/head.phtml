@@ -1,0 +1,132 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php $theme = Mage::helper('ultimo'); ?>
+
+<meta http-equiv="Content-Type" content="<?php echo $this->getContentType() ?>" />
+<title><?php echo $this->getTitle() ?></title>
+<?php if ($theme->getCfgLayout('responsive/responsive')): ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<?php endif; ?>
+<meta name="description" content="<?php echo htmlspecialchars($this->getDescription()) ?>" />
+<meta name="keywords" content="<?php echo htmlspecialchars($this->getKeywords()) ?>" />
+<meta name="robots" content="<?php echo htmlspecialchars($this->getRobots()) ?>" />
+<link rel="icon" href="<?php echo $this->getFaviconFile(); ?>" type="image/x-icon" />
+<link rel="shortcut icon" href="<?php echo $this->getFaviconFile(); ?>" type="image/x-icon" />
+<!--[if lte IE 9]>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl() ?>css/styles-ie9.css" media="all" />
+<![endif]-->
+<?php
+$skinUrl = $this->getSkinUrl('');
+?>
+
+<!--[if lt IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+    var BLANK_URL = '<?php echo $this->helper('core/js')->getJsUrl('blank.html') ?>';
+    var BLANK_IMG = '<?php echo $this->helper('core/js')->getJsUrl('spacer.gif') ?>';
+//]]>
+</script>
+<![endif]-->
+<script type="text/javascript">
+//<![CDATA[
+    var isMobile = <?php echo Mage::helper("device")->isMobile(); ?>
+//]]>
+</script>
+
+<?php echo $this->getCssJsHtml() ?>
+<?php echo $this->getChildHtml() ?>
+<?php echo $this->helper('core/js')->getTranslatorScript() ?>
+<?php //echo $this->getIncludes() ?>
+
+
+
+<?php
+//Include Google Fonts
+$amp = '&amp;';
+$charSubset = '';
+if ($subsets = $theme->getCfgDesign('font/primary_char_subset')) {
+    $charSubset = "{$amp}subset={$subsets}";
+}
+
+$fontWeight = '';
+if ($weight = $theme->getCfgDesign('font/primary_font_weight')) {
+    $fontWeight = ':' . $weight;
+}
+?>
+<?php if ($theme->getCfgDesign('font/primary_font_family_group') == 'google'): ?>
+    <link href='//fonts.googleapis.com/css?family=<?php echo str_replace(' ', '+', $theme->getCfgDesign('font/primary_font_family'));
+    echo $fontWeight;
+    echo $charSubset;
+    ?>' rel='stylesheet' type='text/css' />
+<?php endif; ?>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-4444812-2', 'auto');
+    ga('send', 'pageview');
+
+</script>
+<script type="text/javascript">
+    var _caq = _caq || [];
+    (function () {
+        var ca = document.createElement("script");
+        ca.type = "text/javascript";
+        ca.async = true;
+        ca.id = "_casrc";
+        ca.src = "//t.channeladvisor.com/v2/12014156.js";
+        var ca_script = document.getElementsByTagName("script")[0];
+        ca_script.parentNode.insertBefore(ca, ca_script);
+    })();
+</script>
+<script>
+    jQuery(document).ready(function ($) {
+        var options = {
+            position: 'top',
+            animation: 'grow',
+            interactive: true,
+            offsetY: -5,
+            maxWidth: 160
+        };
+        options.content = jQuery('<p>Delivery of orders under $150 is just<strong style="text-transform: uppercase;"> $9.95 </strong>anywhere in Australia!</p><p><a href="/ampromo/cart/offers">View Gifts</a> <strong>|</strong> <a href="super-fast-delivery-australia-wide-pg-4.html">Delivery</a></p>');
+        jQuery('.my-tooltip-delivery').tooltipster(options);
+        options.content = jQuery('<p>Return <strong>opened items</strong> within 30 days for an exchange / credit. Return <strong>unopened items</strong> within 60 days for a refund!</p><p><a href="/returns.html">Returns Policy</a></p>');
+        jQuery('.my-tooltip-30days').tooltipster(options);
+        options.content = jQuery('<p>We have stores in QLD, NSW, ACT, VIC, SA & WA!</p><p><a href="/bodybuilding-supplements-brisbane-shops-underwood-greenslope-pg-2.html">Find a Store</a></p>');
+        jQuery('.my-tooltip-stores').tooltipster(options);        
+    });
+
+</script>

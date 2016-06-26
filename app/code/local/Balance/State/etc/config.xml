@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Balance_State>
+      <version>0.1.0</version>
+    </Balance_State>
+  </modules>
+  <frontend>
+    <routers>
+      <state>
+        <use>standard</use>
+        <args>
+          <module>Balance_State</module>
+          <frontName>state</frontName>
+        </args>
+      </state>
+    </routers>
+  </frontend>
+  <global>
+    <helpers>
+      <state>
+        <class>Balance_State_Helper</class>
+      </state>
+    </helpers>
+  </global>
+</config> 

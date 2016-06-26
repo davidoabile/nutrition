@@ -1,0 +1,8 @@
+<config>
+    <modules>
+        <Moogento_Core>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Moogento_Core>
+    </modules>
+</config>

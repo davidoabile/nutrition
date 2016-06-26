@@ -1,0 +1,53 @@
+<?php
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+?>
+<div id="checkout-paypaliframe-load" class="authentication">
+<div id="iframe-warning" class="warning-message">
+    <?php echo $this->__('Please do not refresh the page until you complete payment.') ?>
+</div>
+<iframe id="payflow-advanced-iframe" style="display:none;" scrolling="no" frameborder="0" border="0" src="<?php echo $this->getFrameActionUrl() ?>" height="610" width="570"></iframe>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+review.setLoadWaiting();
+
+$$('.opc .section .step:not(#checkout-step-review), .cart .checkout-types, #opc-messages').each(Element.hide);
+
+<?php if(Mage::helper('aitcheckout')->isShowCartInCheckout()):?>
+$$('#shopping-cart-table col:first').each(function(col){
+    col.writeAttribute('width', false);
+});
+<?php endif; ?>
+
+<?php if(Mage::helper('aitcheckout')->isShowCheckoutInCart()):?>
+$$('.cart:first').each(Element.hide);
+<?php endif; ?>
+
+<?php if(Mage::helper('aitcheckout')->isCompactDesign()):?>
+$$('#left_collumn, #center_column').each(Element.hide);
+$('checkoutSteps').setStyle({
+    backgroundImage: 'none'
+});
+$('right_collumn').setStyle({
+    width: '100%'
+});
+$('checkout-step-review').setStyle({
+    paddingRight: $('checkout-step-review').getStyle('paddingLeft')
+});
+<?php endif; ?>
+
+$('payflow-advanced-iframe').observe('load', function(){
+    $('payflow-advanced-iframe').show();
+    $('iframe-warning').show();
+    $('checkout-buttons-container').hide();
+});
+//]]>
+</script>

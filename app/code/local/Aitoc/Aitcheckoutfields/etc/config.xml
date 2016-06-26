@@ -1,0 +1,311 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Aitoc_Aitcheckoutfields>
+            <version>2.9.8</version>
+            <platform>community</platform>
+        </Aitoc_Aitcheckoutfields>
+    </modules>
+    
+    <admin>
+        <routers>
+            <adminhtml>
+				<args>
+					<modules>
+						<aitcheckoutfields before="Mage_Adminhtml">Aitoc_Aitcheckoutfields_Adminhtml</aitcheckoutfields>
+					</modules>
+				</args>
+			</adminhtml>
+        </routers>
+    </admin>
+    
+    <adminhtml>
+        <layout>
+            <updates>
+                <aitcheckoutfields>
+                    <file>aitcheckoutfields.xml</file>
+                </aitcheckoutfields>
+            </updates>
+        </layout>
+        
+    </adminhtml> 
+      
+    <frontend>
+        <layout>
+             <updates>
+                  <aitcheckoutfields>
+                      <file>aitcheckoutfields.xml</file>
+                  </aitcheckoutfields>
+             </updates>
+        </layout>
+    </frontend>
+    
+    <global>
+
+        <blocks>
+            <aitcheckoutfields>
+                <class>Aitoc_Aitcheckoutfields_Block</class>
+            </aitcheckoutfields>
+
+            <adminhtml>
+                <rewrite>
+                    <sales_order_view_info>Aitoc_Aitcheckoutfields_Block_Rewrite_AdminSalesOrderViewInfo</sales_order_view_info>
+                    <sales_order_grid>Aitoc_Aitcheckoutfields_Block_Rewrite_AdminhtmlSalesOrderGrid</sales_order_grid>
+                    <sales_order_create_form_account>Aitoc_Aitcheckoutfields_Block_Rewrite_AdminSalesOrderCreateFormAccount</sales_order_create_form_account>
+                    <customer_edit_tabs>Aitoc_Aitcheckoutfields_Block_Rewrite_AdminCustomerEditTabs</customer_edit_tabs>
+				</rewrite>
+            </adminhtml>
+            
+            <sales>
+                <rewrite>
+                    <order_view>Aitoc_Aitcheckoutfields_Block_Rewrite_FrontSalesOrderView</order_view>
+                    <order_print>Aitoc_Aitcheckoutfields_Block_Rewrite_FrontSalesOrderPrint</order_print>
+                    <order_email_items>Aitoc_Aitcheckoutfields_Block_Rewrite_FrontSalesOrderEmailItems</order_email_items>
+					<recurring_profile_view>Aitoc_Aitcheckoutfields_Block_Rewrite_FrontSalesRecurringProfileView</recurring_profile_view>
+                </rewrite>
+            </sales>
+            
+            <checkout>
+                <rewrite>
+                    <onepage_billing>Aitoc_Aitcheckoutfields_Block_Rewrite_FrontCheckoutOnepageBilling</onepage_billing>
+                    <onepage_shipping>Aitoc_Aitcheckoutfields_Block_Rewrite_FrontCheckoutOnepageShipping</onepage_shipping>
+                    <onepage_shipping_method>Aitoc_Aitcheckoutfields_Block_Rewrite_FrontCheckoutOnepageShippingMethod</onepage_shipping_method>
+                    <onepage_payment>Aitoc_Aitcheckoutfields_Block_Rewrite_FrontCheckoutOnepagePayment</onepage_payment>
+                    <onepage_review>Aitoc_Aitcheckoutfields_Block_Rewrite_FrontCheckoutOnepageReview</onepage_review>
+                    <onepage_review_info>Aitoc_Aitcheckoutfields_Block_Rewrite_FrontCheckoutOnepageReviewInfo</onepage_review_info>
+                    <multishipping_addresses>Aitoc_Aitcheckoutfields_Block_Rewrite_FrontCheckoutMultishippingAddresses</multishipping_addresses>
+                    <multishipping_shipping>Aitoc_Aitcheckoutfields_Block_Rewrite_FrontCheckoutMultishippingShipping</multishipping_shipping>
+                    <multishipping_billing>Aitoc_Aitcheckoutfields_Block_Rewrite_FrontCheckoutMultishippingBilling</multishipping_billing>
+                    <multishipping_overview>Aitoc_Aitcheckoutfields_Block_Rewrite_FrontCheckoutMultishippingOverview</multishipping_overview>
+                </rewrite>
+            </checkout>
+            
+            <customer>
+                <rewrite>
+                    <form_register>Aitoc_Aitcheckoutfields_Block_Rewrite_FrontCustomerFormRegister</form_register>
+                    <form_edit>Aitoc_Aitcheckoutfields_Block_Rewrite_FrontCustomerFormEdit</form_edit>
+                </rewrite>
+            </customer>
+        </blocks>
+        
+        <models>
+            <aitcheckoutfields>
+                <class>Aitoc_Aitcheckoutfields_Model</class>
+                <resourceModel>aitcheckoutfields_mysql4</resourceModel>
+            </aitcheckoutfields>
+            
+            <aitcheckoutfields_mysql4>
+                <class>Aitoc_Aitcheckoutfields_Model_Mysql4</class>
+                <entities>
+                    <order_field>
+                        <table>aitoc_order_entity_custom</table>
+                    </order_field>
+                    <customer_field>
+                        <table>aitoc_customer_entity_data</table>
+                    </customer_field>
+                    <profile_field>
+                        <table>aitoc_recurring_profile_entity_custom</table>
+                    </profile_field>
+                    <description>
+                        <table>aitoc_custom_attribute_description</table>
+                    </description>
+                    <need_select>
+                        <table>aitoc_custom_attribute_need_select</table>
+                    </need_select>
+                </entities>
+            </aitcheckoutfields_mysql4>
+        
+             <checkout>
+                <rewrite>
+                    <type_onepage>Aitoc_Aitcheckoutfields_Model_Rewrite_FrontCheckoutTypeOnepage</type_onepage>
+                    <type_multishipping>Aitoc_Aitcheckoutfields_Model_Rewrite_FrontCheckoutTypeMultishipping</type_multishipping>
+                    <type_multishipping_state>Aitoc_Aitcheckoutfields_Model_Rewrite_FrontCheckoutTypeMultishippingState</type_multishipping_state>
+                </rewrite>
+            </checkout>
+            
+            <customer>
+                <rewrite>
+                    <customer>Aitoc_Aitcheckoutfields_Model_Rewrite_FrontCustomerCustomer</customer>
+                </rewrite>
+            </customer>
+            
+            <catalog>
+                <rewrite>
+                    <product_flat_observer>Aitoc_Aitcheckoutfields_Model_Rewrite_FrontCatalogProductFlatObserver</product_flat_observer>
+                </rewrite>
+            </catalog>
+            
+            <sales>
+                <rewrite>
+                    <order>Aitoc_Aitcheckoutfields_Model_Rewrite_FrontSalesOrder</order>
+                    <order_api>Aitoc_Aitcheckoutfields_Model_Rewrite_FrontSalesOrderApi</order_api>
+                    <order_api_v2>Aitoc_Aitcheckoutfields_Model_Rewrite_FrontSalesOrderApiV2</order_api_v2>
+                    <order_pdf_invoice>Aitoc_Aitcheckoutfields_Model_Rewrite_AdminSalesPdfInvoice</order_pdf_invoice>
+                </rewrite>
+            </sales>
+            
+            <adminhtml>
+                <rewrite>
+                    <sales_order_create>Aitoc_Aitcheckoutfields_Model_Rewrite_AdminSalesOrderCreate</sales_order_create>
+                </rewrite>
+            </adminhtml>
+            
+            <eav_resource>
+                <rewrite>
+                    <entity_attribute>Aitoc_Aitcheckoutfields_Model_Rewrite_EavResourceEntityAttribute</entity_attribute>
+                </rewrite>
+            </eav_resource>
+            
+            <paypal>
+                <rewrite>
+                    <express_checkout>Aitoc_Aitcheckoutfields_Model_Rewrite_PaypalExpressCheckout</express_checkout>
+					<ipn>Aitoc_Aitcheckoutfields_Model_Rewrite_PaypalIpn</ipn>
+                </rewrite>
+            </paypal>
+            
+            <paypaluk>
+                <rewrite>
+                    <express_checkout>Aitoc_Aitcheckoutfields_Model_Rewrite_PaypalExpressCheckout</express_checkout>
+                </rewrite>
+            </paypaluk>
+            
+            <core>
+                <rewrite>
+                    <email_template>Aitoc_Aitcheckoutfields_Model_Rewrite_CoreEmailTemplate</email_template>
+                </rewrite>
+            </core>
+
+        </models>
+        
+        <helpers>
+            <aitcheckoutfields>
+                <class>Aitoc_Aitcheckoutfields_Helper</class>
+            </aitcheckoutfields>
+        </helpers>
+        
+        <resources>
+            <aitcheckoutfields_setup>
+                <setup>
+                    <module>Aitoc_Aitcheckoutfields</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </aitcheckoutfields_setup>
+            <aitcheckoutfields_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </aitcheckoutfields_write>
+            <aitcheckoutfields_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </aitcheckoutfields_read>
+        </resources>
+        
+        <events>
+            <controller_action_predispatch_checkout_multishipping_addressesPost>
+                <observers>
+                    <aitcheckoutfields>
+                        <type>singleton</type>
+                        <class>aitcheckoutfields/observer</class>
+                        <method>frontCheckoutMultishippingAddressesPost</method>
+                    </aitcheckoutfields>
+                </observers>
+            </controller_action_predispatch_checkout_multishipping_addressesPost>
+            <controller_action_predispatch_sagepaysuite_payment_onepageSaveOrder>
+                <observers>
+                    <aitcheckoutfields>
+                        <type>singleton</type>
+                        <class>aitcheckoutfields/observer</class>
+                        <method>predispatchSagepaysuitePaymentOnepageSaveOrder</method>
+                    </aitcheckoutfields>
+                </observers>
+            </controller_action_predispatch_sagepaysuite_payment_onepageSaveOrder>
+            <aitcheckoutfields_paypal_express_order_place_after>
+                <observers>
+                    <aitcheckoutfields>
+                        <type>singleton</type>
+                        <class>aitcheckoutfields/observer</class>
+                        <method>onPaypalExpressOrderPlaceAfter</method>
+                    </aitcheckoutfields>
+                </observers>
+            </aitcheckoutfields_paypal_express_order_place_after>
+            
+            <controller_action_predispatch_checkout_onepage_progress>
+                <observers>
+                    <aitcheckoutfields>
+                        <type>singleton</type>
+                        <class>aitcheckoutfields/observer</class>
+                        <method>onPredispatchCheckoutOnepageProgress</method>
+                    </aitcheckoutfields>
+                </observers>
+            </controller_action_predispatch_checkout_onepage_progress>
+            <core_block_abstract_to_html_after>
+                <observers>
+                    <aitcheckoutfields>
+                        <type>singleton</type>
+                        <class>aitcheckoutfields/observer</class>
+                        <method>onCoreBlockAbstractToHtmlAfter</method>
+                    </aitcheckoutfields>
+                </observers>
+            </core_block_abstract_to_html_after>
+            <customer_address_format>
+                <observers>
+                    <aitcheckoutfields>
+                        <type>singleton</type>
+                        <class>aitcheckoutfields/observer</class>
+                        <method>onCustomerAddressFormat</method>
+                    </aitcheckoutfields>
+                </observers>            
+            </customer_address_format>
+            <controller_action_predispatch_checkout_multishipping_shipping>
+                <observers>
+                    <aitcheckoutfields>
+                        <type>singleton</type>
+                        <class>aitcheckoutfields/observer</class>
+                        <method>onPredispatchCheckoutMultishipping</method>
+                    </aitcheckoutfields>
+                </observers>            
+            </controller_action_predispatch_checkout_multishipping_shipping>
+            <controller_action_predispatch_checkout_multishipping_overview>
+                <observers>
+                    <aitcheckoutfields>
+                        <type>singleton</type>
+                        <class>aitcheckoutfields/observer</class>
+                        <method>onPredispatchCheckoutMultishipping</method>
+                    </aitcheckoutfields>
+                </observers>            
+            </controller_action_predispatch_checkout_multishipping_overview>            
+        </events>
+    </global>
+    
+    <default>
+        <aitcheckoutfields>
+            <settings>
+                <aitcheckoutfields_reg_label_top>Additional Info</aitcheckoutfields_reg_label_top>
+                <aitcheckoutfields_reg_label_bottom>Additional Info</aitcheckoutfields_reg_label_bottom>
+            </settings>
+            <email_settings>
+                <aitcheckoutfields_email_label>Additional Info</aitcheckoutfields_email_label>
+                <aitcheckoutfields_email_TheadTrThStyle>background: #eaeaea; font-size:13px; padding:5px 9px 6px 9px; line-height:1em;</aitcheckoutfields_email_TheadTrThStyle>
+                <aitcheckoutfields_email_TbodyTrTdStyle>font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #eaeaea; border-bottom:1px solid #eaeaea; border-right:1px solid #eaeaea;</aitcheckoutfields_email_TbodyTrTdStyle>
+            </email_settings>
+            <common_settings>
+                <aitcheckoutfields_additionalblock_label>Additional Info</aitcheckoutfields_additionalblock_label>
+            </common_settings>
+        </aitcheckoutfields>
+    </default>
+</config>
+<!--
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (CFM Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckoutfields
+ * @version      1.0.9 - 2.9.8
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+-->

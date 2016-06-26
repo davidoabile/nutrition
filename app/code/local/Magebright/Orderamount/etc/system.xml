@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config>
+	  <sections>
+		<sales>           
+			<groups>
+		      <minimum_order translate="label"> 
+			       <fields>
+	                  <amount translate="label">
+	                    <label>Minimum Amount</label>
+	                    <frontend_model>magebright_orderamount_block_adminhtml_config_customergroup</frontend_model>
+	                    <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+	                    <sort_order>10</sort_order>
+	                    <show_in_default>1</show_in_default>
+	                    <show_in_website>1</show_in_website>
+	                    <show_in_store>1</show_in_store>
+	                  </amount>
+				   </fields>
+			   </minimum_order>
+			</groups>
+		</sales>
+	  </sections>
+</config>

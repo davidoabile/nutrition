@@ -1,0 +1,131 @@
+<?php
+/**
+ * BelVG LLC.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ *
+/**********************************************
+ *        MAGENTO EDITION USAGE NOTICE        *
+ **********************************************/
+/* This package designed for Magento COMMUNITY edition
+ * BelVG does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * BelVG does not provide extension support in case of
+ * incorrect edition usage.
+/**********************************************
+ *        DISCLAIMER                          *
+ **********************************************/
+/* Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future.
+ **********************************************
+ * @category   Belvg
+ * @package    Belvg_DropDownMenu
+ * @copyright  Copyright (c) 2010 - 2012 BelVG LLC. (http://www.belvg.com)
+ * @license    http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ */
+
+    $settings = Mage::helper('ddmenu')->getSettings();
+?>
+
+<nav id="nav">
+    <ol class="nav-primary<?php echo ($settings['stretched']) ? ' nav-stretched' : '' ?>">
+        <?php
+            $i = 1;
+            $this->_menu->setOutermostClass('level-top');
+            $this->_menu->setChildrenWrapClass('');
+
+            $children = $this->_menu->getChildren();
+            $count    = $children->count();
+        ?>
+        <?php if ($settings['home']): ?>
+            <li class="level0 nav-<?php echo $i ?> first<?php echo (($settings['home_ico']) ? ' nav-home-page' : '') ?>">
+                <a class="level0" href='<?php echo $this->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) ?>'><span><?php echo $this->__('Home page')?></span></a>
+            </li>
+            <?php $count++ ?>
+        <?php endif ?>
+        <?php foreach ($children as $child): ?>
+            <?php
+                $i++;
+                $categoryId  = $this->getCategoryId($child);
+                $ddmenu      = $this->getDdmenuObject($categoryId);
+                $showProduct = $ddmenu->getLastProduct();
+                $this->categoryIds = array($categoryId);
+
+                // html - sub categories
+                $subHtml           = FALSE;
+                $navClass          = 'nav' . '-' . $i;
+                if ($this->maxRows = $ddmenu->getRows()) {
+                    $subHtml       = $this->getSubCategoryHtml($child, TRUE, 1, $navClass);
+                } else if ($showProduct) {
+                    $this->searchCategoriesForLastProduct($child);
+                }
+
+                // html - last product
+                $prodHtml = FALSE;
+                if ($showProduct) {
+                    $prodHtml = $this->getChild('ddmenu_last_product')
+                        ->setTreeItem($child)
+                        ->setCategoryIds($this->categoryIds)
+                        ->_toHtml();
+                }
+
+                // html - friend category
+                $friendHtml = FALSE;
+                if ($ddmenu->getCategoriesList()) {
+                    $friendHtml = $this->getChild('ddmenu_category_friends')
+                        ->setCategoryIds($ddmenu->getCategoriesList())
+                        ->_toHtml();
+                }
+
+                // html - static block
+                $staticHtml = FALSE;
+                if ($ddmenu->getStaticBlockId()) {
+                    $staticHtml = $this->getChild('ddmenu_static_block')
+                        ->setId($ddmenu->getStaticBlockId())
+                        ->_toHtml();
+                }
+
+                // html - template
+                $templateHtml = FALSE;
+                if ($ddmenu->getTemplate()) {
+                    $templateHtml = $this->getChild('ddmenu_template')
+                        ->setTreeItem($child)
+                        ->setCategoryId($categoryId)
+                        ->setTemplateFile($ddmenu->getTemplate())
+                        ->_toHtml();
+                }
+
+
+                if ($subHtml || $prodHtml || $friendHtml || $staticHtml || $templateHtml) {
+                    $showMenu = TRUE;
+                } else {
+                    $showMenu = FALSE;
+                }
+            ?>
+            <li class="<?php echo $this->getLiClass(0, $showMenu, $navClass, $child->getIsActive(), $count, $i) ?>">
+                <a class="<?php echo $this->getAClass(0, $showMenu) ?>" href="<?php echo $child->getUrl() ?>"><span><?php echo $this->escapeHtml($child->getName()) ?></span></a>
+                <?php if ($showMenu): ?>
+                    <div class="sub">
+                        <dl>
+                        <?php
+                            $blockIds = explode(',', $ddmenu->getBlocksLoc());
+                            foreach ($blockIds AS $blockId) {
+                                if ($blockId == 'b1' && $subHtml)      echo '<dd>' . $subHtml .      '</dd>';
+                                if ($blockId == 'b2' && $friendHtml)   echo '<dd>' . $friendHtml .   '</dd>';
+                                if ($blockId == 'b3' && $prodHtml)     echo '<dd>' . $prodHtml .     '</dd>';
+                                if ($blockId == 'b4' && $staticHtml)   echo '<dd>' . $staticHtml .   '</dd>';
+                                if ($blockId == 'b5' && $templateHtml) echo '<dd>' . $templateHtml . '</dd>';
+                            }
+                        ?>
+                        </dl>
+                    </div>
+                <?php endif ?>
+            </li>
+        <?php endforeach ?>
+    </ol>
+</nav>

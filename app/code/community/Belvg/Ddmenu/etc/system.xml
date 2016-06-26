@@ -1,0 +1,284 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * BelVG LLC.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ *
+/**********************************************
+ *        MAGENTO EDITION USAGE NOTICE        *
+ **********************************************/
+/* This package designed for Magento COMMUNITY edition
+ * BelVG does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * BelVG does not provide extension support in case of
+ * incorrect edition usage.
+/**********************************************
+ *        DISCLAIMER                          *
+ **********************************************/
+/* Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future.
+ **********************************************
+ * @category   Belvg
+ * @package    Belvg_DropDownMenu
+ * @copyright  Copyright (c) 2010 - 2012 BelVG LLC. (http://www.belvg.com)
+ * @license    http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ */
+-->
+
+<config>
+    <sections>
+        <ddmenu translate="label">
+            <label>Dropdown Menu</label>
+            <tab>belvg</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1018</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <info translate="label">
+                    <label>Info</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <comment>        
+                    <![CDATA[
+                    <div style="padding:10px;background-color:#fff;border:1px solid #ddd;margin-bottom:7px;">
+                    <div style="float:left;margin-right:10px;background:url('data:image/png;base64,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') no-repeat; width: 54px; height: 54px;"></div>
+                    This module was developed by <a href="http://www.belvg.com" target="_blank">www.BelVG.com</a>.<br>
+                    For docs & examples refer to the BelVG <a href="http://www.belvg.com" target="_blank">web site</a>.
+                    <br/>We have the largest selections of  <a href="http://store.belvg.com/extensions.html" target="_blank">extensions</a> and <a href="http://store.belvg.com/themes.html" target="_blank">themes</a> on Magento.
+                    </div>
+                    ]]>
+                    </comment>
+                    <fields>
+                        <info>
+                            <frontend_type>text</frontend_type>
+                            <frontend_model>ddmenu/adminhtml_config_info</frontend_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </info>
+                    </fields>
+                </info>
+                <settings translate="label">
+                    <label>Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enabled translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enabled>
+                        <stretched_width>
+                            <label>Stretched Width</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </stretched_width>
+                        <home translate="label comment">
+                            <label>Home Page link</label>
+                            <comment><![CDATA[Include in Navigation Menu]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </home>
+                        <home_ico translate="label comment">
+                            <label>Home Page link as Ico</label>
+                            <comment><![CDATA[Include in Navigation Menu]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>31</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <home>1</home>
+                            </depends>
+                        </home_ico>
+                        <fly translate="label">
+                            <label>Floating Menu</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </fly>
+                        <fly_background translate="label tooltip">
+                            <label>Floating Menu Background</label>
+                            <tooltip>Specifies a overlay color. Colors should be specified in hex format, e.g. '#aa00aa'.</tooltip>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>41</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <fly>1</fly>
+                            </depends>
+                        </fly_background>
+                        <fly_opacity translate="label tooltip">
+                            <label>Floating Menu Background Opacity</label>
+                            <tooltip><![CDATA[Default value <b>0.8</b><br><br>]]>Where 0 is fully transparent, and 1 is fully opaque.</tooltip>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-not-negative-number</validate>
+                            <sort_order>42</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <fly>1</fly>
+                            </depends>
+                        </fly_opacity>
+                        <overlay_show translate="label">
+                            <label>Display Overlay</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </overlay_show>
+                        <overlay_color translate="label tooltip">
+                            <label>Overlay Color</label>
+                            <tooltip>Specifies a overlay color. Colors should be specified in hex format, e.g. '#aa00aa'.</tooltip>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>210</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <overlay_show>1</overlay_show>
+                            </depends>
+                        </overlay_color>
+                        <overlay_opacity translate="label tooltip">
+                            <label>Overlay Opacity</label>
+                            <tooltip><![CDATA[Default value <b>0.7</b><br><br>]]>Where 0 is fully transparent, and 1 is fully opaque.</tooltip>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-not-negative-number</validate>
+                            <sort_order>220</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <overlay_show>1</overlay_show>
+                            </depends>
+                        </overlay_opacity>
+                        <overlay_height>
+                            <label>After Header</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>230</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </overlay_height>
+                    </fields>
+                </settings>
+                <animate translate="label">
+                    <label>Animation</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>110</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <transition_in translate="label">
+                            <label>Transition In type</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddmenu/source_transition</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </transition_in>
+                        <transition_in_easing translate="label">
+                            <label>Transition In Easing</label>
+                            <tooltip>Easing used for elastic animations</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddmenu/source_easing_in</source_model>
+                            <sort_order>55</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <transition_in separator=",">fade,slide</transition_in>
+                            </depends>
+                        </transition_in_easing>
+                        <speed_in translate="label tooltip">
+                            <label>Speed In</label>
+                            <tooltip><![CDATA[<b>in milliseconds</b><br><br>Default value <b>300</b><br><br>]]>Speed of transitions</tooltip>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-not-negative-number</validate>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <transition_in separator=",">fade,slide</transition_in>
+                            </depends>
+                        </speed_in>
+                        <transition_out translate="label">
+                            <label>Transition Out type</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddmenu/source_transition</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </transition_out>
+                        <transition_out_easing translate="label">
+                            <label>Transition Out Easing</label>
+                            <tooltip>Easing used for elastic animations</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddmenu/source_easing_out</source_model>
+                            <sort_order>75</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <transition_out separator=",">fade,slide</transition_out>
+                            </depends>
+                        </transition_out_easing>
+                        <speed_out translate="label tooltip">
+                            <label>Speed Out</label>
+                            <tooltip><![CDATA[<b>in milliseconds</b><br><br>Default value <b>200</b><br><br>]]>Speed of transitions</tooltip>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-not-negative-number</validate>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <transition_out separator=",">fade,slide,elastic</transition_out>
+                            </depends>
+                        </speed_out>
+                    </fields>
+                </animate>
+            </groups>
+        </ddmenu>
+    </sections>
+</config>

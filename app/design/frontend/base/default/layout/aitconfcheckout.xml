@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+    </default>
+
+    <checkout_onepage_index>
+    	<reference name="checkout.progress">
+    		<action method="setTemplate"><template>aitcommonfiles/design--frontend--base--default--template--checkout--onepage--progress.phtml</template></action>
+    	</reference>
+    	<reference name="checkout.onepage.billing">
+    		<action method="setTemplate"><template>aitcommonfiles/design--frontend--base--default--template--checkout--onepage--billing.phtml</template></action>
+    	</reference>
+    	<reference name="checkout.onepage.shipping">
+    		<action method="setTemplate"><template>aitcommonfiles/design--frontend--base--default--template--checkout--onepage--shipping.phtml</template></action>
+    	</reference>
+    </checkout_onepage_index>
+    
+    <checkout_onepage_progress>
+    	<reference name="root">
+    		<action method="setTemplate"><template>aitcommonfiles/design--frontend--base--default--template--checkout--onepage--progress.phtml</template></action>
+    	</reference>
+    </checkout_onepage_progress>    
+	<!--<paypal_express_review>
+		<reference name="paypal.express.review">
+		    <action method="setTemplate"><template>aitcommonfiles/design--frontend--base--default--template--paypal--express--review.phtml</template></action>
+    	</reference>
+		<reference name="express.review.billing">
+		    <action method="setTemplate"><template>aitcommonfiles/design--frontend--base--default--template--paypal--express--review--address.phtml</template></action>
+    	</reference>
+		<reference name="express.review.shipping">
+		    <action method="setTemplate"><template>aitcommonfiles/design--frontend--base--default--template--paypal--express--review--address.phtml</template></action>
+    	</reference>		
+	</paypal_express_review>-->
+    
+</layout> 
+<!--
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (CC Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitconfcheckout
+ * @version      1.0.9 - 2.1.23
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+-->

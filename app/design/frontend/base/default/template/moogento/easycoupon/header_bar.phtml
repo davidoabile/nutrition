@@ -1,0 +1,30 @@
+<?php
+if ($this->_canShow()): ?>
+    <div id="ezcoupon_container">
+            <div class="ezcoupon_message">
+                <?php if (Mage::getStoreConfig('moogento_easycoupon/settings/show_image')): ?>
+                    <?php $image = $this->_getImage() ?>
+                    <?php if ($image): ?>
+                        <img class="ezcoupon_image" src="<?php echo $image ?>" alt="" />
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php echo $this->_getText() ?>
+            </div>
+			<div id="ezycoupon_close">
+				<svg xmlns="http://www.w3.org/2000/svg" width="18px" height="16.8px" viewBox="0 0 30 16.8"><path d="M16.1,0.4c-0.6-0.6-1.6-0.6-2.1,0L0.5,13.9c-0.7,0.7-0.7,1.7,0,2.4c0.7,0.7,1.7,0.7,2.4,0l11-11c0.6-0.6,1.6-0.6,2.1,0l11,11c0.7,0.7,1.7,0.7,2.4,0c0.7-0.7,0.7-1.7,0-2.4L16.1,0.4z"></path></svg>
+			</div>
+    </div>
+    <style>
+        #ezcoupon_container {
+            background-color: <?php echo $this->_getBarBackground(); ?>;
+        }
+        #ezcoupon_container .ezcoupon_message {
+            color: <?php echo $this->_getBarTextColor(); ?>;
+            font-size: <?php echo (int)Mage::getStoreConfig('moogento_easycoupon/settings/bar_font_size'); ?>px;
+            font-family: <?php echo Mage::getStoreConfig('moogento_easycoupon/settings/bar_font_family'); ?>;
+        }
+        #ezycoupon_close {
+            fill: <?php echo $this->_getBarTextColor(); ?>;
+        }
+    </style>
+<?php endif; ?>

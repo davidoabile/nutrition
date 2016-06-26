@@ -1,0 +1,241 @@
+<?php
+$element = $this->getElement();
+$htmlId = $element->getHtmlId();
+
+if ($element->getExpanded() !== null) {
+    $collapseState = 1;
+} else {
+    $extra = Mage::getSingleton('admin/session')->getUser()->getExtra();
+    if (isset($extra['configState'][$element->getId()])) {
+        $collapseState = (int)$extra['configState'][$element->getId()];
+    } else {
+        $collapseState = 0;
+    }
+}
+
+?>
+
+<div class="section-config">
+    <div class="entry-edit-head collapseable">
+        <a onclick="Fieldset.toggleCollapse('<?php echo $htmlId ?>', '<?php echo $this->getUrl('*/*/state/')?>'); return false;" href="#" id="<?php echo $htmlId ?>-head" class="">
+            <?php echo $element->getLegend() ?>
+        </a>
+    </div>
+    <input type="hidden" value="<?php echo $collapseState ?>" name="config_state[<?php echo $htmlId ?>]" id="<?php echo $htmlId ?>-state">
+    <fieldset id="<?php echo $htmlId ?>" class="config collapseable grid" style="display: none">
+        <?php if (Mage::helper('moogento_core')->isInstalled('BL_CustomGrid') && !Mage::getStoreConfigFlag('moogento_shipeasy/general/override_bl_grid')): ?>
+            <div class="notification-global">
+                <?php echo $this->__('You need to set "General -> Override BL > orders grid?" to yes to make the grid work correctly') ?>
+            </div>
+        <?php endif; ?>
+        <div id="sorting-section">
+            <?php echo $this->getSortingGridHtml() ?>
+        </div>
+        <table class="data" cellspacing="0">
+            <thead>
+            <tr class="headings">
+                <th style="width: 110px;">&nbsp;</th>
+                <th style="width: 200px;"><?php echo $this->__('Column') ?></th>
+                <th style="width: 200px;"><?php echo $this->__('Title') ?></th>
+                <th style="width: 100px;"><?php echo $this->__('Width') ?></th>
+                <th><?php echo $this->__('Column-specific Options') ?></th>
+            </tr>
+            </thead>
+            <tbody class="toggle-light" data-bind="sortable: {data: columns, afterMove: updateOrder, options: sortableOptions}">
+                <tr>
+                    <td style="width: 110px;">
+                        <span class="icon-drag"></span>
+                        <span style="display: inline-block">
+                            <input type="hidden" value="0" data-bind="attr: {name: buildName('show')}" />
+                            <input type="checkbox" value="1" data-bind="attr: {name: buildName('show')}, checked: show, switch: show" />
+                        </span>
+                        <input style="width: 40px" type="text" class="input-text" data-bind="value: order, attr: {name: buildName('order')}" />
+                    </td>
+                    <td style="width: 200px;" data-bind="text:orig_header"></td>
+                    <td style="width: 200px;">
+                        <input type="text" class="input-text" data-bind="value: header, attr: {name: buildName('header')}" />
+                    </td>
+                    <td style="width: 100px;">
+                        <input type="text" class="input-text input-width" data-bind="value: width, attr: {name: buildName('width')}" />
+                    </td>
+                    <td>
+                        <div data-bind="visible: show">
+                            <!-- ko foreach:additionalFields -->
+                            <div data-bind="template: {name: $data.tpl, data: $data}, visible: index() < 3 || $parent.showAll">
+
+                            </div>
+                            <!-- /ko -->
+                            <a data-bind="click: doShowAll, visible: visibleFields().length > 3 && !showAll()">Show all</a>
+                            <div class="clearfix"></div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </fieldset>
+    <div style="display: none">
+        <div id="field-template-checkbox">
+            <div class="additional-field" data-bind="visible: isVisible">
+                <label data-bind="visible: !hideLabel()">
+                    <span data-bind="html: label"></span>
+                        <span data-bind="visible: comment()" class="helper-info">
+                            <i>?</i>
+                            <div class="content" data-bind="html: comment"></div>
+                        </span>
+                </label>
+                <input type="hidden" value="0" data-bind="attr: {name: $parents[1].buildName($data.key())}" />
+                <input type="checkbox" value="1" data-bind="attr: {name: $parents[1].buildName($data.key())}, checked: checked, switch: checked" />
+            </div>
+        </div>
+        <div id="field-template-text">
+            <div class="additional-field" data-bind="visible: isVisible">
+                <label data-bind="visible: !hideLabel()">
+                    <span data-bind="html: label"></span>
+                        <span data-bind="visible: comment()" class="helper-info">
+                            <i>?</i>
+                            <div class="content" data-bind="html: comment"></div>
+                        </span>
+                </label>
+                <input type="text" class="input-text" data-bind="value: value, attr: {name: $parents[1].buildName($data.key())}" />
+            </div>
+        </div>
+        <div id="field-template-select">
+            <div class="additional-field" data-bind="visible: isVisible">
+                <label data-bind="visible: !hideLabel()">
+                    <span data-bind="html: label"></span>
+                        <span data-bind="visible: comment()" class="helper-info">
+                            <i>?</i>
+                            <div class="content" data-bind="html: comment"></div>
+                        </span>
+                </label>
+                <select class="chosen" data-bind="chosen: {width: '200px'}, value: value, attr: {name: $parents[1].buildName($data.key())}, options: options, optionsText: 'label', optionsValue: 'value'">
+                </select>
+            </div>
+        </div>
+        <div id="field-template-image">
+            <div class="additional-field" data-bind="visible: isVisible">
+                <div class="additional-field" data-bind="visible: isVisible">
+                    <label data-bind="visible: !hideLabel()">
+                        <span data-bind="html: label"></span>
+                        <span data-bind="visible: comment()" class="helper-info">
+                            <i>?</i>
+                            <div class="content" data-bind="html: comment"></div>
+                        </span>
+                    </label>
+                    <div data-bind="if: value">
+                        <a data-bind="attr: {href: value}" target="_blank">
+                            <img style="height:40px" data-bind="attr: {src: value}" />
+                        </a>
+                        <input type="checkbox" class="checkbox" value="1" data-bind="attr: {name: $parents[1].buildName($data.key()) + '[delete]'}"">
+                        <?php echo $this->__('Delete image') ?>
+                    </div>
+                    <input type="file" class="input-file" data-bind="attr: {name: $parents[1].buildName($data.key())}" />
+                </div>
+            </div>
+        </div>
+        <div id="field-template-textarea">
+            <div class="additional-field" data-bind="visible: isVisible">
+                <label data-bind="visible: !hideLabel()">
+                    <span data-bind="html: label"></span>
+                    <span data-bind="visible: comment()" class="helper-info">
+                        <i>?</i>
+                        <div class="content" data-bind="html: comment"></div>
+                    </span>
+                </label>
+                <textarea rows="3" cols="30" data-bind="value: value, attr: {name: $parents[1].buildName($data.key())}"></textarea>
+            </div>
+        </div>
+        <div id="field-template-multiselect" data-bind="visible: isVisible">
+            <div class="additional-field">
+                <label data-bind="visible: !hideLabel()">
+                    <span data-bind="html: label"></span>
+                    <span data-bind="visible: comment()" class="helper-info">
+                        <i>?</i>
+                        <div class="content" data-bind="html: comment"></div>
+                    </span>
+                </label>
+                <input type="hidden" value="" data-bind="attr: {name: $parents[1].buildName($data.key())}" />
+                <select class="chosen" multiple="true" data-bind="chosen: {width: '200px'}, selectedOptions: value, attr: {name: $parents[1].buildName($data.key(), true)}, options: options, optionsText: 'label', optionsValue: 'value'">
+                </select>
+            </div>
+        </div>
+        <div id="field-template-serializable_table">
+            <table class="data" cellspacing="0" style="width: 450px">
+                <thead>
+                    <tr class="headings">
+                        <!-- ko foreach: fields -->
+                        <th data-bind="text: $data.label"></th>
+                        <!-- /ko -->
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: rows">
+                    <tr>
+                        <!-- ko foreach: additionalFields -->
+                        <td data-bind="template:{name: $data.tpl, data: $data}">
+
+                        </td>
+                        <!-- /ko -->
+                        <td>
+                            <button data-bind="click: $parents[1].removeRow" type="button" class="scalable delete delete-select-row icon-btn"><span></span></button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="a-right" colspan="3">
+                            <button class="scalable add add-select-row" type="button" data-bind="click: addRow"><span><?php echo $this->__('Add') ?></span></button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript">
+        Fieldset.applyCollapse('<?php echo $htmlId ?>');
+        ko.applyBindings(new GridColumns(<?php echo $this->_getColumnsJson() ?>), document.getElementById('<?php echo $htmlId ?>'));
+    </script>
+    <style>
+        .additional-field {
+            float: left;
+            margin-right: 15px;
+        }
+        .helper-info i {
+            font-size: 10px;
+            font-weight: bold;
+            line-height: 12px;
+            text-align: center;
+            position: absolute;
+            left: 3px;
+            font-style: normal;
+        }
+        .helper-info {
+            background: none repeat scroll 0 0 lightgrey;
+            border: 1px solid lightgrey;
+            border-radius: 6px;
+            display: inline-block;
+            height: 12px;
+            position: relative;
+            width: 12px;
+        }
+        .helper-info div.content {
+            display: none;
+            position: absolute;
+            width: 400px;
+            border: 1px solid black;
+            background: lightgrey;
+            box-shadow: 1px 1px #000;
+        }
+        .helper-info:hover div.content {
+            display: block;
+            z-index: 1000;
+            top:12px;
+        }
+        .toggle-light td {
+            background: #fff;
+        }
+        .icon-drag {
+            cursor: move;
+        }
+    </style>
+</div>

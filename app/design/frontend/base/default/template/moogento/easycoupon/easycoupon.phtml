@@ -1,0 +1,18 @@
+<form id="discount-coupon-form" action="<?php echo $this->getUrl('coupons') ?>" method="get">
+    <div id="coupon-box" class="discount">
+        <h2><?php echo $this->__('Enter Coupon Code Here') ?></h2>
+		
+        <div class="discount-form">
+            <div class="input-box">
+                <input class="input-text" id="coupons" name="coupon" value="<?php echo $this->htmlEscape(Mage::getSingleton('customer/session')->getCouponCode()) ?>" />
+            </div>
+            <div class="buttons-set">
+                <input type="submit" title="<?php echo $this->__('Apply Coupon') ?>" class="button" value="<?php echo $this->__('Apply Coupon')?>" />
+
+                <?php if(strlen(Mage::getSingleton('customer/session')->getCouponCode())): ?>
+                    &nbsp; <input type="submit" name="remove_coupon" title="<?php echo $this->__('Cancel Coupon') ?>" class="button" value="<?php echo $this->__('Cancel Coupon') ?>" />
+                <?php endif;?>
+            </div>
+        </div>
+    </div>
+</form>

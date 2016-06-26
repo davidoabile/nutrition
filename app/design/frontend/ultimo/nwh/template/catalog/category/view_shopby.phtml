@@ -1,0 +1,79 @@
+<?php
+    $categories = $this->getCategoryCollections();
+    $category   = Mage::helper('local')->getCategoryCategory();
+    $_helper    = $this->helper('catalog/output');
+?>
+<div class="block-red clearfix catalog-category-view-shopby">
+    <div class="block-title clearfix">
+        <h1><?php echo $this->__('Shop by %s', $_helper->categoryAttribute($category, $category->getName(), 'name')) ?></h1>
+    </div>
+    <div class="block-content clearfix">
+        <div class="shop-by-category clearfix">
+            <?php
+                $i               = 0;
+                $_columnCount    = 3;
+                //$_collectionSize = $categories->count();
+                $_collectionSize = 6;
+            ?>
+            <ul class="itemgrid itemgrid-adaptive itemgrid-3col">
+            <?php foreach ($categories AS $_category): ?>
+                <?php
+                    $_name    = $_helper->categoryAttribute($_category, $_category->getName(), 'name');
+                    $_imgHtml = '';
+                    if ($_category->getThumbnail()) {
+                        $_imgUrl  = Mage::getBaseUrl('media') . 'catalog/category/' . $_category->getThumbnail();
+                        $_imgHtml = '<img src="'.$_imgUrl.'" alt="' . $_name . '" title="' . $_name . '" />';
+                        $_imgHtml = $_helper->categoryAttribute($_category, $_imgHtml, 'image');
+                    }
+                ?>
+
+                <li class="item">
+                    <div class="inner">
+                        <?php if ($_imgHtml): ?>
+                            <div class="product-image-wrapper">
+                                <a href="<?php echo $_category->getUrl() ?>" title="Fat Blaster" class="product-image">
+                                    <?php echo $_imgHtml ?>
+                                </a>
+                            </div>
+                        <?php endif ?>
+                        <div class="category-info">
+                            <h2 class="product-name">
+                                <a href="<?php echo $_category->getUrl() ?>" title="<?php echo $_name ?>">
+                                    <?php echo $_name ?>
+                                </a>
+                            </h2>
+                            <?php $_description = $_category->getDescription() ?>
+                            <p class="item-short-description"><?php echo $_helper->categoryAttribute($_category, $_description, 'description') ?></p>
+                            <div class="view-detail clearfix"><a href="<?php echo $_category->getUrl() ?>"><?php echo $this->__('Shop Category') ?></a></div>
+                        </div>
+                    </div>
+                </li>
+                <?php
+                    $i++;
+                    if ($i == $_collectionSize) {
+                        break;
+                    }
+                ?>
+            <?php endforeach ?>
+            </ul>
+        </div>
+    </div>
+</div>
+<?php if ($this->isContentMode()): ?>
+    <div class="category-promo-image">
+        <?php echo $this->getCmsBlockHtml() ?>
+    </div>
+
+<?php elseif ($this->isMixedMode()): ?>
+    <div class="category-promo-image">
+        <?php echo $this->getCmsBlockHtml() ?>
+    </div>
+<?php else: ?>
+<?php endif ?>
+
+<?php if ($category->getPromobanner()): ?>
+    <div class="catalog-category-view-promo-banner">
+        <?php $_bannerUrl = Mage::getBaseUrl('media') . 'catalog/category/' . $category->getPromobanner() ?>
+        <img src="<?php echo $_bannerUrl ?>" />
+    </div>
+<?php endif ?>

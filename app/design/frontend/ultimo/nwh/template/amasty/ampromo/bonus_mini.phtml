@@ -1,0 +1,45 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Promo
+ */
+?>
+<?php
+$products = Mage::helper('ampromo')->getNewItems();
+$autoOpen = Mage::getStoreConfig('ampromo/general/auto_open_popup');
+?>
+<?php if (sizeof($products) > 0): ?>
+        <div id="ampromo-items-add-mini">
+            <a href="#">
+                    <div class="free_gift">
+                        <div class="gif-img"><img src="<?php echo $this->getSkinUrl('images/gift.png'); ?>" /></div>
+                        <div class="gif-message">
+                            <?php echo Mage::helper("ampromo/bonus")->messageGift();?>
+                        </div>
+                        <div class="gif-over-message">
+                            <?php echo $this->__('See available gifts.') ?>
+                        </div>
+                    </div>
+            </a>
+        </div>
+        <script type="text/javascript">
+            if(screen.width > 767){
+                <?php if(Mage::app()->getRequest()->getControllerName() != 'checkout_cart'):?>
+                    show_popup_firstload=0;
+                $('ampromo-items-add-mini').down('a').setAttribute('href','<?php echo Mage::getUrl('ampromo/cart/freegiftcheckout');?>');
+                <?php endif;?>
+                <?php $bonus=Mage::helper('ampromo/bonus')->getBonusSku();
+                       $free=Mage::helper('ampromo/bonus')->getFreeSku(); ?>
+                var freesku='<?php echo $free;?>';
+                var freesku=freesku.split(",");
+                var bonussku='<?php echo $bonus;?>';
+                var bonussku=bonussku.split(",");
+                var button1 = $('ampromo-items-add-mini').down('a');
+                button1.observe('click', showing_amasty_popup);
+
+            }else{
+                $('ampromo-items-add-mini').down('a').setAttribute('href','<?php echo Mage::helper('ampromo/bonus')->FreegiftLandingPage();?>');
+            }
+        </script>
+<?php endif ?>

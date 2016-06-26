@@ -1,0 +1,320 @@
+<?php
+/**
+ * One Step Checkout Manager : One Step Checkout Manager (OPCB Unit)
+ *
+ * @category:    Aitoc
+ * @package:     Aitoc_Aitcheckout / Aitoc_Aitcheckout
+ * @version      1.0.9 - 1.4.9
+ * @license:     Nichj4LUEMsSNLvlLmobwL49OlCNVmKqxOe78SZxGK
+ * @copyright:   Copyright (c) 2014 AITOC, Inc. (http://www.aitoc.com)
+ */
+if ($this->getQuote()->getItemsCount()):?>
+<div class="cart">
+    <?php $methods = $this->getMethods('top_methods'); ?>
+    <div class="page-title title-buttons">
+        <?php if ($this->helper('aitcheckout')->isShowCheckoutTitle()):?>
+            <h1><?php echo $this->__($this->helper('aitcheckout')->getCheckoutTitle()) ?></h1>
+        <?php endif; ?>
+        <?php if(!empty($methods)):?>
+        <ul class="checkout-types">
+            <?php foreach ($methods as $method): ?>
+                <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
+                <li><?php echo $methodHtml; ?></li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </ul>
+        <?php endif; ?> 
+    </div>
+</div>
+<div id="popup-litebox" style="width: 100%; height: 100%; display: none;"></div>
+    <?php echo $this->getChildHtml('login') ?>
+<script type="text/javascript">countryRegions = <?php echo $this->helper('directory')->getRegionJson() ?></script>
+
+
+<?php 
+$loginHtml = $this->getLoginBlockHtml();
+if($loginHtml): ?>
+    <div id="co-checkout-form" class="co-checkout-insteadform-div">
+        <?php echo $loginHtml;?>
+    </div>
+<?php else : ?>
+    <div class="popup-overlay" style="display:none;">
+    <div class="popup_main offer_popup">
+        <div class="del_updt_pop_heading_clsimg close_gift">
+            <a href="javascript:;" class="close_gift_img"><img src="<?php echo $this->getSkinUrl("images/close_img.png") ?>"></a>
+        </div>
+        <!--<div class="popup_heading">
+            <div class="popup_heading_txt">AVAILABLE GIFTS</div>
+        </div>-->
+        <div class="popup_middle gift_middle">
+            <div class="popup_mid_wrap">
+                <div class="comman mrgn_t20">
+                    <div class="popup_left">
+                        <div class="popup_left_txt1">CONGRATULATIONS!<br />YOU'RE ELIGIBLE
+                            <br />FOR A <span class="popup_left_txt2">FREE GIFT</span>
+                            <div class="popup_left_txt3">
+                                Spend over $100 with Nutritionwarehouse.com.au<br />and we will reward you with a free gift.
+                                <br><br>
+                                <a href="javascript:;" class="chk_offer_close link14_gry2">NO THANKS</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="popup_right">
+                        <img src="<?php echo $this->getSkinUrl("images/popup_img.png") ?>" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script type="text/javascript">
+    //<![CDATA[
+
+        var aitCheckout = new AitCheckout('co-checkout-form', {
+                ajaxUpdateUrl : '<?php echo $this->getUrl('aitcheckout/checkout/updateSteps', array('_secure'=>true)) ?>',
+                failureUrl : '<?php echo $this->getUrl('checkout/cart') ?>',
+				refreshUrl : '<?php echo $this->getUrl('aitcheckout/checkout/refreshSteps', array('_secure'=>true)) ?>'				
+        });
+        <?php if ($this->isDisabled()):?>aitCheckout.disableCheckout();<?php endif; ?>
+        aitCheckout.createStep('messages',{}, {
+            doCheckErrors : false,
+            isLoadWaiting : false,
+            isUpdateOnReload : false,
+            container: 'checkout-step-messages'
+        });
+
+    //]]>
+    </script>  
+    <?php $i = 1; ?>
+    <form id="co-checkout-form"   method="POST" autocomplete="on"  action="">
+        <?php //if ($this->helper('aitcheckout')->isShowCartInCheckout()): ?>
+        <div id="opc-messages"> 
+            <div id="checkout-step-messages">
+                <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+            </div>
+        </div>
+        <?php //endif;?>
+    <ol class="opc" id="checkoutSteps">
+        <li id="left_collumn">
+            <ol class="opc">
+                <li id="opc-billing" class="section allow active">
+                    <div class="step-title">
+                        <span class="number"><?php echo $i++;?></span>
+                        <h2><?php echo Mage::helper('checkout')->__('1. Billing Information') ?></h2>
+                    </div>
+
+                    <div id="checkout-step-billing" class="step a-item">
+                        <?php echo $this->getChildHtml('billing') ?>
+                    </div>
+                </li>
+
+                <?php if ($this->getChild('shipping') && $this->getChild('shipping')->isShow()): ?>
+                <li id="checkout-step-shipping" class="section allow active">
+                    <div class="step-title">
+                        <h2><?php echo Mage::helper('checkout')->__('Shipping Information') ?></h2>
+                    </div>
+                    <div id="checkout-step-shipping2" class="step a-item">
+                        <?php echo $this->getChildHtml('shipping') ?>
+                    </div>
+                </li>
+                <?php endif;?>
+            </ol>
+        </li>
+        <li id="center_column">
+            <ol class="opc">
+                <?php if ($this->getChild('shipping_method') && $this->getChild('shipping_method')->isShow()): ?>
+                <li id="opc-shipping_method" class="section allow active">
+                    <div class="step-title">
+                        <span class="number"><?php echo $i++;?></span>
+                        <h2><?php echo Mage::helper('checkout')->__('2. Shipping Method') ?></h2>
+                    </div>
+                    <div id="checkout-step-shipping_method" class="step a-item">
+                        <?php echo $this->getChildHtml('shipping_method') ?>
+                    </div>
+                </li>
+                <?php endif;?>
+                <?php if ($this->getChild('deliverydate') && $this->getChild('deliverydate')->isShow()): ?>
+                <li id="opc-deliverydate" class="section allow active">
+                    <div class="step-title">
+                        <span class="number"><?php echo $i++;?></span>
+                        <h2><?php echo Mage::helper('adjdeliverydate')->__('Delivery Date') ?></h2>
+                    </div>
+                    <div id="checkout-step-deliverydate" class="step a-item">
+                        <?php echo $this->getChildHtml('deliverydate') ?>
+                    </div>
+                </li>
+                <?php endif;?>
+                <?php if ($this->getChild('payment') && $this->getChild('payment')->isShow()): ?>
+                <li id="opc-payment" class="section allow active">
+                    <div class="step-title">
+                        <span class="number"><?php echo $i++;?></span>
+                        <h2><?php echo Mage::helper('checkout')->__('Payment Information') ?></h2>
+                    </div>
+                    <div id="checkout-step-payment" class="step a-item">
+                        <?php echo $this->getChildHtml('payment') ?>
+                        <div class="credit-card-information">
+                            <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId("credit-card-information")->toHtml();?>
+                        </div>
+                    </div>
+                </li>
+                <?php endif;?>
+
+                <?php //if ($this->helper('aitcheckout')->isShowCartInCheckout() || $this->helper('aitcheckout')->isShowCheckoutInCart()): ?>
+                <li id="opc-coupon" class="section allow active">
+                    <div class="step-title">
+                        <span class="number"><?php echo $i++;?></span>
+                        <h2><?php echo Mage::helper('checkout')->__('Coupon') ?></h2>
+                    </div>
+                    <div id="checkout-step-coupon" class="step a-item">
+                        <?php echo $this->getChildHtml('coupon') ?>
+                    </div>
+                </li>
+                <?php // endif; ?>
+
+                <li id="opc-giftcard" class="section allow active">
+                    <div class="step-title">
+                        <span class="number"><?php echo $i++;?></span>
+                        <h2><?php echo Mage::helper('checkout')->__('Giftcard') ?></h2>
+                    </div>
+                    <div id="checkout-step-giftcard" class="step a-item">
+                        <?php echo $this->getChildHtml('bonus.giftcard') ?>
+                    </div>
+                </li>
+            </ol>
+        </li>
+        <li id="right_collumn">
+            <ol class="opc">
+                <li id="opc-review" class="section allow active">
+                    <div class="step-title">
+                        <h2><?php echo Mage::helper('checkout')->__('3. Order Review') ?></h2>
+                    </div>
+                    <div id="checkout-step-review" class="step a-item">
+                        <?php echo $this->getChildHtml('review') ?>
+                    </div>
+                </li>
+
+                <?php if ($this->getChild('aitgiftwrap') && $this->getChild('aitgiftwrap')->isShow()): ?>
+                <li id="opc-aitgiftwrap" class="section allow active">
+                    <div id="checkout-step-aitgiftwrap" class="step a-item">
+                        <?php echo $this->getChildHtml('aitgiftwrap') ?>
+                    </div>
+                </li>
+                <?php endif;?>
+                <?php if ($this->getChild('agreements')->getAgreements()): ?>
+                <li id="opc-agreements" class="section allow active">
+                    <div id="checkout-step-agreements" class="checkout-agreements step a-item">
+                        <?php echo $this->getChildHtml('agreements'); ?>
+                    </div>
+                </li>
+                <?php endif;?>
+                <?php if ($this->getChild('giftmessage') && $this->getChild('giftmessage')->isShow()): ?>
+                <li id="opc-giftmessage" class="section allow active">
+                    <div id="checkout-step-giftmessage" class="step a-item">
+                        <?php echo $this->getChildHtml('giftmessage') ?>
+                    </div>
+                </li>
+                <?php endif;?>
+                <?php if ($this->getChild('newsletter')->isShow()): ?>
+                <li id="opc-newsletter" class="section allow active compact-newsletter">
+                    <?php echo $this->getChildHtml('newsletter') ?>
+                </li>
+                <?php endif; ?>
+            </ol>
+            <div class="buttons-set" id="checkout-buttons-container" style="position: relative;">
+                <?php if ($this->helper('aitcheckout')->isShowCheckoutInCart()): ?>
+                    <p class="f-left"><?php echo Mage::helper('checkout')->__('Forgot an Item?') ?> <a href="" onclick="Effect.ScrollTo('shopping-cart-table');return false;"><?php echo Mage::helper('checkout')->__('Edit Your Cart') ?></a></p>
+                <?php elseif ($this->helper('aitcheckout')->isShowCheckoutOutsideCart()): ?>
+                    <p class="f-left"><?php echo Mage::helper('checkout')->__('Forgot an Item?') ?> <a href="<?php echo $this->getUrl('checkout/cart') ?>"><?php echo Mage::helper('checkout')->__('Edit Your Cart') ?></a></p>
+                <?php endif; ?>
+                <button id="aitcheckout-place-order" type="button" title="<?php echo Mage::helper('checkout')->__('Submit Order') ?>" class="button btn-checkout<?php if ($this->isDisabled()):?> no-checkout<?php endif; ?>"<?php if ($this->isDisabled()):?> disabled="disabled"<?php endif; ?> onclick="aitcheckout_place_order()"><span><span><?php echo Mage::helper('checkout')->__('Submit Order') ?></span></span></button>
+                <span class="please-wait" id="checkout-please-wait" style="display:none;">
+                    <img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" alt="<?php echo Mage::helper('checkout')->__('Submitting order information...') ?>" title="<?php echo Mage::helper('checkout')->__('Submitting order information...') ?>" class="v-middle" /> <?php echo Mage::helper('checkout')->__('Submitting order information...') ?>
+                </span>
+            </div>
+            <div class="continue-link">
+                <a href="<?php echo Mage::getBaseUrl()?>"><?php echo $this->__("Continue shopping")?></a>
+            </div>
+        </li>
+    </ol>
+
+    </form>
+    
+        <?php if ($this->helper('aitcheckout')->isShowCheckoutInCart()): ?>
+        <div class="cart">
+            <div class="cart-collaterals">
+                <div class="col2-set">
+                    <div class="col-1">     
+                <?php echo $this->getChildHtml('crosssell') ?>
+                </div>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+    <?php endif; ?>
+<?php endif; ?>
+
+<div class="order_summary_footer">
+    <div id="confidance">
+        <img src="<?php echo $this->getSkinUrl('images/cart_confidence.png') ?>"/>
+    </div>
+</div>
+
+
+
+
+<?php
+$products = Mage::helper('ampromo')->getNewItems();
+$autoOpen = Mage::getStoreConfig('ampromo/general/auto_open_popup');
+$bonus=Mage::helper('ampromo/bonus')->getBonusSku();
+$free=Mage::helper('ampromo/bonus')->getFreeSku();
+?>
+<?php if (sizeof($products) > 0): ?>
+    <script type="text/javascript">
+        var show_popup_firstload=1;
+        Event.observe(window, 'load', function() {
+            <?php if(!empty($free) || !empty($bonus)): ?>
+            <?php if(!empty($bonus)): ?>
+            hide_freegift_sku();
+            <?php endif;?>
+            if(jQuery('.form_log_crt_main') == undefined) {
+                ampromo_popup();
+            }
+            ampromo_init();
+            <?php endif; ?>
+        });
+    </script>
+    <?php
+    echo $this->getLayout()
+        ->createBlock("ampromo/items")
+        ->setTemplate("amasty/ampromo/items.phtml")
+        ->toHtml();
+    ?>
+<?php endif ?>
+<script>
+    jQuery( document ).ready(function() {
+        jQuery("input[name='shipping_method']:checked").click();
+    });
+    function aitcheckout_place_order(){
+        
+        var customForm = new VarienForm('co-checkout-form');
+        if(customForm.validator.validate())
+        review.save.bind(review).defer();
+    }
+</script>
+
+<!-- Facebook Conversion Code for Checkouts - NWH -->
+<script>(function() {
+        var _fbq = window._fbq || (window._fbq = []);
+        if (!_fbq.loaded) {
+            var fbds = document.createElement('script');
+            fbds.async = true;
+            fbds.src = '//connect.facebook.net/en_US/fbds.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(fbds, s);
+            _fbq.loaded = true;
+        }
+    })();
+    window._fbq = window._fbq || [];
+    window._fbq.push(['track', '6032943890463', {'value':'0.00','currency':'AUD'}]);
+</script>
+<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6032943890463&amp;cd[value]=0.00&amp;cd[currency]=AUD&amp;noscript=1" /></noscript>

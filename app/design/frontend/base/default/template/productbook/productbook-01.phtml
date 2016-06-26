@@ -1,0 +1,303 @@
+<?php
+$productid = Mage::app()->getRequest()->getParam('id');
+$model = Mage::getModel('catalog/product'); //getting product model
+$_product = $model->load($productid); //getting product object for particular product id
+?>
+
+<html>
+    
+    <body>
+      <?php //$product = Mage::getModel('catalog/product')->load($productid);
+
+?>
+        <!--<div class="prod_pop_main mrgn_t40">-->
+        <form action="<?php echo Mage::helper('collection/cart')->getAddUrl($_product) ?>" method="post" id="product_addtocart_form"<?php if ($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+        
+        <!--<form action="<?php echo Mage::helper('checkout/cart')->getAddUrl($_product) ?>" method="post" id="product_addtocart_form"<?php if ($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>-->
+        
+        <input type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" name="form_key">
+        <div class="del_updt_pop_heading">
+            <div class="del_updt_pop_heading_clsimg"><a href="javascript:;" class="pb_close"><img src="<?php echo $this->getSkinUrl("images/close_img.png") ?>" /></a></div>
+        </div>
+        <div class="prod_pop_mid">
+            <div class="prodetl_area">
+                <div class="prodetl_left">
+                    <div class="prodbig"><span><img width="250" height="248"  title="<?php echo $_product->getName() ?>" alt="<?php echo $_product->getName() ?>" src="<?php echo $_product->getImageUrl() ?>"></span></div>
+                    <div class="prodthumb">
+                        <ul>
+                            <?php
+                            //$product = Mage::getModel('catalog/product')->load($productid);
+                            foreach ($_product->getMediaGalleryImages() as $_image):
+                                ?>
+                                <li>
+                                    <a href="#" onclick="popWin('<?php echo $this->getGalleryUrl($_image) ?>', 'gallery', 'width=300,height=300,left=0,top=0,location=no,status=yes,scrollbars=yes,resizable=yes'); return false;" title="<?php echo $this->escapeHtml($_image->getLabel()) ?>"><img src="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize(56); ?>" width="56" height="56" alt="<?php echo $this->escapeHtml($_image->getLabel()) ?>" /></a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </div>
+                <div class="prodetl_right">
+                    <div class="comman">
+                        <div id="tabs" class="pd_tab">
+                            <div class="pd_1"><a href="javascript:;" class="tab_link tab_link_current OVERVIEWTAB">OVERVIEW</a></div>
+                            <div class="pd_2"><a href="javascript:;" class="tab_link DESCRIPTIONTAB">DESCRIPTION</a></div>
+                           
+<!--                                <ul>
+                                    <li><a href="#tabs-1">OVERVIEW</a></li>
+                                    <li><a href="#tabs-2">DESCRIPTION</a></li>
+                                   <li><span class="overtab_current">OVERVIEW</span></li>
+                                   <li><a href="#">Video</a></li>
+                                </ul>-->
+                          
+
+                        </div>
+                        <div class="font30_red mrgn_t10 left"><?php echo $_product->getName() ?></div>
+
+                        <div class="prod_sname font18_m_blk"><?php echo substr(strip_tags($_product->getShortDescription()), 0, 90) ?></div>
+                        <hr>
+                       <div id="tabs-1">
+                        <div class="prod_pricing mrgn_t10">
+                            <?php if ($_product->getSpecialPrice()) { ?> 
+                                <div class="prod_pricing_left">
+                                    <ul>
+                                        <li>
+                                            <div class="pricingleft2 font18_gry">Retail Price</div>
+                                            <div class="pricingright2 font30_gry"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($_product->getPrice(), '2', '.', ','); ?></div>
+                                        </li>
+                                        <li>
+                                            <div class="pricingleft2 font18_red">Warehouse Price</div>
+                                            <div class="pricingright2 font30_red price"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($_product->getSpecialPrice(), '2', '.', ','); ?></div>
+                                        </li>
+                                        <?php
+                                        $_finalPrice = $_product->getFinalPrice();
+                                        $_price = $_product->getPrice();
+					$heightInstock = 'style="height:60px;"';
+                                        if ($_finalPrice < $_price):
+                                            ?>
+                                            <?php
+                                            $_savePercent = 100 - round(($_finalPrice / $_price) * 100);
+                                            $_saveAmount = number_format(($_price - $_finalPrice), 2);
+                                            ?>
+                                            <li>
+
+                                                <div class="pricingleft2 font14_blk">SAVE</div>
+                                                <div class="pricingright2 font14_blk"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo $_saveAmount; ?></div>
+                                            </li>
+                                        <?php
+                                        $heightInstock = 'style="height:114px;"';
+                                         endif; ?>
+                                    </ul>
+                                </div>
+
+                                <?php
+                                
+                            } else {
+                                ?> 
+                               <div class="pricingleft2 font18_red">Warehouse Price</div>
+                                            <div class="pricingright2 font30_red"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($_product->getPrice(), '2', '.', ','); ?></div>
+                                <?php
+                                $heightInstock = 'style="height:29px;"';
+                            }
+                            ?>  
+                            <div class="prod_pricing_right" style="width:auto;">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="font14_blk">
+                                    <tbody>
+                                        <tr>
+                                            <td valign="middle" align="left" <?php echo $heightInstock ?> >
+                        <!--                        <input type="checkbox" class="css-checkbox" id="checkboxG4" name="checkboxG4">-->
+
+                                                <?php
+                                                if ($_product->isSaleable()) {
+                                                    if ($_product->stock_item->is_in_stock == 1) {
+$stock1 = 0;                                                    
+foreach ($_product->getTypeInstance(true)->getUsedProducts ( null, $_product) as $simple) {
+     $stock = (int) Mage::getModel('cataloginventory/stock_item')->loadByProduct($simple)->getQty();
+     if($stock > 0){
+     $stock1 = $stock; 
+     }
+ }
+ if($stock1 == 0){
+ echo $this->__('OUT OF STOCK');
+ }else {
+                                                        echo $this->__('IN STOCK');
+                                                        
+?> <span style="margin-left: 9px;"><img src="<?php echo $this->getSkinUrl('images/Check_b.png'); ?>"></span><?php                                                        
+                                                        }
+                                                    } else {
+                                                        echo $this->__('OUT OF STOCK');
+                                                    }
+                                              ?>
+                                               
+                                                <?php  }
+                                                ?>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    
+                    <?php if ($_product->isSaleable()) { ?>
+                        <div class="prod_opt mrgn_t10">
+                        
+                        
+                        <?php
+                                        $cProduct = Mage::getModel('catalog/product')->load($_product->getId());
+
+                                        if ($cProduct->getData('type_id') == "configurable") {
+
+                                            $config = $cProduct->getTypeInstance(true);
+                                            
+                                           
+                                            foreach ($config->getConfigurableAttributesAsArray($cProduct) as $attributes) {
+                                               
+                                                ?>
+                                                <div style="float: left; width: 100%;">
+                                                 <div class="font18_gry" style="width: 115px; float: left;margin-bottom: 12px;"><?php echo $attributes['label'] ?>:</div>  
+                                                <div class="dropdownqty" style="margin:0"><select style="" name="super_attribute[<?php echo $attributes['attribute_id'] ?>]" id="attribute<?php echo $attributes['attribute_id'] ?>" class="changeprice  required-entry super-attribute-select">
+                                                    <option price='0' value="0"><?php echo $this->__('Choose an Option...') ?></option>
+                                                    <?php foreach ($attributes["values"] as $values) {
+                                                        $price1 = number_format($values['pricing_value'], '2', '.', ',');
+                                                        $pricelable1 = ($price1 !='0.00')? ' +'.Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol().$price1 :'';
+                                                        ?>
+                                                        <option value="<?php echo $values['value_index'] ?>" price="<?php echo number_format($values['pricing_value'], '2', '.', ','); ?>" ><?php echo $values['label'] ?><?php echo $pricelable1; ?></option>
+            <?php } ?>
+                                                </select></div>  
+                                                </div>      
+
+        <?php
+        }
+    }
+
+    
+    $attVal = $_product->getOptions();
+ 
+$optStr = "";
+if(count($attVal) > 0){
+foreach($attVal as $optionKey => $optionVal) {
+ 
+//$optStr .= "<br/>";
+
+$optStr .= '<div style="float: left; width: 100%;"><div class="font18_gry" style="float: left;margin-bottom: 12px;">' . $optionVal->getTitle() . ':</div>';
+ 
+$optStr .= "<div class='dropdownqty' style='margin:0'><select class='changeprice' name='options[".$optionVal->getId()."]'>";
+ $optStr .= "<option value='0'  price='0'>--Please select--</option>";
+foreach($optionVal->getValues() as $valuesKey => $valuesVal) {
+       $price = number_format($valuesVal->getPrice(), '2', '.', ',');
+        $pricelable = ($price !='0.0000')? ' +'.Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol().$price :'';
+$optStr .= "<option price='".$valuesVal->getPrice()."' value='".$valuesVal->getId()."'>".$valuesVal->getTitle().$pricelable."</option>";
+}
+ 
+$optStr .= "</select></div></div>";
+ 
+}
+echo($optStr);
+}
+
+    ?>
+                        
+                        <label class="font18_gry" style="width: 115px; float: left;" for="qty">Qty:</label>
+                            <input type="hidden" class="input-text qty" title="Qty" value="1" maxlength="12" id="qty_<?php echo $productid ?>" name="qty">
+<div class="dropdownqty" style="margin:0">
+                                <select name="qty1" onchange="jQuery('.qty').val(this.value);" class="">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                                </div>
+                            <div style="float: right; margin-top: 14px;">
+                                <div class="prod_opt_right">
+                                    
+                                    <!--<a class="cart_btn btn-cart" href="javascript:;" id="pb_cart_<?php echo $_product->getId() ?>" title="Add to Cart"><span><span>Add to Cart</span></span></a>-->
+                                    <button class="btn-cart cart_btn" id="pb_cart_<?php echo $_product->getId() ?>" title="Add to Cart" type="submit"><span><span>Add to Cart</span></span></button>
+                                    
+                                    </div>
+                            </div>
+                        </div>
+                    <?php } ?>
+                    <div class="timer_banner">
+<!--                    <img src="<?php //echo $this->getSkinUrl('images/timer.png') ?>">-->
+<?php $store = Mage::app()->getStore();
+$code  = $store->getCode();
+$bannerYes = Mage::getStoreConfig('samedd/sameddgroup/samedaydisplay',$code);
+if($bannerYes == 1){ ?> 
+    <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'catalog/product/watermark/'.Mage::getStoreConfig('samedd/sameddgroup/samedaybanner',$code) ?>"/>
+<?php }else { ?>
+    <script src="<?php echo $this->getSkinUrl('js/dscountdown.min.js') ?>"></script>
+<script>
+    jQuery(document).ready(function($){
+        $('.timerClosed').hide();
+        //var localdate= (dNow.getMonth()+1) + '/' + dNow.getDate() + '/' + dNow.getFullYear() + ' 00:00:00';
+        //var localdate1= (dNow.getMonth()+1) + '/' + dNow.getDate() + '/' + dNow.getFullYear() + ' 19:00:00';
+        var myVar = setInterval(function(){mytimer()}, 1000);
+        function mytimer(){
+            //var now = new Date(),
+            //nowtime = now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
+            
+           var nowtime = "<?php echo date('h:i:s'); ?>";
+           
+            if(nowtime >="00:00:01" && nowtime <= "14:22:00"){
+                
+                var s = '<?php echo date('F d, Y h:i:s'); ?>';
+                var e = '<?php echo date('F d, Y 14:22:00'); ?>';
+                $('.timerCoundown').dsCountDown({
+                    startDate: new Date(s), // this value is picked up by PHP script &lt;?php echo date('F d, Y h:i:s'); ?&gt;
+                    endDate: new Date(e),
+                    titleDays:'',
+                    titleHours:"",
+                    titleMinutes:"",
+                    titleSeconds:""
+                });
+               clearInterval(myVar);
+            }else {
+                $('.timerCoundown').hide();
+                $('.timerClosed').show();
+            }    
+            
+        }
+    });
+
+</script>
+    <div class="timerCoundown"></div>
+    <div class="timerClosed"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'catalog/product/watermark/'.Mage::getStoreConfig('samedd/sameddgroup/samedaybanner',$code) ?>"/></div>
+<?php }?>
+                </div>
+                
+                    </div>
+                   </div>
+                   <div id="tabs-2" style="display:none;">
+                        <div class="font12_gry" style="min-height: 420px;"> <?php
+                        $description = strip_tags($_product->getDescription());
+                        if(strlen($description) < 779){
+                            echo $description;
+                        }else {
+                            echo substr($description, 0,779);
+                            ?>
+                            <span id="collapse1" class="descreadmore" style="display:none;">
+                               <?php echo substr($description,780); ?>
+                            </span>
+<div style="float:right;margin-top:17px;">
+                            <a href="#collapse1" class="readmoredesc link12_red">Read More</a>
+                            </div>
+                       <?php }
+                         ?></div>
+                         <div style="margin-top:17px;">
+                            <a href="<?php echo $_product->getProductUrl() ?>" class="link12_red" style="text-decoration:underline;">VIEW FULL PRODUCT</a>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+        </div>
+          </form>     
+        <!--</div>-->
+    </body>
+</html>
+ 

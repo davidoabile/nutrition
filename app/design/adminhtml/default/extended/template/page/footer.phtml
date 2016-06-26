@@ -1,0 +1,108 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+?>
+<?php if (Mage::getStoreConfigFlag(Moogento_Clean_Helper_Data::XML_PATH_SHOW_BOTTOM_STATISTICS)): ?>
+<span class="statistics">
+    <?php echo Mage::helper('moogento_clean')->getStatistics(); ?>
+</span>
+<?php endif; ?>
+<?php if (Mage::getStoreConfigFlag(Moogento_Clean_Helper_Data::XML_PATH_FOOTER_CSS)): ?>
+    <span id="magento_logo" title="We're on Magento v<?php echo Mage::getVersion() ?>"><em></em> <?php echo Mage::getVersion() ?></span>
+    <div class="tooltip-footer-content" style="display: none">
+        <p class="bug-report">
+            <?php if (Mage::getStoreConfigFlag(Moogento_Clean_Helper_Data::XML_PATH_SHOW_MAGENTO_ADS)): ?>
+                <a href="https://www.moogento.com/" id="footer_superpowers"><?php echo $this->__('Superpower your store with Moogento!') ?></a><br/>
+            <?php endif; ?>
+            <?php if (Mage::getStoreConfigFlag(Moogento_Clean_Helper_Data::XML_PATH_SHOW_MAGENTO_ADS)): ?>
+                <a href="<?php echo $this->getBugreportUrl() ?>" id="footer_bug_tracking"><?php echo $this->__('Help Keep Magento Healthy - Report All Bugs') ?></a><br/>
+            <?php endif; ?>
+        </p>
+        <p class="legality">
+            <?php if (Mage::getStoreConfigFlag(Moogento_Clean_Helper_Data::XML_PATH_SHOW_MAGENTO_ADS)): ?>
+                <a href="<?php echo $this->getConnectWithMagentoUrl() ?>" id="footer_connect"><?php echo $this->__('Connect with the Magento Community') ?></a><br/>
+            <?php endif; ?>
+            <?php if (Mage::getStoreConfigFlag(Moogento_Clean_Helper_Data::XML_PATH_SHOW_COPYRIGHT)): ?>
+                <?php echo $this->__('Magento&trade; is a trademark of Magento Inc.<br/>Copyright &copy; %s Magento Inc.', date('Y')) ?>
+            <?php endif; ?>
+        </p>
+    </div>
+    <?php echo $this->getLanguageSelect() ?>
+    <script>
+        jQuery('#magento_logo').tooltipster({
+            content: jQuery('.tooltip-footer-content').html(),
+            contentAsHTML: true,
+            interactive: true,
+            offsetY: 7
+        })
+    </script>
+<?php else: ?>
+<p class="bug-report">
+    <?php if (Mage::getStoreConfigFlag(Moogento_Clean_Helper_Data::XML_PATH_SHOW_MAGENTO_ADS)): ?>
+        <a href="<?php echo $this->getBugreportUrl() ?>" id="footer_bug_tracking"><?php echo $this->__('Help Us Keep Magento Healthy - Report All Bugs') ?></a><br/>
+    <?php endif; ?>
+    <?php echo $this->getLanguageSelect() ?>
+</p>
+<p class="legality">
+    <?php if (Mage::getStoreConfigFlag(Moogento_Clean_Helper_Data::XML_PATH_SHOW_MAGENTO_ADS)): ?>
+        <a href="<?php echo $this->getConnectWithMagentoUrl() ?>" id="footer_connect"><?php echo $this->__('Connect with the Magento Community') ?></a><br/>
+    <?php endif; ?>
+    <?php if (Mage::getStoreConfigFlag(Moogento_Clean_Helper_Data::XML_PATH_SHOW_COPYRIGHT)): ?>
+        <img src="<?php echo $this->getSkinUrl('images/varien_logo.gif') ?>" class="v-middle" alt="" />&nbsp;&nbsp;
+        <?php echo $this->__('Magento&trade; is a trademark of Magento Inc.<br/>Copyright &copy; %s Magento Inc.', date('Y')) ?>
+    <?php endif; ?>
+</p>
+<?php 
+	if (Mage::getStoreConfigFlag(Moogento_Clean_Helper_Data::XML_PATH_SHOW_COPYRIGHT)) {
+		echo '<span id="magento_logo" title="We\'re on Magento v'.Mage::getVersion().'"><em></em> '.Mage::getVersion().'</span>';
+	}
+?>
+<?php endif ?>
+<script type="text/javascript">
+    <?php if (Mage::getStoreConfigFlag(Moogento_Clean_Helper_Data::XML_PATH_SHOW_MAGENTO_ADS)): ?>
+        $('footer_bug_tracking').target = 'Varien_External';
+        $('footer_connect').target = 'Varien_External';
+    <?php endif; ?>
+    function setInterfaceLanguage(evt){
+        var elem = Event.element(evt);
+        if(elem){
+            setLocation('<?php echo $this->getChangeLocaleUrl() ?>locale/'+elem.value+'/<?php echo $this->getRefererParamName() ?>/<?php echo $this->getUrlForReferer() ?>');
+        }
+    }
+    Event.observe('interface_locale', 'change', setInterfaceLanguage);
+    
+    var currentPermission;
+    if ('Notification' in window) {
+        Notification.requestPermission(function (result) {
+            currentPermission = result
+        });
+    }
+    
+    var noticationCheckingPeriod = '<?php echo Mage::getStoreConfig('moogento_clean/notifications/checking_time')*1000; ?>';
+    var noticationControllerURL = '<?php echo $this->getUrl('*/sales_notifications/checkNotifications'); ?>';
+    var noticationImage = '<?php echo $this->getSkinUrl('images/varien_logo.gif'); ?>';
+    
+</script>

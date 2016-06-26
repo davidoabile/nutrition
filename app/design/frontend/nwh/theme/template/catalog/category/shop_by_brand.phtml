@@ -1,0 +1,137 @@
+<link rel="stylesheet" href="<?php //echo $this->getSkinUrl('css/jquery-ui.css') ?>">
+<!--   <script src="<?php echo $this->getSkinUrl('js/jquery-1.10.2.js') ?>"></script> -->
+  <script src="<?php echo $this->getSkinUrl('js/jquery-ui.js') ?>"></script>
+<!--  <link rel="stylesheet" href="/resources/demos/style.css">-->
+<script>
+    jQuery.noConflict();
+  jQuery(function() {
+    jQuery( "#tabs" ).tabs();
+  });
+  </script>
+ <?php
+$layer = Mage::getSingleton('catalog/layer');
+$_category = $layer->getCurrentCategory();
+$currentCategoryId = $_category->getId();
+
+$categoryid = $currentCategoryId;
+$category2 = new Mage_Catalog_Model_Category();
+$category2->load($categoryid);
+$collection = $category2->getProductCollection();
+$collection->addAttributeToSelect('*');
+        $fileName = $_category->getThumbnail();
+        if (!$fileName) {
+            $url = Mage::getBaseUrl('media') . 'catalog/category/small_image.jpg';
+        } else {
+            $url = Mage::getBaseUrl('media') . 'catalog/category/' . $fileName;
+        }
+?>
+<div id="tabs" class="overtabmain mrgn_b20">
+    <div class="overtab">
+        <ul>
+             <li><a href="#tabs-1">OVERVIEW</a></li>
+             <li><a href="#tabs-2">Video</a></li>
+<!--            <li><span class="overtab_current">OVERVIEW</span></li>
+            <li><a href="#">Video</a></li>-->
+        </ul>
+    </div>
+<!--    <div id="tabs-1">
+    <div  class="overtab_detl">
+        <div class="overtab_detl_left font12_blk">
+            <span class="font18_b_red">GENETIX NUTRITION</span><br>
+            <span class="font18_blk">QUALITY YOU CAN TRUST</span><br><br>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. d<br><br>
+            oloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+        </div>
+        <div class="overtab_detl_right"><img width="230" height="273" src="<?php echo $url; ?>"/></div>
+    </div>
+    </div>
+    <div id="tabs-2">
+        <div  class="overtab_detl">
+        video
+        </div>
+    </div>-->
+<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('shop_by_brand_tab_content')->toHtml() ?>
+
+</div> 
+
+
+
+<div class="brandpromr_banner mrgn_b20"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('brand_promo_banner')->toHtml() ?></div>
+<!--single feature product-->
+    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('feature_single_product')->toHtml() ?>
+<?php if (count($collection) > 0) { ?>
+    <div class="main_part mrgn_b20">
+        <div class="hadd_pink2">
+            <h1>GENETIX PRODUCTS</h1><div class="triangle-bottomleft"></div>
+    <!--                    <a class="link14_gry right" href="<?php echo $_category->getUrl(); ?>">VIEW ALL</a>-->
+
+        </div>
+        <div class="prod_slider fp_area_main">
+            <ul  id="" class="jcarousel-skin-tango">
+                <?php foreach ($collection as $product) {
+                    ?>
+
+                    <li>
+                        <div class="ps_part">
+                            <ul>
+                                <li>
+
+                                    <div class="ps_img_cntr">
+                                        <div class="ps_img">
+                                            <a class="EnableQuickView" id="pb_item_<?php echo $product->getId() ?>" href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>" >
+                                                <img  src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(115, 115) ?>" alt="<?php echo $this->htmlEscape($product->getName()) ?>" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="quickview">&nbsp;</div>
+                                    </a>
+                                </li>
+                                <li class="font14_blk"><a class="font14_blk" href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>)">
+        <?php echo $this->htmlEscape($product->getName()) ?>
+                                    </a>
+                                </li>
+                                <!--                                    <li class="font12_gry">Small description here</li>-->
+                                <li class="mrgn_t5">
+                                   <?php if ($product->getSpecialPrice()) { ?>
+                                    <span class="font16_gry"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($product->getPrice(), '2', '.', ','); ?>
+                                    </span>
+                                        <span class="font16_red"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($product->getSpecialPrice(), '2', '.', ','); ?></span>
+        <?php }else{ ?>
+        <span class="font16_red"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?><?php echo number_format($product->getPrice(), '2', '.', ','); ?>
+                                    </span>
+        <?php } ?>
+                                </li>
+                                <!--                                    <li class="font14b_blk">SAVE $888.00</li>-->
+        <?php $_compareUrl = $this->helper('catalog/product_compare')->getAddUrl($product) ?>
+
+                                <li class="mrgn_t5"><a class="link12_red" href="<?php echo $_compareUrl ?>">+ Add to compare</a></li>
+
+        <?php if ($product->isSaleable()): ?>
+
+
+                                    <li class="mrgn_t5"><a class="buy_btn" href="<?php echo Mage::helper('checkout/cart')->getAddUrl($product); ?>">BUY NOW</a></li> 
+                                <?php else: ?>
+                                    <li class="mrgn_t5"><?php echo $this->__('Out of stock') ?></li>
+        <?php endif; ?>
+
+                            </ul>
+                        </div>
+
+        <?php //echo $this->getReviewsSummaryHtml($product, 'short')   ?>
+                    </li>
+
+
+    <?php } ?>
+
+            </ul>
+        </div>
+    </div>
+<?php }  ?>
+
+<!--   remove category title -->
+<script type="text/javascript">
+    //jQuery(document).ready(function() {
+        //jQuery('.category-title').remove();
+        
+    });
+</script>

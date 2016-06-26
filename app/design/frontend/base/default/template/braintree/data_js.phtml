@@ -1,0 +1,26 @@
+<?php
+/**
+* Braintree Payments Extension
+*
+* This source file is subject to the Braintree Payment System Agreement (https://www.braintreepayments.com/legal)
+*
+* DISCLAIMER
+* This file will not be supported if it is modified.
+*
+* @copyright   Copyright (c) 2015 Braintree. (https://www.braintreepayments.com/)
+*/
+?>
+<script type="text/javascript">
+    var braintreeUtilsDataJs = new BraintreeUtils();
+    var formId = '<?php echo $this->getFormId()?>';
+    if (!$(formId)) {
+        formId = 'co-payment-form';
+    }
+    braintreeUtilsDataJs.setupDataJSOnEvent(
+        '<?php echo Mage::helper('braintree_payments')->getKountEnvironment()?>',
+        '<?php echo Mage::helper('braintree_payments')->getKountId()?>',
+        '<?php echo $this->getMerchantId() ?>',
+        formId
+    );
+</script>
+<script type="text/javascript" src="<?php echo $this->getJsSrc() ?>"></script>

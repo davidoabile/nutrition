@@ -1,0 +1,156 @@
+<?php
+$_current_category = Mage::registry("current_category");
+if (Mage::helper('category')->is_child_of_goal_category($_current_category))
+    return '';
+
+if (Mage::helper('category')->isClearance($_current_category)) {
+    return;
+}
+
+$_helper = $this->helper('catalog/output');
+
+if ($_current_category->getLevel() <= 3) :
+    $cache = Mage::helper('nwhcache');
+    $redis = $cache->connect();
+    $redKey = $cache->getKey($_current_category->getName() . $_current_category->getId());
+    if (!$contents = $redis->get($redKey)) :
+        $_productCollection = $this->getLoadedProductCollection();
+        $filter_result = array();
+        foreach ($_productCollection as $_prd) {
+            $filter_result[] = $_prd->getEntityId();
+        }
+        ob_start();
+        ?>
+        <?php if (0): ?>
+            <p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+        <?php else: ?>
+            <div class="clearfix slide-category-list show-category-list">
+                <?php
+                $catHelper = Mage::helper('catalog/category');
+                $allCategory = false;
+                $category = Mage::getModel("catalog/category");
+                $_storeCategories = $_current_category->getChildren();
+                $allIdCategory = explode(',', $_storeCategories);
+
+                if ($allIdCategory) {
+                    foreach ($allIdCategory as $key => $value) {
+                        $cat = Mage::getModel("catalog/category")->load($value);
+                        $allCategory[$cat->getName()] = $cat;
+                    }
+                }
+                if (is_array($allCategory)) {
+                    ksort($allCategory);
+                }
+                ?>
+                <?php if ($allCategory): ?>
+
+                    <?php foreach ($allCategory AS $cat): ?>
+                        <?php
+                        if (!empty($filter_result))
+                            $products = $cat->getProductCollection()->addAttributeToFilter('entity_id', array('in' => $filter_result));
+                        else
+                            $products = $cat->getProductCollection();
+                        ?>
+                        <?php if ($products->count()): ?>
+                            <div class="block-red clearfix slide-category <?php echo strtolower(str_replace(' ', '_', $cat->getName())) ?>">
+                                <div class="block-title clearfix">
+                                    <h1><span><?php echo $cat->getName(); ?></span></h1>
+                                    <a class="view-all" href="<?php echo $catHelper->getCategoryUrl($cat) ?>">
+                                        <?php echo $this->__('VIEW ALL') ?>
+                                    </a>
+                                </div>
+                                <?php
+                                $quickViewId = 'quickview' . str_replace(' ', '', $cat->getName());
+                                //$products = $cat->getProductCollection();
+                                ?>
+                                <div class="block-content clearfix prod_slider fp_area_main">
+                                    <ul class="jcarousel-skin-tango products-grid single-line-name">
+                                        <?php $i = 0 ?>
+                                        <?php
+                                        foreach ($products as $product):
+                                            $product = Mage::getModel("catalog/product")->load($product->getId());
+                                            ?>
+                                            <?php
+                                            $i++;
+                                            if ($i > 8) {
+                                                break;
+                                            }
+                                            ?>
+                                            <li class="item">
+                                                <div class="inner">
+                                                    <div class="product-image-wrapper">
+                                                        <a data-link="<?php echo $quickViewId ?>" id="pb_item_<?php echo $product->getId() ?>" class="EnableQuickView" href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>" >
+                                                            <img  src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(295, 295) ?>" alt="<?php echo $this->htmlEscape($product->getName()) ?>" />
+                                                        </a>
+                                                    </div>
+
+                                                    <?php echo $this->getPriceHtml($product, true) ?>
+
+                                                    <h2 class="product-name<?php echo $productNameClasses; ?>">
+                                                        <a href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>">
+                                                            <?php echo $this->htmlEscape($product->getName()) ?>
+                                                        </a>
+                                                    </h2>
+
+                                                    <?php
+                                                    $enable_button_cart = Mage::getStoreConfig("catalog/frontend/enable_button_cart");
+                                                    ?>
+                                                    <?php if ($enable_button_cart): ?>
+                                                        <?php if ($product->isSaleable()): ?>
+                                                            <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                                                        <?php else: ?>
+                                                            <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                                                        <?php endif; ?>
+                                                    <?php endif; ?>
+
+
+                                                </div>
+                                            </li>
+                                        <?php endforeach ?>
+                                    </ul>
+                                </div>
+                                <div id="<?php echo $quickViewId ?>" class="slidmain" style="float: left; display: none;"></div>
+                            </div>
+                        <?php endif ?>
+                    <?php endforeach ?>
+                <?php endif ?>
+
+            </div>
+            <script>
+                // On product list pages, we want to show the layered nav/category menu immediately above the product list
+                var $nwhjquery = jQuery.noConflict();
+
+                $nwhjquery(document).ready(function () {
+                    var thisisResponsive = $nwhjquery('body').hasClass('responsive');
+                    var breakpointMedium = 768;
+                    if (thisisResponsive)
+                    {
+                        if ($nwhjquery('.block-layered-nav').length && $nwhjquery('.show-category-list').length)
+                        {
+                            if (typeof enquire != "undefined")
+                                enquire.register('screen and (max-width: ' + (breakpointMedium - 1) + 'px)', {
+                                    match: function () {
+                                        $nwhjquery('.block-layered-nav').insertBefore($nwhjquery('.show-category-list'))
+                                    },
+                                    unmatch: function () {
+                                        // Move layered nav back to left column
+                                        $nwhjquery('.block-layered-nav').insertAfter($nwhjquery('#layered-nav-marker'))
+                                    }
+                                });
+                        }
+                    }
+                });
+
+            </script>
+        <?php endif ?>
+        <?php
+        $contents = ob_get_contents();
+        ob_end_clean();
+        $redis->set($redKey, $contents, NWH_Cache_Helper_Data::PAGE_TTL);
+    endif;
+    echo $contents
+    ?>
+    <?php
+
+
+ endif ?>
